@@ -1,9 +1,9 @@
+import math
 import os
 import io
 import json
 import base64
 import datetime
-from django.core.files.base import ContentFile
 from fpdf import FPDF
 from random import randint
 from collections import OrderedDict
@@ -12,8 +12,8 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 from django.db import models
 from django.apps import apps
+from django.contrib.auth.models import Group
 from django.core.files import File as DjangoFile
-from django.contrib.auth.models import User, Group
 
 from documents.file import File
 from actions.models import Actions
@@ -21,7 +21,10 @@ from restoken.models import PostUserToken
 from meetings.model_files.event import Event
 from meetings.model_files.user import Profile
 
-from mainapp.settings import MEDIA_ROOT, server_base_url, BASE_DIR
+from django.core.files.base import ContentFile
+from django.core.files.temp import NamedTemporaryFile
+
+from mainapp.settings import MEDIA_ROOT, server_base_url
 from mainapp.ws_methods import queryset_to_list, send_email_on_creation, search_db
 from mainapp.models import CustomModel
 
@@ -95,89 +98,147 @@ class SignatureDoc(File, Actions):
         return doc.start_assign_signature(request.user, params)
 
     def start_assign_signature(self, user, params):
-        user_ids = []
         if self.send_to_all:
-            users = []
-            self.signature_set.all().delete()
             users = self.get_respondents()
-            self.remove_all_signature()
-            sign_top = 5
-            c = 0
-            height = 95
-            inc_sign_top = height + 15
-            for user_id in users:
-                user_ids.append(user_id)
-                if c == 0:
-                    sign_left = 10
-                if c == 1:
-                    sign_left = 150
-                obj = Signature(
-                    document_id=self.id,
-                    user_id=user_id,
-                    type='signature',
-                    left=sign_left,
-                    top=sign_top,
-                    height=height,
-                    width=height*2+10,
-                    zoom=100
-                )
-                obj.updated_by_id = user.id
-                obj.save()
-                if c == 1:
-                    c = 0
-                    sign_top += inc_sign_top
-                    continue
-                c += 1
-            self.add_pages_for_sign()
+            sign_count = len(users)
+            last_sign_bottom = self.get_sign_stats_send_to_all(sign_count)
+            page_width, page_height, added_pages = self.add_pages_for_sign1(last_sign_bottom, user.id)
+            user_ids = self.add_signature_send_to_all(users, user.id, added_pages, page_width, page_height)
             return self.on_signature_assigned(user, user_ids, params)
         else:
             return self.assign_signature(user, params)
 
-    def assign_signature(self, user, params):
-        signatures = json.loads(params['data'])
-        user_ids = [sign["user_id"] for sign in signatures]
-        user_ids = list(OrderedDict.fromkeys(user_ids))
-        for u in user_ids:
-            for sign in [x for x in signatures if x['user_id'] == u]:
-                obj = Signature(
-                    document_id=sign['document_id'],
-                    user_id=sign['user_id'],
-                    email=sign['email'],
-                    name=sign['name'],
-                    field_name=sign['field_name'],
-                    left=sign['left'],
-                    top=sign['top'],
-                    page=sign['page'],
-                    height=sign['height'],
-                    width=sign['width'],
-                    zoom=sign['zoom'],
-                    type=sign['type']
-                )
-                obj.updated_by_id = user.id
-                obj.save()
-        return self.on_signature_assigned(user, user_ids, params)
+    def get_sign_stats_send_to_all(self, sign_count):
+        start_top = 5
+        height = 95
+        margin_top = 15
+        inc_sign_top = height + margin_top
+        last_sign_bottom = start_top + inc_sign_top * math.ceil(sign_count /2) - margin_top
+        return last_sign_bottom
 
-    def on_signature_assigned(self, user, user_ids, params):
-        template_data = {
-            'subject': params['subject'],
-            'message': params['message'],
-            'url': server_base_url + '/#/token-sign-doc/' + str(self.id) + '/'
-        }
-        post_info = {}
-        post_info['res_app'] = 'esign'
-        post_info['res_model'] = 'SignatureDoc'
-        post_info['res_id'] = self.id
-        template_name = 'esign/esign_request.html'
-        email_data = {
-            'subject': params['subject'],
-            'audience': user_ids,
-            'post_info': post_info,
-            'template_data': template_data,
-            'template_name': template_name,
-            'token_required': True
-        }
-        send_email_on_creation(email_data)
-        return 'done'
+
+    def add_signature_send_to_all(self, users, req_user_id, added_pages, page_width, page_height):
+        user_ids = []
+        self.signature_set.all().delete()
+        self.remove_all_signature()
+
+        start_top = 5
+        height = 95
+        margin_top = 15
+        inc_sign_top = height + margin_top
+
+        c = 0
+        sign_top = start_top
+        sign_width = height * 2 + 10
+        page_number = added_pages[0]
+        for user_id in users:
+            user_ids.append(user_id)
+            if c == 0:
+                sign_left = 10
+            if c == 1:
+                sign_left = page_width - sign_width - 10
+            obj = Signature(
+                document_id=self.id,
+                user_id=user_id,
+                type='signature',
+                left=sign_left,
+                top=sign_top,
+                height=height,
+                width=sign_width,
+                zoom=100
+            )
+            obj.updated_by_id = req_user_id
+            if sign_top + inc_sign_top > page_height:
+                page_number += 1
+                sign_top = start_top
+            obj.page = page_number
+            if page_number not in added_pages:
+                raise Exception("Invalid page number " + str(page_number))
+            obj.save()
+            if c == 1:
+                c = 0
+                sign_top += inc_sign_top
+                continue
+            c += 1
+        return user_ids
+
+    def add_pages_for_sign1(self, last_sign_bottom, req_user_id):
+        if not self.original_pdf:
+            new_file = ContentFile(self.pdf_doc.read())
+            new_file.name = self.pdf_doc.name
+            self.original_pdf = new_file
+            self.pending_tasks = 0
+            self.save()
+        else:
+            new_file = ContentFile(self.original_pdf.read())
+            new_file.name = self.original_pdf.name
+            self.pdf_doc = new_file
+            self.pending_tasks = 0
+            self.save()
+
+        pdf_path = MEDIA_ROOT + "/" + self.pdf_doc.name
+        input = PdfFileReader(open(pdf_path, "rb"))
+        if input.isEncrypted:
+            input.decrypt('')
+        # Addition of code for orientation correction Asfand
+        pageValue = input.getPage(0)
+        pageOrientation = pageValue.get('/Rotate')
+        page = input.getPage(0).mediaBox
+        zAxis = page.getUpperRight_x()
+        yAxis = page.getUpperLeft_x()
+        width = int(zAxis - yAxis)
+        page_width = width
+        height = int(page.getUpperRight_y() - page.getLowerRight_y())
+        page_height = height
+        if width > height or pageOrientation == 90:
+            if height > width:
+                orientation = 'L'
+            else:
+                orientation = 'P'
+        elif pageOrientation == 0 or pageOrientation == 180 or pageOrientation == None:
+            if width > height:
+                orientation = 'L'
+            else:
+                orientation = 'P'
+        solution = [width, height]
+
+        pdf = FPDF(orientation, 'pt', solution)
+        new_pages_count = math.ceil(last_sign_bottom / height)
+        cnt = 0
+        while cnt < new_pages_count:
+            cnt = cnt + 1
+            pdf.add_page(orientation=orientation)
+        temp_file_path = MEDIA_ROOT + '/new_empty_pages_file-'+str(req_user_id)+'.pdf'
+        pdf.output(temp_file_path, "F")
+        pdf.close()
+
+        output = PdfFileWriter()
+        # addd existing pages
+        for page_number in range(input.getNumPages()):
+            output.addPage(input.getPage(page_number))
+
+        prev_page_count = input.getNumPages()
+        temp_pdf = PdfFileReader(open(temp_file_path, "rb"))
+
+        added_pages = []
+        new_page_number = prev_page_count
+        for page_number in range(temp_pdf.getNumPages()):
+            new_page_number += 1
+            added_pages.append(new_page_number)
+            output.addPage(temp_pdf.getPage(page_number))
+
+        output_file_path = MEDIA_ROOT + '/output_sign_file-'+str(req_user_id)+'.pdf'
+        with open(output_file_path, "wb") as outputStream:
+            output.write(outputStream)
+
+        res = open(output_file_path, 'rb')
+        self.pending_tasks = 0
+        self.pdf_doc.save(self.file_name, DjangoFile(res))
+        if os.path.isfile(temp_file_path):
+            os.remove(temp_file_path)
+        if os.path.isfile(output_file_path):
+            os.remove(output_file_path)
+        return page_width, page_height, added_pages
 
     def add_pages_for_sign(self):
         files_to_delete = []
@@ -195,7 +256,7 @@ class SignatureDoc(File, Actions):
             self.pdf_doc = new_file
             self.pending_tasks = 0
             self.save()
-        
+
         file_path = MEDIA_ROOT.replace('media', '')
         # files_to_delete.append(BASE_DIR+self.pdf_doc.url)
         pdf_url = self.pdf_doc.url[1:]
@@ -246,7 +307,7 @@ class SignatureDoc(File, Actions):
             if sign.left > 10:
                 sign.left = width - sign.width - 10
             sign.save()
-            if count%2 == 0:
+            if count % 2 == 0:
                 sign_top += 15 + sign_heigh
                 sign_bottom = sign_heigh + sign_top
             if (sign_bottom >= height):
@@ -270,11 +331,57 @@ class SignatureDoc(File, Actions):
             output.write(outputStream)
         res = open(output_pdf_path, 'rb')
         self.pending_tasks = 0
-        self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
+        self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/', ''), DjangoFile(res))
         files_to_delete.append(output_pdf_path)
         for file_to_delete in files_to_delete:
             if os.path.isfile(file_to_delete):
                 os.remove(file_to_delete)
+
+    def assign_signature(self, user, params):
+        signatures = json.loads(params['data'])
+        user_ids = [sign["user_id"] for sign in signatures]
+        user_ids = list(OrderedDict.fromkeys(user_ids))
+        for u in user_ids:
+            for sign in [x for x in signatures if x['user_id'] == u]:
+                obj = Signature(
+                    document_id=sign['document_id'],
+                    user_id=sign['user_id'],
+                    email=sign['email'],
+                    name=sign['name'],
+                    field_name=sign['field_name'],
+                    left=sign['left'],
+                    top=sign['top'],
+                    page=sign['page'],
+                    height=sign['height'],
+                    width=sign['width'],
+                    zoom=sign['zoom'],
+                    type=sign['type']
+                )
+                obj.updated_by_id = user.id
+                obj.save()
+        return self.on_signature_assigned(user, user_ids, params)
+
+    def on_signature_assigned(self, user, user_ids, params):
+        template_data = {
+            'subject': params['subject'],
+            'message': params['message'],
+            'url': server_base_url + '/#/token-sign-doc/' + str(self.id) + '/'
+        }
+        post_info = {}
+        post_info['res_app'] = 'esign'
+        post_info['res_model'] = 'SignatureDoc'
+        post_info['res_id'] = self.id
+        template_name = 'esign/esign_request.html'
+        email_data = {
+            'subject': params['subject'],
+            'audience': user_ids,
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': True
+        }
+        send_email_on_creation(email_data)
+        return 'done'
 
     def remove_all_signature(self):
         self.signature_set.all().delete()
