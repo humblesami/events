@@ -266,11 +266,10 @@ mention-list.dropup{
     justify-content: space-between;
     padding-bottom: 0.5rem;
 }
-@media screen and (max-width: 390px){
-    .roster-full{
-        top: 0px;
-        height: calc(100% - 25px);
-    }   
+@media screen and (max-width:768px){
+    .kanban-headings{
+        display: block;
+    }
 }
 @media screen and (max-width:480px){
     .roster .table th:first-child,
@@ -278,4 +277,11 @@ mention-list.dropup{
         width: 35%;
     }
 }
+@media screen and (max-width: 390px){
+    .roster-full{
+        top: 0px;
+        height: calc(100% - 25px);
+    }   
+}
+
 
