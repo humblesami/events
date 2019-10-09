@@ -238,10 +238,8 @@ export class DocumentsComponent implements OnInit {
         obj_this.socketService.call_backs_on_mode_changed['handle_file_create'] = function(){
             obj_this.on_admin_mode_changed();
         };
-        if(
-            obj_this.search_type == 'folders'
-            
-            || 
+        if( 
+            obj_this.search_type == 'folders'|| 
             (
                 (!obj_this.parent_id  && !obj_this.recursive)
             )

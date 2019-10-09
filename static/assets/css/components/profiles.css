@@ -1,8 +1,8 @@
 .kanban-profile-card{
     background: #f3f3f3;
     border: 1px solid #f1eeee;
-    padding: 4px;
-    border-radius: 3px;
+    padding: 4px 0 4px 6px;
+    border-radius: 8px;
 }
 .kanban-profile-card a{
     color: #43425D;

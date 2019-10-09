@@ -1,11 +1,13 @@
 <div class="user-modal py-2">
+    
     <div class="form-group my-2 pl-2 p-lr">
-        <label class="font-weight-bold text-muted">Group Name</label>
-        <input [(ngModel)]="group_name" class="form-control form-control-sm"/>
+        <label *ngIf="!group_name" class="text-center w-100 font-weight-bold text-muted">Create Chat Group</label>
+        <label *ngIf="group_name" class="text-center font-weight-bold text-muted">Chat Group: {{group_name}}</label>
+        <input [(ngModel)]="group_name" placeholder="Enter Group Name" class="form-control form-control-sm"/>
     </div>
     <app-userlist 
     selection_input_str="{{selection_input_str}}"
-    user_input_str="{{user_input_str}}" 
+    user_input_str="{{user_input_str}}"
     (group_users_changed)="group_users_changed($event)"
     ></app-userlist>
     <div class="my-3 float-right">
