@@ -3,7 +3,7 @@
     <div class="form-group pl-2 p-lr">
         <label *ngIf="!group_name" class="pop-heading">Create Chat Group</label>
         <label *ngIf="group_name" class="pop-heading">Chat Group: {{group_name}}</label>
-        <input [(ngModel)]="group_name" placeholder="Enter Group Name" class="form-control form-control-sm"/>
+        <input *ngIf="!group_name" [(ngModel)]="group_name" placeholder="Enter Group Name" class="form-control form-control-sm"/>
     </div>
     <app-userlist 
     selection_input_str="{{selection_input_str}}"
