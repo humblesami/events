@@ -1,89 +1,89 @@
 <div  class="folder_container" *ngIf="records && records.length">
-        <div class="pb-3" class="folder_container pt-2">
-            <div class="kanban-headings pt-0">
-                <h4>
-                    <i class="icon-folder text-primary"></i> Folders
-                </h4>
+    <div class="folder_container">
+        <div class="kanban-headings">
+            <h4>
+                <i class="icon-folder text-primary"></i> Folders
+            </h4>
+        </div>
+    </div>
+    <div class="sub cards container">
+        <div class="row docwrappercontainer mb-0">
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
+                <a routerLink="/resource/{{folder.id}}" 
+                title="{{folder.personal ? 'My Folder': ''}}"                    
+                class="folder DocumentWrapper"
+                [ngClass]="{personal: folder.personal}"
+                >
+                    <input type="hidden" class="item_id" value="{{folder.id}}" />
+                    <div class="pointer paste"
+                    title="Paste Here"
+                    (click)="on_paste_clicked($event, folder.id, folder)">
+                        <i class="fa fa-clipboard" ></i>
+                    </div>
+                    <div class="doc-del-btn d-flex" *ngIf="folder.id && !(!personal && folder.personal) && (socketService.admin_mode || personal)">
+                        <div class="pointer" *ngIf="parent_id"
+                        title="Move"
+                        (click)="renameService.make_movable($event, parent_id, folder.id, 'folders', folder.personal)">
+                            <i class="fas fa-cut" ></i>
+                        </div>                            
+                        <div class="pointer"
+                        title="Delete"
+                        (click)="delete_folder($event, folder.id , folder.total_files)">
+                            <i class="far fa-trash-alt" ></i>
+                        </div>                                
+                    </div>
+                    <div class="DocIcon">
+                        <span class="rounded-circle">
+                            <i class="icon-folder" [ngClass]="{personal : !personal && folder.personal}"></i>
+                        </span>
+                    </div>                        
+                    <div class="DocText" (click)="renameService.prevent_default($event, folder.personal)">
+                        <div class="DocName w-100">
+                            <div *ngIf="!folder.edit_mode" [ngClass]="{'d-flex align-items-center': (socketService.admin_mode || folder.personal)}">
+                                <span class="text-truncate resource-info" 
+                                    [ngClass]="{'mt-2': (!socketService.admin_mode && !folder.personal)}">
+                                    {{folder.name}} ({{folder.total_files || 0}})
+                                </span>                                      
+                                <button *ngIf="(socketService.admin_mode || folder.personal)" 
+                                (click)="renameService.enable_rename($event, folder)"
+                                class="btn btn-sm btn-primary mr-1">
+                                    <i class="fas fa-edit "></i>
+                                </button>
+                                <button *ngIf="(socketService.admin_mode || folder.personal)"
+                                (click)="userService.get_access_details(folder,'resources','Folder',parent)" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-user-plus"></i>
+                                </button>                                       
+                            </div>
+                            <div *ngIf="folder.edit_mode" class="d-flex">
+                                <input class="form-control renamer"
+                                    (blur)="renameService.renamer_focused_out($event,folder,'folder')"	
+                                    (keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
+                                    value="{{folder.name}}"
+                                    (change)="renameService.renamer_changed($event.target)">
+                                <button 
+                                class="fri-selt-btn check-time-btn" 
+                                aria-label="rename file.">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                        </div>              
+                    </div>
+                </a>
             </div>
         </div>
-        <div class="sub cards container">
-            <div class="row docwrappercontainer mb-0">
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
-                    <a routerLink="/resource/{{folder.id}}" 
-                    title="{{folder.personal ? 'My Folder': ''}}"                    
-                    class="folder DocumentWrapper"
-                    [ngClass]="{personal: folder.personal}"
-                    >
-                        <input type="hidden" class="item_id" value="{{folder.id}}" />
-                        <div class="pointer paste"
-                        title="Paste Here"
-                        (click)="on_paste_clicked($event, folder.id, folder)">
-                            <i class="fa fa-clipboard" ></i>
-                        </div>
-                        <div class="doc-del-btn d-flex" *ngIf="folder.id && !(!personal && folder.personal) && (socketService.admin_mode || personal)">
-                            <div class="pointer"
-                            title="Move"
-                            (click)="renameService.make_movable($event, parent_id, folder.id, 'folders', folder.personal)">
-                                <i class="fas fa-cut" ></i>
-                            </div>                            
-                            <div class="pointer"
-                            title="Delete"
-                            (click)="delete_folder($event, folder.id , folder.total_files)">
-                                <i class="far fa-trash-alt" ></i>
-                            </div>                                
-                        </div>
-                        <div class="DocIcon">
-                            <span class="rounded-circle">
-                                <i class="icon-folder" [ngClass]="{personal : !personal && folder.personal}"></i>
-                            </span>
-                        </div>                        
-                        <div class="DocText" (click)="renameService.prevent_default($event, folder.personal)">
-                            <div class="DocName w-100">
-                                <div *ngIf="!folder.edit_mode" [ngClass]="{'d-flex align-items-center': (socketService.admin_mode || folder.personal)}">
-                                    <span class="text-truncate resource-info" 
-                                        [ngClass]="{'mt-2': (!socketService.admin_mode && !folder.personal)}">
-                                        {{folder.name}} ({{folder.total_files || 0}})
-                                    </span>                                      
-                                    <button *ngIf="(socketService.admin_mode || folder.personal)" 
-                                    (click)="renameService.enable_rename($event, folder)"
-                                    class="btn btn-sm btn-primary mr-1">
-                                        <i class="fas fa-edit "></i>
-                                    </button>
-                                    <button *ngIf="(socketService.admin_mode || folder.personal)"
-                                    (click)="userService.get_access_details(folder,'resources','Folder',parent)" class="btn btn-sm btn-primary">
-                                        <i class="fa fa-user-plus"></i>
-                                    </button>                                       
-                                </div>
-                                <div *ngIf="folder.edit_mode" class="d-flex">
-                                    <input class="form-control renamer"
-                                        (blur)="renameService.renamer_focused_out($event,folder,'folder')"	
-                                        (keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
-                                        value="{{folder.name}}"
-                                        (change)="renameService.renamer_changed($event.target)">
-                                    <button 
-                                    class="fri-selt-btn check-time-btn" 
-                                    aria-label="rename file.">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                            </div>              
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div *ngIf="records && records.length" class="mb-4">
-                {{records.length}} Folders
+        <div *ngIf="records && records.length" class="mb-4">
+            {{records.length}} Folders
+        </div>
+    </div>
+</div>
+
+<div class="container pt-3" *ngIf="access_denied">
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="jumbotron text-center">
+                <h1>No access to this resource</h1>
+                <hr>
             </div>
         </div>
     </div>
-
-    <div class="container pt-3" *ngIf="access_denied">
-		<div class="row">
-			<div class="col-lg-12 ">
-				<div class="jumbotron text-center">
-                    <h1>No access to this resource</h1>
-                    <hr>
-                </div>
-			</div>
-		</div>
-	</div>
+</div>

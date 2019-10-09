@@ -2796,7 +2796,9 @@ label.check-plus-label-wrap {
     padding: 10px;
     border-radius: 6px;
     position: relative;
-	}
+    margin-bottom: 10px;
+    display: flex;
+}
 .main-full-seachbar .form-control {
 	border-radius: 0;
 	border: 1px solid #ffffff;

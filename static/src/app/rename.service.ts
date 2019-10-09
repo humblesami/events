@@ -115,10 +115,8 @@ export class RenameService {
         evn.preventDefault();
         if((!parent_id && !this.objects_to_move.current_parent_id) || parent_id != this.objects_to_move.current_parent_id)
         {
-            obj_this.objects_to_move = {files:[], folders:[], current_parent_id: parent_id, personal: personal};
-            $('.breadcrumbSection .edit-buttons .paste').remove();
-            $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
-           }
+            obj_this.reset_moveable_values(parent_id, personal);            
+        }
         else{
             if(personal != obj_this.objects_to_move.personal)
             {
@@ -137,24 +135,24 @@ export class RenameService {
             obj_this.objects_to_move[key].push(item_id);                        
             movable.addClass('draggable');
         }
-        if(personal)
-        {
-            $('a.folder.droppable').removeClass('droppable');
-            $('a.folder.personal').addClass('droppable');
+
+
+        if(!obj_this.objects_to_move.files.length && !obj_this.objects_to_move.folders.length){                                
+            this.reset_moveable_values();            
         }
         else{
-            if(!obj_this.objects_to_move.files.length && !obj_this.objects_to_move.folders.length){                                
-                // this.reset_moveable_values();
+            if(personal)
+            {
                 $('a.folder.droppable').removeClass('droppable');
-                $('a.folder:not(.personal)').removeClass('droppable');
-                $('.breadcrumbSection .edit-buttons .paste').remove();
-                $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
-                return;
-            }else{
+                $('a.folder.personal').addClass('droppable');
+            }
+            else{
                 $('a.folder.droppable').removeClass('droppable');
                 $('a.folder:not(.personal)').addClass('droppable');
+            }
         }
-    }        
+
+        
         // console.log(obj_this.movables, 24454);
     }
 
@@ -191,23 +189,20 @@ export class RenameService {
                         {
                             el.closest('a.folder').removeClass('draggable').addClass('draggable');
                         }
-                        else{
-                            el.closest('a.folder').removeClass('droppable').addClass('droppable');
-                        }
                     });
                 }
-            }            
+                $('a.folder:not(.draggable)').removeClass('droppable').addClass('droppable');
+            }
         }
     }
 
-    reset_moveable_values(){
+    reset_moveable_values(parent_id = undefined, personal = undefined){
         let obj_this = this;
-        obj_this.objects_to_move = {files:[], folders:[], current_parent_id: undefined, personal: undefined};
+        obj_this.objects_to_move = {files:[], folders:[], current_parent_id: parent_id, personal: personal};
         $('a.folder.droppable').removeClass('droppable');
         $('a.folder:not(.personal)').removeClass('droppable');
         $('.breadcrumbSection .edit-buttons .paste').remove();
         $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
-        $('a.folder .paste').remove();                
     }
 
     on_files_moved(data, evn=undefined){

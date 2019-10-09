@@ -13,7 +13,7 @@
             >
                 <input type="hidden" class="item_id" value="{{doc.id}}" />
                 <div class="doc-del-btn d-flex" *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly">
-                    <div class="pointer"
+                    <div class="pointer" *ngIf="parent_model == 'Folder'"
                     title="Move"
                     (click)="renameService.make_movable($event, parent_id, doc.id, 'files', doc.personal)">
                         <i class="fas fa-cut" ></i>

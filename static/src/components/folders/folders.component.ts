@@ -146,7 +146,7 @@ export class FoldersComponent implements OnInit {
         var load_preselected = function(){
             
             obj_this.renameService.load_movables(obj_this.parent_id, 'folder', result.can_be_parent);
-            // console.log(obj_this.renameService.objects_to_move.current_parent_id, 777, obj_this.can_be_parent);
+            console.log(obj_this.renameService.objects_to_move.current_parent_id, 777, obj_this.can_be_parent);
             if(obj_this.renameService.objects_to_move.current_parent_id && obj_this.can_be_parent)
             {
                 var paste_button_html = '<button class="btn btn-primary paste"> Paste ';
@@ -158,8 +158,7 @@ export class FoldersComponent implements OnInit {
                 cancle_button.click(reset_moving_objects);
                 paste_button.click(do_paste);
                 $('.breadcrumbSection .edit-buttons:first .paste .cancle_btn').remove();
-                $('.breadcrumbSection .edit-buttons:first').prepend(paste_button,cancle_button);                
-               
+                $('.breadcrumbSection .edit-buttons:first').prepend(paste_button,cancle_button);
             }
         }
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
@@ -311,9 +310,6 @@ export class FoldersComponent implements OnInit {
             {            
                 prev_parent.total_files -=  result.files.length;
             }
-
-
-
             obj_this.renameService.reset_moveable_values();
         }, null);        
     }

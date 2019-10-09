@@ -9,23 +9,19 @@ title="{{breadcrumb_title|firstToUpper}}"></app-breadcrumb>
 
 <div class="router-outlet">
     <div  class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="kanban-headings">
-                    <h3>
-                        <i class="icon-profile text-primary"></i> Profiles
-                    </h3>
-					<div class="MeetingBtnWrapper">
-						<div class="btn-group">
-                            <a routerLink="/profiles" class="btn">All</a>
-							<a routerLink="/profiles/directors" class="btn">Directors</a>
-							<a routerLink="/profiles/admins" class="btn">Admins</a>
-							<a routerLink="/profiles/staff" class="btn">Staff</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+        <div class="kanban-headings">
+            <h3>
+                <i class="icon-profile text-primary"></i> Profiles
+            </h3>
+            <div class="MeetingBtnWrapper">
+                <div class="btn-group">
+                    <a routerLink="/profiles" class="btn">All</a>
+                    <a routerLink="/profiles/directors" class="btn">Directors</a>
+                    <a routerLink="/profiles/admins" class="btn">Admins</a>
+                    <a routerLink="/profiles/staff" class="btn">Staff</a>
+                </div>
+            </div>
+        </div>
         <app-search (onsearch)="get_list()"></app-search>
 
         <div *ngIf="records && records.length" class="d-none d-sm-block">

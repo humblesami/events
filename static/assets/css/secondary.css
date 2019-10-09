@@ -258,14 +258,25 @@ mention-list.dropup{
 }
 .kanban-headings{
     color: #2B2B2B;
-    border-bottom: 1px solid #E1E1E1;
-    padding-top: 1.8rem;
+    border-bottom: 1px solid #E1E1E1;    
     margin-bottom: 0.5rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
     padding-bottom: 0.5rem;
 }
+.router-outlet .kanban-headings {        
+    padding-top: 1rem;
+}
+
+app-breadcrumb + .router-outlet > .container > .kanban-headings {
+    padding-top: 1.8rem;
+}
+.breadcrumbSection + .router-outlet > .container > .kanban-headings {
+    padding-top: 1.8rem;
+}
+
+
 @media screen and (max-width:768px){
     .kanban-headings{
         display: block;
