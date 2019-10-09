@@ -10,6 +10,8 @@ export class ProfilesComponent implements OnInit {
     records: any;
     no_prof = false;
     type = '';
+    show_profiles_breadcrumb = true;
+    breadcrumb_title = '';
     socketService : SocketService;    
     httpService: HttpService;
     constructor(private httpServ: HttpService, private ss: SocketService) {        
@@ -21,6 +23,17 @@ export class ProfilesComponent implements OnInit {
 
     get_list(){
         var obj_this = this;
+        let current_path = this.socketService.current_path.replace('/profiles', '');
+
+        if (current_path.length > 0)
+        {
+            obj_this.breadcrumb_title = current_path.replace('/', '');
+            obj_this.show_profiles_breadcrumb = false;
+        }
+        else
+        {
+            obj_this.show_profiles_breadcrumb = true;
+        }
         var url = window.location.href.split("/")
         var path = url[url.length-1]
         obj_this.type = "";

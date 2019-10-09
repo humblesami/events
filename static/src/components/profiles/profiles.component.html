@@ -1,4 +1,12 @@
-﻿<app-breadcrumb app="meetings" model="profile" create="1" title="Profiles"></app-breadcrumb>
+﻿<app-breadcrumb *ngIf="show_profiles_breadcrumb" app="meetings" 
+model="profile" create="1" 
+title="Profiles"></app-breadcrumb>
+
+<app-breadcrumb *ngIf="!show_profiles_breadcrumb && breadcrumb_title" app="meetings" 
+model="profile" create="1"
+routes='[{"title":"Profiles", "link":"/profiles"}]'
+title="{{breadcrumb_title|firstToUpper}}"></app-breadcrumb>
+
 <div class="router-outlet">
     <div  class="container">
 		<div class="row">

@@ -1,5 +1,5 @@
 <div class="sub search" ng-blur="get_list($event, $event.target.value)">
-    <div class="input-group d-flex main-full-seachbar mb-3">
+    <div class="input-group d-flex main-full-seachbar mb-2">
         <input id="search_input" type="text" [(ngModel)]="search_kw1" 
         (blur)=" get_list($event, $event.target.value)" 
         (keyup)="$event.keyCode == 13 ? get_list($event, $event.target.value): null" 
