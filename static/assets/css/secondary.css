@@ -241,6 +241,20 @@ mention-list.dropup{
     justify-content: center;
     overflow: auto;
 }
+.pop-heading{
+    text-align: center;
+    color: #6c757d;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    width: 100%;
+}
+.pop-buttons{
+    float: right;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
 @media screen and (max-width: 390px){
     .roster-full{
         top: 0px;

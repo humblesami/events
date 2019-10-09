@@ -1,4 +1,4 @@
-<h4 class="text-muted text-center my-2 ">Roster</h4>
+<label class="pop-heading">Roster</label>
 <div class="roster">
     <div class="d-flex main-full-seachbar my-2">
         <input type="text"
@@ -94,11 +94,11 @@
         </div>
     </div>    
 
-    <div class="float-left my-3">
+    <div class="float-left my-2">
         {{attendees.length}} Records 
     </div>
     
-    <div class="d-flex display-block float-right my-3">            
+    <div class="pop-buttons">            
         <button type="button" class="btn btn-primary"
         *ngIf="socketService.admin_mode && meeting_type=='completed'"
         (click)="submit_attendance($event)">Submit</button>
