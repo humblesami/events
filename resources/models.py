@@ -136,6 +136,7 @@ class Folder(CustomModel):
                     'id': obj.id,
                     'name': obj.name,
                     'personal': obj.personal,
+                    'access_token': obj.access_token
                 }
                 res['files'].append(file)
             for obj_id in folder_ids:

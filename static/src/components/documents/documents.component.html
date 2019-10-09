@@ -65,7 +65,7 @@
         </div>
     </div>
     <div *ngIf="docs && docs.length">
-        {{docs.length}} documents
+        {{docs.length}} Documents
     </div>
     <div *ngIf="(personal || socketService.admin_mode) && !readonly">        
         <input class="dlc-file-picker" type="file" name='files[]' multiple/>

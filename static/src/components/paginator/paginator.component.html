@@ -43,6 +43,6 @@
     </div>
 </div>
 <div *ngIf="httpService.count <= limit_options[0]">
-    <span *ngIf="httpService.count>0">{{httpService.count}} Record<span *ngIf="httpService.count>1">s</span> Found</span>
+    <span *ngIf="httpService.count>0">{{httpService.count}} Record(s)<span *ngIf="httpService.count>1">s</span> Found</span>
     <span *ngIf="httpService.count==0">No Records Found</span>
 </div>
