@@ -1,4 +1,4 @@
-<app-breadcrumb app="voting" model="voting" 
+<app-breadcrumb *ngIf="!loaded_as_child" app="voting" model="voting" 
 create="1"
 title="Resolutions"></app-breadcrumb>
 <div class="router-outlet">
@@ -7,9 +7,10 @@ title="Resolutions"></app-breadcrumb>
 			<h3 class="text-dark mb-0">
 				<i class="icon-voting text-primary"></i> Resolutions
 			</h3>
-			<div class="MeetingBtnWrapper">
+			<div *ngIf="!loaded_as_child" class="MeetingBtnWrapper">
 				<div class="btn-group">
-					<a routerLink="/votings" class="btn">Resolutions</a>
+					<a routerLink="/actions" class="btn">All</a>
+					<a routerLink="/votings" [ngClass]="{active: '/votings' == socketService.current_path}" class="btn">Resolutions</a>
 					<a routerLink="/signdocs" class="btn">E-Signature</a>
 					<a routerLink="/surveys" class="btn">Surveys</a>
 				</div>
@@ -18,7 +19,7 @@ title="Resolutions"></app-breadcrumb>
     </div>    
     
 	<div class="container">
-		<app-search (onsearch)="get_list()"></app-search>
+		<app-search *ngIf="!loaded_as_child" (onsearch)="get_list()"></app-search>
 	<!--
 		<div class="main-full-seachbar mb-3">
         <input type="text" 

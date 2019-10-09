@@ -1,6 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { HttpService } from "../../app/http.service";
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { SocketService } from 'src/app/socket.service';
 
 @Component({
     selector: 'app-surveys',
@@ -9,6 +10,9 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 export class SurveysComponent implements OnInit {
     @Input() meeting_id: number;
+    @Input() loaded_as_child: any;
+    
+    socketService: SocketService;
     no_meet = false;
     records = [];
     active_meeting: any;
@@ -20,8 +24,11 @@ export class SurveysComponent implements OnInit {
         title: ''
     };
     httpService: HttpService;
-    constructor(private httpServ: HttpService, public router: Router, private route: ActivatedRoute) {
+    constructor(private httpServ: HttpService, 
+        public router: Router, private route: ActivatedRoute,
+        private sock: SocketService) {
         this.httpService = httpServ;
+        this.socketService = sock;
     }
 
     get_list(){

@@ -1,3 +1,21 @@
-<p>
-  actions works!
-</p>
+<app-breadcrumb title="Actions"></app-breadcrumb>
+<div class="router-outlet">
+    <div class="container">
+        <div class="MainTitleHeadWrap">
+            <h3 class="text-dark mb-0">
+                <i class="icon-action text-primary"></i> Actions
+            </h3>
+            <div *ngIf="!loaded_as_child" class="MeetingBtnWrapper">
+                <div class="btn-group">
+                    <a routerLink="/actions" class="btn">All</a>
+                    <a routerLink="/votings" class="btn">Resolutions</a>
+                    <a routerLink="/signdocs" class="btn">E-Signature</a>
+                    <a routerLink="/surveys" class="btn">Surveys</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  <app-votings loaded_as_child="1"></app-votings>
+  <app-esigndocs loaded_as_child="1"></app-esigndocs>
+  <app-surveys loaded_as_child="1"></app-surveys>
+</div>

@@ -1,21 +1,24 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { Router } from '@angular/router';
 import { SocketService } from 'src/app/socket.service';
 declare var $:any;
 
 @Component({
+    selector: 'app-esigndocs',
     styleUrls:['./esigndocs.css'],
     templateUrl: 'esigndocs.component.html'
 })
 export class EsignDocsComponent implements OnInit {
+    @Input() loaded_as_child: any;
+
     records = [];
     httpService: HttpService;
     socketService: SocketService;
-    constructor(private httpServ: HttpService,public router: Router, private sock: SocketService) {         
+    constructor(private httpServ: HttpService,public router: Router, private sock: SocketService) {
         // console.log(Date(), 99222);
         this.httpService = httpServ;
-        this.socketService = sock;        
+        this.socketService = sock;
     }
     uploadClick(){
         // console.log('yyyyyyyyyyyyyyyyyyyyy ');

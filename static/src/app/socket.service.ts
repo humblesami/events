@@ -533,10 +533,12 @@ export class SocketService {
         }
 	}
 
+    current_path = '/';
     init_route(url){
         this.not_public_url = 0;
         this.current_id = undefined;
         this.current_model = undefined;
+        this.current_path = url;
         this.notificationList.forEach(function(el, i){
             el.active = undefined;
         });

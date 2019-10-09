@@ -17,6 +17,9 @@ body,
 	overflow-x: hidden;
 	overflow-y: overlay;
 	}
+.router-outlet .router-outlet {
+	height: auto;
+	}	
 body {
 	font-family: "Roboto-Condensed";
 	--toggle-left-menu-bg: #4B74B5;

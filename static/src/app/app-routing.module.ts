@@ -51,6 +51,7 @@ import { SurveyresultsComponent } from '../components/surveyresults/surveyresult
 import { SupportComponent } from '../components/support/support.component';
 import { UserlistComponent } from '../components/userlist/userlist.component';
 import { HttpService } from "./http.service";
+import { ActionsComponent } from "src/components/actions/actions.component";
 
 
 const appRoutes: Routes = [    
@@ -125,7 +126,7 @@ const appRoutes: Routes = [
     { path: 'signdocs', data:{app:'esign', model:'SignatureDoc'}, component: EsignDocsComponent, canActivate: [AuthGuard]},
     { path: 'votings', data:{app:'voting', model:'Voting', search_models:{ voting:['Voting','VotingChoice','VotingType']} }, component: VotingsComponent, canActivate: [AuthGuard]},
     
-    { path: 'actions', data:{app:'voting', model:'Voting', search_models:{survey:['Survey', 'Question'], esign: ['SignatureDoc'],voting: ['Voting','VotingChoice','VotingType']}}, component: VotingsComponent, canActivate: [AuthGuard]},
+    { path: 'actions', data:{app:'voting', model:'Voting', search_models:{survey:['Survey', 'Question'], esign: ['SignatureDoc'],voting: ['Voting','VotingChoice','VotingType']}}, component: ActionsComponent, canActivate: [AuthGuard]},
 
     { path: 'voting/:id', component: VotingdetailsComponent},
     { path: 'voting/:id/results', component: VotingresultsComponent},
