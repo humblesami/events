@@ -31,7 +31,10 @@
     {
         // console.log(45);
         // window['functions'].get_trace(1);
-        $('.topbar:first .cursor:first').click();
+        if(!$('.topbar:first .cursor:first').hasClass('active'))
+        {
+            $('.topbar:first .cursor:first').click();
+        }
     }
     function initDocCookies(documentId) {
         localStorage.setItem(documentId + '/version', 0);
@@ -4912,6 +4915,8 @@
                      */
                     function handleInputBlur() {
                         savePoint();
+                        $('.pdfViewer').css("cursor", "auto");
+                        select_cursor();
                     }
                     /**
                      * Handle input.keyup event
@@ -4929,6 +4934,8 @@
                      * Save a new point annotation from input
                      */
                     function savePoint() {
+                        $('.pdfViewer').css("cursor", "auto");
+                        select_cursor();
                         if (input.value.trim().length == 0) {
                             closeInput();
                             return;

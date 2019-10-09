@@ -126,16 +126,29 @@ class Folder(CustomModel):
             can_be_aprent = cls.is_valid_parent(fid, target_folder_id)
             if not can_be_aprent:
                 return 'Can not move a prent in its children'
+        res = {'files':[], 'folders':[]}
         with transaction.atomic():
             for obj_id in file_ids:
                 obj = ResourceDocument.objects.get(pk=obj_id)
                 obj.folder_id = target_folder_id
                 obj.save()
+                file = {
+                    'id': obj.id,
+                    'name': obj.name,
+                    'personal': obj.personal,
+                }
+                res['files'].append(file)
             for obj_id in folder_ids:
                 obj = Folder.objects.get(pk=obj_id)
                 obj.parent_id = target_folder_id
                 obj.save()
-        return 'done'
+                folder = {
+                    'id': obj.id,
+                    'name': obj.name,
+                    'personal': obj.personal,
+                }
+                res['folders'].append(folder)
+        return res
 
     @classmethod
     def folders_recursive_childs(cls, request, params):

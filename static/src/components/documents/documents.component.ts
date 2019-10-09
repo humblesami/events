@@ -212,17 +212,24 @@ export class DocumentsComponent implements OnInit {
 
     ngOnInit() {
         let obj_this = this;
-        if(obj_this.renameService.objects_to_move.current_parent_id)
-        {
-            var on_files_moved = function(){            
-                var object_ids = obj_this.renameService.objects_to_move.files;
+        
+        var on_files_moved = function(data, evn){
+            // console.log(3434);
+            var object_ids = obj_this.renameService.objects_to_move.files;
+            // console.log(obj_this.docs, data, evn, 5656)
+            if(evn)
+            {                    
                 obj_this.docs = obj_this.docs.filter(function(item){
                     return object_ids.indexOf(item.id) == -1
                 });
-                obj_this.renameService.objects_to_move.files = [];
             }
-            obj_this.renameService.on_files_moved = on_files_moved;
+            else{
+                obj_this.docs = obj_this.docs.concat(data);
+            }
+            obj_this.renameService.objects_to_move.files = [];
+            // console.log(obj_this.docs, 444)
         }
+        obj_this.renameService.on_files_moved = on_files_moved;        
         
         if(!obj_this.parent_id)
         {

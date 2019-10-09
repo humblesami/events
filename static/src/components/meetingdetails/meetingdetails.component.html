@@ -23,10 +23,10 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <div class="MainTitleHeadWrap" style="flex-wrap: wrap">
                 <div class="HeadingWrap-status">
                         <div class="d-sm-flex">
-                            <h3 class="text-dark mb-0">
+                            <h3 class="text-dark mb-2">
                                 <i class="icon-meeting text-primary"></i> {{meeting_object.name}}
                             </h3>
-                            <div class="ml-auto">
+                            <div class="ml-auto d-flex">
                                 <button 
                                     *ngIf="(socketService.admin_mode && meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
                                     class="check-status meet-elements position-relative"

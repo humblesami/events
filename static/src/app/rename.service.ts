@@ -198,11 +198,11 @@ export class RenameService {
         $('a.folder .paste').remove();
     }
 
-    on_files_moved(){
+    on_files_moved(data, evn=undefined){
 
     }
 
-    on_folders_moved(){
+    on_folders_moved(data, evn=undefined){
 
     }
 }

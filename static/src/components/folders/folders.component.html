@@ -15,7 +15,7 @@
                         <input type="hidden" class="item_id" value="{{folder.id}}" />
                         <div class="pointer paste"
                         title="Paste Here"
-                        (click)="on_paste_clicked($event, folder.id)">
+                        (click)="on_paste_clicked($event, folder.id, folder)">
                             <i class="fa fa-clipboard" ></i>
                         </div>
                         <div class="doc-del-btn d-flex" *ngIf="folder.id && !(!personal && folder.personal) && (socketService.admin_mode || personal)">

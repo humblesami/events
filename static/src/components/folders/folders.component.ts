@@ -273,7 +273,7 @@ export class FoldersComponent implements OnInit {
         edit_buttons.append(create_button);        
     }
 
-    on_paste_clicked(evn=undefined, folder_id=undefined){
+    on_paste_clicked(evn=undefined, folder_id=undefined, folder=undefined){
         let obj_this = this;
         if(evn)
         {
@@ -298,25 +298,42 @@ export class FoldersComponent implements OnInit {
         }
         // console.log(final_input_data.params, 333);
         obj_this.httpService.get(final_input_data,(result: any) => {
-            obj_this.renameService.on_files_moved();
-            obj_this.renameService.on_folders_moved();
+            obj_this.renameService.on_files_moved(result.files, evn);
+            obj_this.renameService.on_folders_moved(result.folders, evn);
+            if(folder){
+                folder.total_files += result.files.length;
+            }
+            var cp_id = obj_this.renameService.objects_to_move.current_parent_id;
+            var prev_parent = obj_this.records.find(function(el){
+                return el.id == cp_id;
+            });
+            if(prev_parent)
+            {            
+                prev_parent.total_files -=  result.files.length;
+            }
+
+            
+
             obj_this.renameService.reset_moveable_values();
         }, null);
     }
 
     ngOnInit() {
-        let obj_this = this;
-        if(obj_this.renameService.objects_to_move.current_parent_id)
-        {
-            var on_folders_moved = function(){
-                var object_ids = obj_this.renameService.objects_to_move.folders;
+        let obj_this = this;        
+        var on_folders_moved = function(data, evn){
+            var object_ids = obj_this.renameService.objects_to_move.folders;
+            if(evn)
+            {
                 obj_this.records = obj_this.records.filter(function(item){
                     return object_ids.indexOf(item.id) == -1
                 });
-                obj_this.renameService.objects_to_move.folders = [];
             }
-            obj_this.renameService.on_folders_moved = on_folders_moved;
+            else{
+                obj_this.records = obj_this.records.concat(data);
+            }                
+            obj_this.renameService.objects_to_move.folders = [];
         }
+        obj_this.renameService.on_folders_moved = on_folders_moved;        
         
         obj_this.add_folder_create_button();        
         // console.log(obj_this.search_kw, obj_this.search_type, obj_this.recursive);
