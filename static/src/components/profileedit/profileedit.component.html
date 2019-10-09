@@ -1,15 +1,15 @@
 <div class="modal-header modal-header-heading">
         <h1>Edit Profile</h1>
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
     </div>
     <div class="modal-body edit-modal-body">    
         <div class="router-outlet">
             <div class="details-card profile-edit-container edit-mode" *ngIf="edit_mode">
                 <div class="row edit-buttons edit-mode">
-                    <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
                     <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
+                    <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
                 </div>
                 <div *ngIf="section=='personal'" class="label-control-form">
                     <div class="ProFileHeadWrap">
