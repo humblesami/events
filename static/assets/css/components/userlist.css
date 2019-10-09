@@ -12,9 +12,7 @@
 .btn-group .btn.active{
     color: #fff;
 }
-.roster-height{    
-    height:calc(100vh - 370px);    
-}
+
 .custom-control-label::before,
 .custom-control-label::after{
     left: 0;

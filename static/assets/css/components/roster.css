@@ -5,9 +5,7 @@
     padding-left: 5px;
     padding-right: 5px;
 }
-.roster-height{
-    height:calc(100vh - 295px);
-}
+
 .bg-heading > div{
     line-height: inherit;
     padding-top: 0.4rem;
@@ -46,7 +44,7 @@ input[type='radio']:after{
     font-size: 13px;
 }
 .pl-25{
-    padding-left: 0.25rem; 
+    padding-left: 0.75rem; 
 }
 .bg-heading label{
     margin-bottom:0;
@@ -54,6 +52,7 @@ input[type='radio']:after{
 .custom-control-label::before,
 .custom-control-label::after{
     left: -1.25rem;
+    top:.15rem;
 }
 .disabled{
     pointer-events:none;
@@ -80,9 +79,7 @@ input[type='radio']:after{
         top: 0;
         left: 0;
     }
-    .pl-25{
-        padding-left: 0.75rem; 
-    }
+
 
 
 }

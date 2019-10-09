@@ -250,10 +250,11 @@ mention-list.dropup{
     margin-bottom: .5rem;
     width: 100%;
 }
-.pop-buttons{
-    float: right;
-    margin-top: .5rem;
-    margin-bottom: .5rem;
+.pop-bottom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px 10px 10px;
 }
 @media screen and (max-width: 390px){
     .roster-full{

@@ -1,6 +1,6 @@
 <div class="user-modal">
     
-    <div class="form-group pl-2 p-lr">
+    <div class="pl-2 p-lr">
         <label *ngIf="!group_name" class="pop-heading">Create Chat Group</label>
         <label *ngIf="group_name" class="pop-heading">Chat Group: {{group_name}}</label>
         <input *ngIf="!group_name" [(ngModel)]="group_name" placeholder="Enter Group Name" class="form-control form-control-sm"/>
@@ -10,8 +10,12 @@
     user_input_str="{{user_input_str}}"
     (group_users_changed)="group_users_changed($event)"
     ></app-userlist>
-    <div class="pop-buttons" style="margin-right: 15px;">
-        <button [attr.disabled]="group_name ? null: 'disabled'" type="button" class="btn btn-primary" (click)="sendRecord()">Save</button>
-        <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
+    <div class="pop-bottom">
+        <div>
+        </div>
+        <div>
+            <button [attr.disabled]="group_name ? null: 'disabled'" type="button" class="btn btn-primary" (click)="sendRecord()">Save</button>
+            <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
+        </div>
     </div>
 </div>

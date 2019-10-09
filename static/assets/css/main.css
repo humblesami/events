@@ -2072,7 +2072,7 @@ body.public .router-outlet{
 	}
 .MainTitleHeadWrap {
 	border-bottom: 1px solid #E1E1E1;
-	margin-top: 1.3rem;
+	margin: 1.2rem 0 0.7rem 0;
 	margin-bottom: 1.3rem;
 	padding-bottom: 0.7rem;
 	}
@@ -3126,6 +3126,7 @@ a.folder.droppable .paste{
     display: block;
 }
 .roster-height{
+	height:calc(100vh - 350px);
     overflow-y: auto;    
     font-size: 13px;
 }

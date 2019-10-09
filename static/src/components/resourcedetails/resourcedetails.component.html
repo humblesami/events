@@ -17,9 +17,18 @@
 </div>
 
 <div class="router-outlet">
-    <div *ngIf="search_options" class="container resources">
         
-        <div class="sub search pt-4">
+    <div *ngIf="search_options" class="container resources">
+            <div class="row">
+                    <div class="col-lg-12">
+                        <div class="MainTitleHeadWrap">
+                            <h3 class="text-dark mb-0">
+                                <i class="icon-folder text-primary"></i> Resources
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+        <div class="sub search">
             <div class="input-group d-flex main-full-seachbar mb-3">
                 <input id="search_input" type="text"
                     (change)="search()"                    

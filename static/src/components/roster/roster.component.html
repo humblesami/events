@@ -93,15 +93,16 @@
             </div>
         </div>
     </div>    
-
-    <div class="float-left my-2">
+</div>    
+<div class="pop-bottom">
+    <div>
         {{attendees.length}} Records 
     </div>
     
-    <div class="pop-buttons">            
+    <div>            
         <button type="button" class="btn btn-primary"
         *ngIf="socketService.admin_mode && meeting_type=='completed'"
         (click)="submit_attendance($event)">Submit</button>
         <button type="button" class="btn btn-danger" (click)="close_roster($event)">Close</button>
     </div>
-</div>    
+</div>

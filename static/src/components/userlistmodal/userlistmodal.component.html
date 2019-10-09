@@ -1,12 +1,17 @@
-
-<div class="container user-modal-container py-3">
+<label class="pop-heading">Users List</label>
+<div class="roster">
     <app-userlist 
     user_input_str="{{user_input_str}}" 
     selection_input_str="{{selection_input_str}}"
     (group_users_changed)="on_user_selected($event)"
     ></app-userlist>
-    <div class="modal-custom-footer">
-        <button type="button" class="btn btn-primary mr-1" (click)="sendRecord()">Save</button>
-        <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
+
+    <div class="pop-bottom">
+        <div> 
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary mr-1" (click)="sendRecord()">Save</button>
+            <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
+        </div>
     </div>
 </div>
