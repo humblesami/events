@@ -21,22 +21,22 @@
         <app-search (onsearch)="get_list()"></app-search>
 
         <div *ngIf="records && records.length" class="d-none d-sm-block">
-            <div class="row text-primary">
+            <div class="bg-heading">
                 <div class="col-3">
-                    <h6>Basic Info</h6>
+                    <span>Basic Info</span>
                 </div>
                 <!-- <div class="col-2">
                     <h6>Department</h6>
                 </div> -->
                 <div class="col-3 profile-items">
-                    <h6>Company</h6>
+                    <span>Company</span>
                 </div>
                 <div class="col-3 profile-items">
-                    <h6>Phone</h6>
+                    <span>Phone</span>
                 </div>
                 <div class="col-3 profile-items">
                     <div class="profile-item-content">
-                        <h6>Membership</h6>
+                        <span>Membership</span>
                     </div>
                 </div>
             </div>

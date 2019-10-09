@@ -2758,7 +2758,8 @@ h4.title-h4 {
 	text-transform: capitalize;
 	}
 .custom-control-label {
-	cursor: pointer;
+    cursor: pointer;
+    font-weight: bold;
 	}
 .check-plus-label-wrap,
 label.check-plus-label-wrap {
@@ -3123,4 +3124,8 @@ a.folder .paste{
 }
 a.folder.droppable .paste{
     display: block;
+}
+.roster-height{
+    overflow-y: auto;    
+    font-size: 13px;
 }

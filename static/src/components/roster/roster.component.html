@@ -1,18 +1,18 @@
-<h4 class="text-muted text-center my-2 font-weight-bold">Roster</h4>
+<h4 class="text-muted text-center my-2 ">Roster</h4>
 <div class="roster">
     <div class="d-flex main-full-seachbar my-2">
         <input type="text"
             (keyup)="$event.target.value; $event.keyCode == 13 ? search_roster($event.target.value): null" 
             placeholder="Search..."  class="form-control"/>
     </div>
-    <div class="d-flex bg-heading mb-1" [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}">
+    <div class="bg-heading" [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}">
         <div class="col-3 col-sm-4 ">
-            <label class="font-weight-bold">
+            <label class="">
                 Attendees
             </label>
         </div>
         <div class="col-3 col-sm-2">
-            <label class="font-weight-bold">
+            <label class="">
                 Status
             </label>
         </div>

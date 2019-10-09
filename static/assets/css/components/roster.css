@@ -6,24 +6,21 @@
     padding-right: 5px;
 }
 .roster-height{
-    overflow-y: overlay;
-    max-height:calc(100vh - 295px);
-    font-size: 13px;
+    height:calc(100vh - 295px);
 }
 .bg-heading > div{
     line-height: inherit;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
 }
+
 .close-btn
 {
     width: 100%;
     background-color: #21375a !important;
     color: white;
 }
-.custom-control-label{
-    font-weight: bold;
-}
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -92,6 +89,10 @@ input[type='radio']:after{
 @media screen and (max-width:480px){
     .bg-heading{
         font-size: 0.7rem;
+    }
+    .bg-heading > div{        
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
     }
     .custom-control-label::before,
     .custom-control-label::after

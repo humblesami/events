@@ -12,10 +12,8 @@
 .btn-group .btn.active{
     color: #fff;
 }
-.group-height{
-    overflow-y: overlay;
-    max-height:calc(100vh - 370px);
-    font-size: 13px;
+.roster-height{    
+    height:calc(100vh - 370px);    
 }
 .custom-control-label::before,
 .custom-control-label::after{
@@ -61,4 +59,7 @@
 }
 .user-info:hover{
     box-shadow: 0 0 0 0.4rem rgba(255, 255, 255, 0.15);
+}
+.MeetingBtnWrapper{
+    margin-bottom: 5px;
 }

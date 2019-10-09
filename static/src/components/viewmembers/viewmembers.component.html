@@ -6,21 +6,16 @@
             placeholder="Search..."  class="form-control"/>
         </div>
         <div class="roster">
-            <div class="container" *ngIf="shown_users.length">
-                <div class="row py-2">
-                    <div class="col-9 p-0">
-                        <label class="font-weight-bold text-primary">
-                            User Info
-                        </label>
-                    </div>
-                    <div class="col-3">
-                        <label class="font-weight-bold text-primary">
-                            Status
-                        </label>
-                    </div>
+            
+            <div class="bg-heading" *ngIf="shown_users.length">
+                <div class="col-9 p-0">
+                    User Info
                 </div>
-            </div>  
-            <div class="container group-height">  
+                <div class="col-3">
+                    Status
+                </div>
+            </div>            
+            <div class="container roster-height">  
                 <div *ngIf="!shown_users.length" class="row no-data">
                     <h4>No Users</h4>
                 </div>
