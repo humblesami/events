@@ -256,6 +256,16 @@ mention-list.dropup{
     justify-content: space-between;
     padding: 5px 10px 10px 10px;
 }
+.kanban-headings{
+    color: #2B2B2B;
+    border-bottom: 1px solid #E1E1E1;
+    padding-top: 1.8rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+}
 @media screen and (max-width: 390px){
     .roster-full{
         top: 0px;
