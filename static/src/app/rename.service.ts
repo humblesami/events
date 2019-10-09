@@ -125,14 +125,19 @@ export class RenameService {
             }
         }
         var movable = $(evn.target).closest('a.doc,a.folder');
+        // console.log(343);
         if(movable.hasClass('draggable'))
         {
             var item_index = obj_this.objects_to_move[key].indexOf(item_id);
             obj_this.objects_to_move[key].splice(item_index, 1);
             movable.removeClass('draggable');
+            if(!obj_this.objects_to_move.files.length && !obj_this.objects_to_move.folders.length){                                
+                this.reset_moveable_values();
+                return;
+            }
         }
         else{
-            obj_this.objects_to_move[key].push(item_id);
+            obj_this.objects_to_move[key].push(item_id);                        
             movable.addClass('draggable');
         }
         if(personal)
@@ -143,12 +148,7 @@ export class RenameService {
         else{
             $('a.folder.droppable').removeClass('droppable');
             $('a.folder:not(.personal)').addClass('droppable');
-        }
-        if(obj_this.objects_to_move.files.length ==0 && obj_this.objects_to_move.folders.length == 0){
-            console.log(obj_this.objects_to_move.files);
-            $('a.folder.droppable').removeClass('droppable');
-            this.reset_moveable_values();          
-        }
+        }        
         // console.log(obj_this.movables, 24454);
     }
 
@@ -159,7 +159,7 @@ export class RenameService {
         {
             if(folder_id == parent_id)
             {
-                console.log(obj_this.objects_to_move, 455);
+                // console.log(obj_this.objects_to_move, 455);
                 var item_id_el = undefined;
                 var item_val = undefined;
                 if(load_type == 'file')
@@ -195,12 +195,11 @@ export class RenameService {
 
     reset_moveable_values(){
         let obj_this = this;
-        // console.log(obj_this.objects_to_move, 44444444);
         obj_this.objects_to_move = {files:[], folders:[], current_parent_id: undefined, personal: undefined};
-        // console.log(obj_this.objects_to_move);
+        $('a.folder.droppable').removeClass('droppable');
         $('.breadcrumbSection .edit-buttons .paste').remove();
         $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
-        $('a.folder .paste').remove();
+        $('a.folder .paste').remove();                
     }
 
     on_files_moved(data, evn=undefined){
