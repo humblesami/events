@@ -312,12 +312,12 @@ export class FoldersComponent implements OnInit {
                 prev_parent.total_files -=  result.files.length;
             }
 
-            
+
 
             obj_this.renameService.reset_moveable_values();
-        }, null);
+        }, null);        
     }
-
+    
     ngOnInit() {
         let obj_this = this;        
         var on_folders_moved = function(data, evn){

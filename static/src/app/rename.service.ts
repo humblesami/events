@@ -116,7 +116,9 @@ export class RenameService {
         if((!parent_id && !this.objects_to_move.current_parent_id) || parent_id != this.objects_to_move.current_parent_id)
         {
             obj_this.objects_to_move = {files:[], folders:[], current_parent_id: parent_id, personal: personal};
-        }
+            $('.breadcrumbSection .edit-buttons .paste').remove();
+            $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
+           }
         else{
             if(personal != obj_this.objects_to_move.personal)
             {
@@ -125,18 +127,13 @@ export class RenameService {
             }
         }
         var movable = $(evn.target).closest('a.doc,a.folder');
-        // console.log(343);
         if(movable.hasClass('draggable'))
         {
             var item_index = obj_this.objects_to_move[key].indexOf(item_id);
             obj_this.objects_to_move[key].splice(item_index, 1);
-            movable.removeClass('draggable');
-            if(!obj_this.objects_to_move.files.length && !obj_this.objects_to_move.folders.length){                                
-                this.reset_moveable_values();
-                return;
-            }
+            movable.removeClass('draggable');            
         }
-        else{
+        else{            
             obj_this.objects_to_move[key].push(item_id);                        
             movable.addClass('draggable');
         }
@@ -146,9 +143,18 @@ export class RenameService {
             $('a.folder.personal').addClass('droppable');
         }
         else{
-            $('a.folder.droppable').removeClass('droppable');
-            $('a.folder:not(.personal)').addClass('droppable');
-        }        
+            if(!obj_this.objects_to_move.files.length && !obj_this.objects_to_move.folders.length){                                
+                // this.reset_moveable_values();
+                $('a.folder.droppable').removeClass('droppable');
+                $('a.folder:not(.personal)').removeClass('droppable');
+                $('.breadcrumbSection .edit-buttons .paste').remove();
+                $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
+                return;
+            }else{
+                $('a.folder.droppable').removeClass('droppable');
+                $('a.folder:not(.personal)').addClass('droppable');
+        }
+    }        
         // console.log(obj_this.movables, 24454);
     }
 
@@ -180,7 +186,8 @@ export class RenameService {
                         el = $(el);
                         item_id_el = el.closest('.DocumentWrapper').find('.item_id');
                         item_val = parseInt(item_id_el.val());
-                        if(obj_this.objects_to_move.files.indexOf(item_val) != -1)
+
+                        if(obj_this.objects_to_move.folders.indexOf(item_val) != -1)
                         {
                             el.closest('a.folder').removeClass('draggable').addClass('draggable');
                         }
@@ -197,6 +204,7 @@ export class RenameService {
         let obj_this = this;
         obj_this.objects_to_move = {files:[], folders:[], current_parent_id: undefined, personal: undefined};
         $('a.folder.droppable').removeClass('droppable');
+        $('a.folder:not(.personal)').removeClass('droppable');
         $('.breadcrumbSection .edit-buttons .paste').remove();
         $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
         $('a.folder .paste').remove();                
