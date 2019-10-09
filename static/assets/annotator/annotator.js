@@ -282,7 +282,7 @@
                             updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
                         }
                         else {
-                            if( data.version >= document_version - 1)
+                            if( data.version >= document_version)
                             {
                                 message = "Document annotation version=" + data.version + " available from server,";
                                 message += "<br>You have older version=" + document_version + " at local.";
