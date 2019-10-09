@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bind demo</title>    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<pre id="output"></pre>
+<style>
+#folder_view{
+    width: 250px; 
+    height:250px;
+    border: 1px solid; 
+    cursor: pointer;
+}
+#ul_sub_folders{
+    list-style: none;
+}
+#ul_sub_folders li{
+    margin: 5px;
+    border: 1px solid;
+}
+</style>
+<div id="folder_view">
+    <div id="opened_folder">
+        <span id="name"></span>
+        <ul id="ul_sub_folders">
+        </ul>
+    </div>    
+    <button id="btn_open_parent">
+        Back
+    </button>
+</div>
+<script>  
+    
+        function set_parent_paths(afolder){
+            for (var key in afolder.sub_folders){
+                var parent_path = [];
+                if(afolder.parent_path)
+                {
+                    parent_path = afolder.parent_path.slice(0);
+                }
+                parent_path.push(afolder.id);
+                afolder.sub_folders[key].parent_path = parent_path;
+                set_parent_paths(afolder.sub_folders[key]);                
+            }
+        }
+
+        function get_parent(obj){
+            var parent_obj = root_folder;
+            if(!obj.parent_path)
+            {
+                return parent_obj;
+            }
+            var i = 0;
+            for(var id of obj.parent_path)
+            {
+                i++;
+                if(i == 1){
+                    continue;
+                }
+                parent_obj = parent_obj.sub_folders[id];
+            }
+            return parent_obj;
+        }
+
+        var opened_folder = undefined
+        function show_parent(){
+            // console.log(opened_folder, 133);
+            if(opened_folder){
+                var obj = get_parent(opened_folder);
+                show_folder(obj);
+            }
+        }
+
+        function show_folder(obj){
+            opened_folder = obj;
+            $('#name').html(obj.name);
+            var lis = '';
+            for(var child_id in obj.sub_folders){
+                lis += '<li>'+obj.sub_folders[child_id].name+'<input type="hidden" value="'+child_id+'"></li>';
+            }
+            console.log()
+            $('#ul_sub_folders').html(lis);
+            var cnt = 0;
+            $('#ul_sub_folders').children().each(function(i, el){
+                $(this).click(function(){
+                    var ch_id = $(this).find('input').val();
+                    var active_sub_folder = obj.sub_folders[ch_id];
+                    // console.log(active_sub_folder,obj.id, ch_id);
+                    show_folder(active_sub_folder);
+                });
+            })
+        }
+        $('#btn_open_parent').click(show_parent);
+        set_parent_paths(root_folder);
+        //console.log(root_folder);
+        show_folder(root_folder);
+    })()
+    
+</script>
+
+</body>
+</html>

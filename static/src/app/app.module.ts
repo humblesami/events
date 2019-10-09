@@ -82,6 +82,7 @@ import { UserlistmodalComponent } from '../components/userlistmodal/userlistmoda
 import { SearchComponent } from '../components/search/search.component';
 import { ViewmembersComponent } from '../components/viewmembers/viewmembers.component';
 import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfolder.component';
 
 @NgModule({
     imports: [
@@ -154,6 +155,7 @@ import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
         UserlistmodalComponent,
         SearchComponent,
         ViewmembersComponent,
+        MovetomyfolderComponent,
     ],
     providers:[
         AuthGuard,

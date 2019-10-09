@@ -7,7 +7,8 @@ import {SocketService} from "../../app/socket.service";
 import { Router } from '@angular/router';
 import { ChatgroupComponent } from '../chatgroup/chatgroup.component';
 import { ViewmembersComponent } from '../viewmembers/viewmembers.component';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MovetomyfolderComponent } from '../movetomyfolder/movetomyfolder.component';
 declare var $: any;
 
 @Component({
@@ -31,7 +32,9 @@ export class MessengerComponent implements OnInit {
         public router: Router,
         private _location: Location,
 		private httpService: HttpService,
-        private ss: SocketService
+        private ss: SocketService,
+        private modalService: NgbModal
+
         ) {
             window['app_libs']['emoji_picker'].load();
             window['app_libs']['rtc'].load();            
@@ -194,6 +197,18 @@ export class MessengerComponent implements OnInit {
     {
         this.switch_group_mode('none');
     }
+    // open_roster(evn,doc){
+    //     console.log(doc.id);
+    //     evn.preventDefault();
+    //     evn.stopPropagation();
+    //     let obj_this = this;
+	// 	const modalRef = this.modalService.open(MovetomyfolderComponent, { backdrop: 'static' });
+    //     modalRef.componentInstance.doc_id = doc.id;
+    //     modalRef.componentInstance.member_id = obj_this.user.id;
+    //     modalRef.result.then(function(data){
+    //         console.log(data);
+    //     });
+    // }
     
     move_to_my_folder(ev, doc)    
     {

@@ -144,6 +144,11 @@ export class RenameService {
             $('a.folder.droppable').removeClass('droppable');
             $('a.folder:not(.personal)').addClass('droppable');
         }
+        if(obj_this.objects_to_move.files.length ==0 && obj_this.objects_to_move.folders.length == 0){
+            console.log(obj_this.objects_to_move.files);
+            $('a.folder.droppable').removeClass('droppable');
+            this.reset_moveable_values();          
+        }
         // console.log(obj_this.movables, 24454);
     }
 
