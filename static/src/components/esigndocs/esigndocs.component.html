@@ -58,7 +58,7 @@ title="e-Signature"></app-breadcrumb>
         <hr>
     </div>
     <app-paginator
-        *ngIf="records.length"
+        *ngIf="records.length && !loaded_as_child"
             (reload_data)="get_list()">
     </app-paginator>
 
