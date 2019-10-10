@@ -3124,11 +3124,20 @@ a.doc.draggable, a.folder.draggable{
 a.folder .paste{
     display: none;
 }
-a.folder.droppable .paste{
+a.folder.droppable:not(.draggable) .paste{
     display: block;
+}
+.roster{
+    border: 2px solid #f3f3f3;
+    margin: 5px;
+    border-radius: 10px 10px 0 0;
+    padding: 2px;
 }
 .roster-height{
 	height:calc(100vh - 350px);
     overflow-y: auto;    
     font-size: 13px;
+}
+.roster .main-full-seachbar{
+    margin-bottom: 5px;
 }

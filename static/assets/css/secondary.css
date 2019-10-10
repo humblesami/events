@@ -294,5 +294,3 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
         height: calc(100% - 25px);
     }   
 }
-
-
