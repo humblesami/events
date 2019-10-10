@@ -23,9 +23,6 @@
     var saveAnnotationsAtServer = function() {
         console.log("Save annotation not defined");
     };
-    var onAnnotationsDownloaded = function() {
-        console.log("onAnnotationsDownloaded not defined");
-    }
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
     function select_cursor(target) {
@@ -137,6 +134,7 @@
     }
 
     var scroll_div;
+    var content_wrapper;
 
 
     $(function() {
@@ -203,12 +201,8 @@
 
                 $(window).unbind("unload", on_leave_document);
                 $(window).bind("unload", on_leave_document);
-
-                scroll_div = $('#content-wrapper');
-                console.log(scroll_div.length);
-                var rect = scroll_div[0].getBoundingClientRect();
-                console.log(window.innerHeight, rect);
-                scroll_div.height(window.innerHeight - rect.top);
+                scroll_div = $('.PdfViewerWrapper');
+                content_wrapper = $('#content-wrapper');
             }
 
             annotation_user_m2 = localStorage.getItem('user');
@@ -274,77 +268,6 @@
 
             (function() {
                 var message = '';
-                (function() {
-                    onAnnotationsDownloaded = function(data, doc_data) {
-                        var comments = data.comments;
-                        if (!Array.isArray(comments)) {
-                            comments = [];
-                            console.log("Why not comments");
-                        }
-                        var document_version = getDocumentVersion(documentId);
-                        if (!data.annotations) {
-                            data.annotations = [];
-                        }
-                        var message = undefined;
-                        var document_dirty = isDocumentDirty(documentId);
-                        var to_send = [];
-                        if (document_dirty != 1) {
-                            //already uploaded local changes, so just take server version
-                            updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                        } else {
-                            if (data.version >= document_version) {
-                                message = "Document annotation version=" + data.version + " available from server,";
-                                message += "<br>You have older version=" + document_version + " at local.";
-                                message += "<br>If you download, it will discard your recent changes,";
-                                message += "<br>Do you still want to download?";
-                                bootbox.confirm(message, function(dr) {
-                                    if (dr) {
-                                        //Download accepted, local changes are going to be discarded
-                                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                                        unSetDocDirty(documentId);
-                                        setDocVersion(data.version);
-                                    } else {
-                                        //Download rejected because although local is behind but these changes are important
-                                        updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
-                                    }
-                                });
-                            } else {
-                                //No need to donwload as local is already upto date
-                                updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
-                            }
-                        }
-                    }
-
-                    function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {
-                        if (annotations.length == 0) {
-                            annotations = getLocalAnnotations();
-                        }
-                        if (annotations.length == 0 && comments.length == 0) {
-                            if (doc_data && doc_data.first_time) {
-                                render_details(doc_data);
-                            }
-                            return;
-                        }
-                        annotations = annotations.filter(function(annot) {
-                            return annot.type != 'point' || annot.sub_type
-                        });
-                        annotations = annotations.concat(comments);
-                        annotations.forEach(function(item) {
-                            item.class = 'Annotation';
-                        });
-                        var annotation_cookie = "";
-                        if (Array.isArray(annotations)) {
-                            annotation_cookie = JSON.stringify(annotations);
-                        } else {
-                            bootbox.alert("invalid annotations");
-                            return;
-                        }
-
-                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
-                        // console.log(documentId, documentId + '/annotations', annotations);
-                        render_details(doc_data);
-                    }
-                })();
 
                 (function() {
                     function onAnnotationsUploaded(data, reset) {
@@ -411,7 +334,7 @@
                             filtered = filtered.filter(function(el) {
                                 return el.type != 'point' || el.sub_type;
                             });
-                            input_data['annotations'] = JOSN.stringify(filtered);
+                            input_data['annotations'] = JSON.stringify(filtered);
                         }
 
                         var args = {
@@ -586,10 +509,17 @@
                 }
             }
 
+            function setViewerWrapperBottom(source) {
+                var topbar_rect = $('.toolbar.topbar')[0].getBoundingClientRect();
+                // console.log(diff, 5555, source, topbar_rect);
+                content_wrapper.height(window.innerHeight - topbar_rect.top - topbar_rect.height);
+            }
+
             function hideComments() {
                 comments_wrapper.hide();
                 shown_comment_type = false;
                 localStorage.removeItem(documentId + '/shown_comment_type');
+                setViewerWrapperBottom('comment hide');
             }
 
             function showCommentsContainer(comment_sub_type) {
@@ -616,6 +546,7 @@
                     $('.comment-list-form').show();
                 shown_comment_type = slected_comment_type;
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
+                setViewerWrapperBottom('comment show')
             }
 
             function showHideAnnotations(rotate_degree) {
@@ -650,6 +581,7 @@
                         }
                     }
                 }
+                setViewerWrapperBottom('Loaded')
             }
 
             function getLocalAnnotations() {
@@ -835,9 +767,6 @@
             function render_details(doc_data) {
                 try {
                     var pdfData = false;
-                    var cwr_top = scroll_div.offset().top;
-                    // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
-                    scroll_div.height(window.innerHeight - cwr_top);
                     var pages_rendered = 0;
                     if (doc_data && doc_data.first_time) {
                         try {
@@ -873,11 +802,8 @@
                                 setCookieStrict(documentId, documentId + '/scale', 1)
                             }
                             scale_select.val(RENDER_OPTIONS.scale);
-
-                            var scroll_div_top = scroll_div.prev()[0].getBoundingClientRect().bottom;
-                            // console.log(scroll_div_top, window.innerHeight);
-                            scroll_div.height(window.innerHeight - 40 - scroll_div_top);
-
+                            var topbar_rect = $('.toolbar.topbar')[0].getBoundingClientRect();
+                            content_wrapper.height(window.innerHeight - topbar_rect.top - topbar_rect.height);
                         } catch (er) {
                             console.log(er);
                         }
@@ -956,7 +882,6 @@
                             var rotateBy = RENDER_OPTIONS.rotate;
 
                             var rotate_degree = rotateBy % 360;
-                            showHideAnnotations(rotate_degree);
 
                             switch (rotate_degree) {
                                 case 90:
@@ -1006,6 +931,9 @@
                                 $('.ToolBarWrapper>div').css({
                                     display: 'flex'
                                 });
+                                var rotateBy = RENDER_OPTIONS.rotate;
+                                var rotate_degree = rotateBy % 360;
+                                showHideAnnotations(rotate_degree);
                                 if (!(doc_data && doc_data.first_time)) {
                                     return;
                                 }
@@ -1484,7 +1412,8 @@
                         return;
                     }
                     var dom_item_to_focus = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
-                    console.log(dom_item_to_focus[0]);
+                    // console.log(dom_item_to_focus[0]);
+                    window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
 
                     var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="' + annotationId + '"]')
                     if (c_svg.length > 0) {
@@ -2165,10 +2094,14 @@
                     module.exports = EventEmitter; // Backwards-compat with node 0.10.x
                     EventEmitter.EventEmitter = EventEmitter;
                     EventEmitter.prototype._events = undefined;
-                    EventEmitter.prototype._maxListeners = undefined; // By default EventEmitters will print a warning if more than 10 listeners are
-                    // added to it. This is a useful default which helps finding memory leaks.
+                    EventEmitter.prototype._maxListeners = undefined;
+                    /*
+                    By default EventEmitters will print a warning if more than 10 listeners are
+                    added to it. This is a useful default which helps finding memory leaks.
                     EventEmitter.defaultMaxListeners = 10; // Obviously not all Emitters should be limited to 10. This function allows
-                    // that to be increased. Set to zero for unlimited.
+                    that to be increased. Set to zero for unlimited.
+                    */
+
                     EventEmitter.prototype.setMaxListeners = function(n) {
                         if (!isNumber(n) || n < 0 || isNaN(n)) throw TypeError('n must be a positive number');
                         this._maxListeners = n;
