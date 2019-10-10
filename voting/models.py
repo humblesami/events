@@ -228,9 +228,11 @@ class Voting(Actions):
                             chart_data['option_perc'] ="{:.{}f}".format((result['answer_count']/voting_object['results']['respondent_count']) *100,2)
                         
 
+        my_status = ''
         user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=uid)
         if len(user_answer) > 0:
             user_answer = user_answer[0]
+            my_status = user_answer.user_answer.name
             voting_object['signature_data'] = user_answer.signature_data.decode('utf-8')
         else:
             voting_object['my_status'] = 'pending'
@@ -255,6 +257,8 @@ class Voting(Actions):
             voting_object['topic'].append({'id': topic.validate_unique()})
         if voting_object.get('_state'):
             del voting_object['_state']
+        if my_status:
+            voting_object['my_status'] = my_status
         ws_methods.stringfy_sytem_fields(voting_object)
         return voting_object
 

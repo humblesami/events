@@ -432,11 +432,15 @@ class Folder(CustomModel):
 
 
 def save_folder_users(sender, instance, action, pk_set, **kwargs):
-    if action == 'post_remove':
-        removed_respondents = list(pk_set)
-        instance.resource_invitation_email(removed_respondents, 'removed')
+    # if action == 'post_remove':
+    #     removed_respondents = list(pk_set)
+    #     instance.resource_invitation_email(removed_respondents, 'removed')
     if action == "post_add":
         new_added_respondets = list(pk_set)
+        try:
+            new_added_respondets.remove(get_current_user().id)
+        except:
+            pass
         if new_added_respondets:
             instance.resource_invitation_email(new_added_respondets)
 

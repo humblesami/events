@@ -29,6 +29,10 @@ def respond(request, voting_id, choice_id, token):
     context = {}
     user_token = None
     user_token = PostUserToken.validate_token(token)
+    if not user_token:
+        context['error'] = 'Error: Invalid Token or Expired'
+        return render(request, 'token_submit.html', context)
+
     if voting_id != user_token.post_info.res_id:
         context['error'] = 'Error: Invalid Token or Expired'
         return render(request, 'token_submit.html', context)
