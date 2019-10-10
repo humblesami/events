@@ -80,11 +80,11 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="profile_data.resume"  class="row docwrappercontainer mb-0">
+                    <div class="row docwrappercontainer mb-0">
                         <div class="col-sm-12 pt-3">
                             <div class="ProFileHeadWrap">Resume</div>
                         </div>
-                        <div class="col-sm-12 mb-4">
+                        <div  *ngIf="profile_data.resume" class="col-sm-12 mb-4">
                             <div class="upload-resume-edit-section">
                                 <div class="resume-edit-control resume-edit-control-btn">
                                     <a class="edit link" (click)="edit_resume($event.target)">

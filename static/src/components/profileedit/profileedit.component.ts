@@ -260,7 +260,6 @@ export class ProfileeditComponent implements OnInit {
 			file_input.attr('dragdrop', 1);
 			window['apply_drag_drop'](file_input, null, function(data){
 				try{
-					console.log(data);
 					let file = []
 					file.push(data.file)
 					let resInfo = {

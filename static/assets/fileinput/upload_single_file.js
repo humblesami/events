@@ -67,6 +67,7 @@ function upload_single_file(files, resInfo, cloud=false, success)
                 else
                 // console.log($('.file-input-picker-container:visible').closest('.modal:visible').length, 232);
                 {
+                    success(data);
                     $('.file-input-picker-container:visible').closest('.modal:visible').find('#close-btn').click();
                 }
             }
