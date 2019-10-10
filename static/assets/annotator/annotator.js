@@ -765,40 +765,43 @@
                     RENDER_OPTIONS.documentId = documentId;
                     //Important to be updated
                     
-                    var server_annotations = doc_data.annotations;
-                    var server_comments = [];
-                    if(server_annotations)
-                    {
-                        server_comments = server_annotations.comments;
-                        server_annotations = server_annotations.annotations;                        
-                    }
-                    var local_annots = getCookieStrict(documentId, documentId + '/annotations');
-                    try{
-                        local_annots = JSON.parse(local_annots);
-                    }
-                    catch(er){
-                        
-                    }
-                    if(isDocumentDirty(documentId) && server_comments.length)
-                    {                        
-                        local_annots.filter(function(el){
-                            return el.type != 'point' || el.sub_type;
-                        });                            
-                        local_annots = local_annots.concat(server_comments);
-                        setCookieStrict(documentId, documentId + '/annotations', local_annots);
-                    }
-                    else{
-                        if(server_comments.length || server_annotations.length)
+                    if(doc_data.type == 'meeting' || doc_data.type == 'topic')
+                    {                    
+                        var server_annotations = doc_data.annotations;
+                        var server_comments = [];
+                        if(server_annotations)
                         {
-                            local_annots = server_annotations.concat(server_comments);
+                            server_comments = server_annotations.comments;
+                            server_annotations = server_annotations.annotations;                        
+                        }
+                        var local_annots = getCookieStrict(documentId, documentId + '/annotations');
+                        try{
+                            local_annots = JSON.parse(local_annots);
+                        }
+                        catch(er){
+                            
+                        }
+                        if(isDocumentDirty(documentId) && server_comments.length)
+                        {                        
+                            local_annots.filter(function(el){
+                                return el.type != 'point' || el.sub_type;
+                            });                            
+                            local_annots = local_annots.concat(server_comments);
                             setCookieStrict(documentId, documentId + '/annotations', local_annots);
                         }
-                    }
-                    
-                    comments_loaded = false;
-                    var cookieVal = localStorage.getItem(documentId + '/dirty');
-                    if (!cookieVal) {
-                        initDocCookies(documentId);
+                        else{
+                            if(server_comments.length || server_annotations.length)
+                            {
+                                local_annots = server_annotations.concat(server_comments);
+                                setCookieStrict(documentId, documentId + '/annotations', local_annots);
+                            }
+                        }
+                        
+                        comments_loaded = false;
+                        var cookieVal = localStorage.getItem(documentId + '/dirty');
+                        if (!cookieVal) {
+                            initDocCookies(documentId);
+                        }
                     }
                 }
                 render_details(doc_data);
