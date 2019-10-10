@@ -129,11 +129,11 @@ export class RenameService {
         {
             var item_index = obj_this.objects_to_move[key].indexOf(item_id);
             obj_this.objects_to_move[key].splice(item_index, 1);
-            movable.removeClass('draggable');            
+            movable.removeClass('draggable');
         }
         else{            
             obj_this.objects_to_move[key].push(item_id);                        
-            movable.addClass('draggable');
+            movable.addClass('draggable');            
         }
 
 
@@ -147,8 +147,10 @@ export class RenameService {
                 $('a.folder.personal').addClass('droppable');
             }
             else{
+
                 $('a.folder.droppable').removeClass('droppable');
-                $('a.folder:not(.personal)').addClass('droppable');
+                $('a.folder:not(.personal):not(.draggable)').addClass('droppable');
+
             }
         }
 
