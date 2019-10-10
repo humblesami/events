@@ -1042,7 +1042,6 @@
                         function on_document_rendered(){
                             try{
                                 $('.ToolBarWrapper>div').css({display: 'flex'});
-                                document_version = getDocumentVersion(documentId);                                
                                 if(!(doc_data && doc_data.first_time))
                                 {
                                     return;
