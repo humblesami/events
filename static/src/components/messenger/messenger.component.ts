@@ -197,45 +197,48 @@ export class MessengerComponent implements OnInit {
     {
         this.switch_group_mode('none');
     }
-    // open_roster(evn,doc){
-    //     console.log(doc.id);
-    //     evn.preventDefault();
-    //     evn.stopPropagation();
-    //     let obj_this = this;
-	// 	const modalRef = this.modalService.open(MovetomyfolderComponent, { backdrop: 'static' });
-    //     modalRef.componentInstance.doc_id = doc.id;
-    //     modalRef.componentInstance.member_id = obj_this.user.id;
-    //     modalRef.result.then(function(data){
-    //         console.log(data);
-    //     });
-    // }
     
-    move_to_my_folder(ev, doc)    
-    {
-        ev.preventDefault();
-        ev.stopPropagation();
-        doc.moved = true;
-        var file_id = doc.id;
+    open_my_folder(evn,doc){
+
+        evn.preventDefault();
+        evn.stopPropagation();
+ 
         let obj_this = this;
-        let input_data = {
-            args:{
-                app:'chat',
-                model:'message',
-                method:'move_to_folder',
-                no_loader:1,
-            },
-            params: {
-                group_id: obj_this.active_chat_user.id,
-                member_id: obj_this.user.id,
-                file_id: file_id
-            },
-        }
-        obj_this.httpService.post(input_data, function(data){                        
-            alert(data);
-        } , function(){
-            console.log("Nothing");
-        });    
+		const modalRef = this.modalService.open(MovetomyfolderComponent, { backdrop: 'static' });
+        modalRef.componentInstance.doc_id = doc.id;
+        modalRef.componentInstance.member_id = obj_this.user.id;
+        modalRef.result.then(function(data){
+            doc.moved = true;
+            console.log(data,1111111111111111111);
+        });
     }
+    
+    // move_to_my_folder(ev, doc)    
+    // {
+    //     ev.preventDefault();
+    //     ev.stopPropagation();
+    //     doc.moved = true;
+    //     var file_id = doc.id;
+    //     let obj_this = this;
+    //     let input_data = {
+    //         args:{
+    //             app:'chat',
+    //             model:'message',
+    //             method:'move_to_folder',
+    //             no_loader:1,
+    //         },
+    //         params: {
+    //             group_id: obj_this.active_chat_user.id,
+    //             member_id: obj_this.user.id,
+    //             file_id: file_id
+    //         },
+    //     }
+    //     obj_this.httpService.post(input_data, function(data){                        
+    //         alert(data);
+    //     } , function(){
+    //         console.log("Nothing");
+    //     });    
+    // }
 
     change_messenger_view()
     {

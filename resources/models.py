@@ -4,6 +4,7 @@ from meetings.model_files.user import *
 from mainapp.models import CustomModel
 from django_currentuser.middleware import get_current_user
 from django.db.models import Q
+from mainapp import ws_methods
 from django.db.models.signals import m2m_changed
 from mainapp.settings import server_base_url
 
@@ -152,10 +153,15 @@ class Folder(CustomModel):
         return res
 
     @classmethod
-    def folders_recursive_childs(cls, request, params):
+    def get_my_folder_recursive(cls, request, params):
+        user_id = request.user.id        
+        parent_id = Folder.objects.get(created_by_id = user_id, personal=True, parent_id__isnull=True).id
+        res = cls.folders_recursive_childs(user_id, parent_id)
+        return res    
+    
+    @classmethod
+    def folders_recursive_childs(cls, user_id, parent_id):
         res = {}
-        parent_id = params.get('parent_id')
-        user_id = request.user.id
         if parent_id:
             folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
             if folder:

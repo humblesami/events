@@ -744,6 +744,22 @@ class Message(models.Model):
 
         return "File Saved Successfully"
 
+    @classmethod
+    def move_to_other_folder(cls, request, params):
+        file_id_is = params['file_id']
+        folder_id  = params['folder_id']
+
+        file = File.objects.get(pk=file_id_is)
+        folder = Folder.objects.get(pk=folder_id ,created_by_id=request.user.id )
+        # my_folder = Folder.objects.get(created_by_id=request.user.id, personal=True, parent_id__isnull=True)
+        doc = ResourceDocument(folder_id=folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name)
+        doc.save()
+
+        doc = MessageDocument.objects.get(pk=file_id_is)
+        doc.moved = True
+        doc.save()
+        
+        return "File Saved Successfully"
 
     @classmethod
     def get_old_messages(cls, request, params):

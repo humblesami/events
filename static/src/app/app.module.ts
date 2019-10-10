@@ -168,6 +168,6 @@ import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfo
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent, RosterComponent, ProfilesummaryComponent]
+    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent, RosterComponent, ProfilesummaryComponent, MovetomyfolderComponent,]
 })
 export class AppModule { }
