@@ -319,23 +319,22 @@ var js_utils = window['js_utils'] = {
             );
         });
     },
-    scroll_to_element: function(focus_el_selector, scroll_el_selector){
-        var focus_el = undefined;
-        var scroll_el = undefined;
-        var position = undefined;
-        if(typeof(focus_el_selector) == 'string')
-        {
-            focus_el = $(focus_el_selector).first();
-            if(focus_el.length != 1)
+    scroll_to_element: function(focus_el, scroll_el){
+        if(!(focus_el && focus_el.length && focus_el.length ==1)){
+            console.log('Invalid focus element ', focus_el);
+            if(focus_el.length)
             {
-                console.log('Invalid focus el' + scroll_el.length + ' found', focus_el_selector, focus_el);
-                return;
+                console.log('With length ', focus_el.length);
             }
         }
-        else{
-            focus_el = focus_el_selector;
+        if(!(scroll_el && scroll_el.length && scroll_el.length ==1)){
+            console.log('Invalid scroll element ', scroll_el);
+            if(scroll_el.length)
+            {
+                console.log('With length ', scroll_el.length);
+            }
         }
-        
+        var position = undefined;
         position = focus_el.position();
         if(!position || (position && (!position.left || !position.top))){
             position = {
@@ -355,18 +354,6 @@ var js_utils = window['js_utils'] = {
                 position.top = 0;
             }
         }
-        if(typeof(scroll_el_selector) == 'string')
-        {
-            scroll_el = $(scroll_el_selector).first();
-        }
-        else{
-            scroll_el = scroll_el_selector;
-        }        
-        if(scroll_el.length != 1)
-        {
-            console.log('Invalid focus el' + scroll_el.length + ' found', scroll_el_selector, scroll_el);
-            return;
-        }
         var focus_el_rect = { 
             width: focus_el.width(),
             height: focus_el.height()
@@ -378,17 +365,29 @@ var js_utils = window['js_utils'] = {
 
         // console.log(position, 445);
         position.left = position.left -  scroll_el_rect.width /2 + focus_el_rect.width /2;
+        if(position.left<0)
+        {
+            position.left = 0;
+        }
         position.top = position.top - scroll_el_rect.height/2 + focus_el_rect.height /2;
-        // console.log(position, 115);
+        if(position.top<0)
+        {
+            position.top = 0;
+        }
 
-        scroll_el.scrollLeft(position.left);
+        var scroll_now_y = scroll_el.scrollTop();
+        var scroll_now_x = scroll_el.scrollLeft();
+        var dy = position.top - scroll_now_y;
+        var dx = position.top - scroll_now_x;
 
-        var scroll_now = scroll_el.scrollTop();
-        var distance = Math.abs(position.top - scroll_now);        
+        console.log(position, dy, dx);
+
+        scroll_el.scrollLeft(dx);
+        var distance = Math.abs(position.top - scroll_now_y);        
         var animate_time = distance * 1.5;
         // console.log(distance, 133, animate_time);
         scroll_el.animate({
-            scrollTop: position.top
+            scrollTop: dy
         }, animate_time);
     },
     is_public_route: function (url){
