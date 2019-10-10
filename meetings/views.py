@@ -17,6 +17,7 @@ def response_invitation(request, meeting_id, response, token):
         if not user_token:
             context['error'] = 'Invalid Token'
         else:
+            request.user = user_token.user
             if meeting_id != user_token.post_info.res_id:
                 context['error'] = 'Invalid Token'
             else:

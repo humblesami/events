@@ -24,6 +24,7 @@ class SurveyDetail(View):
         user = get_user_by_token(request, kwargs, do_not_expire=True)
         if type(user) is str:
             return HttpResponse(user)
+        request.user = user
         survey = get_object_or_404(Survey, is_published=True, id=kwargs["id"])
         if survey.template is not None and len(survey.template) > 4:
             template_name = survey.template
@@ -72,10 +73,10 @@ class SurveyDetail(View):
         return render(request, template_name, context)    
 
     def post(self, request, *args, **kwargs):
-        user = get_user_by_token(request, do_not_expire=True)
+        user = get_user_by_token(request)
         if type(user) is str:
             return user
-
+        request.user = user
         survey = get_object_or_404(Survey, is_published=True, id=kwargs["id"])
         if survey.need_logged_user and not user.is_authenticated:
             return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
