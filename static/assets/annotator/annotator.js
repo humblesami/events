@@ -26,7 +26,7 @@
     var onAnnotationsDownloaded = function() {
         console.log("onAnnotationsDownloaded not defined");
     }
-    var is_localhost = window.location.toString().indexOf('localhost:' > -1);
+    var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
     function select_cursor(target)
     {
@@ -716,6 +716,7 @@
                 for (var i in annotations) {
                     if (annotations[i].uuid == point.uuid) {
                         var newVal = 0;
+                        //to be changed
                         if (count != 0) {
                             newVal = count;
                             if (annotations[i].counter)
