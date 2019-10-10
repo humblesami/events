@@ -259,11 +259,11 @@ mention-list.dropup{
 .kanban-headings{
     color: #2B2B2B;
     border-bottom: 1px solid #E1E1E1;    
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
 }
 .router-outlet .kanban-headings {        
     padding-top: 1rem;
