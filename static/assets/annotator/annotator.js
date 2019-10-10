@@ -26,6 +26,7 @@
     var onAnnotationsDownloaded = function() {
         console.log("onAnnotationsDownloaded not defined");
     }
+    var is_localhost = window.location.toString().indexOf('localhost:' > -1);
 
     function select_cursor(target)
     {
@@ -54,16 +55,28 @@
 
     function getDocumentVersion(documentId) {
         var res = getCookieStrict(documentId, documentId + '/version');
-        if (isNaN(res)) {
-            bootbox.alert("Cookie1 must have been se, plz contact support");
+        if (res != 0 && isNaN(res)) {  
+            if(is_localhost)          
+            {
+                bootbox.alert("Cookie1 must have been set for " + documentId + ", plz contact support");
+            }
+            else{
+                setCookieStrict(documentId, documentId + '/version', 0);
+            }
         }
         return res;
     }
 
     function isDocumentDirty(documentId) {
         var res = getCookieStrict(documentId, documentId + '/dirty');
-        if (isNaN(res)) {
-            bootbox.alert("Cookie2 must have been set for " + documentId + ", plz contact support");
+        if (res != 0 && isNaN(res)) {  
+            if(is_localhost)          
+            {
+                bootbox.alert("Cookie2 must have been set for " + documentId + ", plz contact support");
+            }
+            else{
+                setCookieStrict(documentId, documentId + '/dirty', '0');
+            }
         }
         return res;
     }
