@@ -27,13 +27,16 @@
         console.log("onAnnotationsDownloaded not defined");
     }
 
-    function select_cursor()
+    function select_cursor(target)
     {
         // console.log(45);
         // window['functions'].get_trace(1);
         if(!$('.topbar:first .cursor:first').hasClass('active'))
         {
             $('.topbar:first .cursor:first').click();
+        }
+        if(target && isDocumentDirty(documentId)){
+            saveAnnotationsAtServer();
         }
     }
     function initDocCookies(documentId) {
@@ -96,6 +99,13 @@
         if (temp_key == 'dirty' || temp_key == 'version') {
             bootbox.alert("Should not happend");
             console.trace();
+        }        
+        if(typeof(val) != 'string')
+        {
+            if(typeof(val) == 'object')
+            {
+                val = JSON.stringify(val);
+            }
         }
         localStorage.setItem(key, val);
     }
@@ -397,6 +407,15 @@
                             input_data['annotations'] = annotationString;
                             input_data['version'] = document_version;
                         }
+                        var filtered = [];
+                        if(input_data['annotations']){
+                            filtered = JSON.parse(input_data['annotations'])
+                            filtered = filtered.filter(function(el){
+                                return el.type != 'point' || el.sub_type;
+                            });
+                            input_data['annotations'] = JOSN.stringify(filtered);
+                        }
+                        
                         var args = {
                             app: 'documents',
                             model: 'AnnotationDocument',
@@ -654,7 +673,7 @@
                 }
             }
 
-            function getLocalAnnotations() {
+            function getLocalAnnotations() {                
                 var res = getCookieStrict(documentId, documentId + '/annotations');
                 if (!res)
                     res = [];
@@ -744,6 +763,38 @@
                     documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
+                    //Important to be updated
+                    
+                    var server_annotations = doc_data.annotations;
+                    var server_comments = [];
+                    if(server_annotations)
+                    {
+                        server_comments = server_annotations.comments;
+                        server_annotations = server_annotations.annotations;                        
+                    }
+                    var local_annots = getCookieStrict(documentId, documentId + '/annotations');
+                    try{
+                        local_annots = JSON.parse(local_annots);
+                    }
+                    catch(er){
+                        
+                    }
+                    if(isDocumentDirty(documentId) && server_comments.length)
+                    {                        
+                        local_annots.filter(function(el){
+                            return el.type != 'point' || el.sub_type;
+                        });                            
+                        local_annots = local_annots.concat(server_comments);
+                        setCookieStrict(documentId, documentId + '/annotations', local_annots);
+                    }
+                    else{
+                        if(server_comments.length || server_annotations.length)
+                        {
+                            local_annots = server_annotations.concat(server_comments);
+                            setCookieStrict(documentId, documentId + '/annotations', local_annots);
+                        }
+                    }
+                    
                     comments_loaded = false;
                     var cookieVal = localStorage.getItem(documentId + '/dirty');
                     if (!cookieVal) {
@@ -998,36 +1049,6 @@
                                     return;
                                 }
                                 var socket_manager = window['socket_manager'];
-                                var input_data = {
-                                    id: doc_id,
-                                    doc_id: documentId,
-                                    version: document_version
-                                };
-                                var args = {
-                                    app: 'documents',
-                                    model: 'AnnotationDocument',
-                                    method: 'get_annotations'
-                                }
-                                var input_data = {
-                                    args: args,
-                                    no_loader: 1,
-                                    params: {
-                                        id: doc_id, doc_id: documentId,
-                                        version: document_version
-                                    }
-                                };
-                                dn_rpc_object({
-                                    data:input_data,
-                                    no_loader:1,
-                                    onSuccess: function (annotaions_data) {
-                                        doc_data.first_time = undefined;
-                                        onAnnotationsDownloaded(annotaions_data, doc_data);
-                                    },
-                                    onError:function(er){
-                                        console.log(er);
-                                    }
-                                });
-
                                 socket_manager.execute_on_verified(function(){
                                     var n_list = socket_manager.notificationList;
                                     $('.canvasWrapper .new_comments_count').each(function(i, el){
@@ -1266,7 +1287,7 @@
                     var target = $(e.target);
                     target = target.closest('button');
                     if (target.hasClass('pen') && active_btn.hasClass('pen')) {
-                        select_cursor();
+                        select_cursor(target);
                     } else {
                         var tooltype = $(e.target).closest('[data-tooltype]').data('tooltype');
                         if (tooltype)
@@ -3051,16 +3072,14 @@
                         if (!res)
                             res = [];
                         else
-                            res = JSON.parse(res);
-                        
-                            // console.log(documentId, documentId + '/annotations', res);
-                        
-                            return res;
+                            res = JSON.parse(res);                        
+                        // console.log(documentId, documentId + '/annotations', res);
+                        return res;
                     }
 
                     var annot_save_timeout = undefined;
 
-                    function updateAnnotations(documentId, annotations, is_comment) {
+                    function updateAnnotations(documentId, annotations, is_comment) {                        
                         var annotation_cookie = "";
                         if (Array.isArray(annotations))
                             annotation_cookie = JSON.stringify(annotations);
@@ -3963,7 +3982,7 @@
                         } // Now that node has been found inverse the adjustment for "x".
                         // This is done to accomodate tolerance by cutting off on the outside of the
                         // text boundary, instead of missing a character by cutting off within.
-                        x = x + OFFSET_ADJUST * (insertBefore ? -1 : 1);
+                        x = x + OFFSET_ADJUST * (insertBefore ? -1 : 1);                        
                         var svg = document.querySelector('svg[data-pdf-annotate-page="' + pageNumber + '"]');
                         var left = (0, _utils.scaleDown)(svg, {
                             left: node.getBoundingClientRect().left
@@ -4007,6 +4026,7 @@
                      */
                     function textLayerElementFromPoint(x, y, pageNumber) {
                         var svg = document.querySelector('svg[data-pdf-annotate-page="' + pageNumber + '"]');
+                        // console.log(pageNumber, 443, 2);
                         var rect = svg.getBoundingClientRect();
                         y = (0, _utils.scaleUp)(svg, {
                             y: y
@@ -4915,8 +4935,6 @@
                      */
                     function handleInputBlur() {
                         savePoint();
-                        $('.pdfViewer').css("cursor", "auto");
-                        select_cursor();
                     }
                     /**
                      * Handle input.keyup event
@@ -5200,7 +5218,7 @@
                      * @param {Event} e The DOM event to handle
                      */
                     function mouseup32(data_tool_type) {
-                        console.log(data_tool_type, 40);
+                        // console.log(data_tool_type, 40);
                         if (typeof data_tool_type != 'string') {
                             return;
                         }

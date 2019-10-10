@@ -18,6 +18,26 @@ class AnnotationDocument(CustomModel):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
     @classmethod
+    def get_data(cls, request, params):
+        doc_data = File.get_file_data(request, params)
+        annotations = cls.get_annotations(request, params)
+        if doc_data.get('data'):
+            doc_data['data']['annotations'] = annotations
+        else:
+            doc_data['annotations'] = annotations
+        return doc_data
+
+    @classmethod
+    def get_data_with_binary(cls, request, params):
+        doc_data = File.get_file_data(request, params)
+        annotations = cls.get_annotations(request, params)
+        if doc_data.get('data'):
+            doc_data['data']['annotations'] = annotations
+        else:
+            doc_data['annotations'] = annotations
+        return doc_data
+
+    @classmethod
     def get_annotations(cls, request, params):
         res = {}
         force = params.get('force')
@@ -79,10 +99,8 @@ class AnnotationDocument(CustomModel):
 
         doc.annotation_set.remove()
 
-        
         user_annotations = params.get('annotations')
         user_annotations = json.loads(user_annotations)
-
 
         point_annotations = []
         drawing_annotations = []
@@ -131,7 +149,6 @@ class AnnotationDocument(CustomModel):
         Annotation.objects.bulk_create(point_annotations)
         Annotation.objects.bulk_create(drawing_annotations)
         Annotation.objects.bulk_create(rectangle_annotations)
-
 
         save_annotations = PointAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='point')
         cls.save_dimensions(save_annotations, user_annotations)

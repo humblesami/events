@@ -12,7 +12,7 @@ declare var $: any;
 })
 export class DocumentComponent implements OnInit {
     page_num = 1;
-    doc_data: any;  
+    doc_data: any;
     breadcrumb: any;  
     total_pages = 0;
     annot_hidden = false;
@@ -98,20 +98,34 @@ export class DocumentComponent implements OnInit {
         var doc_type = obj_this.route.snapshot.params.doc_type;        
         let doc_id = obj_this.route.snapshot.params.res_id;
         let point_id = undefined;
+        var is_dev_host = window.location.toString().indexOf('4200') > -1
         let args = {
             app: 'documents',
             model: 'File',
             // method: 'get_binary'
             method: 'get_file_data'
         }
-        if (window.location.toString().indexOf('4200') > -1)
+        if (is_dev_host)
         {
             args.method = 'get_binary';
+        }
+        if(doc_type == 'meeting' || doc_type == 'topic')
+        {
+            args = {
+                app: 'documents',
+                model: 'AnnotationDocument',
+                method: 'get_data'
+            }
+            if (is_dev_host)
+            {
+                args.method = 'get_data_with_binary';
+            }
         }
         var input_data = {            
             args: args,
             params: {id : doc_id}
-        };
+        };                
+
         if(obj_this.route.toString().indexOf('discussion') > -1)
         {
             point_id = doc_id;
@@ -120,8 +134,13 @@ export class DocumentComponent implements OnInit {
                 params: {id : doc_id}
             }; 
         }
+        if(doc_type == 'meeting' || doc_type == 'topic'){
+            var doc_name = doc_type + '-' + doc_id + '-' + obj_this.socketService.user_data.id + '.pdf';
+            input_data.params['doc_id'] = doc_name;
+        }
+        // console.log(input_data, doc_type);
         var renderDoc = function(data){
-            // console.log(Date(), data, new Date().getMilliseconds(),  'doc data downloaded');
+            // console.log(data, Date(),  'doc data downloaded');
             data.file_type = doc_type;
             obj_this.doc_data = data;
             if (data.breadcrumb)
@@ -152,15 +171,9 @@ export class DocumentComponent implements OnInit {
                 };
             }
             
-            var doc_data = {
-                id: doc_id,
-                first_time: 1, 
-                type : doc_type,
-                attendees: data.attendees,
-                doc_name: data.name,
-                mp_signature_status:data.mp_signature_status,
-                is_respondent: data.is_respondent
-            };
+            var doc_data = data;
+            data.first_time = 1;
+            data.type = doc_type;
             if(data.url)
             {
                 doc_data['url'] = data.url;

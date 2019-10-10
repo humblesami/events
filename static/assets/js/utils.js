@@ -37,6 +37,7 @@ var app_libs = window['app_libs'] = {
         }
     },
     pdf:{
+        lib_type: 'pdf',
         script_paths:[
             "static/assets/annotator/shared/pdf.js",
             "static/assets/annotator/shared/pdf.viewer.js",
@@ -47,7 +48,7 @@ var app_libs = window['app_libs'] = {
             "static/assets/annotator/shared/custom.css"
         ],
         load: function(on_load){            
-            var obj_this = this;    
+            var obj_this = this;
             js_utils.load_lib(obj_this, on_load);
         }
     },
@@ -152,6 +153,9 @@ function get_cpath_name() {
 
 var js_utils = window['js_utils'] = {
     load_lib: function(obj_this, on_load){
+        // if(obj_this.lib_type == 'pdf'){
+        //     console.log(obj_this.status,  23212);
+        // }
         if(!obj_this.status)
         {
             obj_this.status = 'loading';

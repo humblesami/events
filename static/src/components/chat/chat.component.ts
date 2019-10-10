@@ -28,7 +28,15 @@ export class ChatComponent implements OnInit {
 
     mark_notifications_read(li){
         let obj_this = this;
+        if(li.html().trim() == 'No New Notifications')
+        {
+            return;
+        }        
         let item = obj_this.socketService.notificationList[li.index()];
+        if(!item)
+        {
+            return;
+        }
         if(!item.id){
             return;
         }
