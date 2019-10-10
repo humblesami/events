@@ -56,13 +56,8 @@
     function getDocumentVersion(documentId) {
         var res = getCookieStrict(documentId, documentId + '/version');
         if (res != 0 && isNaN(res)) {  
-            if(is_localhost)          
-            {
-                bootbox.alert("Cookie1 must have been set for " + documentId + ", plz contact support");
-            }
-            else{
-                setCookieStrict(documentId, documentId + '/version', 0);
-            }
+            localStorage.setItem(documentId + '/version', '0');
+            console.log('Set version by force');
         }
         return res;
     }
@@ -70,13 +65,8 @@
     function isDocumentDirty(documentId) {
         var res = getCookieStrict(documentId, documentId + '/dirty');
         if (res != 0 && isNaN(res)) {  
-            if(is_localhost)          
-            {
-                bootbox.alert("Cookie2 must have been set for " + documentId + ", plz contact support");
-            }
-            else{
-                setCookieStrict(documentId, documentId + '/dirty', '0');
-            }
+            localStorage.setItem(documentId + '/version', 0);
+            console.log('Set dirty by force');
         }
         return res;
     }
