@@ -1,6 +1,9 @@
 from django.db import models
 from mainapp import ws_methods
 from mainapp.models import CustomModel
+from django.db.models.signals import m2m_changed
+from django_currentuser.middleware import get_current_user
+from mainapp.settings import server_base_url
 
 
 class Committee(CustomModel):
@@ -76,3 +79,47 @@ class Committee(CustomModel):
 
         data = {'records':committees, 'total': total_cnt, 'count': current_cnt}
         return data
+
+
+    def committee_email(self, audience, action=None):
+        template_data = {
+            'id': self.id,
+            'name': self.name,
+            'server_base_url': server_base_url
+        }
+        post_info = {}
+        post_info['res_app'] = self._meta.app_label
+        post_info['res_model'] = self._meta.model_name
+        post_info['res_id'] = self.id
+        if action:
+            template_name = 'committee/removed_from_committee_email.html'
+            token_required = False
+        else:
+            template_name = 'committee/added_to_committee_email.html'
+            token_required = False
+        email_data = {
+            'subject': self.name,
+            'audience': audience,
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': token_required
+        }
+        ws_methods.send_email_on_creation(email_data)
+
+
+def save_committee_users(sender, instance, action, pk_set, **kwargs):
+    # if action == 'post_remove':
+    #     removed_respondents = list(pk_set)
+    #     instance.committee_email(removed_respondents, 'removed')
+    if action == "post_add":
+        new_added_respondets = list(pk_set)
+        try:
+            new_added_respondets.remove(get_current_user().id)
+        except:
+            pass
+        if new_added_respondets:
+            instance.committee_email(new_added_respondets)
+
+
+m2m_changed.connect(save_committee_users, sender=Committee.users.through)

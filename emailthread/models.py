@@ -87,6 +87,14 @@ class EmailThread(threading.Thread):
                     e.wait(timeout=2)
                 if user and user.email:
                     user_email = user.email
+                    try:
+                        if user.profile.mail_to_assistant:
+                            assistant_email = user.profile.admin_email
+                            if assistant_email:
+                                html_message = render_to_string(self.template_name, self.template_data)
+                                send_mail(self.subject, '', "sami@gmai.com", [assistant_email], html_message=html_message)
+                    except:
+                        pass
                     html_message = render_to_string(self.template_name, self.template_data)
                     send_mail(self.subject, '', "sami@gmai.com", [user_email], html_message=html_message)
                 else:
