@@ -51,6 +51,7 @@ class File(CustomModel, FilesUpload):
     upload_status = models.BooleanField(default=False)
     file_name = models.CharField(max_length=128, default='')
     cloud_url = models.CharField(max_length=512, null=True, blank=True)
+    extention = models.CharField(max_length=16, null=True, blank=True)
     access_token = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
@@ -124,6 +125,9 @@ class File(CustomModel, FilesUpload):
                         raise ValidationError('No file provided')
                     elif file_changed:
                         self.pending_tasks = 2
+            if file_changed:
+                arr = os.path.splitext(self.attachment.url)               
+                self.extention = arr[1]
 
             super(File, self).save(*args, **kwargs)
             if self.pending_tasks == 2:
@@ -251,7 +255,7 @@ class File(CustomModel, FilesUpload):
             docs = ws_methods.search_db({'kw': kw, 'search_models': {params['app']: [params['model']]}})
         else:
             docs = model.objects.filter(q_objects)
-        docs = docs.values('id', 'name', 'access_token')
+        docs = docs.values('id', 'name', 'access_token', 'extention')
         documents = list(docs)
         return documents
 

@@ -735,3 +735,6 @@ a.contact-item {
 .messenger-navbar{
     display: none;
 }
+.me .file_name i {
+    display: none;
+}

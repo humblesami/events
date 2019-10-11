@@ -30,21 +30,23 @@ export class MovetomyfolderComponent implements OnInit {
                 app:'chat',
                 model:'message',
                 method:'move_to_other_folder',
-                no_loader:1,
             },
+            no_loader:1,
             params: {
                  file_id: file_id,
                  folder_id: folder_id
             },
         }
-        obj_this.httpService.post(input_data, function(data){                        
-          obj_this.close_modal(data);
+        obj_this.httpService.post(input_data, (data:any)=>{                      
+            // console.log(data,22233333333233333333);
+            obj_this.close_modal(data);
         } , function(){
             console.log("Nothing");
         });    
     }
     close_modal(data){
-      this.activeModal.close(data);
+        // console.log(data,12222212121);
+        this.activeModal.close(data);
     }
 
   folders_recursive_childs(){
@@ -114,17 +116,17 @@ export class MovetomyfolderComponent implements OnInit {
               opened_folder = obj;
               var par = '';
               par += '<input type="hidden" value="'+obj.id+'">';
-              par += '<button style="margin-left:10px;" class="btn_paste">Paste</button>';
+              par += '<button class="btn btn-primary btn_paste">Paste</button>';
               $('#name').html(obj.name);
               $('#action').html(par);
 
               var lis = '';
               for(var child_id in obj.sub_folders){
-                  lis += '<li><div class="row">'+obj.sub_folders[child_id].name;
-                  lis += '<span class="float-right"><input type="hidden" value="'+child_id+'">';
-                  lis += '<button  style="margin-left:10px;" class="btn_open_folder">Open</button>';
-                  lis += '<button style="margin-left:10px;" class="btn_paste">Paste</button>';
-                  lis += '</span></div></li>';
+                  lis += '<li class="p-1"><div class="row"><div class="col-3 offset-1"><i class="icon-folder" ></i> '+obj.sub_folders[child_id].name;
+                  lis += '</div><input type="hidden" value="'+child_id+'">';
+                  lis += '<div class="ml-auto"><div class="d-flex"><button  class="btn btn-info btn_open_folder">Open</button>';
+                  lis += '<button class="btn btn-primary btn_paste">Paste</button></div>';
+                  lis += '</div></div></li><hr>';
 
               }
               console.log()
@@ -132,7 +134,7 @@ export class MovetomyfolderComponent implements OnInit {
               var cnt = 0;
               $('#parent_div').children().each(function(){
                 $(this).find('.btn_paste').click(function(){
-                  var ch_id = $(this).closest('li').find('input').val();
+                  var ch_id = $(this).closest('span').find('input').val();
                   obj_this.folder_id = ch_id;
                   obj_this.move_to_my_folder(ch_id,obj_this.doc_id);
               });

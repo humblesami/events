@@ -9,7 +9,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from meetings.model_files.user import Profile, create_group
 from resources.models import Folder, ResourceDocument
-
+import os
 
 class PostAddress(models.Model):
     res_app = models.CharField(max_length=128)
@@ -636,7 +636,8 @@ class Message(models.Model):
                 attachment_urls.append({
                     'name': file_name,
                     'id': doc.id,
-                    'url': doc.attachment.url
+                    'file_type': doc.extention,
+                    'url': doc.attachment.url,
                 })
 
         message_dict = message.__dict__
@@ -704,11 +705,14 @@ class Message(models.Model):
                     'name': obj.chat_group.name
                 }
             for att in MessageDocument.objects.filter(message_id=obj.id):
+                att_type = os.path.splitext(att.name)
+
                 dict_obj['attachments'].append({
                     'name': att.name,
                     'url': att.attachment.url,
                     'id':att.id,
-                    'moved':att.moved
+                    'moved':att.moved,
+                    'file_type': att.extention
                 })
             ar.append(dict_obj)
         return ar
@@ -751,15 +755,15 @@ class Message(models.Model):
 
         file = File.objects.get(pk=file_id_is)
         folder = Folder.objects.get(pk=folder_id ,created_by_id=request.user.id )
-        # my_folder = Folder.objects.get(created_by_id=request.user.id, personal=True, parent_id__isnull=True)
         doc = ResourceDocument(folder_id=folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name)
         doc.save()
 
         doc = MessageDocument.objects.get(pk=file_id_is)
         doc.moved = True
         doc.save()
+        data = {"data":"File Move Successfully"}
         
-        return "File Saved Successfully"
+        return data
 
     @classmethod
     def get_old_messages(cls, request, params):

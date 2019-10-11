@@ -168,9 +168,9 @@
                                         href="{{socketService.server_url}}{{doc.url}}"
                                         target="__blank"
                                         class="download">
-                                            <span class="file_name">
+                                            <span class="file_name" >
                                                 {{doc.name}}
-                                                <i title="Move to my folder" *ngIf="!doc.moved" class="fa fa-save p-2" (click)="open_my_folder($event,doc)"></i>
+                                                <i title="Move to my folder" *ngIf="!doc.moved && ['.pdf', '.doc'].indexOf(doc.file_type) > -1 && !active_chat_user.is_group" class="fa fa-save p-2" (click)="open_my_folder($event,doc)"></i>
                                                 <i class="fa fa-download"></i>                                                
                                             </span>
                                         </a>                                        
