@@ -217,8 +217,8 @@ class SignatureDoc(File, Actions):
             output.addPage(input.getPage(page_number))
 
         prev_page_count = input.getNumPages()
-        temp_pdf = PdfFileReader(open(temp_file_path, "rb"))
-
+        temp_file = open(temp_file_path, "rb")
+        temp_pdf = PdfFileReader(temp_file)
         added_pages = []
         new_page_number = prev_page_count
         for page_number in range(temp_pdf.getNumPages()):
@@ -234,6 +234,7 @@ class SignatureDoc(File, Actions):
         self.pending_tasks = 0
         self.pdf_doc.save(self.file_name, DjangoFile(res))
         if os.path.isfile(temp_file_path):
+            temp_file.close()
             os.remove(temp_file_path)
         if os.path.isfile(output_file_path):
             os.remove(output_file_path)
