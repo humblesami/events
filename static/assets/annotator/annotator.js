@@ -17,6 +17,7 @@
     var mention_list = undefined;
     var handlePointAnnotationClick = undefined;
     var doc_loading_step = undefined;
+    var move_to_point = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -24,6 +25,12 @@
         console.log("Save annotation not defined");
     };
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
+
+    move_to_point = function(point_id){
+        let annot_id = $('div[db_id="'+point_id+'"]:first').attr('point_id');
+        $('.toolbar:first .comment:not(.personal):first').click();
+        $('#comment-wrapper .comment-list .groupcomment[annotationid="'+annot_id+'"]').click();
+    };
 
     function select_cursor(target) {
         // console.log(45);
