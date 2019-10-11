@@ -16,21 +16,14 @@
     var activate_annotation = undefined;
     var mention_list = undefined;
     var handlePointAnnotationClick = undefined;
-    var doc_loading_step = undefined;
-    var move_to_point = undefined;
+    var doc_loading_step = undefined;    
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
     var saveAnnotationsAtServer = function() {
         console.log("Save annotation not defined");
     };
-    var is_localhost = window.location.toString().indexOf('localhost:') > -1;
-
-    move_to_point = function(point_id){
-        let annot_id = $('div[db_id="'+point_id+'"]:first').attr('point_id');
-        $('.toolbar:first .comment:not(.personal):first').click();
-        $('#comment-wrapper .comment-list .groupcomment[annotationid="'+annot_id+'"]').click();
-    };
+    var is_localhost = window.location.toString().indexOf('localhost:') > -1;    
 
     function select_cursor(target) {
         // console.log(45);
@@ -140,6 +133,50 @@
         }
     }
 
+    function move_to_point (point_id){
+        let annot_id = $('div[db_id="'+point_id+'"]:first').attr('point_id');
+        $('.toolbar:first .comment:not(.personal):first').click();
+        $('#comment-wrapper .comment-list .groupcomment[annotationid="'+annot_id+'"]').click();
+    }
+
+    function process_notification_url(item_url){        
+        var url_origin = window.location.origin.toString();
+        if(item_url.indexOf(url_origin) == -1)
+        {
+            if(!item_url.startsWith('/'))
+            {
+                item_url = '/' +item_url;
+            }
+            item_url = url_origin + item_url;
+        }
+        var arr = item_url.split('/');
+        var third_last = undefined;
+        try{
+            third_last = arr[arr.length - 3];
+        } 
+        catch(er){
+            // console.log(er)
+        }
+        if(third_last != 'doc'){
+            return;
+        }
+        var point_id = arr[arr.length -1];
+        arr = arr.splice(0, arr.length - 1);
+        var url_without_point = arr.join('/');
+        
+        var url_now = window.location.toString();
+        arr = item_url.split('/');
+        arr = arr.splice(0, arr.length - 1);
+        url_now = arr.join('/');
+        if(url_without_point == url_now){
+            move_to_point(point_id);
+        }
+        else{
+            item_url = item_url.replace(window.location.origin+'');
+            window.open(item_url);
+        }
+    }
+
     var scroll_div;
     var content_wrapper;
 
@@ -176,6 +213,41 @@
                     }
                 }
             }, 10);
+        });
+
+        // var notification_list = $('.notification-list:first');
+        // console.log($('.notification-list').length,notification_list.attr('pointclickapplied'), 333);                
+        // if(!notification_list.attr('pointclickapplied'))
+        // {
+        //     notification_list.on('click','.chat-items>li', function() {
+        //         console.log(this);
+        //     });
+        //     notification_list.attr('pointclickapplied' ,1);
+        // }
+
+        var notification_list = $('.notification-list:first');
+        console.log(33331);
+        notification_list.on('click','.chat-items>li', function() {
+            console.log(this);
+            var el = $(this);
+            var link = el.find('a');
+            if(!link.length)
+            {
+                return;
+            }
+            var item_url = link.attr('routerLink');
+            if(!item_url){
+                item_url = link.attr('href');
+            }
+            if(!item_url){
+                return;
+            }
+            if(item_url.endsWith('/'))
+            {
+                item_url = item_url.substr(0, item_url.length -1);
+            }
+            console.log(item_url);
+            process_notification_url(item_url);            
         });
     });
 
@@ -408,7 +480,7 @@
             $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
                 document.execCommand("copy");
                 $(this).parent().parent().hide();
-            });
+            });            
 
             $(document).mousedown(function(e) {
                 if (e.button == 2)
@@ -471,11 +543,7 @@
                         obj.append($('#applied_color').show());
                     });
                 }
-            });
-
-            $('.notification-list:first').on('click, li.list-group-item contact', function() {
-                console.log(1344);
-            });
+            });            
 
             function onPenLeave() {
 
@@ -491,7 +559,7 @@
                 var point_annotations = annotations_of_page.filter(function(a) {
                     return a.type == 'point' && !a.sub_type;
                 });
-                console.log(point_annotations, 444);
+                // console.log(point_annotations, 444);
                 for (var p_index in point_annotations) {
                     var c_point = point_annotations[p_index];
                     // console.log(c_point);
@@ -533,12 +601,14 @@
                     comments_wrapper.addClass('notes');
 
                     comments_wrapper.find('.title:first').html('Personal Notes');
+                    comments_wrapper.removeClass('comments').addClass('notes');
                 } else {
 
                     comments_wrapper.removeClass('notes');
                     comments_wrapper.addClass('comments');
 
                     comments_wrapper.find('.title:first').html('Comments');
+                    comments_wrapper.removeClass('notes').addClass('comments');
                 }
                 comments_wrapper.show();
                 if (!activePointId) {
@@ -1320,7 +1390,7 @@
 
                 loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
-                    comments_wrapper.removeClass('single_point_comments').addClass('all_point_comments');
+                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');                    
                     comment_list.removeAttr('annotation-id');
                     $('.comment-list-container').addClass('full-discussion');
                     var point_type = false;
@@ -1340,6 +1410,10 @@
                         }
                         onAllCommentsRendered(point_uuid)
                     });
+                    if(comments_wrapper.hasClass('comments'))
+                    {
+                        comments_wrapper.addClass('all_point_comments');
+                    }
                 }
 
                 function onAllCommentsRendered(point_uuid) {
@@ -1414,6 +1488,7 @@
                 });
 
                 select_comment_item = function(point_identifier) {
+                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     if (!comments_loaded) {
                         loadALlCommentsOnDocument(point_identifier);
                         return;
@@ -1428,11 +1503,18 @@
                         return;
                     }
                     var dom_item_to_focus = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
+                    if(!dom_item_to_focus.length)
+                    {
+                        return;
+                    }                    
                     var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="' + annotationId + '"]')
                     if (c_svg.length > 0) {
                         window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
-                        handleAnnotationClick(c_svg[0]);
-                        comments_wrapper.removeClass('all_point_comments').addClass('single_point_comments');                        
+                        handleAnnotationClick(c_svg[0]);                        
+                        if(comments_wrapper.hasClass('comments'))
+                        {
+                            comments_wrapper.addClass('single_point_comments');
+                        }
                     }
                 }
 
@@ -1674,31 +1756,31 @@
                     }
                     exports.default = {
                         /**
-                         * Abstract class that needs to be defined so PDFJSAnnotate
-                         * knows how to communicate with your server.
-                         */
+                            * Abstract class that needs to be defined so PDFJSAnnotate
+                            * knows how to communicate with your server.
+                            */
                         StoreAdapter: _StoreAdapter2.default,
                         /**
-                         * Implementation of StoreAdapter that stores annotation data to localStorage.
-                         */
+                            * Implementation of StoreAdapter that stores annotation data to localStorage.
+                            */
                         LocalStoreAdapter: _LocalStoreAdapter2.default,
                         /**
-                         * Abstract instance of StoreAdapter
-                         */
+                            * Abstract instance of StoreAdapter
+                            */
                         __storeAdapter: new _StoreAdapter2.default(),
                         /**
-                         * Getter for the underlying StoreAdapter property
-                         *
-                         * @return {StoreAdapter}
-                         */
+                            * Getter for the underlying StoreAdapter property
+                            *
+                            * @return {StoreAdapter}
+                            */
                         getStoreAdapter: function getStoreAdapter() {
                             return this.__storeAdapter;
                         },
                         /**
-                         * Setter for the underlying StoreAdapter property
-                         *
-                         * @param {StoreAdapter} adapter The StoreAdapter implementation to be used.
-                         */
+                            * Setter for the underlying StoreAdapter property
+                            *
+                            * @param {StoreAdapter} adapter The StoreAdapter implementation to be used.
+                            */
                         setStoreAdapter: function setStoreAdapter(adapter) { // TODO this throws an error when bundled
                             // if (!(adapter instanceof StoreAdapter)) {
                             //   throw new Error('adapter must be an instance of StoreAdapter');
@@ -1706,27 +1788,27 @@
                             this.__storeAdapter = adapter;
                         },
                         /**
-                         * UI is a helper for instrumenting UI interactions for creating,
-                         * editing, and deleting annotations in the browser.
-                         */
+                            * UI is a helper for instrumenting UI interactions for creating,
+                            * editing, and deleting annotations in the browser.
+                            */
                         UI: _UI2.default,
                         /**
-                         * Render the annotations for a page in the PDF Document
-                         *
-                         * @param {SVGElement} svg The SVG element that annotations should be rendered to
-                         * @param {PageViewport} viewport The PDFPage.getViewport data
-                         * @param {Object} data The StoreAdapter.getAnnotations data
-                         * @return {Promise}
-                         */
+                            * Render the annotations for a page in the PDF Document
+                            *
+                            * @param {SVGElement} svg The SVG element that annotations should be rendered to
+                            * @param {PageViewport} viewport The PDFPage.getViewport data
+                            * @param {Object} data The StoreAdapter.getAnnotations data
+                            * @return {Promise}
+                            */
                         render: _render2.default,
                         /**
-                         * Convenience method for getting annotation data
-                         *
-                         * @alias StoreAdapter.getAnnotations
-                         * @param {String} documentId The ID of the document
-                         * @param {String} pageNumber The page number
-                         * @return {Promise}
-                         */
+                            * Convenience method for getting annotation data
+                            *
+                            * @alias StoreAdapter.getAnnotations
+                            * @param {String} documentId The ID of the document
+                            * @param {String} pageNumber The page number
+                            * @return {Promise}
+                            */
                         getAnnotations: function getAnnotations(documentId, pageNumber) {
                             var _getStoreAdapter;
                             return (_getStoreAdapter = this.getStoreAdapter()).getAnnotations.apply(_getStoreAdapter, arguments);
@@ -1771,10 +1853,10 @@
                     } // Adapter should never be invoked publicly
                     var StoreAdapter = function() {
                         /**
-                         * Create a new StoreAdapter instance
-                         *
-                         * @param {Object} [definition] The definition to use for overriding abstract methods
-                         */
+                            * Create a new StoreAdapter instance
+                            *
+                            * @param {Object} [definition] The definition to use for overriding abstract methods
+                            */
                         function StoreAdapter() {
                             var _this = this;
                             var definition = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -1786,12 +1868,12 @@
                             });
                         }
                         /**
-                         * Get all the annotations for a given document and page number.
-                         *
-                         * @param {String} documentId The ID for the document the annotations belong to
-                         * @param {Number} pageNumber The number of the page the annotations belong to
-                         * @return {Promise}
-                         */
+                            * Get all the annotations for a given document and page number.
+                            *
+                            * @param {String} documentId The ID for the document the annotations belong to
+                            * @param {Number} pageNumber The number of the page the annotations belong to
+                            * @return {Promise}
+                            */
                         _createClass(StoreAdapter, [{
                             key: '__getAnnotations',
                             value: function __getAnnotations(documentId, pageNumber) {
@@ -1800,23 +1882,23 @@
                         }, {
                             key: 'getAnnotation',
                             /**
-                             * Get the definition for a specific annotation.
-                             *
-                             * @param {String} documentId The ID for the document the annotation belongs to
-                             * @param {String} annotationId The ID for the annotation
-                             * @return {Promise}
-                             */
+                                * Get the definition for a specific annotation.
+                                *
+                                * @param {String} documentId The ID for the document the annotation belongs to
+                                * @param {String} annotationId The ID for the annotation
+                                * @return {Promise}
+                                */
                             value: function getAnnotation(documentId, annotationId) {
                                 (0, _abstractFunction2.default)('getAnnotation');
                             }
                             /**
-                             * Add an annotation
-                             *
-                             * @param {String} documentId The ID for the document to add the annotation to
-                             * @param {String} pageNumber The page number to add the annotation to
-                             * @param {Object} annotation The definition for the new annotation
-                             * @return {Promise}
-                             */
+                                * Add an annotation
+                                *
+                                * @param {String} documentId The ID for the document to add the annotation to
+                                * @param {String} pageNumber The page number to add the annotation to
+                                * @param {Object} annotation The definition for the new annotation
+                                * @return {Promise}
+                                */
                         }, {
                             key: 'getCommentAnnotations',
                             value: function getCommentAnnotations(documentId) {
@@ -1841,43 +1923,43 @@
                         }, {
                             key: '__deleteAnnotation',
                             /**
-                             * Delete an annotation
-                             *
-                             * @param {String} documentId The ID for the document
-                             * @param {String} annotationId The ID for the annotation
-                             * @return {Promise}
-                             */
+                                * Delete an annotation
+                                *
+                                * @param {String} documentId The ID for the document
+                                * @param {String} annotationId The ID for the annotation
+                                * @return {Promise}
+                                */
                             value: function __deleteAnnotation(documentId, annotationId) {
                                 (0, _abstractFunction2.default)('deleteAnnotation');
                             }
                         }, {
                             key: 'getComments',
                             /**
-                             * Get all the comments for an annotation
-                             *
-                             * @param {String} documentId The ID for the document
-                             * @param {String} annotationId The ID for the annotation
-                             * @return {Promise}
-                             */
+                                * Get all the comments for an annotation
+                                *
+                                * @param {String} documentId The ID for the document
+                                * @param {String} annotationId The ID for the annotation
+                                * @return {Promise}
+                                */
                             value: function getComments(documentId, annotationId) {
                                 (0, _abstractFunction2.default)('getComments');
                             }
                             /**
-                             * Add a new comment
-                             *
-                             * @param {String} documentId The ID for the document
-                             * @param {String} annotationId The ID for the annotation
-                             * @param {Object} content The definition of the comment
-                             * @return {Promise}
-                             */
+                                * Add a new comment
+                                *
+                                * @param {String} documentId The ID for the document
+                                * @param {String} annotationId The ID for the annotation
+                                * @param {Object} content The definition of the comment
+                                * @return {Promise}
+                                */
                         }, {
                             key: 'getAllComments',
                             /**
-                             * Get all the comments on document
-                             *
-                             * @param {String} documentId The ID for the document
-                             * @return {Promise}
-                             */
+                                * Get all the comments on document
+                                *
+                                * @param {String} documentId The ID for the document
+                                * @return {Promise}
+                                */
                             value: function getAllComments(documentId) {
                                 (0, _abstractFunction2.default)('getAllComments');
                             }
@@ -1889,24 +1971,24 @@
                         }, {
                             key: '__editComment',
                             /**
-                             * Delete a comment
-                             *
-                             * @param {String} documentId The ID for the document
-                             * @param {String} commentId The ID for the comment
-                             * @return {Promise}
-                             */
+                                * Delete a comment
+                                *
+                                * @param {String} documentId The ID for the document
+                                * @param {String} commentId The ID for the comment
+                                * @return {Promise}
+                                */
                             value: function __editComment(documentId, commentId) {
                                 (0, _abstractFunction2.default)('editComment');
                             }
                         }, {
                             key: '__deleteComment',
                             /**
-                             * Delete a comment
-                             *
-                             * @param {String} documentId The ID for the document
-                             * @param {String} commentId The ID for the comment
-                             * @return {Promise}
-                             */
+                                * Delete a comment
+                                *
+                                * @param {String} documentId The ID for the document
+                                * @param {String} commentId The ID for the comment
+                                * @return {Promise}
+                                */
                             value: function __deleteComment(documentId, annotationId, commentId) {
                                 (0, _abstractFunction2.default)('deleteComment');
                             }
@@ -2023,10 +2105,10 @@
                     });
                     exports.default = abstractFunction;
                     /**
-                     * Throw an Error for an abstract function that hasn't been implemented.
-                     *
-                     * @param {String} name The name of the abstract function
-                     */
+                        * Throw an Error for an abstract function that hasn't been implemented.
+                        *
+                        * @param {String} name The name of the abstract function
+                        */
                     function abstractFunction(name) {
                         throw new Error(name + ' is not implemented');
                     }
@@ -2051,10 +2133,10 @@
                     var emitter = new _events2.default();
                     var clickNode = void 0;
                     /**
-                     * Handle document.click event
-                     *
-                     * @param {Event} e The DOM event to be handled
-                     */
+                        * Handle document.click event
+                        *
+                        * @param {Event} e The DOM event to be handled
+                        */
                     document.addEventListener('click', function(e) {
                         // console.log(7887);
                         if (!$('.toolbar .cursor').hasClass('active')) {
@@ -2318,11 +2400,11 @@
                     });
                     userSelectStyleSheet.setAttribute('data-pdf-annotate-user-select', 'true');
                     /**
-                     * Find the SVGElement that contains all the annotations for a page
-                     *
-                     * @param {Element} node An annotation within that container
-                     * @return {SVGElement} The container SVG or null if it can't be found
-                     */
+                        * Find the SVGElement that contains all the annotations for a page
+                        *
+                        * @param {Element} node An annotation within that container
+                        * @return {SVGElement} The container SVG or null if it can't be found
+                        */
                     function findSVGContainer(node) {
                         var parentNode = node;
                         while ((parentNode = parentNode.parentNode) && parentNode !== document) {
@@ -2333,12 +2415,12 @@
                         return null;
                     }
                     /**
-                     * Find an SVGElement container at a given point
-                     *
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     * @return {SVGElement} The container SVG or null if one can't be found
-                     */
+                        * Find an SVGElement container at a given point
+                        *
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        * @return {SVGElement} The container SVG or null if one can't be found
+                        */
                     function findSVGAtPoint(x, y) {
                         var elements = document.querySelectorAll('svg[data-pdf-annotate-container="true"]');
                         for (var i = 0, l = elements.length; i < l; i++) {
@@ -2351,12 +2433,12 @@
                         return null;
                     }
                     /**
-                     * Find an Element that represents an annotation at a given point
-                     *
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     * @return {Element} The annotation element or null if one can't be found
-                     */
+                        * Find an Element that represents an annotation at a given point
+                        *
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        * @return {Element} The annotation element or null if one can't be found
+                        */
                     function findAnnotationAtPoint(x, y) {
                         var svg = findSVGAtPoint(x, y);
                         if (!svg) {
@@ -2373,22 +2455,22 @@
                     }
 
                     /**
-                     * Determine if a point intersects a rect
-                     *
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     * @param {Object} rect The points of a rect (likely from getBoundingClientRect)
-                     * @return {Boolean} True if a collision occurs, otherwise false
-                     */
+                        * Determine if a point intersects a rect
+                        *
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        * @param {Object} rect The points of a rect (likely from getBoundingClientRect)
+                        * @return {Boolean} True if a collision occurs, otherwise false
+                        */
                     function pointIntersectsRect(x, y, rect) {
                         return y >= rect.top && y <= rect.bottom && x >= rect.left && x <= rect.right;
                     }
                     /**
-                     * Get the rect of an annotation element accounting for offset.
-                     *
-                     * @param {Element} el The element to get the rect of
-                     * @return {Object} The dimensions of the element
-                     */
+                        * Get the rect of an annotation element accounting for offset.
+                        *
+                        * @param {Element} el The element to get the rect of
+                        * @return {Object} The dimensions of the element
+                        */
                     function getOffsetAnnotationRect(el) {
                         var rect = getAnnotationRect(el);
                         var _getOffset = getOffset(el);
@@ -2402,11 +2484,11 @@
                         };
                     }
                     /**
-                     * Get the rect of an annotation element.
-                     *
-                     * @param {Element} el The element to get the rect of
-                     * @return {Object} The dimensions of the element
-                     */
+                        * Get the rect of an annotation element.
+                        *
+                        * @param {Element} el The element to get the rect of
+                        * @return {Object} The dimensions of the element
+                        */
                     function getAnnotationRect(el) {
                         var h = 0,
                             w = 0,
@@ -2499,12 +2581,12 @@
                         return result;
                     }
                     /**
-                     * Adjust scale from normalized scale (100%) to rendered scale.
-                     *
-                     * @param {SVGElement} svg The SVG to gather metadata from
-                     * @param {Object} rect A map of numeric values to scale
-                     * @return {Object} A copy of "rect" with values scaled up
-                     */
+                        * Adjust scale from normalized scale (100%) to rendered scale.
+                        *
+                        * @param {SVGElement} svg The SVG to gather metadata from
+                        * @param {Object} rect A map of numeric values to scale
+                        * @return {Object} A copy of "rect" with values scaled up
+                        */
                     function scaleUp(svg, rect) {
                         var result = {};
                         var _getMetadata = getMetadata(svg);
@@ -2515,12 +2597,12 @@
                         return result;
                     }
                     /**
-                     * Adjust scale from rendered scale to a normalized scale (100%).
-                     *
-                     * @param {SVGElement} svg The SVG to gather metadata from
-                     * @param {Object} rect A map of numeric values to scale
-                     * @return {Object} A copy of "rect" with values scaled down
-                     */
+                        * Adjust scale from rendered scale to a normalized scale (100%).
+                        *
+                        * @param {SVGElement} svg The SVG to gather metadata from
+                        * @param {Object} rect A map of numeric values to scale
+                        * @return {Object} A copy of "rect" with values scaled down
+                        */
                     function scaleDown(svg, rect) {
                         var result = {};
                         var _getMetadata2 = getMetadata(svg);
@@ -2531,11 +2613,11 @@
                         return result;
                     }
                     /**
-                     * Get the scroll position of an element, accounting for parent elements
-                     *
-                     * @param {Element} el The element to get the scroll position for
-                     * @return {Object} The scrollTop and scrollLeft position
-                     */
+                        * Get the scroll position of an element, accounting for parent elements
+                        *
+                        * @param {Element} el The element to get the scroll position for
+                        * @return {Object} The scrollTop and scrollLeft position
+                        */
                     function getScroll(el) {
                         var scrollTop = 0;
                         var scrollLeft = 0;
@@ -2550,11 +2632,11 @@
                         };
                     }
                     /**
-                     * Get the offset position of an element, accounting for parent elements
-                     *
-                     * @param {Element} el The element to get the offset position for
-                     * @return {Object} The offsetTop and offsetLeft position
-                     */
+                        * Get the offset position of an element, accounting for parent elements
+                        *
+                        * @param {Element} el The element to get the offset position for
+                        * @return {Object} The offsetTop and offsetLeft position
+                        */
                     function getOffset(el) {
                         var parentNode = el;
                         while ((parentNode = parentNode.parentNode) && parentNode !== document) {
@@ -2569,26 +2651,26 @@
                         };
                     }
                     /**
-                     * Disable user ability to select text on page
-                     */
+                        * Disable user ability to select text on page
+                        */
                     function disableUserSelect() {
                         if (!userSelectStyleSheet.parentNode) {
                             document.head.appendChild(userSelectStyleSheet);
                         }
                     }
                     /**
-                     * Enable user ability to select text on page
-                     */
+                        * Enable user ability to select text on page
+                        */
                     function enableUserSelect() {
                         if (userSelectStyleSheet.parentNode) {
                             userSelectStyleSheet.parentNode.removeChild(userSelectStyleSheet);
                         }
                     }
                     /**
-                     * Get the metadata for a SVG container
-                     *
-                     * @param {SVGElement} svg The SVG container to get metadata for
-                     */
+                        * Get the metadata for a SVG container
+                        *
+                        * @param {SVGElement} svg The SVG container to get metadata for
+                        */
                     function getMetadata(svg) {
                         return {
                             documentId: svg.getAttribute('data-pdf-annotate-document'),
@@ -3030,10 +3112,10 @@
                         return v.toString(16);
                     }
                     /**
-                     * Generate a univierally unique identifier
-                     *
-                     * @return {String}
-                     */
+                        * Generate a univierally unique identifier
+                        *
+                        * @return {String}
+                        */
                     function uuid() {
                         return PATTERN.replace(REGEXP, replacement);
                     }
@@ -3057,16 +3139,16 @@
                         };
                     }
                     /**
-                     * Render the response from PDFJSAnnotate.getStoreAdapter().getAnnotations to SVG
-                     *
-                     * @param {SVGElement} svg The SVG element to render the annotations to
-                     * @param {Object} viewport The page viewport data
-                     * @param {Object} data The response from PDFJSAnnotate.getStoreAdapter().getAnnotations
-                     * @return {Promise} Settled once rendering has completed
-                     *  A settled Promise will be either:
-                     *    - fulfilled: SVGElement
-                     *    - rejected: Error
-                     */
+                        * Render the response from PDFJSAnnotate.getStoreAdapter().getAnnotations to SVG
+                        *
+                        * @param {SVGElement} svg The SVG element to render the annotations to
+                        * @param {Object} viewport The page viewport data
+                        * @param {Object} data The response from PDFJSAnnotate.getStoreAdapter().getAnnotations
+                        * @return {Promise} Settled once rendering has completed
+                        *  A settled Promise will be either:
+                        *    - fulfilled: SVGElement
+                        *    - rejected: Error
+                        */
                     function render(svg, viewport, data) {
 
                         return new Promise(function(resolve, reject) { // Reset the content of the SVG
@@ -3114,12 +3196,12 @@
                     }
                     var isFirefox = /firefox/i.test(navigator.userAgent);
                     /**
-                     * Get the x/y translation to be used for transforming the annotations
-                     * based on the rotation of the viewport.
-                     *
-                     * @param {Object} viewport The viewport data from the page
-                     * @return {Object}
-                     */
+                        * Get the x/y translation to be used for transforming the annotations
+                        * based on the rotation of the viewport.
+                        *
+                        * @param {Object} viewport The viewport data from the page
+                        * @return {Object}
+                        */
                     function getTranslation(viewport) {
                         var x = void 0;
                         var y = void 0; // Modulus 360 on the rotation so that we only
@@ -3150,12 +3232,12 @@
                         };
                     }
                     /**
-                     * Transform the rotation and scale of a node using SVG's native transform attribute.
-                     *
-                     * @param {Node} node The node to be transformed
-                     * @param {Object} viewport The page's viewport data
-                     * @return {Node}
-                     */
+                        * Transform the rotation and scale of a node using SVG's native transform attribute.
+                        *
+                        * @param {Node} node The node to be transformed
+                        * @param {Object} viewport The page's viewport data
+                        * @return {Node}
+                        */
                     function transform(node, viewport) {
                         var trans = getTranslation(viewport);
                         var scale_rotate = 'scale(' + viewport.scale + ')';
@@ -3218,13 +3300,13 @@
                         return node;
                     }
                     /**
-                     * Append an annotation as a child of an SVG.
-                     *
-                     * @param {SVGElement} svg The SVG element to append the annotation to
-                     * @param {Object} annotation The annotation definition to render and append
-                     * @param {Object} viewport The page's viewport data
-                     * @return {SVGElement} A node that was created and appended by this function
-                     */
+                        * Append an annotation as a child of an SVG.
+                        *
+                        * @param {SVGElement} svg The SVG element to append the annotation to
+                        * @param {Object} annotation The annotation definition to render and append
+                        * @param {Object} viewport The page's viewport data
+                        * @return {SVGElement} A node that was created and appended by this function
+                        */
                     function appendChild(svg, annotation, viewport) {
                         if (!viewport) {
                             viewport = JSON.parse(svg.getAttribute('data-pdf-annotate-viewport'));
@@ -3310,12 +3392,12 @@
                         };
                     }
                     /**
-                     * Create SVGLineElements from an annotation definition.
-                     * This is used for anntations of type "strikeout".
-                     *
-                     * @param {Object} a The annotation definition
-                     * @return {SVGGElement} A group of all lines to be rendered
-                     */
+                        * Create SVGLineElements from an annotation definition.
+                        * This is used for anntations of type "strikeout".
+                        *
+                        * @param {Object} a The annotation definition
+                        * @return {SVGGElement} A group of all lines to be rendered
+                        */
                     function renderLine(a) {
                         var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                         (0, _setAttributes2.default)(group, {
@@ -3352,11 +3434,11 @@
                         return key;
                     };
                     /**
-                     * Set attributes for a node from a map
-                     *
-                     * @param {Node} node The node to set attributes on
-                     * @param {Object} attributes The map of key/value pairs to use for attributes
-                     */
+                        * Set attributes for a node from a map
+                        *
+                        * @param {Node} node The node to set attributes on
+                        * @param {Object} attributes The map of key/value pairs to use for attributes
+                        */
                     function setAttributes(node, attributes) {
                         var attr = Object.keys(attributes);
                         attr.forEach(function(key) {
@@ -3372,11 +3454,11 @@
                     exports.default = normalizeColor;
                     var REGEX_HASHLESS_HEX = /^([a-f0-9]{6}|[a-f0-9]{3})$/i;
                     /**
-                     * Normalize a color value
-                     *
-                     * @param {String} color The color to normalize
-                     * @return {String}
-                     */
+                        * Normalize a color value
+                        *
+                        * @param {String} color The color to normalize
+                        * @return {String}
+                        */
                     function normalizeColor(color) {
                         if (REGEX_HASHLESS_HEX.test(color)) {
                             color = "#" + color;
@@ -3401,12 +3483,12 @@
                         };
                     }
                     /**
-                     * Create SVGPathElement from an annotation definition.
-                     * This is used for anntations of type "drawing".
-                     *
-                     * @param {Object} a The annotation definition
-                     * @return {SVGPathElement} The path to be rendered
-                     */
+                        * Create SVGPathElement from an annotation definition.
+                        * This is used for anntations of type "drawing".
+                        *
+                        * @param {Object} a The annotation definition
+                        * @return {SVGPathElement} The path to be rendered
+                        */
                     function renderPath(a) {
                         var d = [];
                         var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -3444,12 +3526,12 @@
                     var SIZE = 25;
                     var D = 'M499.968 214.336q-113.832 0 -212.877 38.781t-157.356 104.625 -58.311 142.29q0 62.496 39.897 119.133t112.437 97.929l48.546 27.9 -15.066 53.568q-13.392 50.778 -39.06 95.976 84.816 -35.154 153.45 -95.418l23.994 -21.204 31.806 3.348q38.502 4.464 72.54 4.464 113.832 0 212.877 -38.781t157.356 -104.625 58.311 -142.29 -58.311 -142.29 -157.356 -104.625 -212.877 -38.781z';
                     /**
-                     * Create SVGElement from an annotation definition.
-                     * This is used for anntations of type "comment".
-                     *
-                     * @param {Object} a The annotation definition
-                     * @return {SVGElement} A svg to be rendered
-                     */
+                        * Create SVGElement from an annotation definition.
+                        * This is used for anntations of type "comment".
+                        *
+                        * @param {Object} a The annotation definition
+                        * @return {SVGElement} A svg to be rendered
+                        */
                     function renderPoint(a) {
                         //console.log(a);
                         var outerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -3538,12 +3620,12 @@
                         };
                     }
                     /**
-                     * Create SVGRectElements from an annotation definition.
-                     * This is used for anntations of type area and highlight.
-                     *
-                     * @param {Object} a The annotation definition
-                     * @return {SVGGElement|SVGRectElement} A group of all rects to be rendered
-                     */
+                        * Create SVGRectElements from an annotation definition.
+                        * This is used for anntations of type area and highlight.
+                        *
+                        * @param {Object} a The annotation definition
+                        * @return {SVGGElement|SVGRectElement} A group of all rects to be rendered
+                        */
                     function renderRect(a) {
                         if (a.type === 'highlight') {
                             var _ret = function() {
@@ -3598,12 +3680,12 @@
                         };
                     }
                     /**
-                     * Create SVGTextElement from an annotation definition.
-                     * This is used for anntations of type textbox.
-                     *
-                     * @param {Object} a The annotation definition
-                     * @return {SVGTextElement} A text to be rendered
-                     */
+                        * Create SVGTextElement from an annotation definition.
+                        * This is used for anntations of type textbox.
+                        *
+                        * @param {Object} a The annotation definition
+                        * @return {SVGTextElement} A text to be rendered
+                        */
                     function renderText(a) {
                         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                         (0, _setAttributes2.default)(text, {
@@ -3634,10 +3716,10 @@
                     } // TODO This is not the right place for this to live
                     (0, _initEventHandlers2.default)();
                     /**
-                     * Insert hints into the DOM for screen readers.
-                     *
-                     * @param {Array} annotations The annotations that hints are inserted for
-                     */
+                        * Insert hints into the DOM for screen readers.
+                        *
+                        * @param {Array} annotations The annotations that hints are inserted for
+                        */
                     function renderScreenReaderHints(annotations) {
                         annotations = Array.isArray(annotations) ? annotations : []; // Insert hints for each type
                         Object.keys(SORT_TYPES).forEach(function(type) {
@@ -3704,11 +3786,11 @@
                     } // Annotation types that support comments
                     var COMMENT_TYPES = ['highlight', 'point', 'area'];
                     /**
-                     * Insert a hint into the DOM for screen readers for a specific annotation.
-                     *
-                     * @param {Object} annotation The annotation to insert a hint for
-                     * @param {Number} num The number of the annotation out of all annotations of the same type
-                     */
+                        * Insert a hint into the DOM for screen readers for a specific annotation.
+                        *
+                        * @param {Object} annotation The annotation to insert a hint for
+                        * @param {Number} num The number of the annotation out of all annotations of the same type
+                        */
                     function insertScreenReaderHint(annotation) {
                         var num = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
                         switch (annotation.type) {
@@ -3749,12 +3831,12 @@
                     });
                     exports.default = createScreenReaderOnly;
                     /**
-                     * Create a node that is only visible to screen readers
-                     *
-                     * @param {String} content The text content that should be read by screen reader
-                     * @param {String} [annotationId] The ID of the annotation assocaited
-                     * @return {Element} An Element that is only visible to screen readers
-                     */
+                        * Create a node that is only visible to screen readers
+                        *
+                        * @param {String} content The text content that should be read by screen reader
+                        * @param {String} [annotationId] The ID of the annotation assocaited
+                        * @return {Element} An Element that is only visible to screen readers
+                        */
                     function createScreenReaderOnly(content, annotationId) {
                         var node = document.createElement('div');
                         var text = document.createTextNode(content);
@@ -3796,16 +3878,16 @@
                         }
                     }
                     /**
-                     * Insert an element at a point within the document.
-                     * This algorithm will try to insert between elements if possible.
-                     * It will however use "insertElementWithinElement" if it is more accurate.
-                     *
-                     * @param {Element} el The element to be inserted
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     * @param {Number} pageNumber The page number to limit elements to
-                     * @return {Boolean} True if element was able to be inserted, otherwise false
-                     */
+                        * Insert an element at a point within the document.
+                        * This algorithm will try to insert between elements if possible.
+                        * It will however use "insertElementWithinElement" if it is more accurate.
+                        *
+                        * @param {Element} el The element to be inserted
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        * @param {Number} pageNumber The page number to limit elements to
+                        * @return {Boolean} True if element was able to be inserted, otherwise false
+                        */
                     function insertElementWithinChildren(el, x, y, pageNumber) { // Try and use most accurate method of inserting within an element
                         if ((0, _insertElementWithinElement2.default)(el, x, y, pageNumber, true)) {
                             return true;
@@ -3857,16 +3939,16 @@
                         }
                     }
                     /**
-                     * Insert an element at a point within the document.
-                     * This algorithm will only insert within an element amidst it's text content.
-                     *
-                     * @param {Element} el The element to be inserted
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     * @param {Number} pageNumber The page number to limit elements to
-                     * @param {Boolean} insertBefore Whether the element is to be inserted before or after x
-                     * @return {Boolean} True if element was able to be inserted, otherwise false
-                     */
+                        * Insert an element at a point within the document.
+                        * This algorithm will only insert within an element amidst it's text content.
+                        *
+                        * @param {Element} el The element to be inserted
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        * @param {Number} pageNumber The page number to limit elements to
+                        * @param {Boolean} insertBefore Whether the element is to be inserted before or after x
+                        * @return {Boolean} True if element was able to be inserted, otherwise false
+                        */
                     function insertElementWithinElement(el, x, y, pageNumber, insertBefore) {
                         var OFFSET_ADJUST = 2; // If inserting before adjust "x" by looking for element a few px to the right
                         // Otherwise adjust a few px to the left
@@ -3914,13 +3996,13 @@
                         return true;
                     }
                     /**
-                     * Get a text layer element at a given point on a page
-                     *
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     * @param {Number} pageNumber The page to limit elements to
-                     * @return {Element} First text layer element found at the point
-                     */
+                        * Get a text layer element at a given point on a page
+                        *
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        * @param {Number} pageNumber The page to limit elements to
+                        * @return {Element} First text layer element found at the point
+                        */
                     function textLayerElementFromPoint(x, y, pageNumber) {
                         var svg = document.querySelector('svg[data-pdf-annotate-page="' + pageNumber + '"]');
                         // console.log(pageNumber, 443, 2);
@@ -3953,28 +4035,28 @@
                         };
                     }
                     /**
-                     * Insert the comments into the DOM to be available by screen reader
-                     *
-                     * Example output:
-                     *   <div class="screenReaderOnly">
-                     *    <div>Begin highlight 1</div>
-                     *    <ol aria-label="Comments">
-                     *      <li>Foo</li>
-                     *      <li>Bar</li>
-                     *      <li>Baz</li>
-                     *      <li>Qux</li>
-                     *    </ol>
-                     *  </div>
-                     *  <div>Some highlighted text goes here...</div>
-                     *  <div class="screenReaderOnly">End highlight 1</div>
-                     *
-                     * NOTE: "screenReaderOnly" is not a real class, just used for brevity
-                     *
-                     * @param {String} documentId The ID of the document
-                     * @param {String} annotationId The ID of the annotation
-                     * @param {Array} [comments] Optionally preloaded comments to be rendered
-                     * @return {Promise}
-                     */
+                        * Insert the comments into the DOM to be available by screen reader
+                        *
+                        * Example output:
+                        *   <div class="screenReaderOnly">
+                        *    <div>Begin highlight 1</div>
+                        *    <ol aria-label="Comments">
+                        *      <li>Foo</li>
+                        *      <li>Bar</li>
+                        *      <li>Baz</li>
+                        *      <li>Qux</li>
+                        *    </ol>
+                        *  </div>
+                        *  <div>Some highlighted text goes here...</div>
+                        *  <div class="screenReaderOnly">End highlight 1</div>
+                        *
+                        * NOTE: "screenReaderOnly" is not a real class, just used for brevity
+                        *
+                        * @param {String} documentId The ID of the document
+                        * @param {String} annotationId The ID of the annotation
+                        * @param {Array} [comments] Optionally preloaded comments to be rendered
+                        * @return {Promise}
+                        */
                     function renderScreenReaderComments(documentId, annotationId, comments) {
                         var promise = void 0;
                         if (Array.isArray(comments)) {
@@ -4002,10 +4084,10 @@
                     });
                     exports.default = insertScreenReaderComment;
                     /**
-                     * Insert a comment into the DOM to be available by screen reader
-                     *
-                     * @param {Object} comment The comment to be inserted
-                     */
+                        * Insert a comment into the DOM to be available by screen reader
+                        *
+                        * @param {Object} comment The comment to be inserted
+                        */
                     function insertScreenReaderComment(comment) {
                         if (!comment) {
                             return;
@@ -4043,8 +4125,8 @@
                         };
                     }
                     /**
-                     * Initialize the event handlers for keeping screen reader hints synced with data
-                     */
+                        * Initialize the event handlers for keeping screen reader hints synced with data
+                        */
                     function initEventHandlers() {
                         (0, _event.addEventListener)('annotation:add', function(documentId, pageNumber, annotation) {
                             reorderAnnotationsByType(documentId, pageNumber, annotation.type);
@@ -4057,12 +4139,12 @@
                         (0, _event.addEventListener)('comment:delete', removeComment);
                     }
                     /**
-                     * Reorder the annotation numbers by annotation type
-                     *
-                     * @param {String} documentId The ID of the document
-                     * @param {Number} pageNumber The page number of the annotations
-                     * @param {Strig} type The annotation type
-                     */
+                        * Reorder the annotation numbers by annotation type
+                        *
+                        * @param {String} documentId The ID of the document
+                        * @param {Number} pageNumber The page number of the annotations
+                        * @param {Strig} type The annotation type
+                        */
                     function reorderAnnotationsByType(documentId, pageNumber, type) {
                         _PDFJSAnnotate2.default.getStoreAdapter().getAnnotations(documentId, pageNumber).then(function(annotations) {
                             return annotations.annotations.filter(function(a) {
@@ -4076,22 +4158,22 @@
                         }).then(_renderScreenReaderHints2.default);
                     }
                     /**
-                     * Remove the screen reader hint for an annotation
-                     *
-                     * @param {String} documentId The ID of the document
-                     * @param {String} annotationId The Id of the annotation
-                     */
+                        * Remove the screen reader hint for an annotation
+                        *
+                        * @param {String} documentId The ID of the document
+                        * @param {String} annotationId The Id of the annotation
+                        */
                     function removeAnnotation(documentId, annotationId) {
                         removeElementById('pdf-annotate-screenreader-' + annotationId);
                         removeElementById('pdf-annotate-screenreader-' + annotationId + '-end');
                     }
                     /**
-                     * Insert a screen reader hint for a comment
-                     *
-                     * @param {String} documentId The ID of the document
-                     * @param {String} annotationId The ID of tha assocated annotation
-                     * @param {Object} comment The comment to insert a hint for
-                     */
+                        * Insert a screen reader hint for a comment
+                        *
+                        * @param {String} documentId The ID of the document
+                        * @param {String} annotationId The ID of tha assocated annotation
+                        * @param {Object} comment The comment to insert a hint for
+                        */
                     function insertComment(documentId, annotationId, comment) {
                         var list = document.querySelector('pdf-annotate-screenreader-comment-list-' + annotationId);
                         var promise = void 0;
@@ -4108,19 +4190,19 @@
                         });
                     }
                     /**
-                     * Remove a screen reader hint for a comment
-                     *
-                     * @param {String} documentId The ID of the document
-                     * @param {String} commentId The ID of the comment
-                     */
+                        * Remove a screen reader hint for a comment
+                        *
+                        * @param {String} documentId The ID of the document
+                        * @param {String} commentId The ID of the comment
+                        */
                     function removeComment(documentId, commentId) {
                         removeElementById('pdf-annotate-screenreader-comment-' + commentId);
                     }
                     /**
-                     * Remove an element from the DOM by it's ID if it exists
-                     *
-                     * @param {String} elementID The ID of the element to be removed
-                     */
+                        * Remove an element from the DOM by it's ID if it exists
+                        *
+                        * @param {String} elementID The ID of the element to be removed
+                        */
                     function removeElementById(elementId) {
                         var el = document.getElementById(elementId);
                         if (el) {
@@ -4235,10 +4317,10 @@
                         dragStartY = void 0;
                     var OVERLAY_BORDER_SIZE = 3;
                     /**
-                     * Create an overlay for editing an annotation.
-                     *
-                     * @param {Element} target The annotation element to apply overlay for
-                     */
+                        * Create an overlay for editing an annotation.
+                        *
+                        * @param {Element} target The annotation element to apply overlay for
+                        */
                     function createEditOverlay(target) {
                         // console.log(targe166);
                         destroyEditOverlay();
@@ -4303,8 +4385,8 @@
 
 
                     /**
-                     * Destroy the edit overlay if it exists.
-                     */
+                        * Destroy the edit overlay if it exists.
+                        */
                     function destroyEditOverlay() {
                         if (overlay) {
                             overlay.parentNode.removeChild(overlay);
@@ -4318,8 +4400,8 @@
                         (0, _utils.enableUserSelect)();
                     }
                     /**
-                     * Delete currently selected annotation
-                     */
+                        * Delete currently selected annotation
+                        */
                     function deleteAnnotation() {
                         if (!overlay) {
                             return;
@@ -4350,10 +4432,10 @@
                     }
 
                     /**
-                     * Handle document.click event
-                     *
-                     * @param {Event} e The DOM event that needs to be handled
-                     */
+                        * Handle document.click event
+                        *
+                        * @param {Event} e The DOM event that needs to be handled
+                        */
                     function click29(e) {
                         if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
@@ -4367,10 +4449,10 @@
                         }
                     }
                     /**
-                     * Handle document.keyup event
-                     *
-                     * @param {Event} e The DOM event that needs to be handled
-                     */
+                        * Handle document.keyup event
+                        *
+                        * @param {Event} e The DOM event that needs to be handled
+                        */
                     function key_up29(e) {
                         if (overlay && e.keyCode === 46 && e.target.nodeName.toLowerCase() !== 'textarea' && e.target.nodeName.toLowerCase() !== 'input') {
                             deleteAnnotation();
@@ -4379,10 +4461,10 @@
 
                     var object_to_move = undefined;
                     /**
-                     * Handle document.mousedown event
-                     *
-                     * @param {Event} e The DOM event that needs to be handled
-                     */
+                        * Handle document.mousedown event
+                        *
+                        * @param {Event} e The DOM event that needs to be handled
+                        */
                     function mouse_down29(e) {
 
                         if (e.target !== overlay) {
@@ -4417,10 +4499,10 @@
                             object_to_move = object_to_move[0];
                     }
                     /**
-                     * Handle document.mousemove event
-                     *
-                     * @param {Event} e The DOM event that needs to be handled
-                     */
+                        * Handle document.mousemove event
+                        *
+                        * @param {Event} e The DOM event that needs to be handled
+                        */
                     function mouse_move29(e) {
                         var annotationId = overlay.getAttribute('data-target-id');
                         var parentNode = overlay.parentNode;
@@ -4444,10 +4526,10 @@
                         }
                     }
                     /**
-                     * Handle document.mouseup event
-                     *
-                     * @param {Event} e The DOM event that needs to be handled
-                     */
+                        * Handle document.mouseup event
+                        *
+                        * @param {Event} e The DOM event that needs to be handled
+                        */
                     function mouse_up29(e) {
                         var annotationId = overlay.getAttribute('data-target-id');
                         var target = document.querySelectorAll('[data-pdf-annotate-id="' + annotationId + '"]');
@@ -4550,10 +4632,10 @@
                         (0, _utils.enableUserSelect)();
                     }
                     /**
-                     * Handle annotation.click event
-                     *
-                     * @param {Element} e The annotation element that was clicked
-                     */
+                        * Handle annotation.click event
+                        *
+                        * @param {Element} e The annotation element that was clicked
+                        */
                     handleAnnotationClick = function(target) {
                         // console.log(561);
                         setTimeout(function() {
@@ -4563,8 +4645,8 @@
                         }, 15);
                     }
                     /**
-                     * Enable edit mode behavior.
-                     */
+                        * Enable edit mode behavior.
+                        */
                     function enableEdit(target) {
                         // console.log(_enabled, 679);
                         if (_enabled) {
@@ -4579,8 +4661,8 @@
                         (0, _event.addEventListener)('annotation:click', handleAnnotationClick);
                     };
                     /**
-                     * Disable edit mode behavior.
-                     */
+                        * Disable edit mode behavior.
+                        */
                     function disableEdit() {
                         destroyEditOverlay();
                         if (!_enabled) {
@@ -4614,8 +4696,8 @@
                     var path = void 0;
                     var lines = void 0;
                     /**
-                     * Handle document.mousedown event
-                     */
+                        * Handle document.mousedown event
+                        */
                     function mouse_down30(e) {
                         //console.log(e, 777);
                         if (is_mobile_device)
@@ -4632,10 +4714,10 @@
                         document.addEventListener('touchend', mouse_up30);
                     }
                     /**
-                     * Handle document.mouseup event
-                     *
-                     * @param {Event} e The DOM event to be handled
-                     */
+                        * Handle document.mouseup event
+                        *
+                        * @param {Event} e The DOM event to be handled
+                        */
 
                     function mouse_up30(e) {
                         //console.log(777);
@@ -4685,10 +4767,10 @@
                         });
                     }
                     /**
-                     * Handle document.mousemove event
-                     *
-                     * @param {Event} e The DOM event to be handled
-                     */
+                        * Handle document.mousemove event
+                        *
+                        * @param {Event} e The DOM event to be handled
+                        */
 
                     function mouse_move30(e) {
                         e.preventDefault();
@@ -4699,10 +4781,10 @@
                         savePoint(e.clientX, e.clientY);
                     }
                     /**
-                     * Handle document.keyup event
-                     *
-                     * @param {Event} e The DOM event to be handled
-                     */
+                        * Handle document.keyup event
+                        *
+                        * @param {Event} e The DOM event to be handled
+                        */
                     function key_up30(e) { // Cancel rect if Esc is pressed
                         if (e.keyCode === 27) {
                             lines = null;
@@ -4712,11 +4794,11 @@
                         }
                     }
                     /**
-                     * Save a point to the line being drawn.
-                     *
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     */
+                        * Save a point to the line being drawn.
+                        *
+                        * @param {Number} x The x coordinate of the point
+                        * @param {Number} y The y coordinate of the point
+                        */
                     function savePoint(x, y) {
                         var svg = (0, _utils.findSVGAtPoint)(x, y);
                         if (!svg) {
@@ -4742,11 +4824,11 @@
                         });
                     }
                     /**
-                     * Set the attributes of the pen.
-                     *
-                     * @param {Number} penSize The size of the lines drawn by the pen
-                     * @param {String} penColor The color of the lines drawn by the pen
-                     */
+                        * Set the attributes of the pen.
+                        *
+                        * @param {Number} penSize The size of the lines drawn by the pen
+                        * @param {String} penColor The color of the lines drawn by the pen
+                        */
                     function setPen() {
                         var penSize = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
                         var penColor = arguments.length <= 1 || arguments[1] === undefined ? '000000' : arguments[1];
@@ -4754,8 +4836,8 @@
                         _penColor = penColor;
                     }
                     /**
-                     * Enable the pen behavior
-                     */
+                        * Enable the pen behavior
+                        */
                     function enablePen() {
                         //console.log(777);                    
                         if (_enabled) {
@@ -4769,8 +4851,8 @@
                         (0, _utils.disableUserSelect)();
                     }
                     /**
-                     * Disable the pen behavior
-                     */
+                        * Disable the pen behavior
+                        */
                     function disablePen() {
                         if (!_enabled) {
                             return;
@@ -4806,10 +4888,10 @@
                     var _enabled = false;
                     var input = void 0;
                     /**
-                     * Handle document.mouseup event
-                     *
-                     * @param {Event} The DOM event to be handled
-                     */
+                        * Handle document.mouseup event
+                        *
+                        * @param {Event} The DOM event to be handled
+                        */
                     function mouse_up31(e) {
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
@@ -4828,16 +4910,16 @@
                         input.focus();
                     }
                     /**
-                     * Handle input.blur event
-                     */
+                        * Handle input.blur event
+                        */
                     function handleInputBlur() {
                         savePoint();
                     }
                     /**
-                     * Handle input.keyup event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle input.keyup event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function handleInputKeyup(e) {
                         if (e.keyCode === 27) {
                             closeInput();
@@ -4846,8 +4928,8 @@
                         }
                     }
                     /**
-                     * Save a new point annotation from input
-                     */
+                        * Save a new point annotation from input
+                        */
                     function savePoint() {
                         $('.pdfViewer').css("cursor", "auto");
                         select_cursor();
@@ -4909,8 +4991,8 @@
                         closeInput();
                     }
                     /**
-                     * Close the input element
-                     */
+                        * Close the input element
+                        */
                     function closeInput() {
                         input.removeEventListener('blur', handleInputBlur);
                         input.removeEventListener('keyup', handleInputKeyup);
@@ -4918,8 +5000,8 @@
                         input = null;
                     }
                     /**
-                     * Enable point annotation behavior
-                     */
+                        * Enable point annotation behavior
+                        */
                     function enablePoint() {
                         //console.log(4233423);
                         if (_enabled) {
@@ -4929,8 +5011,8 @@
                         document.addEventListener('mouseup', mouse_up31);
                     }
                     /**
-                     * Disable point annotation behavior
-                     */
+                        * Disable point annotation behavior
+                        */
                     function disablePoint() {
                         if (!_enabled) {
                             return;
@@ -4973,10 +5055,10 @@
                     var originY = void 0;
                     var originX = void 0;
                     /**
-                     * Get the current window selection as rects
-                     *
-                     * @return {Array} An Array of rects
-                     */
+                        * Get the current window selection as rects
+                        *
+                        * @return {Array} An Array of rects
+                        */
                     function getSelectionRects() {
                         try {
                             var selection = window.getSelection();
@@ -4989,10 +5071,10 @@
                         return null;
                     }
                     /**
-                     * Handle document.mousedown event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle document.mousedown event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function mouse_down32(e) {
                         var svg = void 0;
                         if (_type !== 'area' || !(svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
@@ -5012,10 +5094,10 @@
                         (0, _utils.disableUserSelect)();
                     }
                     /**
-                     * Handle document.mousemove event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle document.mousemove event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function mouse_move32(e) {
                         var svg = overlay.parentNode.querySelector('svg.annotationLayer');
                         var rect = svg.getBoundingClientRect();
@@ -5028,10 +5110,10 @@
                     }
 
                     /**
-                     * Handle document.keyup event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle document.keyup event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function keyup_32(e) { // Cancel rect if Esc is pressed
                         if (e.keyCode === 27) {
                             var selection = window.getSelection();
@@ -5044,12 +5126,12 @@
                         }
                     }
                     /**
-                     * Save a rect annotation
-                     *
-                     * @param {String} type The type of rect (area, highlight, strikeout)
-                     * @param {Array} rects The rects to use for annotation
-                     * @param {String} color The color of the rects
-                     */
+                        * Save a rect annotation
+                        *
+                        * @param {String} type The type of rect (area, highlight, strikeout)
+                        * @param {Array} rects The rects to use for annotation
+                        * @param {String} color The color of the rects
+                        */
                     function saveRect(type, rects, color) {
                         var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);
                         var node = void 0;
@@ -5110,10 +5192,10 @@
                     }
 
                     /**
-                     * Handle document.mouseup event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle document.mouseup event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function mouseup32(data_tool_type) {
                         // console.log(data_tool_type, 40);
                         if (typeof data_tool_type != 'string') {
@@ -5152,8 +5234,8 @@
                     }
                     // Enabling Main Annotations
                     /**
-                     * Enable rect behavior
-                     */
+                        * Enable rect behavior
+                        */
                     function enableRect(type) {
                         _type = type;
                         if (_enabled) {
@@ -5166,8 +5248,8 @@
                         mouseup32(type);
                     }
                     /**
-                     * Disable rect behavior
-                     */
+                        * Disable rect behavior
+                        */
                     function disableRect() {
                         if (!_enabled) {
                             return;
@@ -5206,10 +5288,10 @@
                     var _textSize = void 0;
                     var _textColor = void 0;
                     /**
-                     * Handle document.mouseup event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle document.mouseup event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function mouse_up_enable_text(e) {
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
@@ -5229,16 +5311,16 @@
                         input.focus();
                     }
                     /**
-                     * Handle input.blur event
-                     */
+                        * Handle input.blur event
+                        */
                     function handleInputBlur() {
                         saveText();
                     }
                     /**
-                     * Handle input.keyup event
-                     *
-                     * @param {Event} e The DOM event to handle
-                     */
+                        * Handle input.keyup event
+                        *
+                        * @param {Event} e The DOM event to handle
+                        */
                     function handleInputKeyup(e) {
                         if (e.keyCode === 27) {
                             closeInput();
@@ -5247,8 +5329,8 @@
                         }
                     }
                     /**
-                     * Save a text annotation from input
-                     */
+                        * Save a text annotation from input
+                        */
                     function saveText() {
                         if (input.value.trim().length > 0) {
                             var _ret = function() {
@@ -5284,8 +5366,8 @@
                         closeInput();
                     }
                     /**
-                     * Close the input
-                     */
+                        * Close the input
+                        */
                     function closeInput() {
                         if (input) {
                             input.removeEventListener('blur', handleInputBlur);
@@ -5295,11 +5377,11 @@
                         }
                     }
                     /**
-                     * Set the text attributes
-                     *
-                     * @param {Number} textSize The size of the text
-                     * @param {String} textColor The color of the text
-                     */
+                        * Set the text attributes
+                        *
+                        * @param {Number} textSize The size of the text
+                        * @param {String} textColor The color of the text
+                        */
                     function setText() {
                         var textSize = arguments.length <= 0 || arguments[0] === undefined ? 12 : arguments[0];
                         var textColor = arguments.length <= 1 || arguments[1] === undefined ? '000000' : arguments[1];
@@ -5307,8 +5389,8 @@
                         _textColor = textColor;
                     }
                     /**
-                     * Enable text behavior
-                     */
+                        * Enable text behavior
+                        */
                     function enableText() {
                         if (_enabled) {
                             return;
@@ -5317,8 +5399,8 @@
                         document.addEventListener('mouseup', mouse_up_enable_text);
                     }
                     /**
-                     * Disable text behavior
-                     */
+                        * Disable text behavior
+                        */
                     function disableText() {
                         if (!_enabled) {
                             return;
@@ -5379,11 +5461,11 @@
                     } // Template for creating a new page
                     var PAGE_TEMPLATE = '\n  <div style="visibility: hidden;" class="page" data-loaded="false">\n    <div class="canvasWrapper">\n      <canvas></canvas>\n    </div>\n    <svg class="annotationLayer"></svg>\n    <div class="textLayer"></div>\n  </div>\n';
                     /**
-                     * Create a new page to be appended to the DOM.
-                     *
-                     * @param {Number} pageNumber The page number that is being created
-                     * @return {HTMLElement}
-                     */
+                        * Create a new page to be appended to the DOM.
+                        *
+                        * @param {Number} pageNumber The page number that is being created
+                        * @return {HTMLElement}
+                        */
                     function createPage(pageNumber) {
                         var temp = document.createElement('div');
                         temp.innerHTML = PAGE_TEMPLATE;
@@ -5397,15 +5479,15 @@
                     }
 
                     /**
-                     * Render a page that has already been created.
-                     *
-                     * @param {Number} pageNumber The page number to be rendered
-                     * @param {Object} renderOptions The options for rendering
-                     * @return {Promise} Settled once rendering has completed
-                     *  A settled Promise will be either:
-                     *    - fulfilled: [pdfPage, annotations]
-                     *    - rejected: Error
-                     */
+                        * Render a page that has already been created.
+                        *
+                        * @param {Number} pageNumber The page number to be rendered
+                        * @param {Object} renderOptions The options for rendering
+                        * @return {Promise} Settled once rendering has completed
+                        *  A settled Promise will be either:
+                        *    - fulfilled: [pdfPage, annotations]
+                        *    - rejected: Error
+                        */
 
                     function renderPage(pageNumber, renderOptions, onPageRendered) {
                         var documentId = renderOptions.documentId;
@@ -5539,13 +5621,13 @@
                         });
                     }
                     /**
-                     * Scale the elements of a page.
-                     *
-                     * @param {Number} pageNumber The page number to be scaled
-                     * @param {Object} viewport The viewport of the PDF page (see pdfPage.getViewport(scale, rotate))
-                     * @param {Object} context The canvas context that the PDF page is rendered to
-                     * @return {Array} The transform data for rendering the PDF page
-                     */
+                        * Scale the elements of a page.
+                        *
+                        * @param {Number} pageNumber The page number to be scaled
+                        * @param {Object} viewport The viewport of the PDF page (see pdfPage.getViewport(scale, rotate))
+                        * @param {Object} context The canvas context that the PDF page is rendered to
+                        * @return {Array} The transform data for rendering the PDF page
+                        */
                     function scalePage(pageNumber, viewport, context) {
                         var page = document.getElementById('pageContainer' + pageNumber);
                         if (!page) {
@@ -5581,12 +5663,12 @@
                         return transform;
                     }
                     /**
-                     * Approximates a float number as a fraction using Farey sequence (max order of 8).
-                     *
-                     * @param {Number} x Positive float number
-                     * @return {Array} Estimated fraction: the first array item is a numerator,
-                     *                 the second one is a denominator.
-                     */
+                        * Approximates a float number as a fraction using Farey sequence (max order of 8).
+                        *
+                        * @param {Number} x Positive float number
+                        * @return {Array} Estimated fraction: the first array item is a numerator,
+                        *                 the second one is a denominator.
+                        */
                     function approximateFraction(x) { // Fast path for int numbers or their inversions.
                         if (Math.floor(x) === x) {
                             return [x, 1];
@@ -5849,4 +5931,4 @@
         module4
     ]);
     window['pdf_js_module'] = pdf_js_module;
-})();
+})();                

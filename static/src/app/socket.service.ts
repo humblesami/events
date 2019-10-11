@@ -635,7 +635,13 @@ export class SocketService {
         }
         if(!in_list)
         {
-            obj_this.notificationList.push(item);
+            if(on_receive)
+            {
+                obj_this.notificationList.unshift(item);
+            }
+            else{
+                obj_this.notificationList.push(item);
+            }
         }
     }
 

@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit {
     }
 
     mark_notifications_read(li){
+        return;
         let obj_this = this;
         if(li.html().trim() == 'No New Notifications')
         {
