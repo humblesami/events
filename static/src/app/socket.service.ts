@@ -612,7 +612,13 @@ export class SocketService {
             }
             route += item.address.info.post_parent_id+'/';
         }
-        item.client_route = route + item.address.res_id;
+        if(route.indexOf('doc/')> -1)
+        {
+            item.link =  '/#' + route + item.address.res_id;
+        }
+        else{
+            item.client_route = route + item.address.res_id;
+        }
         // item.counter = 1;
         obj_this.set_notification_text(item);
         if(!item.count)

@@ -24,12 +24,21 @@ export class DocumentComponent implements OnInit {
 				private ss:SocketService,
                 private httpService: HttpService,
                 private router: Router,
-                private _location: Location) {
-                    this.mention_list = []
-                    window['should_save'] = true;
-		this.socketService = ss;
-        this.loadDoc();
-    }	
+                private _location: Location) 
+    {
+        let obj_this = this;
+        obj_this.mention_list = []
+        window['should_save'] = true;
+        obj_this.socketService = ss;        
+        obj_this.route.params.subscribe(params => {                        
+            if(obj_this.router.url != obj_this.loaded_doc_path)
+            {
+                obj_this.loaded_doc_path = obj_this.router.url;
+                obj_this.loadDoc();
+            }
+        });        
+    }
+    loaded_doc_path = undefined;
 
 	hint() {
 		$('.search-bar-container .search-hint-text').css("display", "none").fadeIn(700);
@@ -278,9 +287,8 @@ export class DocumentComponent implements OnInit {
                     pdf_scroll = 1;
                 }
                 let page_height = $('.pdfViewer .page:first').height();
-                obj_this.page_num = Math.ceil(pdf_scroll / page_height);            
+                obj_this.page_num = Math.ceil(pdf_scroll / page_height);
             });
         });
-        
     }
 }

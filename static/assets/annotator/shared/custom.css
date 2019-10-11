@@ -655,7 +655,7 @@ mark.current {
     color: #ffffff;
 }
 .new_comments_count {
-    z-index: 54;
+    z-index: 1;
     padding: 0px 5px;
     border-radius: 8px;
     background-color: red;

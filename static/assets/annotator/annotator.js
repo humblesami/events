@@ -2,6 +2,7 @@
     var annotation_user_m2;
     var annotation_mode = 0;
     var hand_drawings = [];
+    var prev_doc_url = '';
     var shown_comment_type = false;
     var slected_comment_type = false;
     var comment_sub_type = false;
@@ -140,7 +141,7 @@
     }
 
     function process_notification_url(item_url){        
-        var url_origin = window.location.origin.toString();
+        var url_origin = window.location.origin.toString();        
         if(item_url.indexOf(url_origin) == -1)
         {
             if(!item_url.startsWith('/'))
@@ -149,8 +150,9 @@
             }
             item_url = url_origin + item_url;
         }
+        console.log(item_url);
         var arr = item_url.split('/');
-        var third_last = undefined;
+        var third_last = undefined;        
         try{
             third_last = arr[arr.length - 3];
         } 
@@ -164,16 +166,17 @@
         arr = arr.splice(0, arr.length - 1);
         var url_without_point = arr.join('/');
         
-        var url_now = window.location.toString();
-        arr = item_url.split('/');
+        var url_now = prev_doc_url;
+        arr = url_now.split('/');
         arr = arr.splice(0, arr.length - 1);
         url_now = arr.join('/');
         if(url_without_point == url_now){
             move_to_point(point_id);
         }
         else{
-            item_url = item_url.replace(window.location.origin+'');
-            window.open(item_url);
+            item_url = item_url.replace(window.location.origin+'', '');
+            // console.log(item_url, 999);
+            window.open(item_url, '_self');            
         }
     }
 
@@ -215,40 +218,22 @@
             }, 10);
         });
 
-        // var notification_list = $('.notification-list:first');
-        // console.log($('.notification-list').length,notification_list.attr('pointclickapplied'), 333);                
-        // if(!notification_list.attr('pointclickapplied'))
-        // {
-        //     notification_list.on('click','.chat-items>li', function() {
-        //         console.log(this);
-        //     });
-        //     notification_list.attr('pointclickapplied' ,1);
-        // }
-
         var notification_list = $('.notification-list:first');
-        console.log(33331);
+        // console.log(337773);
         notification_list.on('click','.chat-items>li', function() {
-            console.log(this);
+            // console.log(this);
             var el = $(this);
             var link = el.find('a');
             if(!link.length)
             {
                 return;
             }
-            var item_url = link.attr('routerLink');
-            if(!item_url){
-                item_url = link.attr('href');
-            }
+            var item_url = link.attr('link');            
             if(!item_url){
                 return;
             }
-            if(item_url.endsWith('/'))
-            {
-                item_url = item_url.substr(0, item_url.length -1);
-            }
-            console.log(item_url);
             process_notification_url(item_url);            
-        });
+        });      
     });
 
 
@@ -751,6 +736,7 @@
                 doc_loading_step = "Document Render Data";
                 site_functions.showLoader(doc_loading_step);
                 if (doc_data && doc_data.first_time) {
+                    prev_doc_url = window.location.toString();
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
@@ -1025,6 +1011,10 @@
                                 if (!annotation_mode) {
                                     return;
                                 }
+
+                                window['route_changing'] = false;
+                                process_notification_url(window.location.toString());                                
+
                                 var socket_manager = window['socket_manager'];
                                 socket_manager.execute_on_verified(function() {
                                     var n_list = socket_manager.notificationList;
