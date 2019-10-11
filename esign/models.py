@@ -237,6 +237,7 @@ class SignatureDoc(File, Actions):
             temp_file.close()
             os.remove(temp_file_path)
         if os.path.isfile(output_file_path):
+            res.close()
             os.remove(output_file_path)
         return page_width, page_height, added_pages
 
