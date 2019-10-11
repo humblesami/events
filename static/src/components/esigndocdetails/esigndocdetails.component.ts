@@ -657,21 +657,23 @@ export class EsignDocDetailsComponent implements OnInit {
                         onSuccess: function(data) {
                             if (data == 'done')
                             {
-                                window.open(window['site_config'].server_base_url+'/response-sumbitted', '_self');
+                                window.open(window['site_config'].server_base_url+'/response-sumbitted', '_self');                                
                             }
-                            obj_this.signature_started = true;                            
-                            for(var i =0;i < doc_data.length; i++)
-                            {
-                                // console.log(signature_dom.attr('id'), doc_data[i].id);
-                                if(doc_data[i].id == signature_dom.attr('id'))
+                            else{
+                                obj_this.signature_started = true;                            
+                                for(var i =0;i < doc_data.length; i++)
                                 {
-                                    signature_dom.attr('signed',true);
-                                    doc_data[i].image = 'data:image/png;base64,' + data.image;
-                                    doc_data[i].signed = true;
-                                    on_sign_saved(signature_dom, data);
-                                    break;
-                                }
-                            }                            
+                                    // console.log(signature_dom.attr('id'), doc_data[i].id);
+                                    if(doc_data[i].id == signature_dom.attr('id'))
+                                    {
+                                        signature_dom.attr('signed',true);
+                                        doc_data[i].image = 'data:image/png;base64,' + data.image;
+                                        doc_data[i].signed = true;
+                                        on_sign_saved(signature_dom, data);
+                                        break;
+                                    }
+                                }                            
+                            }
                         },
                         onError:function(er){
                             window['bootbox'].alert(er);
