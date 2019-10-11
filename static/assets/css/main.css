@@ -360,6 +360,7 @@ breadcrumb
 	min-height: 40px;
 	padding: 0 20px 0 15px;
 	}
+	.centered .btn,
 	.modal-content button.btn,
 	.edit-buttons .btn,
 	.modal-footer .btn,

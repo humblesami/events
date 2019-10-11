@@ -1,0 +1,22 @@
+.thankyou{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 70px);
+}
+.thanks-content {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+.thanks-content img{
+    width: 75%;
+    box-shadow: 0px 0px 20px #ddd;
+    border-radius: 10px;
+}  
+.centered {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

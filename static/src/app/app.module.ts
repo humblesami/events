@@ -83,6 +83,7 @@ import { SearchComponent } from '../components/search/search.component';
 import { ViewmembersComponent } from '../components/viewmembers/viewmembers.component';
 import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfolder.component';
+import { ThankyouComponent } from '../components/thankyou/thankyou.component';
 
 @NgModule({
     imports: [
@@ -156,6 +157,7 @@ import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfo
         SearchComponent,
         ViewmembersComponent,
         MovetomyfolderComponent,
+        ThankyouComponent,
     ],
     providers:[
         AuthGuard,
