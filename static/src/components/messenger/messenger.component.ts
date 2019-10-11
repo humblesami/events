@@ -188,8 +188,10 @@ export class MessengerComponent implements OnInit {
     }
 
     group_name = '';
-    add_message(chat_client: ChatClient, message: Message){        
-        chat_client.messages.push(message);      
+    add_message(chat_client: ChatClient, message: Message){
+        chat_client.messages= this.add_attachment(chat_client.messages,message);
+        // chat_client.messages.push(message);      
+        //do above with function
         // console.log(345, chat_client.messages);
     }
 
@@ -208,8 +210,11 @@ export class MessengerComponent implements OnInit {
         modalRef.componentInstance.doc_id = doc.id;
         modalRef.componentInstance.member_id = obj_this.user.id;
         modalRef.result.then(function(data){
-            doc.moved = true;
-            console.log(data,1111111111111111111);
+            if(data){
+                doc.moved = true;
+                window['bootbox'].alert(data);
+            }
+            // console.log(data,111113232);
         });
     }
     
@@ -611,7 +616,10 @@ export class MessengerComponent implements OnInit {
                 if(data.length > 0) {
                     obj_this.is_request_sent = false;
                     obj_this.update_emjoi_urls(data);
-                    obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
+
+                    obj_this.active_chat_user.messages = obj_this.add_attachment(data,obj_this.active_chat_user.messages);
+                    //do above
+
                     obj_this.scroll_to_end(".msg_card_body");
                     // $(".msg_card_body").scrollTop(100);
                 }
@@ -636,7 +644,8 @@ export class MessengerComponent implements OnInit {
             if(already_fetched != 1)
             {
                 obj_this.update_emjoi_urls(messages);		     
-                obj_this.active_chat_user.messages = messages;
+                obj_this.active_chat_user.messages =  obj_this.add_attachment(messages , null);
+                //do above
             }
             
             obj_this.socketService.update_unseen_message_count(
@@ -715,7 +724,9 @@ export class MessengerComponent implements OnInit {
                 if(data.length > 0) {
                     obj_this.is_request_sent = false;
                     obj_this.update_emjoi_urls(data);
-                    obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
+
+                    obj_this.active_chat_user.messages = obj_this.add_attachment(data,obj_this.active_chat_user.messages);
+                    //do above
                     obj_this.scroll_to_end(".msg_card_body");
                     // $(".msg_card_body").scrollTop(100);
                 }
@@ -740,7 +751,8 @@ export class MessengerComponent implements OnInit {
             if(already_fetched != 1)
             {
                 obj_this.update_emjoi_urls(messages);		     
-                obj_this.active_chat_user.messages = messages;
+                obj_this.active_chat_user.messages = obj_this.add_attachment(messages , null);
+                ////do above with function
             }
             
             obj_this.socketService.update_unseen_message_count(
@@ -797,7 +809,7 @@ export class MessengerComponent implements OnInit {
                 args: args
             };           
 			obj_this.httpService.post(input_data, function (data){
-                console.log(data);
+                // console.log(data);
                 if(data.attachments.length)
                 {
                     let messages = obj_this.active_chat_user.messages;
@@ -808,6 +820,7 @@ export class MessengerComponent implements OnInit {
                         if(messages[i].uuid == data.uuid)
                         {                            
                             messages[i].attachments = data.attachments;
+                            //do above with function
                             window['js_utils'].removeLoader($('.chat-message').eq(i));
                             // console.log(i, 1007);
                             break;
@@ -833,7 +846,7 @@ export class MessengerComponent implements OnInit {
         var res = new Promise<any>(function(resolve, reject) {
             window['functions'].get_file_binaries(event.target.files, resolve);
         }).then(function(data){            
-            obj_this.attachments = obj_this.attachments.concat(data);        
+            obj_this.attachments = obj_this.attachments.concat(data);
         });
     }
     
@@ -1071,6 +1084,20 @@ export class MessengerComponent implements OnInit {
     }
 
     attachments = [];
+
+    add_attachment(currentmessages=null, new_messages){
+        var result;
+        if(new_messages){
+            if(new_messages.attachments){
+                    // process_attachments(msg.attachments);  
+            }
+            result = currentmessages.concat(new_messages);
+            // result = new_messages.concat(currentmessages);
+        }else{
+            result = currentmessages;
+        }
+        return result;
+    }
 
 	ngOnInit() {        
         var obj_this = this;
