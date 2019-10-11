@@ -380,7 +380,7 @@ var js_utils = window['js_utils'] = {
         var dy = position.top - scroll_now_y;
         var dx = position.top - scroll_now_x;
 
-        console.log(position, dy, dx);
+        // console.log(position, dy, dx);
 
         scroll_el.scrollLeft(dx);
         var distance = Math.abs(position.top - scroll_now_y);        

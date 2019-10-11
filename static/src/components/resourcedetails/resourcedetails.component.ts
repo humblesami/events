@@ -99,7 +99,7 @@ export class ResourceDetailsComponent implements OnInit {
         }
         // console.log(obj_this.search_options.recursive, 444);
         setTimeout(function(){
-            obj_this.folder_id = obj_this.route.snapshot.params.id;            
+            obj_this.folder_id = obj_this.route.snapshot.params.id;
             obj_this.reloading = false;
         }, 20);
     }

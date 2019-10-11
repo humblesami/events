@@ -481,18 +481,12 @@
             var sclae_value = undefined;
 
             function addCommentCount(annotations_of_page, pange_number) {
-                var annotations_of_page = annotations_of_page.filter(function(a) {
-                    return a.type == 'point';
+                var point_annotations = annotations_of_page.filter(function(a) {
+                    return a.type == 'point' && !a.sub_type;
                 });
-                var note_points = annotations_of_page.filter(function(a) {
-                    return a.sub_type;
-                });
-                // if(note_points.length)
-                // {
-                //     console.log(note_points);
-                // }
-                for (var p_index in annotations_of_page) {
-                    var c_point = annotations_of_page[p_index];
+                console.log(point_annotations, 444);
+                for (var p_index in point_annotations) {
+                    var c_point = point_annotations[p_index];
                     // console.log(c_point);
                     var notif_counters_html = '<div db_id=' + c_point.id + ' point_id=' + c_point.uuid + ' class="new_comments_count"';
                     var point_top = c_point.y * sclae_value - 15;
@@ -549,10 +543,28 @@
                 setViewerWrapperBottom('comment show')
             }
 
-            function showHideAnnotations(rotate_degree) {
+            function setAnnotationMode(){
                 var doc_data = RENDER_OPTIONS.document_data;
-                var doc_type = doc_data.type;
+                var doc_type = doc_data.type;                
+                var rotateBy = RENDER_OPTIONS.rotate;
+                var rotate_degree = rotateBy % 360;
                 if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {
+                    annotation_mode = 1;
+                }
+                else{                                   
+                    if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
+                    {
+                        annotation_mode = 2;
+                    }
+                    else{
+                        annotation_mode = 0;
+                    }
+                }
+            }
+
+            function showHideAnnotations() {
+                var doc_data = RENDER_OPTIONS.document_data;                
+                if (annotation_mode == 1) {
                     annotation_mode = 1;
                     RENDER_OPTIONS.showAnnotations = true;
                     var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
@@ -560,11 +572,8 @@
                     setPen(pen_size, pen_color);
                     $('.topbar:first .annotation_button').show();
                     $('.annot-toggler').show();
-                } else {
-                    annotation_mode = 0;
-                    $('.annot-toggler').hide();
-                    if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
-                        annotation_mode = 2;
+                } else if(annotation_mode == 2){
+                    $('.annot-toggler').hide();                    
                     RENDER_OPTIONS.showAnnotations = false;
                     $('.topbar:first .annotation_button').hide();
                     $('.topbar:first').show();
@@ -574,7 +583,6 @@
                             $('.sign_completed.pdfjs').hide();
                             $('.strt_sign.pdfjs').show();
                         }
-
                         if (doc_data.mp_signature_status == "Completed") {
                             $('.strt_sign.pdfjs').hide();
                             $('.sign_completed.pdfjs').show();
@@ -931,9 +939,9 @@
                                 $('.ToolBarWrapper>div').css({
                                     display: 'flex'
                                 });
-                                var rotateBy = RENDER_OPTIONS.rotate;
-                                var rotate_degree = rotateBy % 360;
-                                showHideAnnotations(rotate_degree);
+                                // var rotateBy = RENDER_OPTIONS.rotate;
+                                // var rotate_degree = rotateBy % 360;
+                                showHideAnnotations();                                
                                 if (!(doc_data && doc_data.first_time)) {
                                     return;
                                 }
@@ -965,7 +973,7 @@
                             }
                         }
                         try {
-                            // console.log('Render pages');
+                            setAnnotationMode();
                             UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
                                 onPageDone(cb_data, page_num, 1);
                                 for (var i = 2; i <= NUM_PAGES; i++) {
@@ -1305,6 +1313,7 @@
 
                 loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
+                    comments_wrapper.removeClass('single_point_comments').addClass('all_point_comments');
                     comment_list.removeAttr('annotation-id');
                     $('.comment-list-container').addClass('full-discussion');
                     var point_type = false;
@@ -1412,33 +1421,11 @@
                         return;
                     }
                     var dom_item_to_focus = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
-                    // console.log(dom_item_to_focus[0]);
-                    window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
-
                     var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="' + annotationId + '"]')
                     if (c_svg.length > 0) {
-                        var target1 = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
-                        setTimeout(function() {
-                            scroll_div.scrollTop(0);
-                            var parent = target1.closest('.canvasWrapper');
-                            var parent_height = parent.height();
-                            var p_number = parent.closest('.page').index() + 1;
-                            var page_top = parent_height * p_number;
-
-                            var c_target = target1[0];
-                            //console.log(c_target);
-                            var my_top = parseFloat(c_target.style.top) - 100;
-                            var my_left = parseFloat(c_target.style.left) - 100;
-                            var scroll_to = page_top + my_top;
-
-                            scroll_div.scrollLeft(my_left);
-                            scroll_div.animate({
-                                scrollTop: scroll_to
-                            }, 500);
-                            handleAnnotationClick(c_svg[0]);
-                        }, 15);
-                    } else {
-                        console.log(target, "Not found");
+                        window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
+                        handleAnnotationClick(c_svg[0]);
+                        comments_wrapper.removeClass('all_point_comments').addClass('single_point_comments');                        
                     }
                 }
 
@@ -1565,6 +1552,11 @@
                     activeAnnotationItem = false;
                 }
 
+                
+                $('body').on('click', '#btn_show_all_point_comments', function() {
+                    $('.toolbar:first .comment:not(.personal):first').click();
+                })
+
                 $('body').on('click', '.toolbar:first .comment', function() {
                     UI.destroyEditOverlay();
                     if ($(this).is('.personal'))
@@ -1574,6 +1566,7 @@
                     }
                     loadALlCommentsOnDocument();
                 });
+
                 UI.addEventListener('annotation:click', handleAnnotationClick);
                 UI.addEventListener('annotation:blur', handleAnnotationBlur);
             })(window, document);

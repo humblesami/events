@@ -28,7 +28,7 @@ export class DocumentComponent implements OnInit {
                     this.mention_list = []
                     window['should_save'] = true;
 		this.socketService = ss;
-        this.route.params.subscribe(params => this.loadDoc());
+        this.loadDoc();
     }	
 
 	hint() {

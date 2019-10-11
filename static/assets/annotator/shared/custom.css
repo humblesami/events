@@ -403,7 +403,7 @@ body.pdf-viewer {
     bottom: 0;
 }
 .comment-header {
-    padding: 15px 10px;
+    padding: 10px;
     /* border-bottom: 1px solid #cccccc; */
     background: linear-gradient(to bottom, #6c6968, #6a6969);
     box-shadow: inset 0 -1px 0 0 #cfd8dc;
@@ -773,4 +773,12 @@ span.pager.disabled
 }
 .ToolBarWrapper>div{
     display: none;
+}
+#comment-wrapper.all_point_comments #btn_show_all_point_comments
+{
+    display: none;
+}
+#comment-wrapper.single_point_comments #btn_show_all_point_comments
+{
+    display: initial;
 }
