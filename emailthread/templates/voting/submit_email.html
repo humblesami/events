@@ -21,7 +21,7 @@
                    <tr>
                         <td>
                         {% for choice in choices %}
-                            <a href="{{server_base_url}}/#/resource/{{folder_id}}"
+                            <a href="{{server_base_url}}/voting/{{id}}/{{choice.id}}/{{token}}"
                             style="background: #4b74b5;color:#fff;text-decoration: none;padding:7px;border-radius: 20px;display: inline-block;min-width: 70px;margin-left:5px">{{choice.name}}</a>
                         {% endfor %}
                     </td>
