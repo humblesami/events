@@ -41,6 +41,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                         <i class="fa fa-users"></i> Roster
                                 </button>
                                 <button
+                                    *ngIf="socketService.admin_mode"
                                     class="btn btn-primary btn-sm roster-button"
                                     (click)="open_topic_edit($event, '', 'create')">
                                         <i class="icon-angenda text-primary"></i> Add Agenda Topic
@@ -200,8 +201,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <th>Lead</th>
                             <th>Duration</th>
                             <th>Attachment</th>
-                            <th>Edit</th>
-                            <th>Deleted</th>
+                            <th *ngIf="socketService.admin_mode">Edit</th>
+                            <th *ngIf="socketService.admin_mode">Deleted</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -216,12 +217,12 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td *ngIf="socketService.admin_mode">
                                     <span (click)="open_topic_edit($event, topic.id, 'update')">
                                         <i class="fas fa-edit "></i>
                                     </span>
                                 </td>
-                                <td>
+                                <td *ngIf="socketService.admin_mode">
                                     <span (click)="delete_agenda_topic($event, topic.id)">
                                         <i class="far fa-trash-alt" ></i>
                                     </span>
