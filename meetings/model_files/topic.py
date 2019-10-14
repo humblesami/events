@@ -3,6 +3,8 @@ from mainapp import ws_methods
 from mainapp.positional import PositionalSortMixIn
 from meetings.model_files.event import Event
 from mainapp.models import CustomModel
+from documents.file import File
+from django.db import transaction
 
 
 class Topic(PositionalSortMixIn, CustomModel):
@@ -16,7 +18,38 @@ class Topic(PositionalSortMixIn, CustomModel):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def save_agenda_topic(cls, request, params):
+        meeting_id = params['meeting_id'];
+        name = params['name']
+        description = params.get('description')
+        lead = params.get('lead')
+        duration = params.get('duration')
+        topic = Topic(event_id = meeting_id, name=name, description=description,lead=lead,duration=duration)
+        topic.save()
+        agenda_docs = params.get('agenda_docs')
+        agenda_doc_model = ws_methods.get_model('meetings', 'AgendaDocument')
+        for agenda_doc in agenda_docs:
+            with transaction.atomic():
+                doc = File.objects.get(pk=agenda_doc.id)
+                a_doc = agenda_doc_model(agenda=topic.id)
+                a_doc = ws_methods.duplicate_file(a_doc, doc)
+                a_doc.save()
+        return 'done'
     
+    @classmethod
+    def update_agenda_topic(cls, request, params):
+        topic_id = params['topic_id']
+        topic = Topic.objects.get(pk=topic_id)
+
+        topic.event_id = params['meeting_id'];
+        topic.name = params.get['name']
+        topic.description = params.get('description')
+        topic.lead = params['lead']
+        topic.duration = params['duration']
+        topic.save()
+        return 'done'
+
     def get_attendees(self):
         attendees_list = []
         attendees_list = self.event.get_attendees()
