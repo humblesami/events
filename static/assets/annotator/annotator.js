@@ -1225,6 +1225,7 @@
 
                     switch (type) {
                         case 'cursor':
+                            $('#viewer').css('cursor', 'auto');
                             UI.enableEdit();
                             break;
                         case 'draw':

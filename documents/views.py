@@ -25,18 +25,25 @@ def upload_files(request):
         res_id = req['res_id']
         model = ws_methods.get_model(res_app, res_model)
         obj = model.objects.get(pk=res_id)
-        cloud_data = req.get('cloud_data')            
-        if cloud_data:
-            cloud_data = json.loads(cloud_data)            
-            for file in cloud_data:
-                with transaction.atomic():
-                    created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
+        cloud_data = req.get('cloud_data')
+        created_file = None
+        with transaction.atomic():
+            if cloud_data:
+                cloud_data = json.loads(cloud_data)
+                for file in cloud_data:
+                    if res_app =='documents' and res_model == 'File':
+                        created_file = obj.create(name=file['name'], cloud_url=file['url'], file_type='temp',
+                                                            file_name=file['file_name'])
+                    else:
+                        created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
-        for key in request.FILES:
-            files = request.FILES.getlist(key)            
-            for file in files:
-                with transaction.atomic():
-                    created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file)
+            for key in request.FILES:
+                files = request.FILES.getlist(key)
+                for file in files:
+                    if res_app == 'documents' and res_model == 'File':
+                        created_file = obj.create(name=file.name, file_name=file.name, attachment=file, file_type='temp')
+                    else:
+                        created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file)
                     docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
 
         docs = json.dumps(docs)

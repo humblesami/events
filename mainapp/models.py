@@ -33,10 +33,3 @@ class CustomModel(models.Model):
             self.updated_at = datetime.datetime.now()
             self.updated_by = req_user
         super(CustomModel, self).save(*args, **kwargs)
-
-
-class FilesUpload(models.Model):
-    binary_data = models.TextField(null=True, blank=True)
-
-    class Meta:
-        abstract = True

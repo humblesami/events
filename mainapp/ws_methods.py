@@ -588,6 +588,22 @@ def has_permission(res):
                 user_permission = True
     return user_permission
 
+
+def duplicate_file(a, file_ptr):
+    a.name = file_ptr.name
+    a.html = file_ptr.html
+    a.content = file_ptr.content
+    a.pdf_doc = file_ptr.pdf_doc
+    a.file_type = file_ptr.file_type
+    a.attachment = file_ptr.attachment
+
+    a.file_name = file_ptr.file_name
+
+    a.extention = file_ptr.extention
+    a.access_token = file_ptr.access_token
+    a.pending_tasks = 0
+    return a
+
 # class SearchModel:
 #     name = ''
 #     fields = []

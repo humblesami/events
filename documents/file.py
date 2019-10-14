@@ -15,7 +15,7 @@ from PyPDF2 import PdfFileReader
 from mainapp import settings, ws_methods
 
 from django.db import models
-from mainapp.models import CustomModel, FilesUpload
+from mainapp.models import CustomModel
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -41,7 +41,7 @@ def text_extractor(f):
     return text
 
 
-class File(CustomModel, FilesUpload):
+class File(CustomModel):
     name = models.CharField(max_length=100)
     html = models.CharField(max_length=30, blank=True)
     content = models.CharField(max_length=30, blank=True)
@@ -66,6 +66,13 @@ class File(CustomModel, FilesUpload):
             if not self.pk:
                 file_changed = True
                 creating = True
+            try:
+                if self.file_ptr and self.file_ptr.attachment and self.file_ptr.attachment.url:
+                    file_changed = False
+                    creating = False
+                    self.pending_tasks = 0
+            except:
+                pass
             if self.pending_tasks == 3:
                 if not creating:
                     if self.attachment != File.objects.get(pk=self.id).attachment:
@@ -105,7 +112,6 @@ class File(CustomModel, FilesUpload):
                         msg = str(e.code) + e.reason
                         raise Exception(msg)
 
-                    self.binary_data = ''
                     if 'https://www.googleapis.com' in cloud_url:
                         self.access_token = 'Google'
                     elif 'files.1drv.com' in cloud_url:
