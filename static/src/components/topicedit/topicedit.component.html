@@ -8,6 +8,7 @@
   <div class="router-outlet">
       <div class="details-card profile-edit-container edit-mode">
           <div class="row edit-buttons edit-mode">
+              <a href="javascript:void(0);" class="btn btn-primary save" (click)="onAddAnother()">Save & Add another</a>
               <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
               <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
           </div>
@@ -22,33 +23,92 @@
                   </div>
                   <div class="col-md-6">
                       <label for="name"> <b>Name</b> </label>
-                      <input value="{{topic.name}}" (change)="modified_topic_data.name = $event.target.value"  type="text" placeholder="Enter Agenda Subject" id="name">
+                      <input value="{{topic.name}}" [(ngModel)]="topic.name" (change)="modified_topic_data.name = $event.target.value"  type="text" placeholder="Enter Agenda Subject" id="name">
                   </div>
                   <div class="col-md-6">
                       <label for="description"> <b>Description</b> </label>
-                      <textarea value="{{topic.description}}" (change)="modified_topic_data.description = $event.target.value"
+                      <textarea value="{{topic.description}}" [(ngModel)]="topic.description" (change)="modified_topic_data.description = $event.target.value"
                       class="form-control" placeholder="Enter Description" id="description">
                       </textarea>
                   </div>
                   <div class="col-md-6">
                       <label for="email"> <b>Lead</b> </label>
-                      <input value="{{topic.lead}}" (change)="modified_topic_data.lead = $event.target.value"  type="text" placeholder="Enter Lead Name" id="lead">
+                      <input value="{{topic.lead}}" [(ngModel)]="topic.lead" (change)="modified_topic_data.lead = $event.target.value"  type="text" placeholder="Enter Lead Name" id="lead">
                   </div>
                   <div class="col-md-6">
                     <label for="duration"> <b>Duration</b> </label>
-                    <input value="{{topic.duration}}" (change)="modified_topic_data.duration = $event.target.value"  type="text" placeholder="Enter Agenda Duration" id="duration">
+                    <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="modified_topic_data.duration = $event.target.value"  type="text" placeholder="Enter Agenda Duration" id="duration">
                   </div>
               </div>
-              <div class="row docwrappercontainer mb-0">
+              <div *ngIf="action=='create'">
+                <div class="row docwrappercontainer mb-0">
                   <div class="col-sm-12 pt-3">
-                      <div class="ProFileHeadWrap">Agenda Documents</div>
+                    <div class="ProFileHeadWrap">Agenda Documents</div>
+                      <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of agenda_docs">
+                        <a class="DocumentWrapper gray-bg doc" 
+                        routerLink="{{'/topic/doc/'+doc.id}}"
+                        >
+                            <input type="hidden" class="item_id" value="{{doc.id}}" />
+                            <div class="doc-del-btn d-flex">
+                                <div class="pointer"
+                                title="Delete"
+                                (click)="delete_file($event, doc.id)">
+                                    <i class="far fa-trash-alt" ></i>
+                                </div>                    
+                            </div>
+                            <div class="p-1 pos-abs" style="left:5px">
+                                <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">
+                            </div>
+                            <div class="DocIcon">
+                                <span class="rounded-circle">
+                                    <i class="icon-doc-file"></i>
+                                </span>
+                            </div>
+                            <div class="DocText" (click)="renameService.prevent_default($event)">
+                                <div class="DocName w-100">
+                                    <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
+                                        <span class="text-truncate doc-info" [ngClass]="{'mt-2': !socketService.admin_mode}">{{doc.name}}</span>
+                                        <span class="d-flex">
+                                            <button (click)="renameService.enable_rename($event, doc)" *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2 mr-1">
+                                                <i class="fas fa-edit "></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    
+                                    <div [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
+                                        <input class="form-control renamer"   
+                                            (blur)="renameService.renamer_focused_out($event,doc,'file')"                             
+                                            (keyup)="renameService.renamer_focused_out($event,doc,'file')"												
+                                            value="{{doc.name}}"
+                                            (change)="renameService.renamer_changed($event.target)">
+                                        <button 
+                                        class="fri-selt-btn check-time-btn" 
+                                        aria-label="rename file.">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                   </div>
+                </div>
+                <input
+                  type="file"
+                  name="files[]"
+                  class='add_agenda_docs' multiple style="display: none"/>
               </div>
-              <input
-              type="file"
-              name="files[]"
-              class='add_agenda_docs' multiple accept=".pdf,.odt,.doc,.docx,.xlsx,.xls,.ppt,.pptx" style="display: none"/>
-          </div>          
+              <div *ngIf="action=='update' && topic && topic.id">
+                <app-documents
+                  title="Agenda Documents" 
+                  parent_model="Topic" 
+                  parent_field="agenda_id" 
+                  parent_id="{{topic.id}}"
+                  res_app="meetings" 
+                  res_model="AgendaDocument">
+                </app-documents>
+              </div>
+          </div>
       </div>
   </div>
 </div>

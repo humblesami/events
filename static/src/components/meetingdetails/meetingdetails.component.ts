@@ -96,7 +96,7 @@ export class MeetingDetailsComponent implements OnInit {
         modalRef.componentInstance.action = action;
         modalRef.componentInstance.topic_id = topic_id;
         modalRef.result.then(function(data){
-            // obj_this.meeting_object.attendance_marked = data && data.attendance_marked;
+            // console.log(data);
         });
     }
 
