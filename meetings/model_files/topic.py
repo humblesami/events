@@ -8,6 +8,7 @@ from mainapp.models import CustomModel
 class Topic(PositionalSortMixIn, CustomModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    description=models.TextField(blank=True, null=True)
     lead = models.CharField(max_length=200, blank=True)
     duration = models.DurationField(null=True)
     position = models.IntegerField(null=True, blank=True)
