@@ -17,7 +17,9 @@
     var activate_annotation = undefined;
     var mention_list = undefined;
     var handlePointAnnotationClick = undefined;
-    var doc_loading_step = undefined;    
+    var doc_loading_step = undefined; 
+    var documentId = undefined;
+    var save_drawing = function() {};
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -245,9 +247,9 @@
             var _initColorPicker = __webpack_require__(4);
             var _initColorPicker2 = _interopRequireDefault(_initColorPicker);
 
-            var save_drawing = function() {};
+            
             var activePointId = undefined;
-            var documentId = false;
+            documentId = false;
             var commentText; // = comments_wrapper.find('#commentText');
             var comment_list_div; // = comments_wrapper.find('.comment-list:first');
             var comment_list; // = comments_wrapper.find('.comment-list-container:first');
@@ -4401,7 +4403,7 @@
                         var nodes = document.querySelectorAll('[data-pdf-annotate-id="' + annotationId + '"]');
                         var svg = overlay.parentNode.querySelector('svg.annotationLayer');
                         var _getMetadata = (0, _utils.getMetadata)(svg);
-                        var documentId = _getMetadata.documentId;
+                        documentId = _getMetadata.documentId;
                         var annotation_cookie = localStorage.getItem(documentId + '/annotations');
                         if (annotation_cookie) {
                             var annotations = JSON.parse(annotation_cookie);
@@ -4527,7 +4529,7 @@
                         var type = target[0].getAttribute('data-pdf-annotate-type');
                         var svg = overlay.parentNode.querySelector('svg.annotationLayer');
                         var _getMetadata2 = (0, _utils.getMetadata)(svg);
-                        var documentId = _getMetadata2.documentId;
+                        documentId = _getMetadata2.documentId;
                         var delbtn = overlay.querySelector('a');
                         if (delbtn && delbtn.style)
                             delbtn.style.display = '';
@@ -4717,7 +4719,7 @@
                         var svg = void 0;
                         if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                             var _getMetadata = (0, _utils.getMetadata)(svg);
-                            var documentId = _getMetadata.documentId;
+                            documentId = _getMetadata.documentId;
                             var pageNumber = _getMetadata.pageNumber;
                             lines[lines.length - 1].push(-1);
                             _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
@@ -4941,7 +4943,7 @@
                                 }
                                 var rect = svg.getBoundingClientRect();
                                 var _getMetadata = (0, _utils.getMetadata)(svg);
-                                var documentId = _getMetadata.documentId;
+                                documentId = _getMetadata.documentId;
                                 var pageNumber = _getMetadata.pageNumber;
                                 var annotation = Object.assign({
                                     type: 'point'
@@ -5172,7 +5174,7 @@
                             annotation.height = rect.height;
                         }
                         var _getMetadata = (0, _utils.getMetadata)(svg);
-                        var documentId = _getMetadata.documentId;
+                        documentId = _getMetadata.documentId;
                         var pageNumber = _getMetadata.pageNumber; // Add the annotation
                         var pdfStoreAdapter = _PDFJSAnnotate2.default.getStoreAdapter();
                         var onAnnotationAdded = function(annotation) {
@@ -5334,7 +5336,7 @@
                                     };
                                 }
                                 var _getMetadata = (0, _utils.getMetadata)(svg);
-                                var documentId = _getMetadata.documentId;
+                                documentId = _getMetadata.documentId;
                                 var pageNumber = _getMetadata.pageNumber;
                                 var rect = svg.getBoundingClientRect();
                                 var annotation = Object.assign({
@@ -5481,7 +5483,7 @@
                         */
 
                     function renderPage(pageNumber, renderOptions, onPageRendered) {
-                        var documentId = renderOptions.documentId;
+                        documentId = renderOptions.documentId;
                         // console.log('rendering page =>' pageNumber);
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
@@ -5548,7 +5550,7 @@
                     }
 
                     function renderPageWithoutAnnotations(pageNumber, renderOptions, onPageRendered) {
-                        var documentId = renderOptions.documentId;
+                        documentId = renderOptions.documentId;
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
                         var rotate = renderOptions.rotate;
