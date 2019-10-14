@@ -1,7 +1,7 @@
 (function() {
     var annotation_user_m2;
     var annotation_mode = 0;
-    var hand_drawings = [];
+    var active_drawing = undefined;
     var prev_doc_url = '';
     var shown_comment_type = false;
     var slected_comment_type = false;
@@ -19,7 +19,7 @@
     var handlePointAnnotationClick = undefined;
     var doc_loading_step = undefined; 
     var documentId = undefined;
-    var save_drawing = function() {};
+    var annotation_save_wait_time = 5000;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -33,10 +33,10 @@
         // window['functions'].get_trace(1);
         if (!$('.topbar:first .cursor:first').hasClass('active')) {
             $('.topbar:first .cursor:first').click();
-        }
-        if (target && isDocumentDirty(documentId)) {
-            saveAnnotationsAtServer();
-        }
+            if (isDocumentDirty(documentId)) {
+                saveAnnotationsAtServer();
+            }
+        }        
     }
 
     function initDocCookies(documentId) {
@@ -44,12 +44,12 @@
         localStorage.setItem(documentId + '/scale', 1);
         localStorage.setItem(documentId + '/roate', 0);
         localStorage.setItem(documentId + '/dirty', 0);
-        localStorage.setItem(documentId + '/annotations', "[]");
+        setCookieStrict(documentId, documentId + '/annotations', '');
     }
 
     function resetCookies(documentId) {
         localStorage.setItem(documentId + '/version', 0);
-        localStorage.setItem(documentId + '/annotations', "[]");
+        setCookieStrict(documentId, documentId + '/annotations', '');
     }
 
     function getDocumentVersion(documentId) {
@@ -64,7 +64,7 @@
     function isDocumentDirty(documentId) {
         var res = getCookieStrict(documentId, documentId + '/dirty');
         if (res != 0 && isNaN(res)) {
-            localStorage.setItem(documentId + '/version', 0);
+            localStorage.setItem(documentId + '/dirty', 0);
             console.log('Set dirty by force');
         }
         return res;
@@ -102,11 +102,17 @@
             bootbox.alert("Should not happend");
             console.trace();
         }
+        if(key.endsWith('annotations'))
+        {
+            console.log(val, 333);
+        }
         if (typeof(val) != 'string') {
             if (typeof(val) == 'object') {
+
                 val = JSON.stringify(val);
             }
         }
+        
         localStorage.setItem(key, val);
     }
 
@@ -359,14 +365,10 @@
                         }
                     }
 
-                    function onAnnotationSaveFailed(er) {
-                        console.log(er);
-                    }
-
                     saveAnnotationsAtServer = function(save_type) {
-                        save_drawing(1);
+                        // console.log(6666);
                         if (!documentId) {
-                            console.log("saveAnnotationsAtServer must be called after document id is set")
+                            console.log("Save must be called after document id is set")
                             return;
                         }
                         var document_dirty = isDocumentDirty(documentId);
@@ -400,6 +402,7 @@
                             filtered = filtered.filter(function(el) {
                                 return el.type != 'point' || el.sub_type;
                             });
+                            console.log(filtered);
                             input_data['annotations'] = JSON.stringify(filtered);
                         }
 
@@ -412,55 +415,29 @@
                             args: args,
                             params: input_data
                         };
-                        // window['add_annotation'](final_input_data);
                         dn_rpc_object({
                             data: final_input_data,
                             no_loader: 1,
                             onSuccess: function(data) {
                                 onAnnotationsUploaded(data, save_type);
                             },
-                            onError: onAnnotationSaveFailed,
                             type: 'post'
                         });
                     }
 
                     window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
-
-                    $('body').on('click', '.doc-saver', function() {
-                        saveAnnotationsAtServer();
-                    });
-
                 })();
 
-                $('body').on('click', '.cb-container.autosave input', function() {
-                    if ($(this).prop('checked')) {
-                        saveAnnotationsAtServer();
-                    }
+                $('body').on('click', '.reset', function() {
+                    setCookieStrict(documentId, documentId +'/annotations', '');
+                    unSetDocDirty(documentId);
+                    render_details();
+                    console.log(4343);
                 });
 
                 $('body').on('click', '.toolbar .back', function() {
                     on_leave_document();
-                });
-
-                $('body').on('click', '.doc-reseter', function() {
-                    message = "Do you want to erase all annotations on document.";
-                    message += "<br>Warning: It will also reset.";
-                    //message += "<br>You can cancel or uncheck auto save if you do not want to reset online";
-                    bootbox.confirm(message, function(dr) {
-                        if (dr) {
-                            var annotations = localStorage.getItem(documentId + '/annotations');
-                            annotations = JSON.parse(annotations);
-                            annotations = annotations.filter(function(annot) {
-                                return annot.type == 'point' && !annot.sub_type
-                            });
-                            annotations = JSON.stringify(annotations);
-                            localStorage.removeItem(documentId + '/annotations');
-                            localStorage.setItem(documentId + '/annotations', annotations);
-                            setDocDirty(documentId);
-                            saveAnnotationsAtServer('reset');
-                        }
-                    });
-                });
+                });                
 
             })();
 
@@ -474,6 +451,7 @@
                     return;
                 var $target = $(e.target);
                 if ($target.closest('#viewer').length == 0) {
+                    active_drawing = undefined;
                     $target.closest('#viewer').css('cursor', 'auto');
                 }
                 if (comment_item_focused) {
@@ -500,9 +478,7 @@
                 } else {
                     $('.ContextMenuPopup').hide();
                     if ($('.topbar:first .pen:first').hasClass('active')) {
-                        if (hand_drawings.length > 0 && $target.closest('#viewer').length == 0) {
-                            save_drawing();
-                        }
+                        
                     } else {
                         if (activePointId && $target.closest('#comment-wrapper').length == 0) {
                             activePointId = undefined;
@@ -703,31 +679,8 @@
                             }
                             elem.html(newVal).attr('comment_count', newVal);
                         }
-                        localStorage.setItem(documentId + '/annotations', JSON.stringify(annotations));
+                        setCookieStrict(documentId, documentId + '/annotations', annotations);
                         break;
-                    }
-                }
-            }
-
-            save_drawing = function(onsave) {
-                if (hand_drawings.length > 0) {
-                    var annotations = getCookieStrict(documentId, documentId + '/annotations');
-                    annotations = JSON.parse(annotations);
-                    var combined_drawing = hand_drawings[0];
-                    annotations = annotations.filter(function(el) {
-                        return el.to_merge != 1
-                    });
-                    for (var i = 1; i < hand_drawings.length; i++) {
-                        combined_drawing.lines = combined_drawing.lines.concat(hand_drawings[i].lines);
-                    }
-                    combined_drawing.to_merge = 0;
-                    annotations.push(combined_drawing);
-                    //console.log(annotations);
-                    localStorage.setItem(documentId + '/annotations', JSON.stringify(annotations));
-                    hand_drawings = [];
-                    combined_drawing = {};
-                    if (!onsave) {
-                        render_details();
                     }
                 }
             }
@@ -1226,7 +1179,7 @@
                     tooltype = type;
 
                     switch (type) {
-                        case 'cursor':
+                        case 'cursor':                            
                             $('#viewer').css('cursor', 'auto');
                             UI.enableEdit();
                             break;
@@ -1293,9 +1246,7 @@
                         data.point.counter = 1;
                         var current_annotations = getLocalAnnotations();
                         current_annotations.push(data.point);
-                        current_annotations = JSON.stringify(current_annotations);
                         setCookieStrict(documentId, documentId + '/annotations', current_annotations);
-
                         UI.renderPage(data.point.page, RENDER_OPTIONS, function(cb_data, page_num) {
                             pdfStoreAdapter.addComment(documentId, data.point.uuid, data.point.comment, 1).then(function(aComment) {
                                 insertComment(aComment, 1);
@@ -2852,10 +2803,6 @@
                                         annotation.uid = annotation_user_m2.id;
                                         var annotations = _getAnnotations(documentId);
                                         annotations.push(annotation);
-                                        if (annotation.type == "drawing") {
-                                            annotation.to_merge = 1;
-                                            hand_drawings.push(annotation);
-                                        }
 
                                         var is_comment = annotation.type == 'pooint' && !annotation.sub_type;
                                         updateAnnotations(documentId, annotations, is_comment);
@@ -3051,11 +2998,8 @@
                     function updateAnnotations(documentId, annotations, is_comment) {
                         if (is_comment == 'comment_point_moved') {
                             return;
-                        }
-                        var annotation_cookie = "";
-                        if (Array.isArray(annotations))
-                            annotation_cookie = JSON.stringify(annotations);
-                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
+                        }                        
+                        setCookieStrict(documentId, documentId + '/annotations', annotations);
                         if (is_comment) {
                             return;
                         }
@@ -3063,9 +3007,9 @@
                         // console.log(Date(), 1333);
                         clearTimeout(annot_save_timeout);
                         annot_save_timeout = setTimeout(function() {
-                            console.log(Date(), 555);
+                            // console.log(Date(), 555);
                             saveAnnotationsAtServer();
-                        }, 10000);
+                        }, annotation_save_wait_time);
                     }
 
                     function findAnnotationObject(documentId, annotationId) {
@@ -4691,13 +4635,20 @@
                     /**
                         * Handle document.mousedown event
                         */
-                    function mouse_down30(e) {
-                        //console.log(e, 777);
+
+                    var drawing_svg = undefined;
+                    function mouse_down30(e) {                        
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
                         path = null;
                         lines = [];
-
+                        var svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY);
+                        if(drawing_svg && svg != drawing_svg)
+                        {
+                            mouse_up30(e);
+                            active_drawing = undefined;
+                        }
+                        drawing_svg = svg;
                         document.addEventListener('mousemove', mouse_move30);
                         document.addEventListener('mouseup', mouse_up30);
 
@@ -4711,13 +4662,30 @@
                         *
                         * @param {Event} e The DOM event to be handled
                         */
+                    function mouse_move30(e) {
+                        e.preventDefault();
+                        //console.log(e); 
+                        if (e.touches) {
+                            e = e.touches[0];
+                        }
+                        var svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY);
+                        if(svg != drawing_svg)
+                        {
+                            mouse_up30(e);
+                            active_drawing = undefined;
+                            return;
+                        }
+                        savePoint(e.clientX, e.clientY);
+                    }
 
-                    function mouse_up30(e) {
-                        //console.log(777);
+                    function mouse_up30(e) {                        
                         if (e.changedTouches)
-                            e = e.changedTouches[0];
-                        var svg = void 0;
-                        if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
+                            e = e.changedTouches[0];                        
+                        var svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY);                        
+                        if(svg != drawing_svg){
+                            svg = drawing_svg;
+                        }
+                        if (lines.length > 1 && svg) {
                             var _getMetadata = (0, _utils.getMetadata)(svg);
                             documentId = _getMetadata.documentId;
                             var pageNumber = _getMetadata.pageNumber;
@@ -4727,52 +4695,41 @@
                                 width: _penSize,
                                 color: _penColor,
                                 lines: lines
-                            }).then(function(annotation) {
+                            }).then(function(annotation) {                                                                
                                 if (path) {
                                     svg.removeChild(path);
                                 }
                                 (0, _appendChild2.default)(svg, annotation);
+                                if(!active_drawing){
+                                    active_drawing = annotation;
+                                }
+                                else{
+                                    active_drawing.lines = active_drawing.lines.concat(annotation.lines);                                    
+                                    var annotations = annotations.filter(function(active_){
+                                        return active_.uuid != annotation.uuid
+                                    });                                    
+                                    annotations.push(active_drawing, annotations);
+                                    console.log(active_drawing, 4454);
+                                    setCookieStrict(documentId, documentId+'/annotations', annotations);
+                                }
                             });
                         }
                         document.removeEventListener('mousemove', mouse_move30);
                         document.removeEventListener('mouseup', mouse_up30);
 
                         document.removeEventListener('touchmove', mouse_move30);
-                        document.removeEventListener('touchend', mouse_up30);
+                        document.removeEventListener('touchend', mouse_up30);                        
                         if (is_mobile_device)
                             $('body').css('overflow', 'auto');
                     }
 
-                    function saveDrawingAnnotation() {
-                        var docId = hand_drawings.documentId;
-                        var pageNumber = hand_drawings.pageNumber;
-                        var lines = hand_drawings.lines;
-                        _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(docId, pageNumber, {
-                            type: 'drawing',
-                            width: _penSize,
-                            color: _penColor,
-                            lines: lines
-                        }).then(function(annotation) {
-                            if (path) {
-                                svg.removeChild(path);
-                            }
-                            (0, _appendChild2.default)(svg, annotation);
-                        });
-                    }
                     /**
                         * Handle document.mousemove event
                         *
                         * @param {Event} e The DOM event to be handled
                         */
 
-                    function mouse_move30(e) {
-                        e.preventDefault();
-                        //console.log(e); 
-                        if (e.touches) {
-                            e = e.touches[0];
-                        }
-                        savePoint(e.clientX, e.clientY);
-                    }
+                    
                     /**
                         * Handle document.keyup event
                         *
@@ -4793,7 +4750,7 @@
                         * @param {Number} y The y coordinate of the point
                         */
                     function savePoint(x, y) {
-                        var svg = (0, _utils.findSVGAtPoint)(x, y);
+                        var svg = (0, _utils.findSVGAtPoint)(x, y);                        
                         if (!svg) {
                             return;
                         }

@@ -1,6 +1,6 @@
 import json
 from django.apps import apps
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
@@ -97,8 +97,6 @@ class AnnotationDocument(CustomModel):
             )
             doc.save()
 
-        doc.annotation_set.remove()
-
         user_annotations = params.get('annotations')
         user_annotations = json.loads(user_annotations)
 
@@ -120,7 +118,6 @@ class AnnotationDocument(CustomModel):
                 annotation_to_save = DrawingAnnotation()
                 annotation_to_save.width=user_annot['width']
                 annotation_to_save.color=user_annot['color']
-
                 set_obj_attrs(new_annotation, annotation_to_save)
                 drawing_annotations.append(annotation_to_save)
             
@@ -146,65 +143,105 @@ class AnnotationDocument(CustomModel):
             else:
                 raise ValidationError('Invalid annotation type '+user_annot['type'])            
                 
-        Annotation.objects.bulk_create(point_annotations)
-        Annotation.objects.bulk_create(drawing_annotations)
-        Annotation.objects.bulk_create(rectangle_annotations)
+        with transaction.atomic():
+            doc.annotation_set.remove()
+            for obj in point_annotations:
+                obj.save()
+            for obj in drawing_annotations:
+                obj.save()
+            for obj in rectangle_annotations:
+                obj.save()
 
-        save_annotations = PointAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='point')
-        cls.save_dimensions(save_annotations, user_annotations)
-        save_annotations = DrawingAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='drawing')
-        cls.save_lines(save_annotations, user_annotations)
-        save_annotations = RectangleAnnotation.objects.filter(type__in = ['highlight','strikeout', 'underline'], user_id=user_id, document_id=doc.id)
-        cls.save_notes(save_annotations, user_annotations)
-        doc.version = document_version
-        doc.save()
+            save_annotations = PointAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='point')
+            cls.save_notes(save_annotations, user_annotations, user_id)
+
+            save_annotations = DrawingAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='drawing')
+            cls.save_lines(save_annotations, user_annotations)
+
+            save_annotations = RectangleAnnotation.objects.filter(type__in = ['highlight','strikeout', 'underline'], user_id=user_id, document_id=doc.id)
+            cls.save_dimensions(save_annotations, user_annotations)
+
+            doc.version = document_version
+            doc.save()
         return 'done'
 
     @classmethod
     def save_lines(cls, saved_annotations, user_annotations):
         children = []
-        for obj in saved_annotations:        
-            client_item = next(item for item in user_annotations if item["uuid"] == obj.uuid)            
-            for child in client_item['lines']:
-                child_to_save = DrawingAnnotation(
-                    drawing_id=obj.id,
-                    x = child[0],
-                    y = child[1]
-                )
-                children.append(child_to_save)
+        if not saved_annotations:
+            return
+        for item in user_annotations:
+            if item['type'] != 'drawing':
+                continue
+            for obj in saved_annotations.filter(uuid=item["uuid"]):
+                for child in item['lines']:
+                    child_to_save = Line(
+                        drawing_id=obj.id,
+                    )
+                    x = None
+                    y = None
+                    if type(child) is dict:
+                        x = child.get('x')
+                        y = child.get('y')
+                    elif type(child) is list:
+                        x = child[0]
+                        y = child[1]
+                    if x and y:
+                        child_to_save.x = x
+                        child_to_save.y = y
+                    else:
+                        return 'Invalid points in line'
+                    children.append(child_to_save)
         if len(children) > 0:
             Line.objects.bulk_create(children)
+        else:
+            saved_annotations.delete()
 
     @classmethod
     def save_dimensions(cls, saved_annotations, user_annotations):
+        if not saved_annotations:
+            return
         children = []
-        for obj in saved_annotations:        
-            client_item = next(item for item in user_annotations if item["uuid"] == obj.uuid)            
-            for child in client_item['rectangles']:
-                child_to_save = Dimension(
-                    rectangle_id = obj.id,
-                    x = child.get('x'),
-                    y = child.get('y'),
-                    width = child.get('width'),
-                    height = child.get('height')
-                )
-                children.append(child_to_save)
+        for item in user_annotations:
+            if item['type'] not in ('highlight','strikeout', 'underline'):
+                continue
+            for obj in saved_annotations.filter(uuid=item["uuid"]):
+                dimensions = item.get('rectangles')
+                if dimensions is None:
+                    dimensions = item.get('dimensions')
+                for dimension in dimensions:
+                    child_to_save = Dimension(
+                        rectangle_id = obj.id,
+                        x = dimension.get('x'),
+                        y = dimension.get('y'),
+                        width = dimension.get('width'),
+                        height = dimension.get('height')
+                    )
+                    children.append(child_to_save)
         if len(children) > 0:
             Dimension.objects.bulk_create(children)
+        else:
+            saved_annotations.delete()
 
     @classmethod
-    def save_notes(cls, saved_annotations, user_annotations):
+    def save_notes(cls, saved_annotations, user_annotations, user_id):
         children = []
-        for obj in saved_annotations:        
-            client_item = next(item for item in user_annotations if item["uuid"] == obj.uuid)            
-            for child in client_item['comments']:
-                child_to_save = CommentAnnotation(
-                    point_id=obj.id,
-                    body=child['body'],                     
-                    user_id=child['commented_by'],
-                    uuid = child['uuid']                    
-                )
-                children.append(child_to_save)
+        for item in user_annotations:
+            if item['type'] != 'point':
+                continue
+            point_id = item.get("uuid")
+            for obj in saved_annotations.filter(uuid = point_id):
+                for comment in item['comments']:
+                    body = comment.get('body')
+                    if body is None:
+                        body = comment.get('content')
+                    child_to_save = CommentAnnotation(
+                        point_id=obj.id,
+                        user_id=user_id,
+                        uuid = comment['uuid'],
+                        body = body
+                    )
+                    children.append(child_to_save)
         if len(children) > 0:
             CommentAnnotation.objects.bulk_create(children)
 
@@ -223,7 +260,7 @@ class RectangleAnnotation(Annotation):
 
     @classmethod
     def get_rectangles(cls, doc_id, user_id):
-        rectangles = RectangleAnnotation.objects.filter(document_id=doc_id, user_id = user_id)
+        rectangles = RectangleAnnotation.objects.filter(document_id=doc_id, type__in=['highlight','underline','strikeout','rectangle'], user_id = user_id)
         user_rectangle = []
         counter = 0
         for rectangle in rectangles:
@@ -238,7 +275,7 @@ class RectangleAnnotation(Annotation):
                 'doc_id': rectangle.document.doc_name,
 
             })
-            dimensions = rectangle.dimensions_set.all()
+            dimensions = rectangle.dimension_set.all()
             user_dimension = []
             for dimension in dimensions:
                 user_dimension.append({'x': dimension.x, 'y': dimension.y,
