@@ -1,0 +1,57 @@
+<div class="modal-header modal-header-heading">
+  <h1>{{action|firstToUpper}} Agenda Topic</h1>
+  <!-- <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+  </button> -->
+</div>
+<div class="modal-body edit-modal-body">    
+  <div class="router-outlet">
+      <div class="details-card profile-edit-container edit-mode">
+          <div class="row edit-buttons edit-mode">
+              <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
+              <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
+          </div>
+          <div class="label-control-form">
+              <div class="ProFileHeadWrap">
+                  Topic Details
+              </div>
+              <div class="row single-input-label">
+                  <div class="col-md-6">
+                      <label for="name"> <b>Meeting Name</b> </label>
+                      <input value="{{event__name}}" [readonly]="true" type="text" id="meeting_name">
+                  </div>
+                  <div class="col-md-6">
+                      <label for="name"> <b>Name</b> </label>
+                      <input value="{{topic.name}}" (change)="modified_topic_data.name = $event.target.value"  type="text" placeholder="Enter Agenda Subject" id="name">
+                  </div>
+                  <div class="col-md-6">
+                      <label for="description"> <b>Description</b> </label>
+                      <textarea value="{{topic.description}}" (change)="modified_topic_data.description = $event.target.value"
+                      class="form-control" placeholder="Enter Description" id="description">
+                      </textarea>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="email"> <b>Lead</b> </label>
+                      <input value="{{topic.lead}}" (change)="modified_topic_data.lead = $event.target.value"  type="text" placeholder="Enter Lead Name" id="lead">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="duration"> <b>Duration</b> </label>
+                    <input value="{{topic.duration}}" (change)="modified_topic_data.duration = $event.target.value"  type="text" placeholder="Enter Agenda Duration" id="duration">
+                  </div>
+              </div>
+              <div class="row docwrappercontainer mb-0">
+                  <div class="col-sm-12 pt-3">
+                      <div class="ProFileHeadWrap">Agenda Documents</div>
+                  </div>
+              </div>
+              <input
+              type="file"
+              name="files[]"
+              class='add_agenda_docs' multiple accept=".pdf,.odt,.doc,.docx,.xlsx,.xls,.ppt,.pptx" style="display: none"/>
+          </div>          
+      </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>

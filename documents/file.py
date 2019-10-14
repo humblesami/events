@@ -298,7 +298,7 @@ class File(CustomModel):
         elif file_type == 'topic':
             breadcrumb = file_obj.agendadocument.breadcrumb
             mention_list = file_obj.agendadocument.agenda.get_attendees()
-            respondents = file_obj.agendadocument.topic.meeting.get_audience()
+            respondents = file_obj.agendadocument.agenda.event.get_audience()
             if request.user.id in respondents:
                 is_respondent = True
         elif file_type == 'voting':

@@ -84,6 +84,7 @@ import { ViewmembersComponent } from '../components/viewmembers/viewmembers.comp
 import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfolder.component';
 import { ThankyouComponent } from '../components/thankyou/thankyou.component';
+import { TopiceditComponent } from '../components/topicedit/topicedit.component';
 
 @NgModule({
     imports: [
@@ -158,6 +159,7 @@ import { ThankyouComponent } from '../components/thankyou/thankyou.component';
         ViewmembersComponent,
         MovetomyfolderComponent,
         ThankyouComponent,
+        TopiceditComponent,
     ],
     providers:[
         AuthGuard,
@@ -170,6 +172,6 @@ import { ThankyouComponent } from '../components/thankyou/thankyou.component';
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent, RosterComponent, ProfilesummaryComponent, MovetomyfolderComponent,]
+    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent, RosterComponent, ProfilesummaryComponent, MovetomyfolderComponent,TopiceditComponent]
 })
 export class AppModule { }

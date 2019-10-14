@@ -589,7 +589,7 @@ def has_permission(res):
     return user_permission
 
 
-def duplicate_file(a, file_ptr):
+def duplicate_file(a, file_ptr, file_type):
     a.name = file_ptr.name
     a.html = file_ptr.html
     a.content = file_ptr.content
@@ -601,6 +601,7 @@ def duplicate_file(a, file_ptr):
 
     a.extention = file_ptr.extention
     a.access_token = file_ptr.access_token
+    a.file_type = file_type
     a.pending_tasks = 0
     return a
 

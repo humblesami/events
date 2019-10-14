@@ -71,7 +71,7 @@ class EventAdmin(BaseAdmin):
     autocomplete_fields = ['attendees']
     # autocomplete_fields = ('attendees',)
 
-    inlines = [TopicInline]
+    # inlines = [TopicInline]
     # extra = 1
     readonly_fields = ('docs',)
     change_form_template = 'event_custom_change_form.html'

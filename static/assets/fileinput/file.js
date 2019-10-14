@@ -154,7 +154,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             }
         }
 
-        $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
+        $('.file-drop-zone-title:last').addClass('loading').html('Uploading '+files.length+' files...');
         var url = window['site_config'].server_base_url+'/docs/upload-files';
         var formData = new FormData();
         if(!cloud)
@@ -185,7 +185,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
         headers = {'Authorization': 'Token '+user.token};
-        var file_input_picker = $('.file-input-picker-container')
+        var file_input_picker = $('.file-input-picker-container:last')
         js_utils.addLoader(file_input_picker);
         // console.log(formData);
         $.ajax({
@@ -202,7 +202,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 }
                 catch(er){
                     console.log(data);
-                    $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
+                    $(".feedback-message:last").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
                     return;
                 }
 
@@ -210,26 +210,26 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 {
                     if(on_files_uploaded)
                     {
-                        parent.find('.file-box').remove();
-                        parent.find('.preview-conatiner').html('');
+                        parent.find('.file-box:last').remove();
+                        parent.find('.preview-conatiner:last').html('');
                         on_files_uploaded(data);
                     }
-                    $(".feedback-message").append('<p id="success-message" class="alert-success">'+ files.length +' File(s) Uploaded Successfully </p>').fadeIn("slow");
+                    $(".feedback-message:last").append('<p id="success-message" class="alert-success">'+ files.length +' File(s) Uploaded Successfully </p>').fadeIn("slow");
                 }
                 else{
                     console.log(data);
-                    $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
+                    $(".feedback-message:last").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
                 }
             },
             error: function(a,b,c,d){
-                $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
+                $('.feedback-message:last').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
             },
             complete:function(){
                 js_utils.removeLoader(file_input_picker);
-                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
+                $('.file-drop-zone-title:last').removeClass('loading').html('Drag & drop files here …');
                 setTimeout(function(){
-                    $(".feedback-message").fadeOut("slow");
-                    $(".feedback-message").html('');
+                    $(".feedback-message:last").fadeOut("slow");
+                    $(".feedback-message:last").html('');
                 }, 4000);
             }
         });

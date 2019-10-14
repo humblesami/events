@@ -282,10 +282,10 @@ var js_utils = window['js_utils'] = {
             if(element.length > 1)
             {
                 console.log(element);                
-                console.log(selector + ' found more than one');
+                console.log('found more than one');
             }
             else{
-                console.log(selector + ' not found');
+                console.log('not found');
                 return;
             }
         }

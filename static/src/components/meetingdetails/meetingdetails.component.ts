@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {SocketService} from "../../app/socket.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RosterComponent } from '../roster/roster.component';
+import { TopiceditComponent } from '../topicedit/topicedit.component';
 
 declare var $: any;
 
@@ -52,6 +53,50 @@ export class MeetingDetailsComponent implements OnInit {
         modalRef.componentInstance.meeting_type = obj_this.meeting_object.exectime;
         modalRef.result.then(function(data){
             obj_this.meeting_object.attendance_marked = data && data.attendance_marked;
+        });
+    }
+
+
+    delete_agenda_topic(evt, topic_id)
+    {
+        evt.stopPropagation();
+        evt.preventDefault();
+        let obj_this = this;
+        if (!topic_id)
+        {
+            return;
+        }
+        let input_data = {
+            topic_id: topic_id
+        }
+        let args = {
+            app: 'meetings',
+            model: 'Topic',
+            method: 'delete_agenda_topic'
+        }
+        let final_input = {
+            params: input_data,
+            args: args
+        }
+        obj_this.httpService.get(final_input, (data)=>{
+            obj_this.meeting_object.topics = obj_this.meeting_object.topics.filter((el)=>{
+                return el.id != topic_id;
+            });
+        }, null)
+    }
+
+    open_topic_edit(evt, topic_id, action)
+    {
+        evt.stopPropagation();
+        evt.preventDefault();
+        let obj_this = this;
+		const modalRef = this.modalService.open(TopiceditComponent, { backdrop: 'static' });
+        modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
+        modalRef.componentInstance.meeting_name = obj_this.meeting_object.name;
+        modalRef.componentInstance.action = action;
+        modalRef.componentInstance.topic_id = topic_id;
+        modalRef.result.then(function(data){
+            // obj_this.meeting_object.attendance_marked = data && data.attendance_marked;
         });
     }
 

@@ -24,7 +24,8 @@ def upload_files(request):
         res_model = req['res_model']
         res_id = req['res_id']
         model = ws_methods.get_model(res_app, res_model)
-        obj = model.objects.get(pk=res_id)
+        if res_id != 'undefined':
+            obj = model.objects.get(pk=res_id)
         cloud_data = req.get('cloud_data')
         created_file = None
         with transaction.atomic():
@@ -32,8 +33,9 @@ def upload_files(request):
                 cloud_data = json.loads(cloud_data)
                 for file in cloud_data:
                     if res_app =='documents' and res_model == 'File':
-                        created_file = obj.create(name=file['name'], cloud_url=file['url'], file_type='temp',
+                        created_file = model(name=file['name'], cloud_url=file['url'], file_type='temp',
                                                             file_name=file['file_name'])
+                        created_file.save()
                     else:
                         created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
@@ -41,7 +43,8 @@ def upload_files(request):
                 files = request.FILES.getlist(key)
                 for file in files:
                     if res_app == 'documents' and res_model == 'File':
-                        created_file = obj.create(name=file.name, file_name=file.name, attachment=file, file_type='temp')
+                        created_file = model(name=file.name, file_name=file.name, attachment=file, file_type='temp')
+                        created_file.save()
                     else:
                         created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file)
                     docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})

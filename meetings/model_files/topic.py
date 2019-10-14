@@ -5,6 +5,7 @@ from meetings.model_files.event import Event
 from mainapp.models import CustomModel
 from documents.file import File
 from django.db import transaction
+from django.utils.dateparse import parse_duration
 
 
 class Topic(PositionalSortMixIn, CustomModel):
@@ -25,18 +26,29 @@ class Topic(PositionalSortMixIn, CustomModel):
         description = params.get('description')
         lead = params.get('lead')
         duration = params.get('duration')
+        if duration:
+            duration = parse_duration(duration)
         topic = Topic(event_id = meeting_id, name=name, description=description,lead=lead,duration=duration)
         topic.save()
         agenda_docs = params.get('agenda_docs')
         agenda_doc_model = ws_methods.get_model('meetings', 'AgendaDocument')
         for agenda_doc in agenda_docs:
             with transaction.atomic():
-                doc = File.objects.get(pk=agenda_doc.id)
-                a_doc = agenda_doc_model(agenda=topic.id)
-                a_doc = ws_methods.duplicate_file(a_doc, doc)
+                doc = File.objects.get(pk=agenda_doc['id'])
+                a_doc = agenda_doc_model(agenda_id=topic.id)
+                a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
         return 'done'
     
+
+    @classmethod
+    def delete_agenda_topic(cls, request, params):
+        topic_id = params['topic_id']
+        topic = Topic.objects.get(pk=topic_id)
+        topic.delete()
+        return 'done'
+
+
     @classmethod
     def update_agenda_topic(cls, request, params):
         topic_id = params['topic_id']
@@ -44,15 +56,14 @@ class Topic(PositionalSortMixIn, CustomModel):
         for key in params:
             if key != "agenda_docs" and key != "meeting_id":
                 setattr(topic,key,params[key])
-        topic.event_id = params['meeting_id'];
         topic.save()
         agenda_docs = params.get('agenda_docs')
         agenda_doc_model = ws_methods.get_model('meetings', 'AgendaDocument')
         for agenda_doc in agenda_docs:
             with transaction.atomic():
-                doc = File.objects.get(pk=agenda_doc.id)
-                a_doc = agenda_doc_model(agenda=topic.id)
-                a_doc = ws_methods.duplicate_file(a_doc, doc)
+                doc = File.objects.get(pk=agenda_doc['id'])
+                a_doc = agenda_doc_model(agenda_id=topic.id)
+                a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
         
         return 'done'
@@ -68,7 +79,7 @@ class Topic(PositionalSortMixIn, CustomModel):
         try:
             topic_id = params['id']
             topic_orm = Topic.objects.get(pk=topic_id)
-            topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'duration', 'event__exectime', 'event__name', 'event__id'])
+            topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'description', 'duration', 'event__exectime', 'event__name', 'event__id'])
             topic['duration'] = str(topic['duration'])
             topic_docs = list(topic_orm.documents.values())
             meeting_type = ''
