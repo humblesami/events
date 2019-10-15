@@ -5,7 +5,7 @@
             (keyup)="$event.target.value; $event.keyCode == 13 ? search_roster($event.target.value): null" 
             placeholder="Search..."  class="form-control"/>
     </div>
-    <div class="bg-heading" [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing') || readonly}">
+    <div class="bg-heading" [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}">
         <div class="col-3 col-sm-4 ">
             <label class="">
                 Attendees

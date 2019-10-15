@@ -280,10 +280,7 @@
             annotation_user_m2 = localStorage.getItem('user');
             annotation_user_m2 = JSON.parse(annotation_user_m2);
 
-            var annotationBiengEdited = false;
-            var comments_loaded = false;
-            var force_download = 0;
-            var loadAnnotationsFromServer = undefined;
+            var comments_loaded = false;            
 
             var _slicedToArray = function() {
                 function sliceIterator(arr, i) {
@@ -1635,8 +1632,7 @@
                     onCOmmentAdded();
                 }
 
-                handleAnnotationBlur = function() {
-                    annotationBiengEdited = false;
+                handleAnnotationBlur = function() {                    
                     activeAnnotationItem = false;
                 }
 

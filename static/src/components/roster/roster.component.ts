@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
 import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
 import { UserService } from 'src/app/user.service';
 declare var $: any;
 
@@ -14,7 +13,7 @@ declare var $: any;
 
 export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
-    @Input() meeting_type: string;
+    @Input() meeting_type: string;    
     server_url = window['server_url'];
     httpService: HttpService;
     constructor(private httpServ: HttpService,        
