@@ -95,13 +95,12 @@ title="{{topic.name}}"></app-breadcrumb>
             </div>
         </div>
     </section>
-	<div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
+	<!-- <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
                 <form>
                 <div *ngFor="let doc of attachments; let i = index" contenteditable="false"
                     class="doc-thumb" style="display: flex;">
                     <span class="doc-thumb-icon"><i class="fa fa-2x fa-file"></i></span>
-                    <!-- <span class="file_name">{{doc.name}}</span> -->
                     <div>
                         <input type="text" name="attachment_name"
                         (click)="$event.target.select()" (change)="doc_name_change(doc, $event)" value="{{doc.name}}"/>
@@ -131,5 +130,5 @@ title="{{topic.name}}"></app-breadcrumb>
             <button class="btn btn-meeting" (click)="upload_doucments()">
                 <span>Upload Documents</span>
             </button>
-        </div>
+        </div> -->
 </div>
