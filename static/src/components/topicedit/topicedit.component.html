@@ -40,7 +40,7 @@
                     <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="modified_topic_data.duration = $event.target.value"  type="text" placeholder="Enter Agenda Duration" id="duration">
                   </div>
               </div>
-              <div *ngIf="action=='create'">
+              <div >
                 <div class="row docwrappercontainer mb-0">
                   <div class="col-sm-12 pt-3">
                     <div class="ProFileHeadWrap">Agenda Documents</div>
@@ -99,7 +99,7 @@
                   name="files[]"
                   class='add_agenda_docs' multiple style="display: none"/>
               </div>
-              <div *ngIf="action=='update' && topic && topic.id">
+              <!-- <div *ngIf="action=='update' && topic && topic.id">
                 <app-documents
                   title="Agenda Documents" 
                   parent_model="Topic" 
@@ -108,7 +108,7 @@
                   res_app="meetings" 
                   res_model="AgendaDocument">
                 </app-documents>
-              </div>
+              </div> -->
           </div>
       </div>
   </div>

@@ -189,6 +189,10 @@ topic = undefined;
     obj_this.httpService.get(final_input_data, (data)=>{
       obj_this.topic = data;
       obj_this.event__name = data.event__name;
+      if (obj_this.topic.docs.length)
+      {
+        obj_this.agenda_docs = obj_this.topic.docs;
+      }
     }, null);
   }
 
@@ -225,7 +229,7 @@ topic = undefined;
     {
       obj_this.get_topic()
     }
-    else if(obj_this.action == 'create')
+    // else if(obj_this.action == 'create')
     {
       setTimeout(() => {
         obj_this.apply_drag_drop();
