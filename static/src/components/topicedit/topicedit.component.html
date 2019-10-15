@@ -46,7 +46,7 @@
                     <div class="ProFileHeadWrap">Agenda Documents</div>
                       <div class="col-sm-6 mb-4" *ngFor="let doc of agenda_docs">
                         <a class="DocumentWrapper gray-bg doc" 
-                        routerLink="{{'/topic/doc/'+doc.id}}"
+                        (click)="redirect_to_doc('/topic/doc/'+doc.id)"
                         >
                             <input type="hidden" class="item_id" value="{{doc.id}}" />
                             <div class="doc-del-btn d-flex">

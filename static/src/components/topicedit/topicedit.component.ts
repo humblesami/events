@@ -3,7 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from '../../app/http.service';
 import {SocketService} from "../../app/socket.service";
 import { RenameService } from 'src/app/rename.service';
-
+import { Router } from '@angular/router';
 
 declare var $: any;
 @Component({
@@ -31,6 +31,7 @@ topic = undefined;
     private httpService: HttpService,
     private renameSer: RenameService,
     private ss: SocketService,
+    public router: Router
   ) {
     this.topic = {};
     this.socketService = ss;
@@ -194,6 +195,12 @@ topic = undefined;
         obj_this.agenda_docs = obj_this.topic.docs;
       }
     }, null);
+  }
+
+  redirect_to_doc(link)
+  {
+    this.activeModal.close();
+    this.router.navigate([link]);
   }
 
      apply_drag_drop()
