@@ -17,6 +17,9 @@ class AnnotationDocument(CustomModel):
     doc_name = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return self.doc_name
+
     @classmethod
     def get_data(cls, request, params):
         doc_data = File.get_file_data(request, params)
@@ -96,7 +99,10 @@ class AnnotationDocument(CustomModel):
             doc.save()
 
         user_annotations = params.get('annotations')
-        user_annotations = json.loads(user_annotations)
+        if not user_annotations:
+            user_annotations = []
+        else:
+            user_annotations = json.loads(user_annotations)
 
         point_annotations = []
         drawing_annotations = []
