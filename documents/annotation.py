@@ -336,6 +336,7 @@ class Line(CustomModel):
     drawing = models.ForeignKey(DrawingAnnotation, on_delete=models.CASCADE)
     x = models.IntegerField()
     y = models.IntegerField()
+    is_last_point = models.BooleanField()
 
 
 class PointAnnotation(Annotation):
