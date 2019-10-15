@@ -9,8 +9,8 @@ declare var $: any;
 @Component({
   selector: 'app-topicedit',
   templateUrl: './topicedit.component.html',
-  styleUrls: ['./topicedit.component.css', '../profileedit/profileedit.component.css',
-  '../documents/documents.component.css',
+  styleUrls: ['../profileedit/profileedit.component.css',
+  '../documents/documents.component.css','./topicedit.component.css'
 ]
 })
 export class TopiceditComponent implements OnInit {

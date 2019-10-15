@@ -360,17 +360,17 @@ breadcrumb
 	min-height: 40px;
 	padding: 0 20px 0 15px;
 	}
-	.centered .btn,
-	.modal-content button.btn,
-	.edit-buttons .btn,
-	.modal-footer .btn,
-	.chat_group_container  button{
-		border-radius: 20px;
-		min-width: 80px;
-		font-size: 13px;
-		margin:0 3px;
+.centered .btn,
+.modal-content button.btn,
+.edit-buttons .btn,
+.modal-footer .btn,
+.chat_group_container  button{
+	border-radius: 20px;
+	min-width: 80px;
+	font-size: 13px;
+	margin:0 3px;
 
-	}
+}
 .breadcrumbSection .breadcrumb {
 	padding: 0;
 	margin: 0;
@@ -2903,12 +2903,12 @@ label.check-plus-label-wrap {
 .doc-del-btn > .pointer {	
 	padding: 3px 7px;
 	border-radius: 50%;
-	border: 1px solid #ede;
+	/* border: 1px solid #ede; */
 }
 .doc-del-btn > .pointer:last-child {	
 	padding: 3px 7px;
 	border-radius: 50%;
-    border: 1px solid #ede;
+    /* border: 1px solid #ede; */
     margin-left: 5px;
 }
 .doc-del-btn>div :hover {

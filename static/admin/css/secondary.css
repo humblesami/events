@@ -16,10 +16,6 @@
     border-radius: 4px;
     margin-top: 15px;
 }
-.inline-related h3 span.delete{
-    float: left;
-
-}
 .inline-related h3 span.delete label{
     margin-left: 0;
     font-size: 13px;
@@ -38,7 +34,7 @@
 }
 .inline-related h3,
 .inline-related fieldset.module h3{
-    padding: 10px 5px 15px;
+    padding: 10px 5px 10px;
     cursor: pointer;
 }
 h3.djn-drag-handler b,.inline-related fieldset.module h3 b{
