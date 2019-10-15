@@ -37,7 +37,10 @@ def upload_files(request):
                                                             file_name=file['file_name'])
                         created_file.save()
                     else:
-                        created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
+                        if file['source']=='Google':
+                            created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'],access_token=file['access_token'])
+                        else:
+                            created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
             for key in request.FILES:
                 files = request.FILES.getlist(key)
