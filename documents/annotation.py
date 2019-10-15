@@ -86,8 +86,9 @@ class AnnotationDocument(CustomModel):
             reset = params.get('reset')
             if reset:
                 doc.version = 0
-                for obj in  doc.annotation_set.all():
-                    obj.delete()
+                with transaction.atomic():
+                    for obj in doc.annotation_set.all():
+                        obj.delete()
                 return 'done'
         else:
             doc = AnnotationDocument(
