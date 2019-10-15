@@ -44,53 +44,55 @@
                 <div class="row docwrappercontainer mb-0">
                   <div class="col-sm-12 pt-3">
                     <div class="ProFileHeadWrap">Agenda Documents</div>
-                      <div class="col-sm-6 mb-4" *ngFor="let doc of agenda_docs">
-                        <a class="DocumentWrapper gray-bg doc" 
-                        (click)="redirect_to_doc('/topic/doc/'+doc.id)"
-                        >
-                            <input type="hidden" class="item_id" value="{{doc.id}}" />
-                            <div class="doc-del-btn d-flex">
-                                <div class="pointer"
-                                title="Delete"
-                                (click)="delete_file($event, doc.id)">
-                                    <i class="far fa-trash-alt" ></i>
-                                </div>                    
-                            </div>
-                            <div class="p-1 pos-abs" style="left:5px">
-                                <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">
-                            </div>
-                            <div class="DocIcon">
-                                <span class="rounded-circle">
-                                    <i class="icon-doc-file"></i>
-                                </span>
-                            </div>
-                            <div class="DocText" (click)="renameService.prevent_default($event)">
-                                <div class="DocName w-100">
-                                    <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
-                                        <span class="text-truncate doc-info" [ngClass]="{'mt-2': !socketService.admin_mode}">{{doc.name}}</span>
-                                        <span class="d-flex">
-                                            <button (click)="renameService.enable_rename($event, doc)" 
-                                            *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2 mr-1">
-                                                <i class="fas fa-edit "></i>
+                    <div class="row">
+                        <div class="col-sm-6 mb-4" *ngFor="let doc of agenda_docs">
+                            <a class="DocumentWrapper gray-bg doc" 
+                            (click)="redirect_to_doc('/topic/doc/'+doc.id)"
+                            >
+                                <input type="hidden" class="item_id" value="{{doc.id}}" />
+                                <div class="doc-del-btn d-flex">
+                                    <div class="pointer"
+                                    title="Delete"
+                                    (click)="delete_file($event, doc.id)">
+                                        <i class="far fa-trash-alt" ></i>
+                                    </div>                    
+                                </div>
+                                <div class="p-1 pos-abs" style="left:5px">
+                                    <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">
+                                </div>
+                                <div class="DocIcon">
+                                    <span class="rounded-circle">
+                                        <i class="icon-doc-file"></i>
+                                    </span>
+                                </div>
+                                <div class="DocText" (click)="renameService.prevent_default($event)">
+                                    <div class="DocName w-100">
+                                        <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
+                                            <span class="text-truncate doc-info" [ngClass]="{'mt-2': !socketService.admin_mode}">{{doc.name}}</span>
+                                            <span class="d-flex">
+                                                <button (click)="renameService.enable_rename($event, doc)" 
+                                                *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2 mr-1">
+                                                    <i class="fas fa-edit "></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        
+                                        <div *ngIf="doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
+                                            <input class="form-control renamer"   
+                                                (blur)="renameService.renamer_focused_out($event,doc,'file')"                             
+                                                (keyup)="renameService.renamer_focused_out($event,doc,'file')"												
+                                                value="{{doc.name}}"
+                                                (change)="renameService.renamer_changed($event.target)">
+                                            <button 
+                                            class="fri-selt-btn check-time-btn" 
+                                            aria-label="rename file.">
+                                                <i class="fas fa-check"></i>
                                             </button>
-                                        </span>
-                                    </div>
-                                    
-                                    <div *ngIf="doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
-                                        <input class="form-control renamer"   
-                                            (blur)="renameService.renamer_focused_out($event,doc,'file')"                             
-                                            (keyup)="renameService.renamer_focused_out($event,doc,'file')"												
-                                            value="{{doc.name}}"
-                                            (change)="renameService.renamer_changed($event.target)">
-                                        <button 
-                                        class="fri-selt-btn check-time-btn" 
-                                        aria-label="rename file.">
-                                            <i class="fas fa-check"></i>
-                                        </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
                   </div>
                 </div>
