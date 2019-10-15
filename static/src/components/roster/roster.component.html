@@ -5,7 +5,7 @@
             (keyup)="$event.target.value; $event.keyCode == 13 ? search_roster($event.target.value): null" 
             placeholder="Search..."  class="form-control"/>
     </div>
-    <div class="bg-heading" [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}">
+    <div class="bg-heading" [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing') || readonly}">
         <div class="col-3 col-sm-4 ">
             <label class="">
                 Attendees
@@ -65,29 +65,37 @@
                 Accepted: Self
             </div>
             <div class="col col-sm-2 pl-1">
-                <input *ngIf="obj.attendance=='absent'" class="absent" checked type="radio" name="{{obj.id}}" />                    
+                <input *ngIf="obj.attendance=='absent'" class="absent" checked type="radio" name="{{obj.id}}"
+                [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}" />                    
                 <input (click)="update_attendance(obj.id,'absent')" 
                 class="absent" *ngIf="obj.attendance!='absent'" 
                 [disabled]="!socketService.admin_mode"
-                type="radio" name="{{obj.id}}" />
+                type="radio" name="{{obj.id}}" 
+                [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}"/>
                 <input type="hidden" value="absent" />
                 <input type="hidden" value="{{obj.id}}" />
             </div>
             <div class="col-2 col-sm-2 pl-1">
-                <input *ngIf="obj.attendance=='inperson'" class="inperson" checked type="radio" name="{{obj.id}}" />
+                <input *ngIf="obj.attendance=='inperson'" class="inperson" checked type="radio" 
+                name="{{obj.id}}" 
+                [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}"/>
                 <input (click)="update_attendance(obj.id,'inperson')" 
                 class='inperson' *ngIf="obj.attendance!='inperson'" 
                 [disabled]="!socketService.admin_mode"
-                type="radio" name="{{obj.id}}" />
+                type="radio" name="{{obj.id}}" 
+                [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}"/>
                 <input type="hidden" value="inperson" />
                 <input type="hidden" value="{{obj.id}}" />
             </div>
             <div class="col-2 col-sm-2 pl-1">
-                <input *ngIf="obj.attendance=='online'" checked class="online" type="radio" name="{{obj.id}}" />
+                <input *ngIf="obj.attendance=='online'" checked class="online" type="radio" 
+                name="{{obj.id}}" 
+                [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}"/>
                 <input (click)="update_attendance(obj.id,'online')" 
                 class="online" *ngIf="obj.attendance!='online'" 
                 [disabled]="!socketService.admin_mode"
-                type="radio" name="{{obj.id}}" />
+                type="radio" name="{{obj.id}}" 
+                [ngClass]="{disabled: (meeting_type != 'completed' && meeting_type != 'ongoing')}"/>
                 <input type="hidden" value="online" />
                 <input type="hidden" value="{{obj.id}}" />
             </div>
