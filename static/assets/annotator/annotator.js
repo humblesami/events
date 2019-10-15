@@ -29,7 +29,7 @@
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
     function select_cursor() {
-        // console.log(45);
+        console.log(45555007);
         // window['functions'].get_trace(1);
         $('.topbar:first .active:not(.cursor)').removeClass('active');
         if (!$('.topbar:first .cursor:first').hasClass('active')) {
@@ -193,7 +193,7 @@
                         'left': e.pageX - ctxMenu.width() / 2,
                         'top': e.clientY + 12
                     }).show();
-                    //console.log(ctxMenu.position());
+                    // console.log(ctxMenu.position());
                     contextMenuShown = true;
                 } else {
                     var pen_active = $('.toolbar .pen').hasClass('active');
@@ -208,6 +208,7 @@
                     } else if (!pen_active && !cursor_active) {
                         select_cursor();
                     }
+                    contextMenuShown = false;
                 }
             }, 10);
         });
@@ -436,10 +437,11 @@
 
             $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
                 document.execCommand("copy");
-                $(this).parent().parent().hide();
+                $(this).closest('.ContextMenuPopup').hide();
             });
 
             $(document).mousedown(function(e) {
+                // console.log(contextMenuShown, 4544);
                 if (e.button == 2)
                     return;
                 var $target = $(e.target);
@@ -452,23 +454,10 @@
                         comment_item_focused = false;
                         loadALlCommentsOnDocument();
                     }
-                }
-                if (contextMenuShown) {
-                    // console.log(contextMenuShown, 883);
-                    $target = $target.closest('.ContextMenuPopup button');
-                    if ($target.length) {
-                        target = $target[0];
-                    } else {
-                        $target = $(e.target).closest('.ColorPalettePopup');
-                        if ($target.length) {
-                            target = $target[0];
-                        } else {
-                            // console.log(e.target);
-                            $('.ContextMenuPopup').hide();
-                        }
-                    }
-                } else {
-                    $('.ContextMenuPopup').hide();
+                }                
+                
+                if(!contextMenuShown)
+                {
                     if ($('.topbar:first .pen:first').hasClass('active')) {
                         if (hand_drawings.length > 0 && $target.closest('#viewer').length == 0) {
                             save_drawing();
@@ -1225,6 +1214,7 @@
                         case 'highlight':
                         case 'strikeout':
                         case 'underline':
+                            console.log(tooltype, 444);
                             UI.enableRect(type);
                             break;
                     }
@@ -1420,7 +1410,6 @@
                 var selected_comment_item = false;
                 $('body').on('click', '#comment-wrapper .buttons', function(e) {
                     e.preventDefault();
-                    contextMenuShown = true;
                     selected_comment_item = $(this).closest('.comment-list-item');
                     $('.update-comment:first').css({
                         'top': e.pageY,
@@ -1450,7 +1439,6 @@
                             comment_parent.remove();
                         } else
                             selected_comment_item.remove();
-                        contextMenuShown = false;
                         $('.update-comment').hide();
                     });
                 });
@@ -1577,7 +1565,6 @@
                                 'left': left_pos,
                                 'top': pos.top + 30
                             }).show();
-                            contextMenuShown = true;
                         }
                     });
                 }
