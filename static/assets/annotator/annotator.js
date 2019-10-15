@@ -3490,66 +3490,41 @@
                     function renderPoint(a) {
                         //console.log(a);
                         var outerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                        var innerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-
-                        (0, _setAttributes2.default)(innerSVG, {
-                            width: SIZE,
-                            height: SIZE,
-                            x: 0,
-                            y: SIZE * 0.05 * -1,
-                            viewBox: '0 0 1000 1000'
-                        });
-                        (0, _setAttributes2.default)(rect, {
-                            width: SIZE,
-                            height: SIZE,
-                            stroke: '#fff',
-                            fill: '#ff5'
-                        });
-                        (0, _setAttributes2.default)(path, {
-                            d: D,
-                            strokeWidth: 50,
-                            stroke: '#000',
-                            fill: '#fff'
-                        });
-                        if (a.sub_type) {
-                            (0, _setAttributes2.default)(outerSVG, {
-                                width: 28,
-                                height: 25,
-                                x: a.x,
-                                y: a.y
-                            });
+                        var outer_width = 25;
+                        if (a.sub_type)
+                        {
+                            outer_width= 18;
                         }
-                        if (!a.sub_type) {
-                            (0, _setAttributes2.default)(outerSVG, {
-                                width: SIZE,
-                                height: SIZE,
-                                x: a.x,
-                                y: a.y
-                            });
-                            innerSVG.appendChild(path);
-                            outerSVG.appendChild(rect);
-                            outerSVG.appendChild(innerSVG);
-                        } else {
-                            var svg_str = '';
-                            svg_str += '<rect width="25" height="22" x="1.962286" y="1"';
-                            svg_str += ' style="fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-opacity:1" />';
-
-                            svg_str += ' <rect width="18.4" height="1.5012145" x="5.8" y="5"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-
-                            svg_str += ' <rect width="18" height="0.86" x="6" y="10"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-
-                            svg_str += ' <rect width="18.4" height="0.86" x="5.8" y="14"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-
-                            svg_str += ' <rect width="18" height="0.86" x="6" y="18"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-
-                            outerSVG.innerHTML = svg_str;
+                        (0, _setAttributes2.default)(outerSVG, {
+                            width: outer_width,
+                            height: 25,
+                            x: a.x,
+                            y: a.y
+                        });
+                        if(!a.sub_type)
+                        {
+                            let inner_svg = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23.629" height="22.054" viewBox="0 0 23.629 22.054">
+                            <g id="chat_new" transform="translate(-887.913 -240)">
+                                <path id="Path_8941" data-name="Path 8941" d="M13.575,20a1.575,1.575,0,1,0,1.575,1.575A1.577,1.577,0,0,0,13.575,20Zm0,2.363a.788.788,0,1,1,.788-.788A.788.788,0,0,1,13.575,22.363Z" transform="translate(880.639 227.089)" fill="#4b74b5"/>
+                                <path id="Path_8940" data-name="Path 8940" d="M27.575,20a1.575,1.575,0,1,0,1.575,1.575A1.577,1.577,0,0,0,27.575,20Zm0,2.363a.788.788,0,1,1,.788-.788A.788.788,0,0,1,27.575,22.363Z" transform="translate(872.152 227.089)" fill="#4b74b5"/>
+                                <path id="Path_8939" data-name="Path 8939" d="M41.575,20a1.575,1.575,0,1,0,1.575,1.575A1.577,1.577,0,0,0,41.575,20Zm0,2.363a.788.788,0,1,1,.788-.788A.788.788,0,0,1,41.575,22.363Z" transform="translate(863.666 227.089)" fill="#4b74b5"/>
+                                <path id="Path_8942" data-name="Path 8942" d="M21.266,2H2.363A2.4,2.4,0,0,0,0,4.363v13a2.4,2.4,0,0,0,2.363,2.363H5.513V23.66a.394.394,0,0,0,.252.367.386.386,0,0,0,.142.026.393.393,0,0,0,.291-.129l3.821-4.2H21.266a2.4,2.4,0,0,0,2.363-2.363v-13A2.4,2.4,0,0,0,21.266,2Zm1.575,15.359a1.6,1.6,0,0,1-1.575,1.575H10.7L12.113,17.3a.394.394,0,0,0-.6-.514L9.554,19.063h0L6.3,22.641V19.328a.393.393,0,0,0-.394-.394H2.363A1.6,1.6,0,0,1,.788,17.359v-13A1.6,1.6,0,0,1,2.363,2.788h18.9a1.6,1.6,0,0,1,1.575,1.575Z" transform="translate(887.913 238)" fill="#4b74b5"/>
+                            </g>
+                            </svg>
+                            `;
+                            outerSVG.innerHTML = inner_svg;
                         }
+                        else
+                        {
+                            let inner_svg = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18.001" height="22" viewBox="0 0 18.001 22">
+                                <path id="note_blue" d="M6555-1566h-12a3,3,0,0,1-3-3v-16a3,3,0,0,1,3-3h12a3,3,0,0,1,3,3v16A3,3,0,0,1,6555-1566Zm-4.952-6a.69.69,0,0,0-.688.69.69.69,0,0,0,.688.69h4.185a.69.69,0,0,0,.688-.69.69.69,0,0,0-.688-.69Zm-6.36,0a.69.69,0,0,0-.689.69.69.69,0,0,0,.689.69h4.113a.69.69,0,0,0,.689-.69.69.69,0,0,0-.689-.69Zm6.36-3a.689.689,0,0,0-.688.688.69.69,0,0,0,.688.69h4.185a.69.69,0,0,0,.688-.69.689.689,0,0,0-.688-.688Zm-6.36,0a.689.689,0,0,0-.689.688.69.69,0,0,0,.689.69h4.113a.69.69,0,0,0,.689-.69.689.689,0,0,0-.689-.688Zm6.36-3a.69.69,0,0,0-.688.69.689.689,0,0,0,.688.688h4.185a.689.689,0,0,0,.688-.688.69.69,0,0,0-.688-.69Zm-6.36,0a.69.69,0,0,0-.689.69.689.689,0,0,0,.689.688h4.113a.689.689,0,0,0,.689-.688.69.69,0,0,0-.689-.69Zm6.36-3a.69.69,0,0,0-.688.69.689.689,0,0,0,.688.688h4.185a.689.689,0,0,0,.689-.688.69.69,0,0,0-.689-.69Zm-6.36,0a.69.69,0,0,0-.689.69.689.689,0,0,0,.689.688h4.113a.689.689,0,0,0,.689-.688.69.69,0,0,0-.689-.69Zm6.36-3a.689.689,0,0,0-.688.688.69.69,0,0,0,.688.69h4.185a.69.69,0,0,0,.688-.69.689.689,0,0,0-.688-.688Zm-6.36,0a.689.689,0,0,0-.689.688.69.69,0,0,0,.689.69h4.113a.69.69,0,0,0,.689-.69.689.689,0,0,0-.689-.688Z" transform="translate(-6540 1588)" fill="#4b74b5"/>
+                            </svg>
+                            `;
+                            outerSVG.innerHTML = inner_svg;
+                        }
+                        
                         return outerSVG;
                     }
                     module.exports = exports['default']; /***/
