@@ -189,22 +189,39 @@ mention-list.dropup{
 .popup{
     z-index: 3;
 }
+.bg-profile,
 .bg-heading{
-    background: #4B74B5;
-    color: #fff;
+    display: flex;
     align-items: center;
     font-size: 0.85rem;
     font-weight: bold;
-    display: flex;
-    margin-bottom: 5px;
+    border-radius: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.bg-heading > div{
+    padding: 7px 15px;
+}
+.bg-profile,
+.bg-heading > div{
+    background: #4B74B5;
+    color: #fff;
+    border-radius: 5px;
+}
+.bg-heading > div:first-child{
+    width: 74%;
+}
+.bg-heading > div:last-child{
+    width: 25%;
+    margin-left:1%; 
 }
 .bg-heading label{
     margin-bottom:0;
 }
-.bg-heading > div{
+.bg-profile > div{
     line-height: 2rem;
 }
-.bg-heading > div:not(:last-child){
+.bg-profile > div:not(:last-child){
     border-right: 1px solid #fff;
 }
 .left-margin{
@@ -245,13 +262,17 @@ mention-list.dropup{
     justify-content: center;
     overflow: auto;
 }
+.roster .main-full-seachbar{
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+}
 .pop-heading{
     text-align: center;
-    color: #6c757d;
+    color: #000;
     font-size: 20px;
-    font-weight: 700;
-    margin-top: .5rem;
-    margin-bottom: .5rem;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 0;
     width: 100%;
 }
 .pop-bottom{

@@ -1,6 +1,6 @@
 <div class="user-modal">
     
-    <div class="pl-2 p-lr">
+    <div>
         <label *ngIf="!group_name" class="pop-heading">Create Chat Group</label>
         <label *ngIf="group_name" class="pop-heading">Chat Group: {{group_name}}</label>
         <input *ngIf="!group_name" [(ngModel)]="group_name" placeholder="Enter Group Name" class="form-control form-control-sm"/>
