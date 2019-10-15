@@ -752,7 +752,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 var sign = my_pending_signs[last_focused_sign_number];
                 var on_page_rendered = function(){
                     var sign_box = $(`.sign_container[id=${sign.id}]:visible:first`);
-                    window['js_utils'].scroll_to_element(sign_box, '#viewer_container');
+                    var scroll_el = $('#viewer_container');
+                    window['js_utils'].scroll_to_element(sign_box, scroll_el);
                     sign_box.css({
                         border: "solid 3px yellow"
                     })

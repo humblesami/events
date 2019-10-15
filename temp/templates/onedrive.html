@@ -19,7 +19,7 @@ var cloud_number = undefined;
 $(function(){
     //alert(window.location.toString());
     var url = new URL(window.location.toString());
-    console.log(url);
+    //console.log(url);
     var file_type = url.searchParams.get("file_type");
     $('input[name="file_type"]').val(file_type);
     var temp = url.searchParams.get("picker_index");
