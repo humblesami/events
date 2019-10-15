@@ -6,7 +6,7 @@ body {
 body,
 .modal{
 	padding: 0 !important;
-}	
+}
 .form-control:focus,
 .form-control.focus {
 	outline: none;
@@ -19,7 +19,7 @@ body,
 	}
 .router-outlet .router-outlet {
 	height: auto;
-	}	
+	}
 body {
 	font-family: "Roboto-Condensed";
 	--toggle-left-menu-bg: #4B74B5;
@@ -251,15 +251,15 @@ a,
 	}
 .DocText,
 .DocInfoVertical {
-	color: #ffffff;	
+	color: #ffffff;
 	text-transform: capitalize;
 	font-family: 'Roboto', sans-serif;
 	background: #638fc9;
 	padding: 10px;
 	padding: 5px;
-    transition: all 0.2s ease;      
+    transition: all 0.2s ease;
 	font-weight: bold;
-	text-align: center;	
+	text-align: center;
 }
 .DocText{
     height: 45px;
@@ -451,7 +451,7 @@ a.kanban-committees-info-box-name {
 .modal-backdrop
 {
 	z-index: 2 !important;
-}	
+}
 .modal.fade .modal-dialog:not(.modal-top-fixed) {
 	-webkit-transform: translate(0, 0);
 	transform: translate(0, 0);
@@ -584,7 +584,7 @@ a.kanban-committees-info-box-name {
 	}
 .hidemouseaway {
 	display: none;
-	}  
+	}
 .bootbox-close-button.close {
 	display: none;
 	}
@@ -1612,9 +1612,9 @@ div#search-modal {
 	font-weight: 400;
 	}
     .notification-container .chat-items.list-group {
-        
+
         list-style: none;
-                
+
         }
 
 .notification-container .chat-items.list-group li>a {
@@ -1634,7 +1634,7 @@ div#search-modal {
     background: #487db6;
     color: white;
 }
-        
+
 
 .notification-container .chat-list-close,
 .notification-container .notification-list-close {
@@ -1819,7 +1819,7 @@ button {
 	background: #5f89cc;
 	border-color: #5f89cc;
 	color: #ffffff;
-}	
+}
 .btn-primary:hover,
 .app-menu__item.active
 {
@@ -2046,7 +2046,7 @@ i.icon-folder.app-menu__icon {
 	.btn-secondary:not(:disabled):not(.disabled):active{
 		background-color: rgba(99, 143, 201, 0.25);
 		border-color:rgba(99, 143, 201, 0.25);
-	}	
+	}
 	.btn-secondary:not(:disabled):not(.disabled):active:focus{
 		box-shadow: none;
     }
@@ -2062,7 +2062,7 @@ body.public .app-content {
 body.public .app-sidebar
 {
 	display:none;
-}	
+}
 body.public .router-outlet{
     height: 100vh !important;
 }
@@ -2089,7 +2089,7 @@ body.public .router-outlet{
 	}
 .btn-group{
 	display: flex;
-}	
+}
 
 .MeetingHeadWrapper .btn i,
 .MeetingBtnWrapper .btn i {
@@ -2215,7 +2215,7 @@ span.kanban-upcoming-meeting-date {
 }
 .page-link:focus{
 	box-shadow: 0 0 0 0;
-}	
+}
 .ChoseButtonHeadWrap .meeting-detail .upcomingButton {
 	border: 0;
 	margin: 0;
@@ -2236,7 +2236,7 @@ span.kanban-upcoming-meeting-date {
 .home-modal-calendar .upcomingButton button i{
 	font-size:12px;
 	margin-right:5px;
-}	
+}
 
 .res-message {
 	border: 2px solid;
@@ -2400,7 +2400,7 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 .meet-elementsInfo {
 	display: block;
 	border-radius: 0;
-	padding: 0 10px 8px 0px;	
+	padding: 0 10px 8px 0px;
 	border-bottom: 1px solid #e1e1e1;
 	margin: 5px 0 25px 0;
 	overflow: hidden;
@@ -2496,7 +2496,7 @@ ul.dropdown-menu.scrollable-menu {
     }
     .popup.messenger .ng-dropdown-panel .ng-dropdown-panel-items{
         max-height: inherit;
-    }    
+    }
     .popup.messenger .ng-select{
         padding: 2px 3px;
     }
@@ -2514,8 +2514,8 @@ ul.dropdown-menu.scrollable-menu {
 	.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
 		background-color: #c0c0c0;
 		color: black;
-	}	
-.popup.messenger .messenger-container {	
+	}
+.popup.messenger .messenger-container {
 	height: calc(100vh - 180px);
 	overflow: hidden;
 }
@@ -2746,7 +2746,7 @@ select {
 .hasDatepicker{
 	font-size: 14px;
     color: #000;
-}	
+}
 #appModal {
 	z-index: 5;
 	}
@@ -2796,7 +2796,8 @@ label.check-plus-label-wrap {
     padding: 10px;
     border-radius: 6px;
     position: relative;
-    margin-bottom: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     display: flex;
 }
 .main-full-seachbar .form-control {
@@ -2898,14 +2899,14 @@ label.check-plus-label-wrap {
     }
 .doc-del-btn {
 	position: absolute;
-	right: 0;	
+	right: 0;
 }
-.doc-del-btn > .pointer {	
+.doc-del-btn > .pointer {
 	padding: 3px 7px;
 	border-radius: 50%;
 	/* border: 1px solid #ede; */
 }
-.doc-del-btn > .pointer:last-child {	
+.doc-del-btn > .pointer:last-child {
 	padding: 3px 7px;
 	border-radius: 50%;
     /* border: 1px solid #ede; */
@@ -2933,8 +2934,8 @@ label.check-plus-label-wrap {
 
  /* From Secondry */
 .container{
-    padding-left:20px; 
-    padding-right:20px; 
+    padding-left:20px;
+    padding-right:20px;
 }
 .img-flex img{
     object-fit: cover;
@@ -3100,7 +3101,7 @@ a:not([href]).app-menu__item{
     align-items: center;
     padding: 10px;
     margin-top: 10px;
-    background: #ddd;    
+    background: #ddd;
 }
 .no-data h4{
     width: 100%;
@@ -3109,13 +3110,13 @@ a:not([href]).app-menu__item{
 .modal-custom-footer{
     width: 100%;
     text-align: right;
-    padding-top: 10px;    
+    padding-top: 10px;
 }
 .DocumentWrapper .paste{
     position: absolute;
     padding: 3px 7px;
     border-radius: 50%;
-    border: 1px solid #ede;        
+    border: 1px solid #ede;
 }
 a.doc.draggable, a.folder.draggable{
 	/* border: 2px solid red; */
@@ -3135,7 +3136,7 @@ a.folder.droppable:not(.draggable) .paste{
 }
 .roster-height{
 	height:calc(100vh - 350px);
-    overflow-y: auto;    
+    overflow-y: auto;
     font-size: 13px;
 }
 .roster .main-full-seachbar{

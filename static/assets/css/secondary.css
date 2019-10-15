@@ -1,11 +1,15 @@
 
-
+h2,
+h3,
+h4{
+    margin-bottom: 0;
+}
 th.d-none.d-md-block{
     margin-block-end: -1px;
 }
 /* Committee */
 a.kanban-committees-info-box:hover{
-    color: #959595; 
+    color: #959595;
 }
 a.DocumentWrapper:hover{
     color: #007bff;
@@ -18,7 +22,7 @@ a.DocumentWrapper:hover{
     color: #959595;
 }
 .kanban-committees-info-box p,
-.kanban-committees-info-box-name{   
+.kanban-committees-info-box-name{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -61,11 +65,11 @@ a.DocumentWrapper:hover{
     height: 30px;
     cursor: pointer;
 }
-.check-status.Published,.check-status.Unpublished 
+.check-status.Published,.check-status.Unpublished
 {
     transition: all 1s ease;
 }
-.check-status.Published .circle,.check-status.Unpublished .circle 
+.check-status.Published .circle,.check-status.Unpublished .circle
 {
     transition: all 1s ease;
 }
@@ -188,7 +192,7 @@ mention-list.dropup{
 .bg-heading{
     background: #4B74B5;
     color: #fff;
-    align-items: center; 
+    align-items: center;
     font-size: 0.85rem;
     font-weight: bold;
     display: flex;
@@ -204,7 +208,7 @@ mention-list.dropup{
     border-right: 1px solid #fff;
 }
 .left-margin{
-    margin-left: -20px; 
+    margin-left: -20px;
     align-items: center;
 }
 
@@ -232,7 +236,7 @@ mention-list.dropup{
     width: 50px;
     height: 50px;
     overflow: hidden;
-    border-radius: 50%; 
+    border-radius: 50%;
     margin-left: 10px;
 }
 .align-modal-middle.modal{
@@ -258,22 +262,26 @@ mention-list.dropup{
 }
 .kanban-headings{
     color: #2B2B2B;
-    border-bottom: 1px solid #E1E1E1;    
-    margin-bottom: 1rem;
+    border-bottom: 1px solid #E1E1E1;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 0.2rem;
+    align-items: center;
 }
-.router-outlet .kanban-headings {        
+.router-outlet .kanban-headings {
     padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 app-breadcrumb + .router-outlet > .container > .kanban-headings {
-    padding-top: 1.8rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 0;
 }
+.board-sheet-paginator,
 .breadcrumbSection + .router-outlet > .container > .kanban-headings {
-    padding-top: 1.8rem;
+    padding-top: 1rem;
 }
 
 
@@ -292,5 +300,5 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
     .roster-full{
         top: 0px;
         height: calc(100% - 25px);
-    }   
+    }
 }
