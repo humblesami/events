@@ -24,6 +24,7 @@ modified_topic_data = {};
 agenda_docs = [];
 event__name = '';
 add_another = false;
+added_topics = [];
 topic = undefined;
   constructor(
     public activeModal: NgbActiveModal,
@@ -150,9 +151,20 @@ topic = undefined;
       args: args
     }
     obj_this.httpService.get(final_input_data, (data)=>{
+      if (data != 'done')
+      {
+        obj_this.added_topics.push(data);
+      }
       if (!obj_this.add_another)
       {
-        obj_this.activeModal.close('saved');
+        if (!obj_this.added_topics.length)
+        {
+          obj_this.activeModal.close('saved');
+        }
+        else
+        {
+          obj_this.activeModal.close(obj_this.added_topics);
+        }
       }
       else
       {

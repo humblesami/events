@@ -6,6 +6,7 @@ import {SocketService} from "../../app/socket.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RosterComponent } from '../roster/roster.component';
 import { TopiceditComponent } from '../topicedit/topicedit.component';
+import { isArray } from 'util';
 
 declare var $: any;
 
@@ -96,7 +97,28 @@ export class MeetingDetailsComponent implements OnInit {
         modalRef.componentInstance.action = action;
         modalRef.componentInstance.topic_id = topic_id;
         modalRef.result.then(function(data){
-            // console.log(data);
+            if (isArray(data))
+            {
+                for (let topic of data)
+                {
+                    let index = -1;
+                    obj_this.meeting_object.topics.filter((el, i)=>{
+                        console.log(el, i, topic);
+                        if (el.id == topic.id)
+                        {
+                            index = i;
+                        }
+                    })
+                    if (index != -1)
+                    {
+                        obj_this.meeting_object.topics[index] = topic;
+                    }
+                    else
+                    {
+                        obj_this.meeting_object.topics.push(topic);
+                    }
+                }
+            }
         });
     }
 

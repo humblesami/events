@@ -38,7 +38,15 @@ class Topic(PositionalSortMixIn, CustomModel):
                 a_doc = agenda_doc_model(agenda_id=topic.id)
                 a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
-        return 'done'
+        data = {
+            'id': topic.id,
+            'name': topic.name,
+            'description': topic.description,
+            'lead': topic.lead,
+            'duration': str(topic.duration),
+            'docs':list(topic.documents.values())
+        }
+        return data
     
 
     @classmethod
@@ -65,8 +73,15 @@ class Topic(PositionalSortMixIn, CustomModel):
                 a_doc = agenda_doc_model(agenda_id=topic.id)
                 a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
-        
-        return 'done'
+        data = {
+            'id': topic.id,
+            'name': topic.name,
+            'description': topic.description,
+            'lead': topic.lead,
+            'duration': str(topic.duration),
+            'docs':list(topic.documents.values())
+        }
+        return data
 
     def get_attendees(self):
         attendees_list = []
