@@ -55,7 +55,6 @@ class SignDocAdmin(BaseAdmin):
         'name',
         'cloud_url',
         'access_token',
-        'binary_data',
         'file_name',
         'meeting',
         'respondents',
