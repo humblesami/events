@@ -22,9 +22,9 @@ class AnnotationDocument(CustomModel):
         doc_data = File.get_file_data(request, params)
         annotations = cls.get_annotations(request, params)
         if doc_data.get('data'):
-            doc_data['data']['annotations'] = annotations
+            doc_data['data']['annotation_data'] = annotations
         else:
-            doc_data['annotations'] = annotations
+            doc_data['annotation_data'] = annotations
         return doc_data
 
     @classmethod
@@ -32,9 +32,9 @@ class AnnotationDocument(CustomModel):
         doc_data = File.get_file_data(request, params)
         annotations = cls.get_annotations(request, params)
         if doc_data.get('data'):
-            doc_data['data']['annotations'] = annotations
+            doc_data['data']['annotation_data'] = annotations
         else:
-            doc_data['annotations'] = annotations
+            doc_data['annotation_data'] = annotations
         return doc_data
 
     @classmethod
@@ -80,14 +80,12 @@ class AnnotationDocument(CustomModel):
         doc = AnnotationDocument.objects.filter(user_id = user_id, document_id = doc_id)
         if doc:
             doc = doc[0]
-            # if doc.version >= document_version:
-            #     reset = params.get('reset')
-            #     force = params.get('force')
-            #     if reset:
-            #         doc.version = 0
-            #         return 'done'
-            #     elif not force:                    
-            #         return {'version': doc.version}
+            reset = params.get('reset')
+            if reset:
+                doc.version = 0
+                for obj in  doc.annotation_set.all():
+                    obj.delete()
+                return 'done'
         else:
             doc = AnnotationDocument(
                 version=1
@@ -195,7 +193,8 @@ class AnnotationDocument(CustomModel):
         if len(children) > 0:
             Line.objects.bulk_create(children)
         else:
-            saved_annotations.delete()
+            for obj in saved_annotations:
+                obj.delete()
 
     @classmethod
     def save_dimensions(cls, saved_annotations, user_annotations):
@@ -221,7 +220,8 @@ class AnnotationDocument(CustomModel):
         if len(children) > 0:
             Dimension.objects.bulk_create(children)
         else:
-            saved_annotations.delete()
+            for obj in saved_annotations:
+                obj.delete()
 
     @classmethod
     def save_notes(cls, saved_annotations, user_annotations, user_id):
