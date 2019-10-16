@@ -32,6 +32,10 @@ title="e-Signature"></app-breadcrumb>
                             (click)="delete_file($event, doc.id)">
                             <i class="far fa-trash-alt pointer" ></i>
                         </div>
+                        <div *ngIf="doc.all.total" class="doc-del-btn"
+                            (click)="open_results($event, doc.id)">
+                            <i class="fas fa-poll fa-2x"></i>
+                        </div>
 						<div class="DocIcon">
 							<span class="rounded-circle">
 								<i class="icon-e-sign" [ngClass]="{'text-muted': doc.sign_started}"></i>

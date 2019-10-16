@@ -693,6 +693,84 @@ class SignatureDoc(File, Actions):
         return result
 
 
+    @classmethod
+    def get_results(cls, request, params):
+        sign_doc_id = params['document_id']
+        sign_doc = SignatureDoc.objects.get(pk=sign_doc_id)
+        all_signs = sign_doc.signature_set.all()
+        total_signatures = all_signs.count()
+        respondents = sign_doc.respondents.all()
+        total_attempted_signatures = 0
+        total_pending_signatures = 0
+        sent_status = 'Partial'
+        if sign_doc.send_to_all:
+            sent_status = 'All'
+        results_against_respondents = []
+        for respondent in respondents:
+            individuals_sign = all_signs.filter(user_id=respondent.id)
+            signature_assigned = False
+            total_signs = individuals_sign.count()
+            if total_signs > 0:
+                signature_assigned = True
+            individual_data = []
+            attempted_signatures = 0
+            pending_signatures = 0
+            for signle_sign in individuals_sign:
+                data = {
+                    'id': signle_sign.id,
+                    'assigned_type': signle_sign.field_name,
+                    'assigned_by': signle_sign.created_by.profile.name
+                }
+                if signle_sign.signed:
+                    data['signed_at'] = str(signle_sign.signed_at)
+                    data['status'] = 'Attempted'
+                    attempted_signatures += 1
+                    total_attempted_signatures += 1
+                else:
+                    data['status'] = 'Pending'
+                    data['signed_at'] = ''
+                    pending_signatures += 1
+                    total_pending_signatures += 1
+                individual_data.append(data)
+            individual_progress_data = []
+            if signature_assigned:
+                individual_progress_data = [{
+                    'option_name': 'pendings',
+                    'option_result': pending_signatures
+                }, {
+                    'option_name': 'attempted',
+                    'option_result': attempted_signatures
+                }]
+            result = {
+                'id': respondent.id,
+                'name': respondent.name,
+                'signature_assigned': signature_assigned,
+                'total_signatures': total_signs,
+                'attempted_signatures': attempted_signatures,
+                'pending_signatures': pending_signatures,
+                'signature_results': individual_data,
+                'progress_data': individual_progress_data
+            }
+            results_against_respondents.append(result)
+        progress_data = [{
+            'option_name': 'pendings',
+            'option_result': total_pending_signatures
+        },{
+            'option_name': 'attempted',
+            'option_result': total_attempted_signatures
+        }]
+        data = {
+            'id': sign_doc.id,
+            'name': sign_doc.name,
+            'results': results_against_respondents,
+            'total_signatures': total_signatures,
+            'total_attempted_signatures': total_attempted_signatures,
+            'total_pending_signatures': total_pending_signatures,
+            'progress_data': progress_data
+        }
+        return data
+
+
 class Signature(CustomModel):
     name = models.CharField(max_length=200, blank=True)
     email = models.CharField(max_length=200, blank=True)

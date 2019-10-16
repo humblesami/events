@@ -24,6 +24,13 @@ export class EsignDocsComponent implements OnInit {
         // console.log('yyyyyyyyyyyyyyyyyyyyy ');
         $('#esign_upload').click();
     }
+
+    open_results(evt, doc_id)
+    {
+        evt.stopPropagation();
+        evt.preventDefault();
+        this.router.navigate(['/signdoc/'+doc_id+'/results']);
+    }
     
     delete_file(ev, doc_id){
         ev.preventDefault();

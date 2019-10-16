@@ -85,6 +85,7 @@ import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfolder.component';
 import { ThankyouComponent } from '../components/thankyou/thankyou.component';
 import { TopiceditComponent } from '../components/topicedit/topicedit.component';
+import { EsigndocresultsComponent } from '../components/esigndocresults/esigndocresults.component';
 
 @NgModule({
     imports: [
@@ -160,6 +161,7 @@ import { TopiceditComponent } from '../components/topicedit/topicedit.component'
         MovetomyfolderComponent,
         ThankyouComponent,
         TopiceditComponent,
+        EsigndocresultsComponent,
     ],
     providers:[
         AuthGuard,

@@ -53,6 +53,7 @@ import { UserlistComponent } from '../components/userlist/userlist.component';
 import { HttpService } from "./http.service";
 import { ActionsComponent } from "src/components/actions/actions.component";
 import { ThankyouComponent } from '../components/thankyou/thankyou.component';
+import { EsigndocresultsComponent } from "src/components/esigndocresults/esigndocresults.component";
 
 
 const appRoutes: Routes = [    
@@ -134,6 +135,7 @@ const appRoutes: Routes = [
     { path: 'voting/:id/results', component: VotingresultsComponent},
     { path: 'survey/:id/results', component: SurveyresultsComponent},
     { path: 'signdoc/:id', component: EsignDocDetailsComponent, canActivate: [AuthGuard]},
+    { path: 'signdoc/:id/results', component: EsigndocresultsComponent, canActivate: [AuthGuard]},
     { path: 'token-sign-doc/:id/:token', component: EsignDocDetailsComponent},
 
     { path: 'support', component: SupportComponent},
