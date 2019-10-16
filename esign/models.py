@@ -735,7 +735,7 @@ class SignatureDoc(File, Actions):
             individual_progress_data = []
             if signature_assigned:
                 individual_progress_data = [{
-                    'option_name': 'pendings',
+                    'option_name': 'pending',
                     'option_result': pending_signatures
                 }, {
                     'option_name': 'attempted',

@@ -53,15 +53,15 @@ title="Results"></app-breadcrumb>
                                                             <tbody><tr>
                                                                   <th>Assigned Type</th>
                                                                   <th>Assigned by</th>
-                                                                  <th>Attempted at</th>
+                                                                  <th>Attempted At</th>
                                                               </tr>
                                                               <tr *ngFor="let signature_result of result.signature_results" >
                                                                   <td>{{signature_result.assigned_type}}</td>
                                                                   <td>{{signature_result.assigned_by}}</td>
-                                                                  <td>{{signature_result.signed_at}}</td>
+                                                                  <td *ngIf="signature_result.signed_at">{{signature_result.signed_at | date:'medium'}}</td>
+                                                                  <td *ngIf="!signature_result.signed_at">Pending</td>
                                                               </tr>
                                                           </tbody></table>
-                                                     
                                                   </div>
                                               </div>
                                               <div *ngIf="result.progress_data.length" class="w-50 ml-25">
@@ -74,7 +74,7 @@ title="Results"></app-breadcrumb>
                                                       <tbody>
                                                           <tr *ngFor="let obj of result.progress_data">
                                                               <td [ngStyle]="{'background-color': obj.color}" style="width: 20px;height:20px;padding:0"></td>
-                                                              <td>{{obj.option_name}}</td>
+                                                              <td>{{obj.option_name | firstToUpper}}</td>
                                                               <td>{{obj.option_result || 0}}</td>
                                                           </tr>
                                                       </tbody>
