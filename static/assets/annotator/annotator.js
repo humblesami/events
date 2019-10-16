@@ -225,6 +225,7 @@
                         }
                     }
                     contextMenuShown = false;
+                    $('.annotation-options.ContextMenuPopup').hide();
                     var pen_active = $('.toolbar .pen').hasClass('active');
                     if(!pen_active){
                         select_cursor();
