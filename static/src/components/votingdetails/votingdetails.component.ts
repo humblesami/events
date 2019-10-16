@@ -176,7 +176,7 @@ export class VotingdetailsComponent implements OnInit {
         {
             obj_this.httpService.post(voting_response_data, function(update_results){                
                 obj_this.voting_object.my_status = option_name;
-                // console.log(update_results);
+                console.log(update_results);
                 obj_this.voting_object.chart_data = update_results.chart_data;
                 if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
                 {                 
@@ -190,6 +190,13 @@ export class VotingdetailsComponent implements OnInit {
                             }
                             question.chart_data[j].color = chart_colors[p++];
                         }
+                    if(update_results.progress_data)
+                    {
+                        obj_this.voting_object.progress_data = update_results.progress_data;
+                        window['app_libs']['chart'].load(()=>{
+                            window['drawChart'](obj_this.voting_object.progress_data, '#progress-chart');
+                        });
+                    }
                     window['app_libs']['chart'].load(()=>{
                         window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
                     });

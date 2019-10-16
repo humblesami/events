@@ -218,6 +218,7 @@ class Voting(Actions):
             'answer_count': len(voting_results),
             'respondent_count': len(voting_object_orm.get_audience())
         }
+        answer_count = 0
         if voting_results:
             for result in voting_results:
                 total = len(voting_results)
@@ -226,7 +227,7 @@ class Voting(Actions):
                         chart_data['option_result'] = result['answer_count']
                         if voting_object['results']['respondent_count']:
                             chart_data['option_perc'] ="{:.{}f}".format((result['answer_count']/voting_object['results']['respondent_count']) *100,2)
-                        
+                answer_count += result['answer_count']
 
         my_status = ''
         user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=uid)
@@ -245,11 +246,11 @@ class Voting(Actions):
         if voting_object['results']['respondent_count']:
             progress_data.append({
                 'option_name': 'Response Required',
-                'option_result': voting_object['results']['respondent_count'] - voting_object['results']['answer_count']
+                'option_result': voting_object['results']['respondent_count'] - answer_count
             })            
             progress_data.append({
                 'option_name': 'Responsed',
-                'option_result': voting_object['results']['respondent_count']
+                'option_result': answer_count
             })
         voting_object['progress_data'] = progress_data
 
@@ -438,6 +439,7 @@ class VotingAnswer(models.Model):
 
                 voting_options = list(voting_object.voting_type.votingchoice_set.values())
                 respondent_count = len(voting_object.get_audience())
+                answer_count = 0
                 if respondent_count > 0:
                     for option in voting_options:
                         chart_data.append({'option_name': option['name'], 'option_result': 0, 'option_perc': 0})
@@ -450,9 +452,20 @@ class VotingAnswer(models.Model):
                                 if data['option_name'] == result['user_answer__name']:
                                     data['option_result'] = result['answer_count']
                                     data['option_perc'] = result['answer_count']/respondent_count*100
+                            answer_count += result['answer_count']
+                progress_data = []
+                progress_data.append({
+                    'option_name': 'Response Required',
+                    'option_result': respondent_count - answer_count
+                })            
+                progress_data.append({
+                    'option_name': 'Responsed',
+                    'option_result': answer_count
+                })
                 res_data = {
                     'voting_option_id': user_answer_id,
-                    'chart_data': chart_data
+                    'chart_data': chart_data,
+                    'progress_data': progress_data
                 }
             else:
                 return 'Voting object not found'
