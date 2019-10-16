@@ -5,8 +5,9 @@ from meetings.model_files.event import Event
 from mainapp.models import CustomModel
 from documents.file import File
 from django.db import transaction
-from django.utils.dateparse import parse_duration
-
+from django.utils.dateparse import parse_duration, parse_time
+from datetime import timedelta
+import datetime
 
 class Topic(PositionalSortMixIn, CustomModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
@@ -27,7 +28,7 @@ class Topic(PositionalSortMixIn, CustomModel):
         lead = params.get('lead')
         duration = params.get('duration')
         if duration:
-            duration = parse_duration(duration)
+            duration = cls.set_duration(duration)
         topic = Topic(event_id = meeting_id, name=name, description=description,lead=lead,duration=duration)
         topic.save()
         agenda_docs = params.get('agenda_docs')
@@ -58,12 +59,21 @@ class Topic(PositionalSortMixIn, CustomModel):
 
 
     @classmethod
+    def set_duration(cls,duration):
+        duration = duration + ":00"
+        duration = parse_duration(duration)
+
+        return duration
+
+    @classmethod
     def update_agenda_topic(cls, request, params):
         topic_id = params['topic_id']
         topic = Topic.objects.get(pk=topic_id)
         for key in params:
-            if key != "agenda_docs" and key != "meeting_id":
+            if key != "agenda_docs" and key != "meeting_id" and key != "duration" :
                 setattr(topic,key,params[key])
+        if params.get("duration"):
+            topic.duration  = cls.set_duration(params.get("duration"))
         topic.save()
         agenda_docs = params.get('agenda_docs')
         agenda_doc_model = ws_methods.get_model('meetings', 'AgendaDocument')
@@ -82,6 +92,34 @@ class Topic(PositionalSortMixIn, CustomModel):
             'docs':list(topic.documents.values())
         }
         return data
+    
+    @classmethod
+    def check_duration(cls, request, params):
+        topics = []
+        total_time=''
+        topic_id = params.get('topic_id')
+        duration =params['duration']
+        duration_after_parse = cls.set_duration(duration)
+        meeting_id = params['meeting_id'];
+        event = Event.objects.get(pk=meeting_id)
+        event_start = str(event.start_date)
+        event_end = str(event.end_date)
+        meeting_durration = event.duration
+        topics = event.topic_set.all()
+        total_hours = 0
+        total_minuets = 0
+        total_seconds = 0
+        if topics:
+            for topic in topics:
+                topic_duration =  topic.duration
+                datetime.timedelta(seconds=666)
+        event.duration
+
+        #         pass
+
+
+        return "Done"
+
 
     def get_attendees(self):
         attendees_list = []

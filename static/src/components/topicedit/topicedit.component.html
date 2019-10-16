@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="duration"> <b>Duration</b> </label>
-                        <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="modified_topic_data.duration = $event.target.value" type="text" placeholder="Enter Agenda Duration" id="duration">
+                        <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="check_duration($event.target.value)" type="text" placeholder="Enter Agenda Duration" id="duration"  >
                     </div>
                 </div>
                 <div>

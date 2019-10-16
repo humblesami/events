@@ -4,6 +4,7 @@ import { HttpService } from '../../app/http.service';
 import {SocketService} from "../../app/socket.service";
 import { RenameService } from 'src/app/rename.service';
 import { Router } from '@angular/router';
+import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 declare var $: any;
 @Component({
@@ -172,6 +173,30 @@ export class TopiceditComponent implements OnInit {
             }
         }, null);
     }
+    check_duration(evn){
+        // modified_topic_data.duration = evn.target.value
+        let obj_this = this;
+        obj_this.modified_topic_data.duration = evn
+        let dur = obj_this.modified_topic_data.duration
+        console.log(obj_this.modified_topic_data.duration)
+        const input_data = {
+            meeting_id: obj_this.meeting_id,
+            duration: dur
+        };
+        let args = {
+            app: 'meetings',
+            model: 'Topic',
+            method: 'check_duration'
+        }
+        let final_input_data = {
+            params: input_data,
+            args: args
+        };
+        obj_this.httpService.get(final_input_data, (data) => {
+            obj_this.modified_topic_data.duration = data
+            console.log(data)
+        }, null);
+    }
 
     get_topic() {
         let obj_this = this;
@@ -235,6 +260,9 @@ export class TopiceditComponent implements OnInit {
                 obj_this.apply_drag_drop();
             }, 10);
         }
+        $(document).ready(function(){
+            $('#duration').mask('00:00');
+        });
     }
 
 }

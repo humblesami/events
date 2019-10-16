@@ -148,7 +148,7 @@ class Event(CustomModel):
             minutes = '0' + str(minutes)
         else:
             minutes = str(minutes)
-        val = hours + ':' + minutes
+        val = hours + ':' + minutes + ':00'
         return val
     duration = property(_compute_duration)
 
