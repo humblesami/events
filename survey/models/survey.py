@@ -271,8 +271,9 @@ class Survey(Actions):
             user_answers = []
             if question.type in ('radio', 'select-multiple'):
                 question_choices = question.choices.split(',')
-            answers = list(question.answers.values('body', 'response__user__username').annotate(answer_count=Count('body')))
-            answer_objects = question.answers.all()
+            answers = list(question.answers.values('id','body', 'response__user__username').annotate(answer_count=Count('body')))
+            # answer_objects = question.answers.all()
+            # answer_objects = question.answers.filter(response__user__id=1)
             cnt = 0
             user_answers_count = 0
             for answer in answers:
@@ -281,7 +282,10 @@ class Survey(Actions):
                     user_answer = literal_eval(user_answer)
                     user_answers_count += len(user_answer)
                 profile_model = ws_methods.get_model('meetings', 'Profile')
-                user_response = answer_objects[cnt].response
+                # user_response = answer_objects[cnt].response
+                answer_objects = question.answers.get(pk=answer['id'])
+                user_response = answer_objects.response
+                # user_response = answer_objects.filter(updated_by_id=)
                 if user_response and user_response.user:
                     answer_user = profile_model.objects.filter(pk=user_response.user.id)
                     cnt += 1
