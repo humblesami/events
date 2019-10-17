@@ -443,7 +443,6 @@ class SignatureDoc(File, Actions):
 
         if doc_data.get('signature_started'):
             return doc_data
-
         meetings = Event.objects.filter(publish=True).exclude(archived=True)
         meetings = queryset_to_list(meetings, fields=['id', 'name'])
         meeting_id = doc_obj.meeting_id
@@ -487,8 +486,12 @@ class SignatureDoc(File, Actions):
         signature_required = self.signature_set.filter(user_id=user.id, signed=False).count()
         if signature_required > 0:
             doc_data['signature_required'] = True
+        else:
+            doc_data['signature_required'] = False
         if sign_count:
             doc_data['signature_started'] = True
+        else:
+            doc_data['signature_started'] = False
         doc_data['doc_name'] = self.name
         return doc_data
 

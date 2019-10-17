@@ -1226,7 +1226,10 @@ export class EsignDocDetailsComponent implements OnInit {
         if(obj_this.socketService.admin_mode)
         {
             obj_this.isAdmin = true;
-            $('.doc-container').removeClass('user').addClass('admin');
+            if (!obj_this.signature_started)
+            {
+                $('.doc-container').removeClass('user').addClass('admin');
+            }
         }
         else{
             $('.doc-container').removeClass('admin').addClass('user');
@@ -1234,8 +1237,11 @@ export class EsignDocDetailsComponent implements OnInit {
         obj_this.socketService.call_backs_on_mode_changed['esign'] = function(){
             if(obj_this.socketService.admin_mode)
             {
-                $('.doc-container').removeClass('user').addClass('admin');
                 obj_this.isAdmin = true;
+                if (!obj_this.signature_started)
+                {
+                    $('.doc-container').removeClass('user').addClass('admin');
+                }
             }
             else{
                 $('.doc-container').removeClass('admin').addClass('user');
