@@ -27,7 +27,17 @@ export class EsigndocresultsComponent implements OnInit {
     };
     const success_cb = function(result) {
         obj_this.esignDetails = result;
-        // console.log(result);
+
+        if (obj_this.esignDetails.progress_data.length)
+        {
+            obj_this.esignDetails.progress_data[0].color = '#EF6262';
+            obj_this.esignDetails.progress_data[1].color = '#7CD122';
+        }
+        for(let obj of obj_this.esignDetails.progress_data)
+        {
+            obj.color 
+        }
+
         setTimeout(function() {
             var chart_colors = window['chart_colors'];
             for (let i in obj_this.esignDetails.results) {

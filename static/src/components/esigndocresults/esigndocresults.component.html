@@ -14,14 +14,27 @@ title="Results"></app-breadcrumb>
                                 <h3>
                                     <i class="icon-action text-primary"></i> {{esignDetails.name}}
                                 </h3>
-                                <div style="height: 160px;width:160px;">
-                                    <canvas id="progress-chart"></canvas>
-                                </div>
-                                <div class="MeetingBtnWrapper m-top" *ngIf="esignDetails.publish">
-                                    <div class="btn-group">
-                                        <a *ngIf="esignDetails && esignDetails.is_respondent && esignDetails.is_attempted" id="{{esignDetails.id}}" class="btn" routerLink='/survey/survey/details/{{esignDetails.id}}'>Reattempt Survey</a>
+                            </div>
+                            <div class="w-50 ml-25">
+                                    <div class="canvas_warpper my-5">
+                                        <div style="height: 160px;width:160px;">
+                                                <canvas id="progress-chart"></canvas>
+                                        </div>
                                     </div>
-                                </div>                            
+                                <!-- <div >
+                                    
+                                </div> -->
+                                <div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr *ngFor="let obj of esignDetails.progress_data">
+                                                <td [ngStyle]="{'background-color': obj.color}" style="width: 20px;height:20px;padding:0"></td>
+                                                <td>{{obj.option_name | firstToUpper}}</td>
+                                                <td>{{obj.option_result || 0}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -40,7 +53,7 @@ title="Results"></app-breadcrumb>
                                       <a class="card-header" data-toggle="collapse" 
                                       [attr.data-target]="'#signature-' + result.id" 
                                       id="headingOne" [ngClass]="{collapsed: !result.progress_data.length }">
-                                        <span>User Name: {{result.name}}</span>
+                                        <span>{{result.name}} - {{result.attempted_signatures}}/{{result.total_signatures}}</span>
                                         <span class="float-right"><i class="fa"></i></span>
                                       </a>
                                       <div id="result-{{result.id}}" class="collapse" [ngClass]="{show: result.progress_data.length }"
@@ -78,7 +91,7 @@ title="Results"></app-breadcrumb>
                                                               <td>{{obj.option_result || 0}}</td>
                                                           </tr>
                                                       </tbody>
-                                                  </table>                                                        
+                                                  </table>
                                               </div>    
                                           </div>
                                       </div>

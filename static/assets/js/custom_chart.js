@@ -50,12 +50,6 @@
             }
             data.push(chartData[i]['option_result']);
         }
-        if (canvas_selector == '#progress-chart'){
-            chart_type = 'doughnut'
-        }else{
-            chart_type = 'pie'
-        }
-
         chartData = {
             datasets: [{
                 data: data,
@@ -66,6 +60,16 @@
             // These labels appear in the legend and in the tooltips when hovering different arcs
             labels: labels,
         };
+        if (canvas_selector == '#progress-chart'){
+            chart_type = 'doughnut'
+            chartData.datasets[0].backgroundColor = ['#EF6262', '#7CD122'];
+            chartData.datasets[0].hoverBackgroundColor = ['#EF6262', '#7CD122'];
+            // chartData.datasets[0].borderColor = 'D3D3D3';
+            // chartData.datasets[0].borderWidth = '.5px';
+            // chartData.datasets[0].weight = 1;
+        }else{
+            chart_type = 'pie'
+        }
         var ctx = $(canvas_selector)[0].getContext('2d');
         var myPieChart = new Chart(ctx, {
             type: chart_type,
