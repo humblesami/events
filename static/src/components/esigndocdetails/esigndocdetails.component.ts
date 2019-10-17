@@ -264,6 +264,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
             function handleDropEvent(event, ui) {
+                // console.log(3333);
                 var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign");
                 new_signature.draggable({
                     containment: "#page_container",
@@ -271,8 +272,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     cursor: 'move'
                 });
 
-
-                if (parseFloat(new_signature[0].style.top) - $(this).parent().position().top < 0) {
+                if (parseFloat(new_signature[0].style.top) - $('#page_container').parent().position().top < 0) {
                     return;
                 }
                 var field_left = parseFloat(new_signature[0].style.left);
@@ -323,7 +323,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
                 $('.active_signature').removeClass('active_signature');
                 new_signature.addClass('active_signature');
-                $(this).append(new_signature);
+                $('#page_container').append(new_signature);
                 if(field_type.html().trim() == 'Text')
                 {
                     field_type.replaceWith('<input class="field_type" />');
@@ -351,10 +351,19 @@ export class EsignDocDetailsComponent implements OnInit {
                 cursor: 'move'
             });
             $("#page_container").droppable({
-                drop: handleDropEvent,
-                accept: ".drag",
+                drop: function(evn, ui){
+                    // console.log(ui.helper);
+                    if($(ui.helper).hasClass('drag'))
+                    {
+                        handleDropEvent(evn, ui);
+                    }
+                    else{
+                        on_dropped($(ui.helper));
+                    }
+                },
+                accept: ".drag,.new_sign",
                 tolerance: "touch",
-            });
+            });            
             //End Dragable
 
             $(document).off("click", ".save_doc_data")
@@ -1052,6 +1061,7 @@ export class EsignDocDetailsComponent implements OnInit {
         }
 
         function on_dropped(el, creating=null){
+            // console.log(2343,234234);
             var position = $(el).position();
             let height = $(el).height();
             position = {
@@ -1116,7 +1126,7 @@ export class EsignDocDetailsComponent implements OnInit {
             {
                 db_pos.left = 10;
             }
-            console.log(position, page_zoom, db_pos, $(el));
+            // console.log(position, page_zoom, db_pos, $(el));
             // console.log($(el)[0].innerHTML);
             var db_pos_str = JSON.stringify(db_pos);
             $(el).attr('position',db_pos_str);
