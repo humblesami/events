@@ -8,7 +8,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 
-<div class="router-outlet">
+<div class="router-outlet meeting-details">
     <div class="page-links">
         <span class="prev next-prev-link" title="Privious">
             <i class="fa fa-angle-left"></i>
@@ -43,8 +43,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <button
                                     *ngIf="socketService.admin_mode"
                                     class="btn btn-primary btn-sm roster-button"
-                                    (click)="open_topic_edit($event, '', 'create')">
-                                        <i class="icon-angenda text-primary"></i> Add Agenda Topic
+                                    (click)="open_topic_edit($event)">
+                                        <i class="icon-angenda text-primary"></i> Agenda Items
                                 </button>
                                 <button *ngIf="meeting_type == 'completed' && socketService.admin_mode" 
                                 class="btn btn-primary btn-sm roster-button"
@@ -188,10 +188,10 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
-            <div class="modal-header">
-                <div><i class="icon-angenda text-primary"></i> Agenda Topics </div>
-            </div>
+        <div id="agenda-items" *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
+            <h3>
+                <div><i class="icon-angenda text-primary"></i> Agenda Topics <i *ngIf="socketService.admin_mode" class="pointer fa fa-plus-circle text-primary" (click)='add_edit_topic(null, null, "create")'></i> </div>
+            </h3>
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table boardsheet-table">
@@ -202,7 +202,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <th>Duration</th>
                             <th>Attachment</th>
                             <th *ngIf="socketService.admin_mode">Edit</th>
-                            <th *ngIf="socketService.admin_mode">Deleted</th>
+                            <th *ngIf="socketService.admin_mode">Delete</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -218,7 +218,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     </div>
                                 </td>
                                 <td *ngIf="socketService.admin_mode">
-                                    <span (click)="open_topic_edit($event, topic.id, 'update')">
+                                    <span (click)="add_edit_topic($event, topic.id, 'update')">
                                         <i class="fas fa-edit "></i>
                                     </span>
                                 </td>
@@ -234,13 +234,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">            
-            <!-- <div class="roster-full">
-                <app-roster meeting_id="{{meeting_object.id}}"></app-roster>
-            </div>
-            <div class="modal-header btn-meeting" *ngIf="meeting_object.inline_roster">
-                Roster
-            </div> -->
+        <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
             <div class="row" *ngIf="meeting_object.inline_roster">
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
                     <div class="kanban-card">

@@ -173,12 +173,36 @@ export class TopiceditComponent implements OnInit {
             }
         }, null);
     }
+
+    duration_to_number(duration){
+
+    }
+
+    // sum_agenda_duration(){
+    //     let obj_this = this;
+    //     var sum = 0;
+    //     for(var topic of obj_this.meeting_object.topics)
+    //     {
+    //         var num = obj_this.duration_to_number(topic.dur)
+    //         if(topic.id != obj_this.topic_id)
+    //         {
+    //             sum += num;
+    //         }
+    //     }
+    //     sum += obj_this.topic.duration;
+    //     if(sum > obj_this.duration_to_number(obj_this.meeting_object.duration)
+    //     {
+    //         console.log('Invalid duration')
+    //     }
+    // }
+
     check_duration(evn, time){
         // modified_topic_data.duration = evn.target.value
         let obj_this = this;
         obj_this.modified_topic_data.duration = time
         let dur = obj_this.modified_topic_data.duration
-        console.log(obj_this.modified_topic_data.duration)
+        // console.log(obj_this.modified_topic_data.duration);
+
         const input_data = {
             meeting_id: obj_this.meeting_id,
             duration: dur
@@ -191,14 +215,14 @@ export class TopiceditComponent implements OnInit {
         }
         let final_input_data = {
             params: input_data,
+            no_loader:1,
             args: args
         };
         obj_this.httpService.get(final_input_data, (data) => {
             if(data.is_valid == true){
-                console.log(data)
-
+                // console.log(data)
             }else{
-                console.log(data)
+                // console.log(data)
                 if(data.valid_time){
                     obj_this.modified_topic_data.duration=data.valid_time
                     window['bootbox'].alert(data.message);

@@ -86,12 +86,13 @@ export class MeetingDetailsComponent implements OnInit {
         }, null)
     }
 
-    open_topic_edit(evt, topic_id, action)
-    {
-        evt.stopPropagation();
-        evt.preventDefault();
+    add_edit_topic(evt, topic_id, action){
+        if(evt){
+            evt.stopPropagation();
+            evt.preventDefault();
+        }
         let obj_this = this;
-		const modalRef = this.modalService.open(TopiceditComponent, { backdrop: 'static' });
+        const modalRef = this.modalService.open(TopiceditComponent, { backdrop: 'static' });
         modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
         modalRef.componentInstance.meeting_name = obj_this.meeting_object.name;
         modalRef.componentInstance.action = action;
@@ -103,7 +104,7 @@ export class MeetingDetailsComponent implements OnInit {
                 {
                     let index = -1;
                     obj_this.meeting_object.topics.filter((el, i)=>{
-                        console.log(el, i, topic);
+                        // console.log(el, i, topic);
                         if (el.id == topic.id)
                         {
                             index = i;
@@ -120,6 +121,19 @@ export class MeetingDetailsComponent implements OnInit {
                 }
             }
         });
+    }
+
+    open_topic_edit()
+    {        
+        let obj_this = this;
+        if(obj_this.meeting_object.topics.length)
+        {
+            $('.router-outlet.meeting-details:first').scrollTop($("#agenda-items").offset().top - 130);
+            return;
+        }
+		else{
+            obj_this.add_edit_topic(null, null, 'create');
+        }
     }
 
     on_publish_changed(e){

@@ -3142,3 +3142,6 @@ a.folder.droppable:not(.draggable) .paste{
 .roster .main-full-seachbar{
     margin-bottom: 5px;
 }
+.pointer{
+    cursor: pointer;
+}
