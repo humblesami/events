@@ -2258,7 +2258,7 @@ span.kanban-upcoming-meeting-date {
 
 .PdfViewerWrapper {
 	background: rgba(0, 0, 0, 0.02);
-	padding: 10px;
+	padding: 6px;
 	overflow: auto;
 	position: absolute;
 	top: 0;
@@ -3139,6 +3139,10 @@ a.folder.droppable:not(.draggable) .paste{
     overflow-y: auto;
     font-size: 13px;
 }
+.no-data.roster-height{
+	height: calc(100vh - 296px);
+}
+
 .roster .main-full-seachbar{
     margin-bottom: 5px;
 }

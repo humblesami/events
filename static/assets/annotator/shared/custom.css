@@ -450,7 +450,7 @@ body.pdf-viewer {
 .comment-list-container {
     width: 100%;
     padding-bottom: 65px;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 154px);
     overflow-y: scroll;
     background: #f1f2f4;
     z-index:3;

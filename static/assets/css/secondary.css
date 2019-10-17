@@ -189,15 +189,13 @@ mention-list.dropup{
 .popup{
     z-index: 3;
 }
-.bg-profile,
-.bg-heading{
+.bg-profile, .bg-heading{
     display: flex;
     align-items: center;
     font-size: 0.85rem;
     font-weight: bold;
     border-radius: 5px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 10px 0;
 }
 .bg-heading > div{
     padding: 7px 15px;
