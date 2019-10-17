@@ -314,11 +314,16 @@ export class EsignDocDetailsComponent implements OnInit {
                         on_dropped(el_this);
                     }, 100);
                 }
+                var field_type = new_signature.find('.field_type');
+                let field_name = field_type.html().trim();
+                if(field_name == 'Signature' || field_name == 'Initials')
+                {
+                    new_signature.css({ height:95});
+                }
 
                 $('.active_signature').removeClass('active_signature');
                 new_signature.addClass('active_signature');
                 $(this).append(new_signature);
-                var field_type = new_signature.find('.field_type');
                 if(field_type.html().trim() == 'Text')
                 {
                     field_type.replaceWith('<input class="field_type" />');
@@ -1048,13 +1053,20 @@ export class EsignDocDetailsComponent implements OnInit {
 
         function on_dropped(el, creating=null){
             var position = $(el).position();
-
+            let height = $(el).height();
             position = {
                 top: parseFloat(position.top),
                 left: parseFloat(position.left),
                 width: $(el).width() + 25,
-                height: $(el).height(),
+                height: height,
             };
+
+            // let field_type = $(el).find('span')[0].innerHTML.toLowerCase();
+            // if (field_type == 'signature' || field_type == 'initials')
+            // {
+            //     height = 95;
+            //     position.height = height;
+            // }
 
             var the_canvas = $('#the-canvas');
 
@@ -1104,7 +1116,8 @@ export class EsignDocDetailsComponent implements OnInit {
             {
                 db_pos.left = 10;
             }
-            // console.log(position, page_zoom, db_pos);
+            console.log(position, page_zoom, db_pos, $(el));
+            // console.log($(el)[0].innerHTML);
             var db_pos_str = JSON.stringify(db_pos);
             $(el).attr('position',db_pos_str);
         }
