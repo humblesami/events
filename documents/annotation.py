@@ -63,9 +63,10 @@ class AnnotationDocument(CustomModel):
             res = {'version': doc.version, 'comments': comments_points}
             return  res
 
-        user_rectangles = RectangleAnnotation.get_rectangles(doc.id, user_id)
-        line_drawings = DrawingAnnotation.get_drawings(doc.id, user_id)
-        note_points = PointAnnotation.get_point_annotations(doc_name=doc_name, user_id=user_id)
+        with transaction.atomic():
+            user_rectangles = RectangleAnnotation.get_rectangles(doc.id, user_id)
+            line_drawings = DrawingAnnotation.get_drawings(doc.id, user_id)
+            note_points = PointAnnotation.get_point_annotations(doc_name=doc_name, user_id=user_id)
         res = {
             'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles,
             'comments': comments_points
@@ -161,10 +162,16 @@ class AnnotationDocument(CustomModel):
             cls.save_notes(save_annotations, user_annotations, user_id)
 
             save_annotations = DrawingAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='drawing')
-            cls.save_lines(save_annotations, user_annotations)
+            res = cls.save_lines(save_annotations, user_annotations)
+            if res:
+                transaction.rollback()
+                return res
 
             save_annotations = RectangleAnnotation.objects.filter(type__in = ['highlight','strikeout', 'underline'], user_id=user_id, document_id=doc.id)
-            cls.save_dimensions(save_annotations, user_annotations)
+            res = cls.save_dimensions(save_annotations, user_annotations)
+            if res:
+                transaction.rollback()
+                return res
 
             doc.version = document_version
             doc.save()
@@ -179,6 +186,8 @@ class AnnotationDocument(CustomModel):
             if item['type'] != 'drawing':
                 continue
             for obj in saved_annotations.filter(uuid=item["uuid"]):
+                if len(item['lines'] == 0):
+                    return 'Invalid drawing object'
                 for child in item['lines']:
                     child_to_save = Line(
                         drawing_id=obj.id,
@@ -200,8 +209,7 @@ class AnnotationDocument(CustomModel):
         if len(children) > 0:
             Line.objects.bulk_create(children)
         else:
-            for obj in saved_annotations:
-                obj.delete()
+            return 'Invalid drawing object'
 
     @classmethod
     def save_dimensions(cls, saved_annotations, user_annotations):
@@ -215,6 +223,8 @@ class AnnotationDocument(CustomModel):
                 dimensions = item.get('rectangles')
                 if dimensions is None:
                     dimensions = item.get('dimensions')
+                if len(dimensions == 0):
+                    return 'Invalid rectangle object'
                 for dimension in dimensions:
                     child_to_save = Dimension(
                         rectangle_id = obj.id,
@@ -227,8 +237,7 @@ class AnnotationDocument(CustomModel):
         if len(children) > 0:
             Dimension.objects.bulk_create(children)
         else:
-            for obj in saved_annotations:
-                obj.delete()
+            return 'Invalid rectangle object'
 
     @classmethod
     def save_notes(cls, saved_annotations, user_annotations, user_id):
@@ -285,11 +294,14 @@ class RectangleAnnotation(Annotation):
             dimensions = rectangle.dimension_set.all()
             user_dimension = []
             for dimension in dimensions:
-                user_dimension.append({'x': dimension.x, 'y': dimension.y,
-                                        'width': dimension.width, 'height': dimension.height})
+                user_dimension.append({
+                    'x': dimension.x, 'y': dimension.y,
+                    'width': dimension.width,
+                    'height': dimension.height
+                })
             user_rectangle[counter]['rectangles'] = user_dimension
             counter += 1
-        return  user_rectangle
+        return user_rectangle
 
 
 class Dimension(CustomModel):

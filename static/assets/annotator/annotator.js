@@ -20,7 +20,7 @@
     var doc_loading_step = undefined;
     var documentId = undefined;
     var annot_save_timeout = undefined;
-    var annotation_save_wait_time = 3000;
+    var annotation_save_wait_time = 8000;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -160,10 +160,19 @@
     function findAnnotationLocal(documentId, annotationId){
         var index = -1;
         var annotations = _getAnnotations(documentId);
-        for (var i = 0, l = annotations.length; i < l; i++) {
+        var l = annotations.length;
+        for (var i = 0; i < l; i++) {
             if (annotations[i].uuid === annotationId) {
-                index = i;
-                break;
+                if(index == -1)
+                {
+                    index = i;
+                }
+                else{
+                    console.log('More found');
+                    annotations.splice(i, 1);
+                    i -= 1;
+                    l -= 1;
+                }                
             }
         }
         return index;
