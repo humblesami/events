@@ -1220,12 +1220,13 @@ export class EsignDocDetailsComponent implements OnInit {
                 {
                     if(field.signed && field.my_record)
                     {
-                        if(!token)
+                        if (field.image.indexOf('data:image') > -1)
+                        {
+                            div.html('<img src="'+field.image+'" style="height:calc(100% - 10px)"/>');
+                        }
+                        else
                         {
                             div.html('<img src="'+window['site_config'].server_base_url+field.image+'" style="height:calc(100% - 10px)"/>');
-                        }
-                        else{
-                            div.html('<img src="'+field.image+'" style="height:calc(100% - 10px)"/>');
                         }
                     }
                 }
