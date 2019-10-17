@@ -25,10 +25,10 @@
         </div>
     </div>
         <!-- Attendance -->
-    <div class="roster-height">
-        <div *ngIf="!shown_users.length" class="row no-data">
+    <div class="roster-height" [ngClass]="{'no-data': shown_users.length===0}">
+        <!-- <div *ngIf="!shown_users.length" class="row no-data">
             <h4>No Users</h4>
-        </div>
+        </div> -->
         <div class="d-flex py-2 mb-1 bg-roster" 
             *ngFor="let obj of shown_users"
             [ngClass]="{disabled_row: obj.current_user}">
