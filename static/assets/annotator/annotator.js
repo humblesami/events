@@ -705,7 +705,7 @@
             function onCOmmentAdded() {
                 commentText.html('');
                 commentText.parent().show();
-                comment_list_div.scrollTop(999999000);
+                // comment_list_div.scrollTop(999999000);
                 commentText.focus();
             }
 
@@ -1487,7 +1487,8 @@
                     setTimeout(hideComments, 50);
                 });
 
-                select_comment_item = function(point_identifier) {
+                select_comment_item = function(point_identifier, is_new) {
+                    // console.log(666,6);
                     comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     if (!comments_loaded) {
                         loadALlCommentsOnDocument(point_identifier);
@@ -1509,12 +1510,11 @@
                     }                    
                     var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="' + annotationId + '"]')
                     if (c_svg.length > 0) {
-                        window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
-                        handleAnnotationClick(c_svg[0]);                        
-                        if(comments_wrapper.hasClass('comments'))
+                        handleAnnotationClick(c_svg[0]);
+                        if(!is_new)
                         {
-                            comments_wrapper.addClass('single_point_comments');
-                        }
+                            window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
+                        }                        
                     }
                 }
 
@@ -1632,6 +1632,8 @@
                         $('#pdf-annotate-edit-overlay a').remove();
                         showCommentsContainer('comments');
                     }
+                    // console.log(4343434);
+                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     onCOmmentAdded();
                 }
 
@@ -4952,7 +4954,9 @@
                                     notif_counters_html += ' comment_count="0" style="' + y_dim + x_dim + ';display:none;">0</div>';
                                     notif_counters_html = $(notif_counters_html);
                                     $('#pageContainer' + pageNumber + ' .canvasWrapper').append(notif_counters_html);
-                                    select_comment_item(new_point_id);
+                                    setTimeout(function(){
+                                        select_comment_item(new_point_id, 'new');
+                                    }, 10)
                                 });
                             }();
                             if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;

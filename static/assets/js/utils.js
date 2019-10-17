@@ -327,7 +327,20 @@ var js_utils = window['js_utils'] = {
             );
         });
     },
+
+    findPos: function(obj, scroll_el) {
+        var obj_this = this;
+        var childPos = obj.offset();
+        var parentPos = scroll_el.offset();
+        var childOffset = {
+            top: scroll_el.scrollTop() + childPos.top - parentPos.top,
+            left: scroll_el.scrollLeft() + childPos.left - parentPos.left
+        }
+        return childOffset;
+    },
+
     scroll_to_element: function(focus_el, scroll_el){
+        var obj_this = this;
         if(!(focus_el && focus_el.length && focus_el.length ==1)){
             console.log('Invalid focus element ', focus_el);
             if(focus_el.length)
@@ -342,26 +355,14 @@ var js_utils = window['js_utils'] = {
                 console.log('With length ', scroll_el.length);
             }
         }
-        var position = undefined;
-        position = focus_el.position();
-        if(!position || (position && (!position.left || !position.top))){
-            position = {
-                left: focus_el.css('left'),
-                top: focus_el.css('top'),
-            }
-            if(position.left){
-                position.left = parseFloat(position.left);
-            }
-            if(position.top){
-                position.top = parseFloat(position.top);
-            }
-            if(!position.left){
-                position.left = 0;
-            }
-            if(!position.top){
-                position.top = 0;
-            }
+        var static_focus_pos = obj_this.findPos(focus_el, scroll_el);
+        var position = {
+            left: static_focus_pos.left,
+            top: static_focus_pos.top,
         }
+
+        // console.log(static_focus_pos,  position);
+        
         var focus_el_rect = { 
             width: focus_el.width(),
             height: focus_el.height()
@@ -383,16 +384,16 @@ var js_utils = window['js_utils'] = {
             position.top = 0;
         }
 
-        var scroll_now_y = scroll_el.scrollTop();
-        var scroll_now_x = scroll_el.scrollLeft();
-        var dy = position.top - scroll_now_y;
-        var dx = position.top - scroll_now_x;
+        // var scroll_now_y = scroll_el.scrollTop();
+        // var scroll_now_x = scroll_el.scrollLeft();
+        var dy = position.top;// - scroll_now_y;
+        var dx = position.left;// - scroll_now_x;
 
         // console.log(position, dy, dx);
 
         scroll_el.scrollLeft(dx);
-        var distance = Math.abs(position.top - scroll_now_y);        
-        var animate_time = distance * 1.5;
+        // var distance = Math.abs(position.top - scroll_now_y);
+        var animate_time = 500;
         // console.log(distance, 133, animate_time);
         scroll_el.animate({
             scrollTop: dy
