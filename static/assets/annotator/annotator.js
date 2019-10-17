@@ -114,26 +114,43 @@
         return res;
     }
 
-    function updateAnnotations(documentId, annotations, is_comment){    
-        if (is_comment) {
-            return;
+    function addAnnotationLocal(documentId, annotation, is_comment){                
+        var current_annotations = _getAnnotations(documentId);
+        var index = findAnnotationLocal(documentId, annotation.uuid);
+        if(index == -1)
+        {
+            current_annotations.push(annotation);            
+            updateAnnotations(documentId, current_annotations, is_comment);
         }
+        else{            
+            console.log("Invalid annot adding",  annotation, 444);
+            console.trace();
+        }
+    }
+
+    function updateAnnotations(documentId, annotations, is_comment){            
         try{            
             if(!Array.isArray(annotations)){
                 console.log('Invalid annotations values', annotations);
                 console.trace();
                 return;
             }
+            if(is_comment == 'comment_point_moved'){
+                return;
+            }
             var val = JSON.stringify(annotations);
             localStorage.setItem(documentId + '/annotations', val);
+            if (is_comment) {
+                return;
+            }
             setDocDirty(documentId);
             if(annot_save_timeout)
             {
                 clearTimeout(annot_save_timeout);
-                annot_save_timeout = setTimeout(function(){
-                    saveAnnotationsAtServer();
-                }, annotation_save_wait_time);
             }
+            annot_save_timeout = setTimeout(function(){
+                saveAnnotationsAtServer();
+            }, annotation_save_wait_time);            
         }
         catch(er){
             console.log(er, 'Invalid annotations', annotations);
@@ -150,22 +167,7 @@
             }
         }
         return index;
-    }
-
-    function addAnnotationLocal(documentId, annotation, is_comment){                
-        var current_annotations = _getAnnotations(documentId);
-        var index = findAnnotationLocal(documentId, annotation.uuid);
-        if(index == -1)
-        {
-            current_annotations.push(annotation);            
-            updateAnnotations(documentId, current_annotations, is_comment);
-        }
-        else{            
-            console.log(annotation, 444);
-            console.trace();
-            alert('Invalid annotation');
-        }
-    }
+    }    
 
     function setCookieStrict(documentId, key, val) {
         var temp_key = validate_key(documentId, key);
@@ -734,10 +736,10 @@
                             }
                             elem.html(newVal).attr('comment_count', newVal);
                         }
-                        updateAnnotations(documentId, annotations);
                         break;
                     }
                 }
+                updateAnnotations(documentId, annotations, 1);
             }
 
             function pdf_render(doc_data) {
@@ -2858,6 +2860,11 @@
                                 },
                                 editAnnotation: function editAnnotation(documentId, annotationId, annotation) {
                                     return new Promise(function(resolve, reject) {
+                                        if(!annotation){
+                                            console.log('Invalid annotation in edit');
+                                            resolve({});
+                                            return;
+                                        }
                                         var annotations = _getAnnotations(documentId);
                                         var annotationIndex = findAnnotation(documentId, annotationId);
                                         annotations[annotationIndex] = annotation;
@@ -2875,8 +2882,14 @@
                                         var index = findAnnotation(documentId, annotationId);
                                         if (index > -1) {
                                             var annotations = _getAnnotations(documentId);
-                                            annotations.splice(index, 1);
-                                            updateAnnotations(documentId, annotations);
+                                            var annotation = annotations[index];
+                                            if (annotation.type == 'point' && !annotation.sub_type) {
+                                                resolve(true);
+                                            }
+                                            else{
+                                                annotations.splice(index, 1);
+                                                updateAnnotations(documentId, annotations);
+                                            }
                                         }
                                         resolve(true);
                                     });
@@ -3249,6 +3262,7 @@
                             viewport = JSON.parse(svg.getAttribute('data-pdf-annotate-viewport'));
                         }
                         var child = void 0;
+                        // console.log(annotation.type, 55588);
                         switch (annotation.type) {
                             case 'area':
                             case 'highlight':
@@ -5152,8 +5166,16 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function mouseup32(data_tool_type) {
-                        // console.log(data_tool_type, 40);
+                    function mouseup32(e) {
+                        var data_tool_type = e;
+                        if(typeof(e) != 'string')
+                        {
+                            var annotation_option = $(e.target).closest('.annotation-options>.Button');
+                            if(annotation_option.length)
+                            {
+                                data_tool_type = annotation_option.find('button:first').attr('data-tooltype');
+                            }                            
+                        }
                         if (typeof data_tool_type != 'string') {
                             return;
                         }
