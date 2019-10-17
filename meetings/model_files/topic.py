@@ -28,7 +28,7 @@ class Topic(PositionalSortMixIn, CustomModel):
         lead = params.get('lead')
         duration = params.get('duration')
         if duration:
-            duration = cls.set_duration(duration)
+            duration = cls.set_duration_parse_to_duration(duration)
         topic = Topic(event_id = meeting_id, name=name, description=description,lead=lead,duration=duration)
         topic.save()
         agenda_docs = params.get('agenda_docs')
@@ -57,14 +57,6 @@ class Topic(PositionalSortMixIn, CustomModel):
         topic.delete()
         return 'done'
 
-
-    @classmethod
-    def set_duration(cls,duration):
-        duration = duration + ":00"
-        duration = parse_duration(duration)
-
-        return duration
-
     @classmethod
     def update_agenda_topic(cls, request, params):
         topic_id = params['topic_id']
@@ -73,7 +65,7 @@ class Topic(PositionalSortMixIn, CustomModel):
             if key != "agenda_docs" and key != "meeting_id" and key != "duration" :
                 setattr(topic,key,params[key])
         if params.get("duration"):
-            topic.duration  = cls.set_duration(params.get("duration"))
+            topic.duration  = cls.set_duration_parse_to_duration(params.get("duration"))
         topic.save()
         agenda_docs = params.get('agenda_docs')
         agenda_doc_model = ws_methods.get_model('meetings', 'AgendaDocument')
@@ -92,19 +84,42 @@ class Topic(PositionalSortMixIn, CustomModel):
             'docs':list(topic.documents.values())
         }
         return data
+    @classmethod
+    def set_duration_parse_to_duration(cls,duration):
+        duration = duration + ":00"
+        duration = parse_duration(duration)
+
+        return duration
     
+    @classmethod
+    def set_duration_to_hour_min(cls,topic_duration):
+        if topic_duration.days <= 10:
+            time = str(datetime.timedelta(seconds=topic_duration.seconds)).split(":")
+            if int(time[0]) < 10:
+                hour = "0" + str(time[0])
+            else:
+                hour = str(time[0])
+            time = hour + ":" + str(time[1])
+        else:
+            days_to_hours = topic_duration.days * 24
+            time = str(datetime.timedelta(seconds=topic_duration.seconds)).split(":")
+            hour = time[0]+days_to_hours
+            time = str(hour) + ":" + str(time[1])
+        return time
+
     @classmethod
     def check_duration(cls, request, params):
         topics = []
-        valid = {}
+        data = {}
         total_time=''
-        topic_id = params.get('topic_id')
-        duration =params['duration']
-        duration_after_parse = cls.set_duration(duration)
+        if params.get('duration'):
+            duration = params['duration']
+            duration_after_parse = cls.set_duration_parse_to_duration(duration)
+        else:
+            duration = False
+            duration_after_parse = False
         meeting_id = params['meeting_id'];
         event = Event.objects.get(pk=meeting_id)
-        event_start = str(event.start_date)
-        event_end = str(event.end_date)
         meeting_durration = event.duration
         topics = event.topic_set.all()
         total_hours = 0
@@ -117,60 +132,47 @@ class Topic(PositionalSortMixIn, CustomModel):
             topics_duration =str(datetime.timedelta(seconds=total_seconds)).split(":")
             total_hours = int(topics_duration[0]) 
             total_minuets = int(topics_duration[1])
-            
-
-        if total_hours != 0:
-            if total_minuets > 60:
-                extra_hours = str(timedelta(minutes=total_minuets))[:-3]
-                extra_hours = extra_hours.split(":")
-                total_hours += int(extra_hours[0])
-                total_minuets = int(extra_hours[1])
-        total_time = str(total_hours) + ":" + str(total_minuets) + ":00"
-        total_time = parse_duration(total_time)
+        if total_hours >= 0 and total_minuets > 60:
+            extra_hours = str(timedelta(minutes=total_minuets))[:-3]
+            extra_hours = extra_hours.split(":")
+            total_hours += int(extra_hours[0])
+            total_minuets = int(extra_hours[1])
+        total_time = str(total_hours) + ":" + str(total_minuets)
+        total_time = cls.set_duration_parse_to_duration(total_time)
         meeting_durration = parse_duration(meeting_durration)
         if (meeting_durration.days >= total_time.days) or (meeting_durration.seconds >= total_time.seconds):
-            day_difference = meeting_durration.days - total_time.days
-            time_difference = meeting_durration.seconds - total_time.seconds
-            if (day_difference >= duration_after_parse.days):
-                if (day_difference == duration_after_parse.days) and (time_difference > duration_after_parse.seconds):
-                    valid['is_valid'] = True
-                    valid['message'] = "Time is valid"
-                elif (day_difference > duration_after_parse.days) and (time_difference < duration_after_parse.seconds):
-                    valid['is_valid'] = True
-                    valid['message'] = "Time is valid"
-                elif  (day_difference == duration_after_parse.days) and (time_difference < duration_after_parse.seconds):
-                    valid['is_valid'] = False
-                    if day_difference == 0:
-                        time = str(datetime.timedelta(seconds=time_difference)).split(":")
-                        hour = "0" + str(time[0])
-                        time = hour + ":" + str(time[1])
-                    else:
-                        days_to_hours = day_difference * 24
-                        time = str(datetime.timedelta(seconds=time_difference)).split(":")
-                        hour = time[0]+days_to_hours
-                        time = str(hour) + ":" + str(time[1])
-                    valid['valid_time'] = time
-                    valid['message'] = "Time is not valid. You have only: " + time
+            difference = meeting_durration- total_time
+            data['valid_time']  = cls.set_duration_to_hour_min(difference)
+            data['meeting_duration'] = cls.set_duration_to_hour_min(meeting_durration)
+            data['topics_duration'] = cls.set_duration_to_hour_min(total_time)
 
+            if duration_after_parse and (difference >= duration_after_parse):
+                
+                if (difference >= duration_after_parse):
+                    data['is_valid'] = True
+                    message = "Time is valid"
+                elif  (difference < duration_after_parse):
+                    data['is_valid'] = False
+                    message = "Time is not valid. You have only: " + data['valid_time']
             else:
-                valid['is_valid'] = False
-                if day_difference == 0:
-                    time = str(datetime.timedelta(seconds=time_difference)).split(":")
-                    hour = "0" + str(time[0])
-                    time = hour + ":" + str(time[1])
+                if not duration:
+                    if meeting_durration > total_time:
+                        data['is_valid'] = True
+                        message = "Time is not valid. You have only: " + data['valid_time']
+                    else:
+                        data['is_valid'] = False
+                        message = "Time is not valid. You have only: " + data['valid_time']
                 else:
-                    days_to_hours = day_difference * 24
-                    time = str(datetime.timedelta(seconds=time_difference)).split(":")
-                    hour = time[0]+days_to_hours
-                    time = str(hour) + ":" + str(time[1])
-                valid['valid_time'] = time
-                valid['message'] = "Time is not valid. You have only: " + time
+                    data['is_valid'] = False
+                    message = "Time is not valid. You have only: " + data['valid_time']
+            
         else:
-            valid['is_valid'] = False
-            valid['message'] = "Sorry You meeting time is less"
-        
-        data = {'data': valid}
+            data['is_valid'] = False
+            message = "Sorry You meeting time is less"
+        data['message'] = message
+        # data = {'data': valid}
         return data
+
 
 
     def get_attendees(self):

@@ -18,6 +18,8 @@ export class TopiceditComponent implements OnInit {
     @Input() meeting_id: any;
     @Input() meeting_name: any;
     @Input() action: any;
+    @Input() meeting_obj: any;
+    @Input() new_topic_valid_time:any;
     @Input() topic_id: any;
     socketService: SocketService;
     renameService: RenameService;
@@ -202,7 +204,7 @@ export class TopiceditComponent implements OnInit {
         obj_this.modified_topic_data.duration = time
         let dur = obj_this.modified_topic_data.duration
         // console.log(obj_this.modified_topic_data.duration);
-
+  
         const input_data = {
             meeting_id: obj_this.meeting_id,
             duration: dur
@@ -224,8 +226,9 @@ export class TopiceditComponent implements OnInit {
             }else{
                 // console.log(data)
                 if(data.valid_time){
-                    obj_this.modified_topic_data.duration=data.valid_time
+                    obj_this.modified_topic_data.duration=data.valid_time;
                     window['bootbox'].alert(data.message);
+                    obj_this.new_topic_valid_time = data.valid_time;
                     $("#duration").val(data.valid_time);
 
                 }else{
@@ -291,6 +294,12 @@ export class TopiceditComponent implements OnInit {
         let obj_this = this;
         if (obj_this.meeting_name) {
             obj_this.event__name = obj_this.meeting_name;
+            // if(obj_this.new_topic_valid_time){
+            //     console.log(obj_this.new_topic_valid_time)
+            //     setTimeout(()=>{
+            //         $("#duration").val(obj_this.new_topic_valid_time);
+            //     },10);          
+            // }
         }
         if (obj_this.action == 'update' && obj_this.topic_id) {
             obj_this.get_topic()
@@ -301,8 +310,11 @@ export class TopiceditComponent implements OnInit {
                 obj_this.apply_drag_drop();
             }, 10);
         }
+
+      
         window['app_libs']['mask'].load(()=>{
             $('#duration').mask('00:00');
+
         });
     }
 

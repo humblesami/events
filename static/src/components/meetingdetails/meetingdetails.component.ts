@@ -95,6 +95,8 @@ export class MeetingDetailsComponent implements OnInit {
         const modalRef = this.modalService.open(TopiceditComponent, { backdrop: 'static' });
         modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
         modalRef.componentInstance.meeting_name = obj_this.meeting_object.name;
+        modalRef.componentInstance.meeting_obj = obj_this.meeting_object;
+        modalRef.componentInstance.new_topic_valid_time = obj_this.meeting_object.duration_data.valid_time;
         modalRef.componentInstance.action = action;
         modalRef.componentInstance.topic_id = topic_id;
         modalRef.result.then(function(data){
@@ -119,6 +121,7 @@ export class MeetingDetailsComponent implements OnInit {
                         obj_this.meeting_object.topics.push(topic);
                     }
                 }
+
             }
         });
     }

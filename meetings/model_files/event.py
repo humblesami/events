@@ -278,19 +278,6 @@ class Event(CustomModel):
             return data
         return 'Something Wrong in Response Invitation'
 
-    @classmethod
-    def set_duration(cls,topic_duration):
-        topic_duration = str(datetime.timedelta(seconds=topic_duration))
-        topic_duration = topic_duration[0:len(topic_duration)-3]
-        topic_duration = topic_duration.split(":")
-        topic_hour = int(topic_duration[0])
-        topic_minuets = int(topic_duration[1])
-        if topic_hour <= 10:
-            topic_hour = "0" + str(topic_hour)
-        duration = str(topic_hour) + ":" + str(topic_minuets)
-
-        return duration
-
 
     @classmethod
     def get_details(cls, request, params):
@@ -305,7 +292,8 @@ class Event(CustomModel):
                 meeting_id = meeting_object_orm.id
         else:
             meeting_object_orm = Event.objects.get(pk=meeting_id)
-
+        
+        topic_model = ws_methods.get_model('meetings', 'Topic')
         meeting_object = {}
         location = meeting_object_orm.location
         duration = meeting_object_orm.duration
@@ -314,6 +302,7 @@ class Event(CustomModel):
         meeting_object['description'] = meeting_object_orm.description
         meeting_object['location'] = location
         meeting_object['duration'] = duration
+        meeting_object['duration_data'] = topic_model.check_duration( request ,params={"meeting_id":meeting_object_orm.id})
 
         meeting_object['street'] = meeting_object_orm.street
         meeting_object['city'] = meeting_object_orm.city
@@ -339,13 +328,13 @@ class Event(CustomModel):
         attendance_status = cls.get_attendance_status(meeting_object_orm, user_id)
         meeting_object['attendee_status'] = attendance_status['state']
         meeting_object['my_event'] = attendance_status['my_event']
-
         topic_orm = list(meeting_object_orm.topic_set.all())
+        
         topics = []
         topic = {}
         for t in topic_orm:
             topic = ws_methods.obj_to_dict(t)
-            topic_duration = cls.set_duration(topic['duration'].seconds)
+            topic_duration = topic_model.set_duration_to_hour_min(topic['duration'])
             topic['duration'] = topic_duration
             topic['docs'] = list(t.documents.values())
             for doc in topic['docs']:
