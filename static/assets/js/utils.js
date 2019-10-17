@@ -134,6 +134,14 @@ var app_libs = window['app_libs'] = {
             var obj_this = this;    
             js_utils.load_lib(obj_this, on_load);
         }
+    },
+    mask: {
+        script_paths : ['static/assets/js/mask.js'],
+        style_paths : [],
+        load: function(on_load){            
+            var obj_this = this;    
+            js_utils.load_lib(obj_this, on_load);
+        }
     }
 };
 

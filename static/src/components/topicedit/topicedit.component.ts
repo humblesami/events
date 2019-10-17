@@ -277,7 +277,7 @@ export class TopiceditComponent implements OnInit {
                 obj_this.apply_drag_drop();
             }, 10);
         }
-        $(document).ready(function(){
+        window['app_libs']['mask'].load(()=>{
             $('#duration').mask('00:00');
         });
     }
