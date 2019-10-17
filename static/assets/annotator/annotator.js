@@ -120,29 +120,51 @@
         if(index == -1)
         {
             current_annotations.push(annotation);            
-            updateAnnotations(documentId, current_annotations, is_comment);
+            updateAnnotations(documentId, current_annotations, 'op=add');
         }
         else{            
+            alert('Invalid addrition');
             console.log("Invalid annot adding",  annotation, 444);
             console.trace();
         }
     }
 
-    function updateAnnotations(documentId, annotations, is_comment){            
+    function updateAnnotations(documentId, annotations, operation){            
         try{            
             if(!Array.isArray(annotations)){
                 console.log('Invalid annotations values', annotations);
                 console.trace();
                 return;
             }
-            if(is_comment == 'comment_point_moved'){
+            if(operation == 'comment_point_moved'){
                 return;
+            }
+            
+            var i = 0;
+            var l1 = annotations.length;
+            for(var i=0; i< l1; i++)
+            {
+                var j = 0;
+                var l2 = annotations.length;
+                for(var j=0; j < l2; j++)
+                {
+                    if(i != j)
+                    {
+                        if(annotations[i].uuid == annotations[j].uuid)
+                        {
+                            console.log('Invalid scene');
+                            annotations.splice(j, 1);
+                            j--;
+                            l2--;
+                            l1--;
+                        }
+                    }
+                    j++;
+                }
+                i++;
             }
             var val = JSON.stringify(annotations);
             localStorage.setItem(documentId + '/annotations', val);
-            if (is_comment) {
-                return;
-            }
             setDocDirty(documentId);
             if(annot_save_timeout)
             {
@@ -468,7 +490,7 @@
                                     var comment_annots = annotations_array.filter(function(el) {
                                         return el.type == 'point' && !el.sub_type;
                                     });
-                                    updateAnnotations(documentId, comment_annots);
+                                    updateAnnotations(documentId, comment_annots, 'op=reset');
                                     render_details();
                                 }
                             });
@@ -748,7 +770,7 @@
                         break;
                     }
                 }
-                updateAnnotations(documentId, annotations, 1);
+                updateAnnotations(documentId, annotations, 'op=embed comment count');
             }
 
             function pdf_render(doc_data) {
@@ -796,7 +818,7 @@
                             local_annots = _getAnnotations(documentId);
                         }
                         local_annots = local_annots.concat(server_comments);
-                        updateAnnotations(documentId, local_annots);
+                        updateAnnotations(documentId, local_annots, 'op=init');
                         comments_loaded = false;
                     }
                 }
@@ -2880,10 +2902,10 @@
                                         var annotations = _getAnnotations(documentId);
                                         var annotationIndex = findAnnotation(documentId, annotationId);
                                         annotations[annotationIndex] = annotation;
-                                        var is_comment = undefined
+                                        var is_comment = 'op=edit point'
                                         if (annotation.type == 'point' && !annotation.sub_type) {
-                                            is_comment = 'comment_point_moved';
-                                        }
+                                            is_comment = 'op=point moved';
+                                        }                                        
                                         updateAnnotations(documentId, annotations, is_comment);
                                         updateAnnotationColor(annotationId, annotation.type, annotation.color);
                                         resolve(annotation);
@@ -2900,7 +2922,7 @@
                                             }
                                             else{
                                                 annotations.splice(index, 1);
-                                                updateAnnotations(documentId, annotations);
+                                                updateAnnotations(documentId, annotations, 'op=delete');
                                             }
                                         }
                                         resolve(true);
@@ -3014,7 +3036,7 @@
                                                 $('.comment-list-container:first').scrollTop(9999);
                                             }, 10);
                                         }
-                                        updateAnnotations(documentId, annotations, is_comment);
+                                        updateAnnotations(documentId, annotations, 'op=add comment');
                                         resolve(comment);
                                     });
                                 },
@@ -3027,7 +3049,8 @@
                                                 annotations[i].content = content;
                                             }
                                         }
-                                        updateAnnotations(documentId, annotations, 1);
+                                        alert('Should never be called')
+                                        updateAnnotations(documentId, annotations, 'op=edit comment');
                                         resolve(true);
                                     });
                                 },
@@ -3044,7 +3067,8 @@
                                         }
                                         if (index > -1) {
                                             annotations.splice(index, 1);
-                                            updateAnnotations(documentId, annotations, 1);
+                                            alert('should never be called')
+                                            updateAnnotations(documentId, annotations, 'op=delete comment');
                                         }
                                         resolve(true);
                                     });
@@ -4733,7 +4757,7 @@
                                     }
                                 }
                                 local_annots[local_annots.length - 1].to_merge = 1;
-                                updateAnnotations(documentId, local_annots);
+                                updateAnnotations(documentId, local_annots, 'op=drawing');
                                 if(merged){
                                     UI.renderPage(annotation.page, RENDER_OPTIONS);
                                 }

@@ -240,7 +240,6 @@ class Profile(user_model, CustomModel):
 
     UniqueConstraint(fields=['email'], name='unique_email')
 
-
     def __str__(self):
         return self.fullname()
 
