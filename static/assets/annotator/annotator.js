@@ -2,6 +2,7 @@
     var annotation_user_m2;
     var annotation_mode = 0;
     var hand_drawings = [];
+    var prev_doc_url = '';
     var shown_comment_type = false;
     var slected_comment_type = false;
     var comment_sub_type = false;
@@ -17,52 +18,44 @@
     var mention_list = undefined;
     var handlePointAnnotationClick = undefined;
     var doc_loading_step = undefined;
+    var documentId = undefined;
     var annot_save_timeout = undefined;
-    var annotation_save_wait = 4000;
+    var annotation_save_wait_time = 3000;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
     var saveAnnotationsAtServer = function() {
         console.log("Save annotation not defined");
     };
+    var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
-    function select_cursor()
-    {
-        if(!$('.topbar:first .cursor:first').hasClass('active'))
-        {
-            $('.topbar:first .cursor:first').click();            
-        }
-        if(annot_save_timeout)
-        {
-            clearTimeout(annot_save_timeout);
-            saveAnnotationsAtServer();
-        }
-    }
-    function initDocCookies(documentId) {
-        localStorage.setItem(documentId + '/version', 0);
-        localStorage.setItem(documentId + '/scale', 1);
-        localStorage.setItem(documentId + '/roate', 0);
-        localStorage.setItem(documentId + '/dirty', 0);
-        localStorage.setItem(documentId + '/annotations', "[]");
-    }
-
-    function resetCookies(documentId) {
-        localStorage.setItem(documentId + '/version', 0);
-        localStorage.setItem(documentId + '/annotations', "[]");
+    function select_cursor(button) {
+        // window['functions'].get_trace(1);
+        $('.topbar:first .active:not(.cursor)').removeClass('active');
+        if (!$('.topbar:first .cursor:first').hasClass('active')) {
+            $('.topbar:first .cursor:first').click();
+            if (button && isDocumentDirty(documentId)) {
+                saveAnnotationsAtServer();
+            }
+        }        
     }
 
     function getDocumentVersion(documentId) {
         var res = getCookieStrict(documentId, documentId + '/version');
-        if (isNaN(res)) {
-            bootbox.alert("Cookie1 must have been se, plz contact support");
+        if (res != 0 && isNaN(res)) {            
+            setCookieStrict(documentId, documentId + '/version', '0');
+            res = 0;
+            console.log('Set version by force');
         }
         return res;
     }
 
     function isDocumentDirty(documentId) {
         var res = getCookieStrict(documentId, documentId + '/dirty');
-        if (isNaN(res)) {
-            bootbox.alert("Cookie2 must have been set for " + documentId + ", plz contact support");
+        if (res != 0 && isNaN(res)) {
+            setCookieStrict(documentId, documentId + '/dirty', 0);
+            console.log('Set dirty by force');
+            res = 0;
         }
         return res;
     }
@@ -72,32 +65,59 @@
         if (document_dirty != 1) {
             var document_version = getCookieStrict(documentId, documentId + '/version');
             document_version += 1;
-            localStorage.setItem(documentId + '/version', document_version);
-            localStorage.setItem(documentId + '/dirty', 1);
+            setCookieStrict(documentId, documentId + '/version', document_version)
+            setCookieStrict(documentId, documentId + '/dirty', 1);
         }
     }
 
     function unSetDocDirty(documentId) {
-        localStorage.setItem(documentId + '/dirty', 0);
+        setCookieStrict(documentId, documentId + '/dirty', 0);
     }
 
     function setDocVersion(documentId, version) {
-        localStorage.setItem(documentId + '/version', version);
+        setCookieStrict(documentId, documentId + '/version', version);
     }
 
     function getCookieStrict(documentId, key) {
         validate_key(documentId, key);
         var val = localStorage.getItem(key);
+        if(key.endsWith('annotations'))
+        {
+            if(!val || val == NaN)
+            {
+                val = '[]';
+            }
+        }
         if (!isNaN(val))
-            val = parseFloat(val);        
+            val = parseFloat(val);
         return val;
+    }
+
+    function _getAnnotations(documentId) {
+        var res = getCookieStrict(documentId, documentId + '/annotations');
+        try{
+            res = JSON.parse(res);
+        }
+        catch(er)
+        {
+            res = [];
+        }
+        // console.log(documentId, documentId + '/annotations', res);
+        return res;
     }
 
     function setCookieStrict(documentId, key, val) {
         var temp_key = validate_key(documentId, key);
-        if (temp_key == 'dirty' || temp_key == 'version') {
-            bootbox.alert("Should not happend");
-            console.trace();
+        if(key.endsWith('annotations'))
+        {
+            // console.log(val, 333);
+            var a = 1;
+        }
+        if (typeof(val) != 'string') {
+            if (typeof(val) == 'object') {
+
+                val = JSON.stringify(val);
+            }
         }
         localStorage.setItem(key, val);
     }
@@ -117,19 +137,65 @@
         return ['point'].indexOf(type) > -1;
     }
 
-    var comments_wrapper;// = $('#comment-wrapper');
-    function on_leave_document() {        
-        if(comments_wrapper && comments_wrapper.length > 0)
-        {
+    var comments_wrapper; // = $('#comment-wrapper');
+    function on_leave_document() {
+        if (comments_wrapper && comments_wrapper.length > 0) {
             $('#annotated-doc-conatiner').hide();
             shown_comment_type = false;
             comments_wrapper.hide();
             $('.router-outlet').show();
             saveAnnotationsAtServer('Leaving');
         }
-    }    
-    
-    var scroll_div;    
+    }
+
+    function move_to_point (point_id){
+        let annot_id = $('div[db_id="'+point_id+'"]:first').attr('point_id');
+        $('.toolbar:first .comment:not(.personal):first').click();
+        $('#comment-wrapper .comment-list .groupcomment[annotationid="'+annot_id+'"]').click();
+    }
+
+    function process_notification_url(item_url){        
+        var url_origin = window.location.origin.toString();        
+        if(item_url.indexOf(url_origin) == -1)
+        {
+            if(!item_url.startsWith('/'))
+            {
+                item_url = '/' +item_url;
+            }
+            item_url = url_origin + item_url;
+        }
+        console.log(item_url);
+        var arr = item_url.split('/');
+        var third_last = undefined;        
+        try{
+            third_last = arr[arr.length - 3];
+        } 
+        catch(er){
+            // console.log(er)
+        }
+        if(third_last != 'doc'){
+            return;
+        }
+        var point_id = arr[arr.length -1];
+        arr = arr.splice(0, arr.length - 1);
+        var url_without_point = arr.join('/');
+        
+        var url_now = prev_doc_url;
+        arr = url_now.split('/');
+        arr = arr.splice(0, arr.length - 1);
+        url_now = arr.join('/');
+        if(url_without_point == url_now){
+            move_to_point(point_id);
+        }
+        else{
+            item_url = item_url.replace(window.location.origin+'', '');
+            // console.log(item_url, 999);
+            window.open(item_url, '_self');            
+        }
+    }
+
+    var scroll_div;
+    var content_wrapper;
 
 
     $(function() {
@@ -147,11 +213,9 @@
                         'left': e.pageX - ctxMenu.width() / 2,
                         'top': e.clientY + 12
                     }).show();
-                    //console.log(ctxMenu.position());
+                    // console.log(ctxMenu.position());
                     contextMenuShown = true;
                 } else {
-                    var pen_active = $('.toolbar .pen').hasClass('active');
-                    var cursor_active = $('.toolbar .cursor').hasClass('active');
                     var comment_active = $('.toolbar .comment').hasClass('active');
                     if (comment_active) {
                         if (last_active_was_comment)
@@ -160,13 +224,36 @@
                             last_active_was_comment = false;
                         }
                     }
-                    else if (!pen_active && !cursor_active) {
+                    contextMenuShown = false;
+                    $('.annotation-options.ContextMenuPopup').hide();
+                    var pen_active = $('.toolbar .pen').hasClass('active');
+                    if(!pen_active){
                         select_cursor();
                     }
                 }
             }, 10);
         });
+    
+        var notification_list = $('.notification-list:first');
+        // console.log(337773);
+        notification_list.on('click','.chat-items>li', function() {
+            // console.log(this);
+            var el = $(this);
+            var link = el.find('a');
+            if(!link.length)
+            {
+                return;
+            }
+            var item_url = link.attr('link');            
+            if(!item_url){
+                return;
+            }
+            process_notification_url(item_url);            
+        });      
     });
+
+    var UI = undefined;
+    var RENDER_OPTIONS = undefined;
 
 
     function module0(module, exports, __webpack_require__) {
@@ -176,15 +263,13 @@
             var _2 = _interopRequireDefault(_);
             var _initColorPicker = __webpack_require__(4);
             var _initColorPicker2 = _interopRequireDefault(_initColorPicker);
+            
+            var activePointId = undefined;            
+            var commentText; // = comments_wrapper.find('#commentText');
+            var comment_list_div; // = comments_wrapper.find('.comment-list:first');
+            var comment_list; // = comments_wrapper.find('.comment-list-container:first');
 
-            var save_drawing = function() {};
-            var activePointId = undefined;
-            var documentId = false;           
-            var commentText;// = comments_wrapper.find('#commentText');
-            var comment_list_div;// = comments_wrapper.find('.comment-list:first');
-            var comment_list;// = comments_wrapper.find('.comment-list-container:first');
-
-            window['init_doc_comments'] = function(){
+            window['init_doc_comments'] = function() {
                 comments_wrapper = $('#comment-wrapper');
                 comments_wrapper.resizable();
                 commentText = comments_wrapper.find('#commentText');
@@ -192,22 +277,18 @@
                 comment_list = comments_wrapper.find('.comment-list-container:first');
                 commentText.focus(function() {
                     comment_item_focused = true;
-                });
-                select_cursor();
-                
+                });                
+
                 $(window).unbind("unload", on_leave_document);
                 $(window).bind("unload", on_leave_document);
-                
-                scroll_div = $('#content-wrapper');
+                scroll_div = $('.PdfViewerWrapper');
+                content_wrapper = $('#content-wrapper');
             }
 
             annotation_user_m2 = localStorage.getItem('user');
             annotation_user_m2 = JSON.parse(annotation_user_m2);
 
-            var annotationBiengEdited = false;
-            var comments_loaded = false;
-            var force_download = 0;
-            var loadAnnotationsFromServer = undefined;
+            var comments_loaded = false;            
 
             var _slicedToArray = function() {
                 function sliceIterator(arr, i) {
@@ -249,11 +330,11 @@
                 };
             }
 
-            var UI = _2.default.UI;
+            UI = _2.default.UI;
             var PAGE_HEIGHT = void 0;
 
 
-            var RENDER_OPTIONS = {};
+            RENDER_OPTIONS = {};
 
             _2.default.setStoreAdapter(new _2.default.LocalStoreAdapter());
             //PDFJS.workerSrc = './shared/pdf.worker.js';
@@ -264,41 +345,9 @@
 
             (function() {
                 var message = '';
-                (function() {
-
-                    function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {
-                        if (annotations.length == 0) {
-                            annotations = getLocalAnnotations();
-                        }
-                        if (annotations.length == 0 && comments.length == 0) {
-                            if (doc_data && doc_data.first_time) {
-                                render_details(doc_data);
-                            }
-                            return;
-                        }
-                        annotations = annotations.filter(function(annot) {
-                            return annot.type != 'point' || annot.sub_type
-                        });                        
-                        annotations = annotations.concat(comments);
-                        annotations.forEach(function(item) {
-                            item.class = 'Annotation';
-                        });
-                        var annotation_cookie = "";
-                        if (Array.isArray(annotations)) {
-                            annotation_cookie = JSON.stringify(annotations);
-                        } else {
-                            bootbox.alert("invalid annotations");
-                            return;
-                        }
-                        
-                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);                        
-                        // console.log(documentId, documentId + '/annotations', annotations);
-                        render_details(doc_data);
-                    }
-                })();
 
                 (function() {
-                    function onAnnotationsUploaded(data, reset) {
+                    function onAnnotationsUploaded(data) {
                         if (data != "done") {
                             if (isNaN(data)) {
                                 bootbox.alert("Could not save:");
@@ -321,43 +370,76 @@
                         }
                     }
 
-                    function onAnnotationSaveFailed(er) {
-                        console.log(er);
-                    }
-
-                    saveAnnotationsAtServer = function(save_type) {
-                        save_drawing(1);
-                        if (!documentId) {
-                            console.log("saveAnnotationsAtServer must be called after document id is set")
-                            return;
-                        }
-                        if (isDocumentDirty(documentId) != 1)
+                    saveAnnotationsAtServer = function(save_type) {                        
+                        if(save_type != 'reset')
                         {
+                            if (isDocumentDirty(documentId) != 1)
+                            {
+                                return;
+                            }
+                            select_cursor();
+                        }
+
+                        unSetDocDirty(documentId);
+                        if (!documentId) {
+                            console.log("Save must be called after document id is set")
                             return;
                         }
 
                         var document_version = getDocumentVersion(documentId);
-                        if(document_version == 0)
-                        {
-                            document_version = 1;
-                        }
                         var input_data = {
-                            id : doc_id,
+                            id: doc_id,
                             doc_id: documentId
                         };
-                        delete input_data['reset'];
                         if (save_type == 'reset') {
-                            input_data['reset'] = 1;
+                            window['bootbox'].confirm('Are you sure to reset all the annotations', function(dr){
+                                if(dr)
+                                {
+                                    input_data['reset'] = 1;
+                                    call_save_annotations(input_data);
+                                    render_details();
+                                }
+                            })
                         } else {
-                            var annotationString = localStorage.getItem(documentId + '/annotations');
+                            delete input_data['reset'];                        
+                            var annotationString = getCookieStrict(documentId, documentId + '/annotations')
                             if (!annotationString || annotationString == '[]') {
-                                console.log("No annotations");
+                                input_data['reset'] = 1;                                
+                            }
+                            else{                                
+                                input_data['annotations'] = annotationString;                                
+                                var filtered = [];
+                                filtered = JSON.parse(input_data['annotations'])
+                                filtered = filtered.filter(function(el) {
+                                    return el.type != 'point' || el.sub_type;
+                                });
+                                console.log(filtered, ' saved aonts');
+                                input_data['annotations'] = JSON.stringify(filtered);                                
+                            }
+                            if (document_version == 0) {
+                                setDocVersion(documentId, 1);
+                            }
+                            input_data['version'] = document_version;
+                            call_save_annotations(input_data);
+                        }                        
+                    }
+
+                    window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
+                    var last_save_call = {};
+                    function call_save_annotations(input_data){
+                        var dt_now = new Date();
+                        if(last_save_call.dt){
+                            var diff = dt_now - last_save_call.dt;
+                            if(diff <= annotation_save_wait_time)
+                            {
+                                var trace_now = undefined;
+                                try { var a = {}; a.debug(); } catch(ex) { trace_now = ex.stack; }
+                                console.log(last_save_call.trace, trace_now);
                                 return;
                             }
-                            console.log(JSON.parse(annotationString));
-                            input_data['annotations'] = annotationString;
-                            input_data['version'] = document_version;
                         }
+                        last_save_call.dt = dt_now;
+                        try { var a = {}; a.debug(); } catch(ex) { last_save_call.trace = ex.stack; }
                         var args = {
                             app: 'documents',
                             model: 'AnnotationDocument',
@@ -367,70 +449,43 @@
                             args: args,
                             params: input_data
                         };
-                        // window['add_annotation'](final_input_data);
                         dn_rpc_object({
                             data: final_input_data,
                             no_loader: 1,
                             onSuccess: function(data) {
-                                onAnnotationsUploaded(data, save_type);
+                                onAnnotationsUploaded(data);
                             },
-                            onError: onAnnotationSaveFailed,
                             type: 'post'
                         });
                     }
 
-                    window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
-
-                    $('body').on('click', '.doc-saver', function() {
-                        saveAnnotationsAtServer();
-                    });
-
                 })();
 
-                $('body').on('click', '.cb-container.autosave input', function() {
-                    if ($(this).prop('checked'))
-                    {
-                        saveAnnotationsAtServer();
-                    }
+
+
+                $('body').on('click', '.reset', function() {
+                    setCookieStrict(documentId, documentId +'/annotations', '');                    
+                    saveAnnotationsAtServer('reset');                    
+                    // console.log(4343);
                 });
 
                 $('body').on('click', '.toolbar .back', function() {
                     on_leave_document();
                 });
 
-                $('body').on('click', '.doc-reseter', function() {
-                    message = "Do you want to erase all annotations on document.";
-                    message += "<br>Warning: It will also reset.";
-                    //message += "<br>You can cancel or uncheck auto save if you do not want to reset online";
-                    bootbox.confirm(message, function(dr) {
-                        if (dr) {
-                            var annotations = localStorage.getItem(documentId + '/annotations');
-                            annotations = JSON.parse(annotations);
-                            annotations = annotations.filter(function(annot) {
-                                return annot.type == 'point' && !annot.sub_type
-                            });
-                            annotations = JSON.stringify(annotations);
-                            localStorage.removeItem(documentId + '/annotations');
-                            localStorage.setItem(documentId + '/annotations', annotations);
-                            setDocDirty(documentId);
-                            saveAnnotationsAtServer('reset');
-                        }
-                    });
-                });
-
-            })();            
+            })();
 
             $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
                 document.execCommand("copy");
-                $(this).parent().parent().hide();
+                $(this).closest('.ContextMenuPopup').hide();
             });
 
             $(document).mousedown(function(e) {
+                // console.log(contextMenuShown, 4544);
                 if (e.button == 2)
                     return;
                 var $target = $(e.target);
-                if ($target.closest('#viewer').length == 0)
-                {
+                if ($target.closest('#viewer').length == 0) {
                     $target.closest('#viewer').css('cursor', 'auto');
                 }
                 if (comment_item_focused) {
@@ -439,41 +494,16 @@
                         comment_item_focused = false;
                         loadALlCommentsOnDocument();
                     }
-                }
-                if (contextMenuShown)
+                }                
+                
+                if(!contextMenuShown)
                 {
-                    // console.log(contextMenuShown, 883);
-                    $target = $target.closest('.ContextMenuPopup button');
-                    if($target.length)
-                    {
-                        target = $target[0];                        
-                    }
-                    else{
-                        $target = $(e.target).closest('.ColorPalettePopup');
-                        if($target.length)
-                        {
-                            target = $target[0];
-                        }
-                        else{
-                            // console.log(e.target);
-                            $('.ContextMenuPopup').hide();
-                        }
-                    }
-                }
-                else{
-                    $('.ContextMenuPopup').hide();                
                     if ($('.topbar:first .pen:first').hasClass('active')) {
-                        if (hand_drawings.length > 0 && $target.closest('#viewer').length == 0) {
-                            save_drawing();
-                        }
+                        
                     } else {
                         if (activePointId && $target.closest('#comment-wrapper').length == 0) {
                             activePointId = undefined;
                             $('.comment-list-form').hide();
-                        } else {
-                            var comment_active = $('.toolbar .comment').hasClass('active');
-                            if (comment_active && $target.closest('#viewer').length == 0)
-                                select_cursor();
                         }
                     }
                 }
@@ -495,10 +525,6 @@
                 }
             });
 
-            $('.notification-list:first').on('click, li.list-group-item contact', function() {
-                console.log(1344);
-            });
-
             function onPenLeave() {
 
             }
@@ -510,37 +536,39 @@
             var sclae_value = undefined;
 
             function addCommentCount(annotations_of_page, pange_number) {
-                var annotations_of_page = annotations_of_page.filter(function(a) {
-                    return a.type == 'point';
+                var point_annotations = annotations_of_page.filter(function(a) {
+                    return a.type == 'point' && !a.sub_type;
                 });
-                var note_points = annotations_of_page.filter(function(a) {
-                    return a.sub_type;
-                });
-                // if(note_points.length)
-                // {
-                //     console.log(note_points);
-                // }
-                for (var p_index in annotations_of_page) {
-                    var c_point = annotations_of_page[p_index];
+                // console.log(point_annotations, 444);                
+                for (var p_index in point_annotations) {
+                    var c_point = point_annotations[p_index];
                     // console.log(c_point);
-                    var notif_counters_html = '<div db_id='+c_point.id+' point_id=' + c_point.uuid + ' class="new_comments_count"';
+                    var notif_counters_html = '<div db_id=' + c_point.id + ' point_id=' + c_point.uuid + ' class="new_comments_count"';
                     var point_top = c_point.y * sclae_value - 15;
                     var point_left = c_point.x * sclae_value + 15;
                     var y_dim = vertical + ':' + point_top + 'px;';
                     var x_dim = horizontal + ':' + point_left + 'px;';
                     var style = y_dim + x_dim;
-                    if (c_point.counter == 0) {
-                        style += 'display:none;'
-                    }
+                    //to be changed
+                    // if (c_point.counter == 0) {
+                    //     style += 'display:none;'
+                    // }
                     notif_counters_html += ' style="' + style + '" comment_count="' + c_point.counter + '">' + c_point.counter + '</div>';
-                    $('#pageContainer' + pange_number + ' .canvasWrapper').append(notif_counters_html);                    
+                    $('#pageContainer' + pange_number + ' .canvasWrapper').append(notif_counters_html);
                 }
+            }
+
+            function setViewerWrapperBottom(source) {
+                var topbar_rect = $('.toolbar.topbar')[0].getBoundingClientRect();
+                // console.log(diff, 5555, source, topbar_rect);
+                content_wrapper.height(window.innerHeight - topbar_rect.top - topbar_rect.height);
             }
 
             function hideComments() {
                 comments_wrapper.hide();
                 shown_comment_type = false;
-                localStorage.removeItem(documentId + '/shown_comment_type');                
+                localStorage.removeItem(documentId + '/shown_comment_type');
+                setViewerWrapperBottom('comment hide');
             }
 
             function showCommentsContainer(comment_sub_type) {
@@ -548,17 +576,19 @@
                     slected_comment_type = comment_sub_type;
                 }
                 if (slected_comment_type == 'notes') {
-                    
+
                     comments_wrapper.removeClass('comments');
                     comments_wrapper.addClass('notes');
 
                     comments_wrapper.find('.title:first').html('Personal Notes');
+                    comments_wrapper.removeClass('comments').addClass('notes');
                 } else {
-                    
+
                     comments_wrapper.removeClass('notes');
                     comments_wrapper.addClass('comments');
 
                     comments_wrapper.find('.title:first').html('Comments');
+                    comments_wrapper.removeClass('notes').addClass('comments');
                 }
                 comments_wrapper.show();
                 if (!activePointId) {
@@ -566,25 +596,32 @@
                 } else
                     $('.comment-list-form').show();
                 shown_comment_type = slected_comment_type;
-
-                var ctop = $('.comment-header').offset().top;
-                try{
-                    ctop = ctop + parseInt(comment_list.css('padding-bottom'))
-                }
-                catch(er){
-
-                }
-                ctop = ctop - 11;
-                var cwr_top = scroll_div.offset().top;
-                // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
-                scroll_div.height(window.innerHeight - cwr_top);
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
+                setViewerWrapperBottom('comment show')
             }
 
-            function showHideAnnotations(rotate_degree) {
+            function setAnnotationMode(){
                 var doc_data = RENDER_OPTIONS.document_data;
-                var doc_type = doc_data.type;
+                var doc_type = doc_data.type;                
+                var rotateBy = RENDER_OPTIONS.rotate;
+                var rotate_degree = rotateBy % 360;
                 if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {
+                    annotation_mode = 1;
+                }
+                else{                                   
+                    if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
+                    {
+                        annotation_mode = 2;
+                    }
+                    else{
+                        annotation_mode = 0;
+                    }
+                }
+            }
+
+            function showHideAnnotations() {
+                var doc_data = RENDER_OPTIONS.document_data;                
+                if (annotation_mode == 1) {
                     annotation_mode = 1;
                     RENDER_OPTIONS.showAnnotations = true;
                     var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
@@ -592,11 +629,8 @@
                     setPen(pen_size, pen_color);
                     $('.topbar:first .annotation_button').show();
                     $('.annot-toggler').show();
-                } else {
-                    annotation_mode = 0;
-                    $('.annot-toggler').hide();
-                    if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
-                        annotation_mode = 2;
+                } else if(annotation_mode == 2){
+                    $('.annot-toggler').hide();                    
                     RENDER_OPTIONS.showAnnotations = false;
                     $('.topbar:first .annotation_button').hide();
                     $('.topbar:first').show();
@@ -605,23 +639,14 @@
                         if (doc_data.mp_signature_status == "Pending") {
                             $('.sign_completed.pdfjs').hide();
                             $('.strt_sign.pdfjs').show();
-                        }
-
+                        }                        
                         if (doc_data.mp_signature_status == "Completed") {
                             $('.strt_sign.pdfjs').hide();
                             $('.sign_completed.pdfjs').show();
                         }
                     }
                 }
-            }
-
-            function getLocalAnnotations() {
-                var res = getCookieStrict(documentId, documentId + '/annotations');
-                if (!res)
-                    res = [];
-                else
-                    res = JSON.parse(res);
-                return res;
+                setViewerWrapperBottom('Loaded')
             }
 
             function onCOmmentAdded() {
@@ -645,6 +670,7 @@
                 for (var i in annotations) {
                     if (annotations[i].uuid == point.uuid) {
                         var newVal = 0;
+                        //to be changed
                         if (count != 0) {
                             newVal = count;
                             if (annotations[i].counter)
@@ -661,42 +687,19 @@
                             }
                             elem.html(newVal).attr('comment_count', newVal);
                         }
-                        localStorage.setItem(documentId + '/annotations', JSON.stringify(annotations));
+                        setCookieStrict(documentId, documentId + '/annotations', annotations);
                         break;
                     }
                 }
             }
 
-            save_drawing = function(onsave) {
-                if (hand_drawings.length > 0) {
-                    var annotations = getCookieStrict(documentId, documentId + '/annotations');
-                    annotations = JSON.parse(annotations);
-                    var combined_drawing = hand_drawings[0];                    
-                    annotations = annotations.filter(function(el) {
-                        return el.to_merge != 1
-                    });
-                    for (var i = 1; i < hand_drawings.length; i++) {
-                        combined_drawing.lines = combined_drawing.lines.concat(hand_drawings[i].lines);
-                    }
-                    combined_drawing.to_merge = 0;
-                    annotations.push(combined_drawing);
-                    //console.log(annotations);
-                    localStorage.setItem(documentId + '/annotations', JSON.stringify(annotations));
-                    hand_drawings = [];
-                    combined_drawing = {};
-                    if (!onsave)
-                    {
-                        render_details();
-                    }
-                }
-            }
-
-            function pdf_render(doc_data) {                
+            function pdf_render(doc_data) {
                 annotation_user_m2 = window['current_user'].cookie;
                 site_functions.hideLoader("Document Data");
                 doc_loading_step = "Document Render Data";
                 site_functions.showLoader(doc_loading_step);
-                if (doc_data && doc_data.first_time) {                    
+                if (doc_data && doc_data.first_time) {
+                    prev_doc_url = window.location.toString();
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
@@ -705,10 +708,49 @@
                     documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
-                    comments_loaded = false;
-                    var cookieVal = localStorage.getItem(documentId + '/dirty');
-                    if (!cookieVal) {
-                        initDocCookies(documentId);
+                    //to be updated
+                    if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
+                        var annotation_data = doc_data.annotation_data;
+                        var server_annotations = annotation_data.annotations;
+                        var server_comments = annotation_data.comments;
+                        if(!Array.isArray(server_annotations))
+                        {
+                            server_annotations = [];
+                        }
+                        // console.log(server_annotations, 33);
+                        for(var annot_obj of server_annotations)
+                        {
+                            if(annot_obj.type == 'drawing'){
+                                for(var i in annot_obj.lines){
+                                    var line_obj = annot_obj.lines[i];
+                                    annot_obj.lines[i] = [line_obj.x, line_obj.y];
+                                }
+                            }
+                        }
+                        // console.log(server_annotations, 44);
+                        if(!Array.isArray(server_comments))
+                        {
+                            server_comments = [];
+                        }
+                        server_annotations = server_annotations.concat(server_comments);
+                        // console.log(server_annotations, 322);
+                        var local_annots = server_annotations;
+                        var is_dirty = isDocumentDirty(documentId);                        
+                        if (is_dirty) {
+                            local_annots = getCookieStrict(documentId, documentId + '/annotations');
+                            try {
+                                local_annots = JSON.parse(local_annots);
+                            } catch (er) {
+    
+                            }
+                            local_annots = local_annots.filter(function(el) {
+                                return el.type != 'point' || el.sub_type;
+                            });
+                        }
+                        local_annots = local_annots.concat(server_comments);
+                        console.log(local_annots, is_dirty, 3333);
+                        setCookieStrict(documentId, documentId + '/annotations', local_annots);
+                        comments_loaded = false;
                     }
                 }
                 render_details(doc_data);
@@ -733,7 +775,7 @@
                     }
                 }
 
-                var scale_select = document.querySelector('.toolbar select.scale');                
+                var scale_select = document.querySelector('.toolbar select.scale');
                 scale_select.onchange = handleScaleChange;
 
                 function handleScaleChange() {
@@ -770,12 +812,9 @@
             function render_details(doc_data) {
                 try {
                     var pdfData = false;
-                    var cwr_top = scroll_div.offset().top;
-                    // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
-                    scroll_div.height(window.innerHeight - cwr_top);
                     var pages_rendered = 0;
                     if (doc_data && doc_data.first_time) {
-                        try{                            
+                        try {
                             if (doc_data.is_respondent && (doc_data.type == 'meeting' || doc_data.type == 'topic')) {
                                 window['show_annotation'] = true;
                             } else {
@@ -789,6 +828,7 @@
                             $('.doc-reseter').hide();
                             $('.toolbar.topbar:first').show();
                             $('#annotated-doc-conatiner').show();
+                            select_cursor();
                             hideComments();
                             init_ScaleRotate();
                             var scale_select = $('.toolbar select.scale:first');
@@ -808,20 +848,15 @@
                                 setCookieStrict(documentId, documentId + '/scale', 1)
                             }
                             scale_select.val(RENDER_OPTIONS.scale);
-                            
-                            var scroll_div_top = scroll_div.prev()[0].getBoundingClientRect().bottom;
-                            // console.log(scroll_div_top, window.innerHeight);
-                            scroll_div.height(window.innerHeight - 40 - scroll_div_top);
-                            
-                        }
-                        catch(er){
+                            var topbar_rect = $('.toolbar.topbar')[0].getBoundingClientRect();
+                            content_wrapper.height(window.innerHeight - topbar_rect.top - topbar_rect.height);
+                        } catch (er) {
                             console.log(er);
                         }
 
                         if (doc_data.type) {
-                            try{
-                                if(!doc_data.url)
-                                {
+                            try {
+                                if (!doc_data.url) {
                                     if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
                                         doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
                                     }
@@ -832,12 +867,10 @@
                                     }
                                     doc_data.doc = uint8Array;
                                     // console.log(window['dt_functions'].now_full(), 'skipped download ');
-                                }
-                                else
-                                {
-                                    var doc_url = window['site_config'].server_base_url + doc_data.url;                                    
+                                } else {
+                                    var doc_url = window['site_config'].server_base_url + doc_data.url;
                                     doc_data.doc = doc_url;
-                                    console.log(window['dt_functions'].now_full(), 'downloading doc data at client from '+doc_url);
+                                    console.log(window['dt_functions'].now_full(), 'downloading doc data at client from ' + doc_url);
                                 }
                                 RENDER_OPTIONS.document_data = doc_data;
                                 site_functions.hideLoader(doc_loading_step);
@@ -847,8 +880,7 @@
                                     console.log(window['dt_functions'].now_full(), 'download completed');
                                     pdf_doc_data = pdf_data;
                                     $('.page-count').html(pdf_doc_data.numPages);
-                                    if (pdf_doc_data.numPages > 1)
-                                    {
+                                    if (pdf_doc_data.numPages > 1) {
                                         $('.page-next-btn').removeAttr('disabled');
                                     }
                                     site_functions.hideLoader(doc_loading_step);
@@ -856,8 +888,7 @@
                                     site_functions.showLoader(doc_loading_step);
                                     renderPdfData(pdf_doc_data);
                                 });
-                            }
-                            catch(er){
+                            } catch (er) {
                                 console.log(er);
                             }
                         } else {
@@ -876,9 +907,9 @@
                         }
                         renderPdfData(pdf_doc_data)
                     }
-                    
+
                     function renderPdfData(pdfContent) {
-                        try{
+                        try {
                             // console.log('Render pdf data');
                             if (!pdfContent) {
                                 alert("PDF not loaded");
@@ -897,7 +928,6 @@
                             var rotateBy = RENDER_OPTIONS.rotate;
 
                             var rotate_degree = rotateBy % 360;
-                            showHideAnnotations(rotate_degree);
 
                             switch (rotate_degree) {
                                 case 90:
@@ -913,13 +943,12 @@
                                     horizontal = 'bottom';
                                     break;
                             }
-                        }
-                        catch(er){
+                        } catch (er) {
                             console.log(er);
                         }
 
                         function onPageDone(annotations_of_page, pange_number) {
-                            try{
+                            try {
                                 pages_rendered++;
                                 if (pange_number == 1) {
                                     site_functions.hideLoader(doc_loading_step);
@@ -928,64 +957,65 @@
                                         $('body').addClass('pdf-viewer');
                                     }
                                     scroll_div.show();
-                                    console.log(window['dt_functions'].now_full(), 'first page done');
+                                    console.log(window['dt_functions'].now_full(), 'first page rendered');
                                 }
                                 if (annotation_mode == 1) {
                                     addCommentCount(annotations_of_page, pange_number);
                                 }
                                 // console.log(pange_number, NUM_PAGES);
-                                if(pange_number == NUM_PAGES)
-                                {
+                                if (pange_number == NUM_PAGES) {
                                     on_document_rendered();
                                     // console.log(window['dt_functions'].now_full(), 'document done');
                                 }
-                            }
-                            
-                            catch(er){
+                            } catch (er) {
                                 console.log(er);
                             }
                         }
 
-                        function on_document_rendered(){
-                            try{
-                                $('.ToolBarWrapper>div').css({display: 'flex'});
-                                document_version = getDocumentVersion(documentId);                                
-                                if(!(doc_data && doc_data.first_time))
-                                {
+                        function on_document_rendered() {
+                            try {
+                                $('.ToolBarWrapper>div').css({
+                                    display: 'flex'
+                                });
+                                // var rotateBy = RENDER_OPTIONS.rotate;
+                                // var rotate_degree = rotateBy % 360;
+                                showHideAnnotations();
+                                if (!(doc_data && doc_data.first_time)) {
                                     return;
                                 }
-                                if(!annotation_mode)
-                                {
+                                if (!annotation_mode) {
                                     return;
                                 }
-                                var socket_manager = window['socket_manager'];                                
+                                
+                                window['route_changing'] = false;
+                                process_notification_url(window.location.toString());
 
-                                socket_manager.execute_on_verified(function(){
+                                var socket_manager = window['socket_manager'];
+                                socket_manager.execute_on_verified(function() {
                                     var n_list = socket_manager.notificationList;
-                                    $('.canvasWrapper .new_comments_count').each(function(i, el){
+                                    $('.canvasWrapper .new_comments_count').each(function(i, el) {
                                         var address = {
                                             res_app: 'documents',
                                             res_model: 'PointAnnotation',
                                             res_id: parseInt($(el).attr('db_id')),
                                         }
-                                        for(var j in n_list){
+                                        for (var j in n_list) {
 
-                                            if(n_list[j].address.res_app == address.res_app &&
+                                            if (n_list[j].address.res_app == address.res_app &&
                                                 n_list[j].address.res_model == address.res_model &&
-                                                n_list[j].address.res_id == address.res_id){
+                                                n_list[j].address.res_id == address.res_id) {
                                                 // console.log(i, j, n_list[j].count, 134);
-                                                $(el).attr('counter',$(el).attr('counter') + n_list[j].count);
+                                                $(el).attr('counter', $(el).attr('counter') + n_list[j].count);
                                             }
                                         }
                                     });
                                 })
-                            }
-                            catch(er){
+                            } catch (er) {
                                 console.log(er);
                             }
                         }
-                        try{
-                            // console.log('Render pages');
+                        try {
+                            setAnnotationMode();
                             UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
                                 onPageDone(cb_data, page_num, 1);
                                 for (var i = 2; i <= NUM_PAGES; i++) {
@@ -994,8 +1024,7 @@
                                     });
                                 }
                             });
-                        }
-                        catch(er){
+                        } catch (er) {
                             console.log(er);
                         }
                     }
@@ -1171,6 +1200,7 @@
 
                     switch (type) {
                         case 'cursor':
+                                $('#viewer').css('cursor', 'auto');
                             UI.enableEdit();
                             break;
                         case 'draw':
@@ -1187,18 +1217,20 @@
                         case 'highlight':
                         case 'strikeout':
                         case 'underline':
+                            console.log(tooltype, 444);
                             UI.enableRect(type);
                             break;
                     }
                     clicked_annotation_button.addClass('active');
                 }
 
-                function handleToolbarClick(e) {                    
-                    var active_btn = $('.topbar:first .active');                    
+                function handleToolbarClick(e) {
+                    var active_btn = $('.topbar:first .active');
                     var target = $(e.target);
                     target = target.closest('button');
                     if (target.hasClass('pen') && active_btn.hasClass('pen')) {
-                        select_cursor();
+                        select_cursor(target);
+                        return;
                     } else {
                         var tooltype = $(e.target).closest('[data-tooltype]').data('tooltype');
                         if (tooltype)
@@ -1212,13 +1244,13 @@
                         }
                     }
                 }
-                
-                $('body').on('click', '.toolbar.topbar:first button, .annotation-options:first button', handleToolbarClick);                
+
+                $('body').on('click', '.toolbar.topbar:first button, .annotation-options:first button', handleToolbarClick);
             })();
 
 
             // Comment stuff
-            (function(window, document) {                
+            (function(window, document) {
                 var on_annotation_comment_received = function(data) {
                     var annot_doc = $('#annotated-doc-conatiner');
                     if (annot_doc.length < 1) {
@@ -1234,11 +1266,9 @@
                     var annot_id = comment_list.attr('annotation-id');
                     if (data['new_point']) {
                         data.point.counter = 1;
-                        var current_annotations = getLocalAnnotations();
-                        current_annotations.push(data.point);
-                        current_annotations = JSON.stringify(current_annotations);
+                        var current_annotations = _getAnnotations(documentId);
+                        current_annotations.push(data.point);                        
                         setCookieStrict(documentId, documentId + '/annotations', current_annotations);
-
                         UI.renderPage(data.point.page, RENDER_OPTIONS, function(cb_data, page_num) {
                             pdfStoreAdapter.addComment(documentId, data.point.uuid, data.point.comment, 1).then(function(aComment) {
                                 insertComment(aComment, 1);
@@ -1289,46 +1319,44 @@
                     postComment();
                 });
 
-                function postComment()
-                {
-                    if (!window['should_save'])
-                        {
-                            window['should_save'] = true;
-                            return;
+                function postComment() {
+                    if (!window['should_save']) {
+                        window['should_save'] = true;
+                        return;
+                    }
+                    mention_list = []
+                    $('.active-mention a.mention').each(function(i, el) {
+                        var mentioned_id = $(el).attr('mentioned_id');
+                        if (mention_list.indexOf(mentioned_id) == -1) {
+                            mention_list.push(parseInt(mentioned_id));
                         }
-                        mention_list = []
-                        $('.active-mention a.mention').each(function(i, el){
-                            var mentioned_id = $(el).attr('mentioned_id');
-                            if(mention_list.indexOf(mentioned_id) == -1)
-                            {
-                                mention_list.push(parseInt(mentioned_id));
-                            }
-                        });
-                        
-                        var commentValue = commentText.html(); // commentText.val().trim();
-                        commentValue = commentValue.substr(0, commentValue.length - 1);
-                        if (commentValue == '') {
-                            commentText.html('');
-                            return;
-                        }
-                        //console.log(commentValue);
-                        var comment = {
-                            date_time: new Date(),
-                            user_name: annotation_user_m2.name,
-                            uid: annotation_user_m2.id,
-                            user_image: annotation_user_m2.photo,
-                            content: commentValue
-                        };
-                        //console.log(commentText.content)
-                        if (!comment.content)
-                            return false;
-                        pdfStoreAdapter.addComment(documentId, activePointId, comment).then(function(comment) {
-                            insertComment(comment, 1);
-                        });
+                    });
+
+                    var commentValue = commentText.html(); // commentText.val().trim();
+                    commentValue = commentValue.substr(0, commentValue.length - 1);
+                    if (commentValue == '') {
+                        commentText.html('');
+                        return;
+                    }
+                    //console.log(commentValue);
+                    var comment = {
+                        date_time: new Date(),
+                        user_name: annotation_user_m2.name,
+                        uid: annotation_user_m2.id,
+                        user_image: annotation_user_m2.photo,
+                        content: commentValue
+                    };
+                    //console.log(commentText.content)
+                    if (!comment.content)
+                        return false;
+                    pdfStoreAdapter.addComment(documentId, activePointId, comment).then(function(comment) {
+                        insertComment(comment, 1);
+                    });
                 }
 
                 loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
+                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     comment_list.removeAttr('annotation-id');
                     $('.comment-list-container').addClass('full-discussion');
                     var point_type = false;
@@ -1336,18 +1364,22 @@
                         point_type = 'personal';
 
                     pdfStoreAdapter.getPointAnnotations(documentId, point_type).then(function(pointAnnotations) {
-                        pointAnnotations = pointAnnotations.annotations;                        
+                        pointAnnotations = pointAnnotations.annotations;
                         pointAnnotations.sort(function(a, b) {
                             return a["page"] - b["page"] || a["y"] - b["y"] || a["x"] - b["x"];
                         });
-                        for (var annotationItem of pointAnnotations) {                            
+                        for (var annotationItem of pointAnnotations) {
                             var comments = annotationItem.comments;
                             // if(annotationItem.sub_type)
                             // console.log(comments, 5333);
-                            renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);                            
+                            renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);
                         }
                         onAllCommentsRendered(point_uuid)
                     });
+                    if(comments_wrapper.hasClass('comments'))
+                    {
+                        comments_wrapper.addClass('all_point_comments');
+                    }
                 }
 
                 function onAllCommentsRendered(point_uuid) {
@@ -1362,7 +1394,7 @@
                     }, 11);
                 }
 
-                function renderCommentsByAnnotation(comments, annotationId, sub_type) {                    
+                function renderCommentsByAnnotation(comments, annotationId, sub_type) {
                     var group = document.createElement('div');
                     group.classList.add("groupcomment");
                     for (var i in comments) {
@@ -1382,7 +1414,6 @@
                 var selected_comment_item = false;
                 $('body').on('click', '#comment-wrapper .buttons', function(e) {
                     e.preventDefault();
-                    contextMenuShown = true;
                     selected_comment_item = $(this).closest('.comment-list-item');
                     $('.update-comment:first').css({
                         'top': e.pageY,
@@ -1412,7 +1443,6 @@
                             comment_parent.remove();
                         } else
                             selected_comment_item.remove();
-                        contextMenuShown = false;
                         $('.update-comment').hide();
                     });
                 });
@@ -1422,6 +1452,7 @@
                 });
 
                 select_comment_item = function(point_identifier) {
+                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     if (!comments_loaded) {
                         loadALlCommentsOnDocument(point_identifier);
                         return;
@@ -1435,30 +1466,19 @@
                         console.log("Invalid point id");
                         return;
                     }
+                    var dom_item_to_focus = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
+                    if(!dom_item_to_focus.length)
+                    {
+                        return;
+                    }                    
                     var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="' + annotationId + '"]')
                     if (c_svg.length > 0) {
-                        var target1 = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
-                        setTimeout(function() {                            
-                            scroll_div.scrollTop(0);
-                            var parent = target1.closest('.canvasWrapper');
-                            var parent_height = parent.height();
-                            var p_number = parent.closest('.page').index() + 1;                            
-                            var page_top = parent_height * p_number;
-
-                            var c_target = target1[0];
-                            //console.log(c_target);
-                            var my_top = parseFloat(c_target.style.top) - 100;
-                            var my_left = parseFloat(c_target.style.left) - 100;
-                            var scroll_to = page_top + my_top;
-
-                            scroll_div.scrollLeft(my_left);
-                            scroll_div.animate({
-                                scrollTop: scroll_to
-                            }, 500);
-                            handleAnnotationClick(c_svg[0]);
-                        }, 15);
-                    } else {
-                        console.log(target, "Not found");
+                        window['js_utils'].scroll_to_element(dom_item_to_focus, scroll_div);
+                        handleAnnotationClick(c_svg[0]);                        
+                        if(comments_wrapper.hasClass('comments'))
+                        {
+                            comments_wrapper.addClass('single_point_comments');
+                        }
                     }
                 }
 
@@ -1470,41 +1490,36 @@
                 });
 
                 function makeCommentItem(aComment) {
-                    if(!aComment.date_time)
-                    {
-                        console.log('No time for comment '+aComment.id+' - '+aComment.uuid);
+                    if (!aComment.date_time) {
+                        console.log('No time for comment ' + aComment.id + ' - ' + aComment.uuid);
                     }
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     var user_name = aComment.user_name;
                     var user_image = '';
-                    if(aComment.user)
-                    {
+                    if (aComment.user) {
                         username = aComment.user.name;
-                        user_image =  aComment.user.image;
-                        if(user_image)
-                        {
-                            user_image = window['site_config'].server_base_url + aComment.user.image;                            
+                        user_image = aComment.user.image;
+                        if (user_image) {
+                            user_image = window['site_config'].server_base_url + aComment.user.image;
                         }
                     }
 
                     var child_info = '';
                     child_info += '<div class="user-pic-time-infoWrapper">';
-                    if(user_image)
-                    {
+                    if (user_image) {
                         child_info += '<div class="userSmpic icon-user-single">';
-                        child_info += '<img src="'+user_image+'" />';
+                        child_info += '<img src="' + user_image + '" />';
                         child_info += '</div>';
                     }
-					
+
                     child_info += '<div class="user-time-info pt-2">';
-                    if(user_name){
+                    if (user_name) {
                         child_info += '<span class="user text-primary">';
                         child_info += user_name + '</span>';
                     }
 
-                    if(aComment.date_time)
-                    {
+                    if (aComment.date_time) {
                         child_info += '<span class="time small">';
                         child_info += window['dt_functions'].timeAgo(aComment.date_time)
                         child_info += '</span>';
@@ -1514,28 +1529,25 @@
                     child_info += '<div class="comment-details pt-1 pl-1">';
                     child_info += '<p>' + aComment.content + '</p>';
                     child_info += '</div>';
-                    
+
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
                     child.innerHTML = child_info;
                     return child;
                 }
 
-                function insertComment(aComment, textBox) {                    
-                    var child = makeCommentItem(aComment);                    
+                function insertComment(aComment, textBox) {
+                    var child = makeCommentItem(aComment);
                     comment_list.append(child);
                     if (textBox)
                         onCOmmentAdded();
                 }
-                activate_annotation = function(target){
+                activate_annotation = function(target) {
                     pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item) {
                         activeAnnotationItem = item;
-                        if(supportsComments(target))
-                        {
+                        if (supportsComments(target)) {
                             handlePointAnnotationClick(item);
-                        }
-                        else
-                        {
+                        } else {
                             var ctxMenu = $('.colors.ContextMenuPopup:first');
                             var pos = $(target).position();
                             var tw = $('#pdf-annotate-edit-overlay:visible').width();
@@ -1557,7 +1569,6 @@
                                 'left': left_pos,
                                 'top': pos.top + 30
                             }).show();
-                            contextMenuShown = true;
                         }
                     });
                 }
@@ -1588,10 +1599,14 @@
                     onCOmmentAdded();
                 }
 
-                handleAnnotationBlur = function () {
-                    annotationBiengEdited = false;
+                handleAnnotationBlur = function() {                    
                     activeAnnotationItem = false;
                 }
+
+
+                $('body').on('click', '#btn_show_all_point_comments', function() {
+                    $('.toolbar:first .comment:not(.personal):first').click();
+                })
 
                 $('body').on('click', '.toolbar:first .comment', function() {
                     UI.destroyEditOverlay();
@@ -1602,6 +1617,7 @@
                     }
                     loadALlCommentsOnDocument();
                 });
+
                 UI.addEventListener('annotation:click', handleAnnotationClick);
                 UI.addEventListener('annotation:blur', handleAnnotationBlur);
             })(window, document);
@@ -2100,6 +2116,7 @@
                             clickNode = target;
                         }
                     });
+
                     function fireEvent() {
                         emitter.emit.apply(emitter, arguments);
                     };
@@ -2121,10 +2138,14 @@
                     module.exports = EventEmitter; // Backwards-compat with node 0.10.x
                     EventEmitter.EventEmitter = EventEmitter;
                     EventEmitter.prototype._events = undefined;
-                    EventEmitter.prototype._maxListeners = undefined; // By default EventEmitters will print a warning if more than 10 listeners are
-                    // added to it. This is a useful default which helps finding memory leaks.
+                    EventEmitter.prototype._maxListeners = undefined;
+                    /*
+                    By default EventEmitters will print a warning if more than 10 listeners are
+                    added to it. This is a useful default which helps finding memory leaks.
                     EventEmitter.defaultMaxListeners = 10; // Obviously not all Emitters should be limited to 10. This function allows
-                    // that to be increased. Set to zero for unlimited.
+                    that to be increased. Set to zero for unlimited.
+                    */
+
                     EventEmitter.prototype.setMaxListeners = function(n) {
                         if (!isNumber(n) || n < 0 || isNaN(n)) throw TypeError('n must be a positive number');
                         this._maxListeners = n;
@@ -2731,7 +2752,7 @@
                                 getAnnotations: function getAnnotations(documentId, pageNumber) {
                                     return new Promise(function(resolve, reject) {
                                         var annotations = _getAnnotations(documentId).filter(function(i) {
-                                            return i.page === pageNumber && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || (i.type == 'point' && !i.sub_type));
+                                            return i.page === pageNumber && (i.uid == annotation_user_m2.id || (i.type == 'point' && !i.sub_type));
                                         });
                                         // if(pageNumber == 1)
                                         // console.log(annotations);
@@ -2745,7 +2766,7 @@
                                 getCommentAnnotations: function(documentId, sub_type) {
                                     return new Promise(function(resolve, reject) {
                                         var annotations = _getAnnotations(documentId).filter(function(i) {
-                                            return i.type == 'point' && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || !i.sub_type);
+                                            return i.type == 'point' && (i.uid == annotation_user_m2.id || !i.sub_type);
                                         });
                                         resolve({
                                             documentId: documentId,
@@ -2755,12 +2776,12 @@
                                 },
                                 getPointAnnotations: function(documentId, sub_type) {
                                     return new Promise(function(resolve, reject) {
-                                        var annotations = _getAnnotations(documentId);                                        
+                                        var annotations = _getAnnotations(documentId);
                                         annotations = annotations.filter(function(i) {
                                             if (sub_type)
-                                                return i.type == 'point' && i.class === 'Annotation' && i.uid == annotation_user_m2.id && i.sub_type;
+                                                return i.type == 'point' && i.uid == annotation_user_m2.id && i.sub_type;
                                             else
-                                                return i.type == 'point' && i.class === 'Annotation' && !i.sub_type;
+                                                return i.type == 'point' && !i.sub_type;
                                         });
                                         resolve({
                                             documentId: documentId,
@@ -2800,11 +2821,6 @@
                                         annotation.uid = annotation_user_m2.id;
                                         var annotations = _getAnnotations(documentId);
                                         annotations.push(annotation);
-                                        if (annotation.type == "drawing") {
-                                            annotation.to_merge = 1;
-                                            hand_drawings.push(annotation);
-                                        }
-
                                         var is_comment = annotation.type == 'pooint' && !annotation.sub_type;
                                         updateAnnotations(documentId, annotations, is_comment);
                                         resolve(annotation);
@@ -2815,7 +2831,11 @@
                                         var annotations = _getAnnotations(documentId);
                                         var annotationIndex = findAnnotation(documentId, annotationId);
                                         annotations[annotationIndex] = annotation;
-                                        updateAnnotations(documentId, annotations);
+                                        var is_comment = undefined
+                                        if (annotation.type == 'point' && !annotation.sub_type) {
+                                            is_comment = 'comment_point_moved';
+                                        }
+                                        updateAnnotations(documentId, annotations, is_comment);
                                         updateAnnotationColor(annotationId, annotation.type, annotation.color);
                                         resolve(annotation);
                                     });
@@ -2844,100 +2864,102 @@
                                             comments_array = [];
                                         }
                                         if (!Array.isArray(comments_array))
-                                            comments_array = [];                                        
+                                            comments_array = [];
                                         resolve(comments_array);
                                     });
                                 },
-                                getAllComments: function getComments(documentId) {                                    
+                                getAllComments: function getComments(documentId) {
                                     return new Promise(function(resolve, reject) {
                                         var points = _getAnnotations(documentId).filter(function(i) {
                                             return i.type === 'point';
                                         }).sort(function(a, b) {
                                             return a["page"] - b["page"] || a["y"] - b["y"] || a["x"] - b["x"];
-                                        });                                        
+                                        });
                                         resolve(points || []);
                                     });
                                 },
                                 addComment: function addComment(documentId, annotationId, values, received_comment) {
                                     return new Promise(function(resolve, reject) {
-                                        if (annotationId) {
-                                            var comment = {
-                                                class: 'Comment',
-                                                uuid: (0, _uuid2.default)(),
-                                                point_id: annotationId,
-                                                content: values.content,
-                                                uid: values.uid,
-                                                user_name: values.user_name,
-                                                user: {image: values.user_image},
-                                                date_time: values.date_time,
-                                            };
-                                            var doc_info = documentId.split('-');
-                                            var input_data = {
-                                                doc_type: doc_info[0],
-                                                document_id: doc_info[1],
-                                                comment_doc_name : comment_doc_id,
-                                            };
-                                            // console.log(input_data);
-
-                                            var annotations = _getAnnotations(documentId);
-                                            var point = {};
-
-                                            var index = -1;
-                                            for (var i in annotations) {
-                                                if (annotations[i].uuid == annotationId) {
-                                                    index = i;
-                                                    var annotation = annotations[i];
-                                                    for (var key in annotation) {
-                                                        if (key != 'comments') {
-                                                            point[key] = annotation[key];
-                                                        }
-                                                    }
-                                                    break;
-                                                }
-                                            }
-                                            if (index > -1) {
-                                                if (!annotations[index].comments) {
-                                                    annotations[index].comments = [comment];
-                                                } else {
-                                                    annotations[index].comments.push(comment);
-                                                }
-                                                // console.log(comment);
-                                                point.comment = comment;
-                                                point.doc_id = documentId;
-                                                point.document_id = doc_info[1];
-                                                point.comment_doc_id = comment_doc_id;
-                                                input_data['point'] = point;
-                                                input_data['mentioned_list'] = mention_list;
-                                                var is_comment = point.sub_type != 'personal';
-                                                if (is_comment && !received_comment) {
-                                                    var args = {
-                                                        app: 'documents',
-                                                        model: 'CommentAnnotation',
-                                                        method: 'save_comment',
-                                                    }
-                                                    var options = {
-                                                        args: args,
-                                                        params: input_data
-                                                    }
-                                                    dn_rpc_object({
-                                                        data:options,
-                                                        no_loader:1,
-                                                        onSuccess: function (annotaions_data) {
-                                                            mention_list = [];
-                                                            console.log('comment saved')
-                                                        }
-                                                    });
-                                                    setTimeout(function(){
-                                                        $('.comment-list-container:first').scrollTop(9999);
-                                                    }, 10);                                                    
-                                                }
-                                                updateAnnotations(documentId, annotations, is_comment);
-                                            } else {
-                                                console.log("Annotation not found " + annotationId);
-                                            }
-                                        } else {
+                                        if (!annotationId) {
                                             console.log("Comment not added because, no active annotationId");
+                                            return;
                                         }
+                                        var comment = {
+                                            class: 'Comment',
+                                            uuid: (0, _uuid2.default)(),
+                                            point_id: annotationId,
+                                            content: values.content,
+                                            uid: values.uid,
+                                            user_name: values.user_name,
+                                            user: {
+                                                image: values.user_image
+                                            },
+                                            date_time: values.date_time,
+                                        };
+                                        var doc_info = documentId.split('-');
+                                        var input_data = {
+                                            doc_type: doc_info[0],
+                                            document_id: doc_info[1],
+                                            comment_doc_name: comment_doc_id,
+                                        };
+                                        // console.log(input_data);
+
+                                        var annotations = _getAnnotations(documentId);
+                                        var point = {};
+
+                                        var index = -1;
+                                        for (var i in annotations) {
+                                            if (annotations[i].uuid == annotationId) {
+                                                index = i;
+                                                var annotation = annotations[i];
+                                                for (var key in annotation) {
+                                                    if (key != 'comments') {
+                                                        point[key] = annotation[key];
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        if (index == -1) {
+                                            console.log("Annotation not found " + annotationId);
+                                            return;
+                                        }
+                                        if (!annotations[index].comments) {
+                                            annotations[index].comments = [comment];
+                                        } else {
+                                            annotations[index].comments.push(comment);
+                                        }
+                                        // console.log(comment);
+                                        point.comment = comment;
+                                        point.doc_id = documentId;
+                                        point.document_id = doc_info[1];
+                                        point.comment_doc_id = comment_doc_id;
+                                        input_data['point'] = point;
+                                        input_data['mentioned_list'] = mention_list;
+                                        var is_comment = point.sub_type != 'personal';
+                                        if (is_comment && !received_comment) {
+                                            var args = {
+                                                app: 'documents',
+                                                model: 'CommentAnnotation',
+                                                method: 'save_comment',
+                                            }
+                                            var options = {
+                                                args: args,
+                                                params: input_data
+                                            }
+                                            dn_rpc_object({
+                                                data: options,
+                                                no_loader: 1,
+                                                onSuccess: function(annotaions_data) {
+                                                    mention_list = [];
+                                                    console.log('comment saved')
+                                                }
+                                            });
+                                            setTimeout(function() {
+                                                $('.comment-list-container:first').scrollTop(9999);
+                                            }, 10);
+                                        }
+                                        updateAnnotations(documentId, annotations, is_comment);
                                         resolve(comment);
                                     });
                                 },
@@ -2978,43 +3000,22 @@
                     }(_StoreAdapter3.default);
                     exports.default = LocalStoreAdapter;
 
-                    function _getAnnotations(documentId) {
-                        var res = getCookieStrict(documentId, documentId + '/annotations');
-                        if (!res)
-                            res = [];
-                        else
-                            res = JSON.parse(res);
-                        
-                            // console.log(documentId, documentId + '/annotations', res);
-                        
-                            return res;
-                    }                    
-
                     function updateAnnotations(documentId, annotations, is_comment) {
-                        var annotation_cookie = "";
-                        if (Array.isArray(annotations))
-                            annotation_cookie = JSON.stringify(annotations);
-                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
+                        if (is_comment == 'comment_point_moved') {
+                            return;
+                        }
+                        setCookieStrict(documentId, documentId + '/annotations', annotations);
                         if (is_comment) {
                             return;
                         }
                         setDocDirty(documentId);
-                        // console.log(Date(), 1333);
-                        clearTimeout(annot_save_timeout);
-                        annot_save_timeout = setTimeout(function() {
-                            console.log(Date(), 555);
-                            saveAnnotationsAtServer();                            
-                        }, annotation_save_wait);
-                    }
-
-                    function findAnnotationObject(documentId, annotationId) {
-                        var index = -1;
-                        var annotations = _getAnnotations(documentId);
-                        for (var i = 0, l = annotations.length; i < l; i++) {
-                            if (annotations[i].uuid === annotationId) {
-                                return annotations[i];
-                            }
+                        if(annot_save_timeout)
+                        {
+                            clearTimeout(annot_save_timeout);
                         }
+                        annot_save_timeout = setTimeout(function() {                            
+                            saveAnnotationsAtServer();
+                        }, annotation_save_wait_time);
                     }
 
                     function findAnnotation(documentId, annotationId) {
@@ -3110,8 +3111,6 @@
                         value: true
                     });
                     exports.default = appendChild;
-                    var _objectAssign = __webpack_require__(12);
-                    var _objectAssign2 = _interopRequireDefault(_objectAssign);
                     var _renderLine = __webpack_require__(13);
                     var _renderLine2 = _interopRequireDefault(_renderLine);
                     var _renderPath = __webpack_require__(16);
@@ -3429,9 +3428,20 @@
                         for (var i = 0, l = a.lines.length; i < l; i++) {
                             var p1 = a.lines[i];
                             var p2 = a.lines[i + 1];
-                            if (p1 && p1.length != 3 && p2 && p2.length != 3) {
-                                d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
+                            if(p1 && p2 && p1.length > 1 && p2.length > 1)
+                            {
+                                var diff1 = Math.abs(p1[0] - p2[0]);
+                                var diff2 = Math.abs(p1[1] - p2[1]);
+                                // console.log(diff1, diff2)
+                                if(diff1 < 40 &&  diff2 < 40)
+                                {
+                                    d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
+                                }
                             }
+
+                            // if (p1 && p1.length != 3 && p2 && p2.length != 3) {
+                            //     d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
+                            // }
                         }
 
                         (0, _setAttributes2.default)(path, {
@@ -3469,66 +3479,41 @@
                     function renderPoint(a) {
                         //console.log(a);
                         var outerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                        var innerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-
-                        (0, _setAttributes2.default)(innerSVG, {
-                            width: SIZE,
-                            height: SIZE,
-                            x: 0,
-                            y: SIZE * 0.05 * -1,
-                            viewBox: '0 0 1000 1000'
-                        });
-                        (0, _setAttributes2.default)(rect, {
-                            width: SIZE,
-                            height: SIZE,
-                            stroke: '#fff',
-                            fill: '#ff5'
-                        });
-                        (0, _setAttributes2.default)(path, {
-                            d: D,
-                            strokeWidth: 50,
-                            stroke: '#000',
-                            fill: '#fff'
-                        });
-                        if (a.sub_type) {
-                            (0, _setAttributes2.default)(outerSVG, {
-                                width: 28,
-                                height: 25,
-                                x: a.x,
-                                y: a.y
-                            });
+                        var outer_width = 25;
+                        if (a.sub_type)
+                        {
+                            outer_width= 18;
                         }
-                        if (!a.sub_type) {
-                            (0, _setAttributes2.default)(outerSVG, {
-                                width: SIZE,
-                                height: SIZE,
-                                x: a.x,
-                                y: a.y
-                            });
-                            innerSVG.appendChild(path);
-                            outerSVG.appendChild(rect);
-                            outerSVG.appendChild(innerSVG);
-                        } else {
-                            var svg_str = '';
-                            svg_str += '<rect width="25" height="22" x="1.962286" y="1"';
-                            svg_str += ' style="fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-opacity:1" />';
-                            
-                            svg_str += ' <rect width="18.4" height="1.5012145" x="5.8" y="5"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-                            
-                            svg_str += ' <rect width="18" height="0.86" x="6" y="10"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-                            
-                            svg_str += ' <rect width="18.4" height="0.86" x="5.8" y="14"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-                            
-                            svg_str += ' <rect width="18" height="0.86" x="6" y="18"';
-                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
-                            
-                            outerSVG.innerHTML = svg_str;
+                        (0, _setAttributes2.default)(outerSVG, {
+                            width: outer_width,
+                            height: 25,
+                            x: a.x,
+                            y: a.y
+                        });
+                        if(!a.sub_type)
+                        {
+                            let inner_svg = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23.629" height="22.054" viewBox="0 0 23.629 22.054">
+                            <g id="chat_new" transform="translate(-887.913 -240)">
+                                <path id="Path_8941" data-name="Path 8941" d="M13.575,20a1.575,1.575,0,1,0,1.575,1.575A1.577,1.577,0,0,0,13.575,20Zm0,2.363a.788.788,0,1,1,.788-.788A.788.788,0,0,1,13.575,22.363Z" transform="translate(880.639 227.089)" fill="#4b74b5"/>
+                                <path id="Path_8940" data-name="Path 8940" d="M27.575,20a1.575,1.575,0,1,0,1.575,1.575A1.577,1.577,0,0,0,27.575,20Zm0,2.363a.788.788,0,1,1,.788-.788A.788.788,0,0,1,27.575,22.363Z" transform="translate(872.152 227.089)" fill="#4b74b5"/>
+                                <path id="Path_8939" data-name="Path 8939" d="M41.575,20a1.575,1.575,0,1,0,1.575,1.575A1.577,1.577,0,0,0,41.575,20Zm0,2.363a.788.788,0,1,1,.788-.788A.788.788,0,0,1,41.575,22.363Z" transform="translate(863.666 227.089)" fill="#4b74b5"/>
+                                <path id="Path_8942" data-name="Path 8942" d="M21.266,2H2.363A2.4,2.4,0,0,0,0,4.363v13a2.4,2.4,0,0,0,2.363,2.363H5.513V23.66a.394.394,0,0,0,.252.367.386.386,0,0,0,.142.026.393.393,0,0,0,.291-.129l3.821-4.2H21.266a2.4,2.4,0,0,0,2.363-2.363v-13A2.4,2.4,0,0,0,21.266,2Zm1.575,15.359a1.6,1.6,0,0,1-1.575,1.575H10.7L12.113,17.3a.394.394,0,0,0-.6-.514L9.554,19.063h0L6.3,22.641V19.328a.393.393,0,0,0-.394-.394H2.363A1.6,1.6,0,0,1,.788,17.359v-13A1.6,1.6,0,0,1,2.363,2.788h18.9a1.6,1.6,0,0,1,1.575,1.575Z" transform="translate(887.913 238)" fill="#4b74b5"/>
+                            </g>
+                            </svg>
+                            `;
+                            outerSVG.innerHTML = inner_svg;
                         }
+                        else
+                        {
+                            let inner_svg = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18.001" height="22" viewBox="0 0 18.001 22">
+                                <path id="note_blue" d="M6555-1566h-12a3,3,0,0,1-3-3v-16a3,3,0,0,1,3-3h12a3,3,0,0,1,3,3v16A3,3,0,0,1,6555-1566Zm-4.952-6a.69.69,0,0,0-.688.69.69.69,0,0,0,.688.69h4.185a.69.69,0,0,0,.688-.69.69.69,0,0,0-.688-.69Zm-6.36,0a.69.69,0,0,0-.689.69.69.69,0,0,0,.689.69h4.113a.69.69,0,0,0,.689-.69.69.69,0,0,0-.689-.69Zm6.36-3a.689.689,0,0,0-.688.688.69.69,0,0,0,.688.69h4.185a.69.69,0,0,0,.688-.69.689.689,0,0,0-.688-.688Zm-6.36,0a.689.689,0,0,0-.689.688.69.69,0,0,0,.689.69h4.113a.69.69,0,0,0,.689-.69.689.689,0,0,0-.689-.688Zm6.36-3a.69.69,0,0,0-.688.69.689.689,0,0,0,.688.688h4.185a.689.689,0,0,0,.688-.688.69.69,0,0,0-.688-.69Zm-6.36,0a.69.69,0,0,0-.689.69.689.689,0,0,0,.689.688h4.113a.689.689,0,0,0,.689-.688.69.69,0,0,0-.689-.69Zm6.36-3a.69.69,0,0,0-.688.69.689.689,0,0,0,.688.688h4.185a.689.689,0,0,0,.689-.688.69.69,0,0,0-.689-.69Zm-6.36,0a.69.69,0,0,0-.689.69.689.689,0,0,0,.689.688h4.113a.689.689,0,0,0,.689-.688.69.69,0,0,0-.689-.69Zm6.36-3a.689.689,0,0,0-.688.688.69.69,0,0,0,.688.69h4.185a.69.69,0,0,0,.688-.69.689.689,0,0,0-.688-.688Zm-6.36,0a.689.689,0,0,0-.689.688.69.69,0,0,0,.689.69h4.113a.69.69,0,0,0,.689-.69.689.689,0,0,0-.689-.688Z" transform="translate(-6540 1588)" fill="#4b74b5"/>
+                            </svg>
+                            `;
+                            outerSVG.innerHTML = inner_svg;
+                        }
+                        
                         return outerSVG;
                     }
                     module.exports = exports['default']; /***/
@@ -3939,6 +3924,7 @@
                      */
                     function textLayerElementFromPoint(x, y, pageNumber) {
                         var svg = document.querySelector('svg[data-pdf-annotate-page="' + pageNumber + '"]');
+                        // console.log(pageNumber, 443, 2);
                         var rect = svg.getBoundingClientRect();
                         y = (0, _utils.scaleUp)(svg, {
                             y: y
@@ -4343,7 +4329,7 @@
                         var nodes = document.querySelectorAll('[data-pdf-annotate-id="' + annotationId + '"]');
                         var svg = overlay.parentNode.querySelector('svg.annotationLayer');
                         var _getMetadata = (0, _utils.getMetadata)(svg);
-                        var documentId = _getMetadata.documentId;
+                        documentId = _getMetadata.documentId;
                         var annotation_cookie = localStorage.getItem(documentId + '/annotations');
                         if (annotation_cookie) {
                             var annotations = JSON.parse(annotation_cookie);
@@ -4469,7 +4455,7 @@
                         var type = target[0].getAttribute('data-pdf-annotate-type');
                         var svg = overlay.parentNode.querySelector('svg.annotationLayer');
                         var _getMetadata2 = (0, _utils.getMetadata)(svg);
-                        var documentId = _getMetadata2.documentId;
+                        documentId = _getMetadata2.documentId;
                         var delbtn = overlay.querySelector('a');
                         if (delbtn && delbtn.style)
                             delbtn.style.display = '';
@@ -4569,13 +4555,13 @@
                      *
                      * @param {Element} e The annotation element that was clicked
                      */
-                    handleAnnotationClick =function(target) {
+                    handleAnnotationClick = function(target) {
                         // console.log(561);
-                        setTimeout(function(){
+                        setTimeout(function() {
                             activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
                             createEditOverlay(target);
                             activate_annotation(target);
-                        }, 15);                        
+                        }, 15);
                     }
                     /**
                      * Enable edit mode behavior.
@@ -4631,12 +4617,37 @@
                     /**
                      * Handle document.mousedown event
                      */
+                    var old_svg = undefined;
                     function mouse_down30(e) {
                         //console.log(e, 777);
                         if (is_mobile_device)
+                        {
                             $('body').css('overflow', 'hidden');
+                        }
+                        if(!$('.topbar .pen').hasClass('active'))
+                        {
+                            return;
+                        }
+                        var svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY);
+                        var local_annots = _getAnnotations(documentId);
+                        if(local_annots.length > 0)
+                        {
+                            var last_item = local_annots[local_annots.length - 1];
+                            if(old_svg && old_svg != svg)
+                            {
+                                last_item.to_merge = 0;
+                            }
+                            else{
+                                if(last_item.type == 'drawing')
+                                {
+                                    last_item.to_merge = 1;
+                                }
+                            }
+                        }
+                        local_annots[local_annots.length - 1] = last_item;
+                        old_svg = svg;
                         path = null;
-                        lines = [];
+                        lines = [];                        
 
                         document.addEventListener('mousemove', mouse_move30);
                         document.addEventListener('mouseup', mouse_up30);
@@ -4655,11 +4666,13 @@
                     function mouse_up30(e) {
                         //console.log(777);
                         if (e.changedTouches)
+                        {
                             e = e.changedTouches[0];
+                        }
                         var svg = void 0;
                         if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                             var _getMetadata = (0, _utils.getMetadata)(svg);
-                            var documentId = _getMetadata.documentId;
+                            documentId = _getMetadata.documentId;
                             var pageNumber = _getMetadata.pageNumber;
                             lines[lines.length - 1].push(-1);
                             _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
@@ -4672,6 +4685,24 @@
                                     svg.removeChild(path);
                                 }
                                 (0, _appendChild2.default)(svg, annotation);
+                                var local_annots = _getAnnotations(documentId);
+                                var merged = 0;
+                                if(local_annots.length > 1)
+                                {
+                                    var second_last = local_annots[local_annots.length - 2];
+                                    if(second_last.to_merge)
+                                    {
+                                        second_last.lines = second_last.lines.concat(annotation.lines);
+                                        local_annots[local_annots.length - 2] = second_last;
+                                        local_annots.splice(local_annots.length - 1);
+                                        merged = 1;
+                                    }
+                                }
+                                local_annots[local_annots.length - 1].to_merge = 1;
+                                setCookieStrict(documentId, documentId + '/annotations', local_annots);
+                                if(merged){
+                                    UI.renderPage(annotation.page, RENDER_OPTIONS);
+                                }
                             });
                         }
                         document.removeEventListener('mousemove', mouse_move30);
@@ -4681,23 +4712,6 @@
                         document.removeEventListener('touchend', mouse_up30);
                         if (is_mobile_device)
                             $('body').css('overflow', 'auto');
-                    }
-
-                    function saveDrawingAnnotation() {
-                        var docId = hand_drawings.documentId;
-                        var pageNumber = hand_drawings.pageNumber;
-                        var lines = hand_drawings.lines;
-                        _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(docId, pageNumber, {
-                            type: 'drawing',
-                            width: _penSize,
-                            color: _penColor,
-                            lines: lines
-                        }).then(function(annotation) {
-                            if (path) {
-                                svg.removeChild(path);
-                            }
-                            (0, _appendChild2.default)(svg, annotation);
-                        });
                     }
                     /**
                      * Handle document.mousemove event
@@ -4864,6 +4878,7 @@
                      * Save a new point annotation from input
                      */
                     function savePoint() {
+                        $('.pdfViewer').css("cursor", "auto");
                         if (input.value.trim().length == 0) {
                             closeInput();
                             return;
@@ -4881,7 +4896,7 @@
                                 }
                                 var rect = svg.getBoundingClientRect();
                                 var _getMetadata = (0, _utils.getMetadata)(svg);
-                                var documentId = _getMetadata.documentId;
+                                documentId = _getMetadata.documentId;
                                 var pageNumber = _getMetadata.pageNumber;
                                 var annotation = Object.assign({
                                     type: 'point'
@@ -5112,7 +5127,7 @@
                             annotation.height = rect.height;
                         }
                         var _getMetadata = (0, _utils.getMetadata)(svg);
-                        var documentId = _getMetadata.documentId;
+                        documentId = _getMetadata.documentId;
                         var pageNumber = _getMetadata.pageNumber; // Add the annotation
                         var pdfStoreAdapter = _PDFJSAnnotate2.default.getStoreAdapter();
                         var onAnnotationAdded = function(annotation) {
@@ -5274,7 +5289,7 @@
                                     };
                                 }
                                 var _getMetadata = (0, _utils.getMetadata)(svg);
-                                var documentId = _getMetadata.documentId;
+                                documentId = _getMetadata.documentId;
                                 var pageNumber = _getMetadata.pageNumber;
                                 var rect = svg.getBoundingClientRect();
                                 var annotation = Object.assign({
@@ -5421,33 +5436,32 @@
                      */
 
                     function renderPage(pageNumber, renderOptions, onPageRendered) {
-                        var documentId = renderOptions.documentId;
+                        documentId = renderOptions.documentId;
                         // console.log('rendering page =>' pageNumber);
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
                         var rotate = renderOptions.rotate;
                         var pageToRender = pdfDocument.getPage(pageNumber);
-                        var pageAnnotations = _PDFJSAnnotate2.default.getAnnotations(documentId, pageNumber);                        
+                        var pageAnnotations = _PDFJSAnnotate2.default.getAnnotations(documentId, pageNumber);
+                        // console.log(pageAnnotations, pageNumber, 444);
                         var promise_params = [pageToRender, pageAnnotations];
                         return Promise.all(promise_params).then(function(_ref) {
                             var _ref2 = _slicedToArray(_ref, 2);
                             var pdfPage = _ref2[0];
                             var annotations = _ref2[1];
                             var page = document.getElementById('pageContainer' + pageNumber);
-                            if(!page)
-                            {
-                                console.log('1. Invalid page container '+'pageContainer' + pageNumber);
+                            if (!page) {
+                                console.log('1. Invalid page container ' + 'pageContainer' + pageNumber);
                                 return;
                             }
-                            var svg = page.querySelector('.annotationLayer');                            
+                            var svg = page.querySelector('.annotationLayer');
                             var canvas = page.querySelector('.canvasWrapper canvas');
                             // console.log(pageNumber, 223);
                             var canvasContext = canvas.getContext('2d', {
                                 alpha: false
                             });
                             var viewport = pdfPage.getViewport(scale, rotate);
-                            if(!viewport)
-                            {
+                            if (!viewport) {
                                 console.log(scale, rotate, pdfPage, 'Invalid view port');
                                 return;
                             }
@@ -5490,7 +5504,7 @@
                     }
 
                     function renderPageWithoutAnnotations(pageNumber, renderOptions, onPageRendered) {
-                        var documentId = renderOptions.documentId;
+                        documentId = renderOptions.documentId;
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
                         var rotate = renderOptions.rotate;
@@ -5502,19 +5516,17 @@
                             var pdfPage = _ref2[0];
                             var annotations = [];
                             var page = document.getElementById('pageContainer' + pageNumber);
-                            if(!page)
-                            {
-                                console.log('2. Invalid page container '+'pageContainer' + pageNumber);
+                            if (!page) {
+                                console.log('2. Invalid page container ' + 'pageContainer' + pageNumber);
                                 return;
                             }
-                            var svg = page.querySelector('.annotationLayer');                            
+                            var svg = page.querySelector('.annotationLayer');
                             var canvas = page.querySelector('.canvasWrapper canvas');
                             var canvasContext = canvas.getContext('2d', {
                                 alpha: false
                             });
                             var viewport = pdfPage.getViewport(scale, rotate);
-                            if(!viewport)
-                            {
+                            if (!viewport) {
                                 console.log(scale, rotate, pdfPage, 'Invalid view port');
                                 return;
                             }
@@ -5565,9 +5577,8 @@
                      */
                     function scalePage(pageNumber, viewport, context) {
                         var page = document.getElementById('pageContainer' + pageNumber);
-                        if(!page)
-                        {
-                            console.log('3. Invalid page container '+'pageContainer' + pageNumber);
+                        if (!page) {
+                            console.log('3. Invalid page container ' + 'pageContainer' + pageNumber);
                             return;
                         }
                         var svg = page.querySelector('.annotationLayer');

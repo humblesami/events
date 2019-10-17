@@ -11,6 +11,9 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <i class="fa fa-times-circle"></i>
                 </span>
                 <span class="title">Comments</span>
+                <button id="btn_show_all_point_comments"
+                class="btn btn-primary btn-sm ml-2"
+                >Show All</button>
             </div>
 
             <div class="comment-list">
@@ -164,6 +167,9 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 <i *ngIf="annot_hidden" class="fa fa-eye" aria-hidden="true"></i>
                             </div>
                         </a>
+                        <button class="btn btn-sm btn-primary reset">
+                            Reset
+                        </button>
                     </div>
                 </div>
             </div>
@@ -172,14 +178,6 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <div id="viewer" class="pdfViewer"></div>
                 </div>
             </div>
-
-            <!--<div id="notification-wrapper">-->
-            <!--<div class="notification-list">-->
-            <!--<div class="notification-list-container">-->
-            <!--<div class="notification-list-item">No Notifications</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
         </div>
 
     </div>
