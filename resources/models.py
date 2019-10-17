@@ -237,6 +237,10 @@ class Folder(CustomModel):
                 personal = False
                 if folder.personal and folder.created_by_id == user_id:
                     result['personal'] = folder.personal
+                owner = False
+                if folder.created_by_id == user_id:
+                    owner = True
+                result['owner'] = owner
         else:
             result['folders'] = cls.search_root(kw, user_id, [], 'folders', recursive)
         return result
@@ -281,7 +285,9 @@ class Folder(CustomModel):
                 folder.total_files = 0
                 folder.files_in_folder(folder, user_id)
                 total_files = folder.total_files
-
+                owner = False
+                if folder.created_by_id == user_id:
+                    owner = True
                 folder_obj = folder.__dict__
                 if re.search(kw, folder_obj['name'], re.IGNORECASE):
                     personal = False
@@ -291,7 +297,8 @@ class Folder(CustomModel):
                         'id': folder_obj['id'],
                         'name': folder_obj['name'],
                         'total_files': total_files,
-                        'personal': personal
+                        'personal': personal,
+                        'owner': owner
                     })
         if recursive:
             for obj in folders:
@@ -319,7 +326,9 @@ class Folder(CustomModel):
                 folder.total_files = 0
                 folder.files_in_folder(folder, user_id)
                 total_files = folder.total_files
-
+                owner = False
+                if folder.created_by_id == user_id:
+                    owner == True
                 if search_type == 'folders':
                     folder_obj = folder.__dict__
                     if re.search(kw, folder_obj['name'], re.IGNORECASE):
@@ -330,7 +339,8 @@ class Folder(CustomModel):
                             'id': folder_obj['id'],
                             'name': folder_obj['name'],
                             'total_files': total_files,
-                            'personal': personal
+                            'personal': personal,
+                            'owner': owner
                         })
                 if recursive:
                     folder.search_folder(kw, user_id, results, search_type, recursive)

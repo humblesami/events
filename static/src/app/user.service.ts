@@ -109,12 +109,24 @@ export class UserService {
             // console.log(obj_this.valid_users, 54);
             obj_this.selectedUsers = result.selected;
             // console.log(valid_users, 43434);
+            let owner = false;
+            if (!obj.personal)
+            {
+                if (obj.owner)
+                {
+                    owner = true
+                }
+            }
+            else
+            {
+                owner = true
+            }
             var diaolog_options = {
                 selected_users: result.selected,
                 user_list: valid_users,
                 component: UserlistmodalComponent,
                 extra_input: {},
-                owner: obj.personal,
+                owner: owner,
                 call_back: on_modal_closed, 
             };
             obj_this.socketService.user_selection_dialog(diaolog_options);
