@@ -154,7 +154,17 @@ class Topic(PositionalSortMixIn, CustomModel):
 
             else:
                 valid['is_valid'] = False
-                valid['message'] = "Sorry You meeting time is less"
+                if day_difference == 0:
+                    time = str(datetime.timedelta(seconds=time_difference)).split(":")
+                    hour = "0" + str(time[0])
+                    time = hour + ":" + str(time[1])
+                else:
+                    days_to_hours = day_difference * 24
+                    time = str(datetime.timedelta(seconds=time_difference)).split(":")
+                    hour = time[0]+days_to_hours
+                    time = str(hour) + ":" + str(time[1])
+                valid['valid_time'] = time
+                valid['message'] = "Time is not valid. You have only: " + time
         else:
             valid['is_valid'] = False
             valid['message'] = "Sorry You meeting time is less"
