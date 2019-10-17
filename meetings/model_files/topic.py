@@ -96,6 +96,7 @@ class Topic(PositionalSortMixIn, CustomModel):
     @classmethod
     def check_duration(cls, request, params):
         topics = []
+        valid = {}
         total_time=''
         topic_id = params.get('topic_id')
         duration =params['duration']
@@ -112,13 +113,54 @@ class Topic(PositionalSortMixIn, CustomModel):
         if topics:
             for topic in topics:
                 topic_duration =  topic.duration
-                datetime.timedelta(seconds=666)
-        event.duration
+                total_seconds += topic_duration.seconds
+            topics_duration =str(datetime.timedelta(seconds=total_seconds)).split(":")
+            total_hours = int(topics_duration[0]) 
+            total_minuets = int(topics_duration[1])
+            
 
-        #         pass
+        if total_hours != 0:
+            if total_minuets > 60:
+                extra_hours = str(timedelta(minutes=total_minuets))[:-3]
+                extra_hours = extra_hours.split(":")
+                total_hours += int(extra_hours[0])
+                total_minuets = int(extra_hours[1])
+        total_time = str(total_hours) + ":" + str(total_minuets) + ":00"
+        total_time = parse_duration(total_time)
+        meeting_durration = parse_duration(meeting_durration)
+        if (meeting_durration.days >= total_time.days) or (meeting_durration.seconds >= total_time.seconds):
+            day_difference = meeting_durration.days - total_time.days
+            time_difference = meeting_durration.seconds - total_time.seconds
+            if (day_difference >= duration_after_parse.days):
+                if (day_difference == duration_after_parse.days) and (time_difference > duration_after_parse.seconds):
+                    valid['is_valid'] = True
+                    valid['message'] = "Time is valid"
+                elif (day_difference > duration_after_parse.days) and (time_difference < duration_after_parse.seconds):
+                    valid['is_valid'] = True
+                    valid['message'] = "Time is valid"
+                elif  (day_difference == duration_after_parse.days) and (time_difference < duration_after_parse.seconds):
+                    valid['is_valid'] = False
+                    if day_difference == 0:
+                        time = str(datetime.timedelta(seconds=time_difference)).split(":")
+                        hour = "0" + str(time[0])
+                        time = hour + ":" + str(time[1])
+                    else:
+                        days_to_hours = day_difference * 24
+                        time = str(datetime.timedelta(seconds=time_difference)).split(":")
+                        hour = time[0]+days_to_hours
+                        time = str(hour) + ":" + str(time[1])
+                    valid['valid_time'] = time
+                    valid['message'] = "Time is not valid. You have only: " + time
 
-
-        return "Done"
+            else:
+                valid['is_valid'] = False
+                valid['message'] = "Sorry You meeting time is less"
+        else:
+            valid['is_valid'] = False
+            valid['message'] = "Sorry You meeting time is less"
+        
+        data = {'data': valid}
+        return data
 
 
     def get_attendees(self):

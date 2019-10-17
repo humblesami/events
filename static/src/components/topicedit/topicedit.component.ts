@@ -173,10 +173,10 @@ export class TopiceditComponent implements OnInit {
             }
         }, null);
     }
-    check_duration(evn){
+    check_duration(evn, time){
         // modified_topic_data.duration = evn.target.value
         let obj_this = this;
-        obj_this.modified_topic_data.duration = evn
+        obj_this.modified_topic_data.duration = time
         let dur = obj_this.modified_topic_data.duration
         console.log(obj_this.modified_topic_data.duration)
         const input_data = {
@@ -186,15 +186,31 @@ export class TopiceditComponent implements OnInit {
         let args = {
             app: 'meetings',
             model: 'Topic',
-            method: 'check_duration'
+            method: 'check_duration',
+            no_loader:1,
         }
         let final_input_data = {
             params: input_data,
             args: args
         };
         obj_this.httpService.get(final_input_data, (data) => {
-            obj_this.modified_topic_data.duration = data
-            console.log(data)
+            if(data.is_valid == true){
+                console.log(data)
+
+            }else{
+                console.log(data)
+                if(data.valid_time){
+                    obj_this.modified_topic_data.duration=data.valid_time
+                    window['bootbox'].alert(data.message);
+                    $("#duration").val(data.valid_time);
+
+                }else{
+                    window['bootbox'].alert(data.message);
+                    $("#duration").val('');
+                }
+
+            }
+
         }, null);
     }
 
@@ -208,6 +224,7 @@ export class TopiceditComponent implements OnInit {
             model: 'Topic',
             method: 'get_details'
         }
+
         let final_input_data = {
             params: input_data,
             args: args

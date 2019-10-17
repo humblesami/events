@@ -279,6 +279,20 @@ class Event(CustomModel):
         return 'Something Wrong in Response Invitation'
 
     @classmethod
+    def set_duration(cls,topic_duration):
+        topic_duration = str(datetime.timedelta(seconds=topic_duration))
+        topic_duration = topic_duration[0:len(topic_duration)-3]
+        topic_duration = topic_duration.split(":")
+        topic_hour = int(topic_duration[0])
+        topic_minuets = int(topic_duration[1])
+        if topic_hour <= 10:
+            topic_hour = "0" + str(topic_hour)
+        duration = str(topic_hour) + ":" + str(topic_minuets)
+
+        return duration
+
+
+    @classmethod
     def get_details(cls, request, params):
         meeting_id = params['id']
         user_id = request.user.id
@@ -331,7 +345,8 @@ class Event(CustomModel):
         topic = {}
         for t in topic_orm:
             topic = ws_methods.obj_to_dict(t)
-            topic['duration'] = str(topic['duration'])
+            topic_duration = cls.set_duration(topic['duration'].seconds)
+            topic['duration'] = topic_duration
             topic['docs'] = list(t.documents.values())
             for doc in topic['docs']:
                 doc['created_at'] = str(doc['created_at'])
