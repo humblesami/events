@@ -67,7 +67,7 @@ function dn_rpc_object(options) {
     var url_with_params = 'Nothing';
     options.beforeSend = function(a, b) {
         url_with_params = b.url.toString();
-        if(site_config.trace_request)
+        if(site_config.trace_request || is_localhost)
         {
             if(api_url == '/rest/secure')
             {
