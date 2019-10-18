@@ -774,11 +774,7 @@ span.pager.disabled
 .ToolBarWrapper>div{
     display: none;
 }
-#comment-wrapper #btn_show_all_point_comments
+#comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
     display: none;
-}
-#comment-wrapper.single_point_comments #btn_show_all_point_comments
-{
-    display: initial;
 }
