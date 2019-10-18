@@ -141,12 +141,13 @@
                 console.trace();
                 return;
             }
-            if(operation == 'comment_point_moved'){
+            if(operation == 'op=point moved'){
                 return;
             }
             
             var res = checkDuplication(annotations);
             if(res){
+                console.log('Duplication found');
                 return;
             }
 
@@ -210,7 +211,7 @@
                     annotations.splice(i, 1);
                     i -= 1;
                     l -= 1;
-                }                
+                }
             }
         }
         return index;
@@ -573,16 +574,12 @@
                                     return;
                                 }
                                 else{
-                                    if(!annotations.length)
-                                    {
-                                        return;
-                                    }
                                     input_data['annotations'] = JSON.stringify(annotations);
                                     // console.log('No duplication');
                                 }
                             }
                             else{
-
+                                return;
                             }
                             console.log('Saving', annotations);
                         }
@@ -1375,7 +1372,7 @@
                         case 'highlight':
                         case 'strikeout':
                         case 'underline':
-                            console.log(tooltype, 444);
+                            // console.log(tooltype, 444);
                             UI.enableRect(type);
                             break;
                     }

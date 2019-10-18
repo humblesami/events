@@ -3,6 +3,7 @@ from django.apps import apps
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from documents.file import File
 from chat.models import Notification
@@ -20,7 +21,7 @@ class AnnotationDocument(CustomModel):
     def __str__(self):
         nam = 'Unnamed'
         if self.doc_name:
-            nam = self.doc_name
+            nam = self.doc_name + '---'+ str(self.file_id)
         return nam
 
     @classmethod
@@ -152,7 +153,8 @@ class AnnotationDocument(CustomModel):
                 
         res = False
         with transaction.atomic():
-            doc.annotation_set.all().delete()
+            doc.annotation_set.filter(~Q(type='point')).delete()
+            PointAnnotation.objects.filter(sub_type='personal').delete()
             for obj in point_annotations:
                 if not obj.sub_type:
                     raise ValidationError('Invalid point annotation')
@@ -294,10 +296,7 @@ class Annotation(CustomModel):
 
     def __str__(self):
         nam = self.type + '-'
-        if self.document:
-            if self.document.doc_name:
-                nam += self.document.doc_name
-        nam += '-' + str(self.id)+'-'+self.uuid
+        nam += self.document.doc_name+'-'+str(self.page)+'--'+str(self.document.file_id)
         return nam
 
 
