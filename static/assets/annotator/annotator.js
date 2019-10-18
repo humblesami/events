@@ -20,6 +20,7 @@
     var documentId = undefined;
     var annot_save_timeout = undefined;
     var annotation_save_wait_time = 8000;
+    var merge_rects = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -28,6 +29,41 @@
     };
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
+    merge_rects = function(rects)
+    {
+        let dist_rects = [];
+        let index = -1;
+        for (let rect of rects)
+        {
+            if (dist_rects.length)
+            {
+                let bottom_diff = 0
+                if (dist_rects[index].bottom - rect.bottom > 0)
+                {
+                    bottom_diff = dist_rects[index].bottom - rect.bottom;
+                }
+                else
+                {
+                    bottom_diff = rect.bottom - dist_rects[index].bottom;
+                }
+                if(dist_rects[index].bottom==rect.bottom|| bottom_diff <= 7)
+                {
+                    dist_rects[index].width += rect.width;
+                }
+                else
+                {
+                    index++;
+                    dist_rects.push(rect);
+                }
+            }
+            else
+            {
+                dist_rects.push(rect);
+                index++;
+            }
+        }
+        return dist_rects;
+    }
     var programtic_cursor = false;
     function select_cursor(force) {
         // window['functions'].get_trace(1);
@@ -211,7 +247,7 @@
                     annotations.splice(i, 1);
                     i -= 1;
                     l -= 1;
-                }
+                }                
             }
         }
         return index;
@@ -347,20 +383,20 @@
                 return;
             }
         });
-        $(document).on('mouseup', '#viewer', function(e) {            
+        $(document).on('mouseup', '#viewer', function(e) {
             if (e.button == 2)
                 return;
             if (annotation_mode != 1)
-                return;            
+                return;
             setTimeout(function() {
                 var selection = window.getSelection();
-                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {                    
+                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
                     var ctxMenu = $('.annotation-options.ContextMenuPopup');
                     ctxMenu.css({
                         'left': e.pageX - ctxMenu.width() / 2,
                         'top': e.clientY + 12
                     }).show();
-                    contextMenuShown = true;                
+                    contextMenuShown = true;
                 } else {
                     $('.annotation-options:first').hide();
                     contextMenuShown = false;
@@ -5216,6 +5252,7 @@
                                         dist_rects.push(rect)
                                     }
                                 }
+                                rects = merge_rects(dist_rects);
                                 return dist_rects;
                             }
                         } catch (e) {}
