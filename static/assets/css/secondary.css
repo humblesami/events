@@ -213,6 +213,13 @@ mention-list.dropup{
     width: 25%;
     margin-left:1%; 
 }
+.roster-bg > div{
+    border-radius: 0;
+}
+.roster-bg > div:last-child{
+    width: 25%;
+    margin-left:0; 
+}
 .bg-heading label{
     margin-bottom:0;
 }
