@@ -1,7 +1,7 @@
 (function() {
     var annotation_user_m2;
     var annotation_mode = 0;
-    var hand_drawings = [];
+    var already_saving = false;
     var prev_doc_url = '';
     var shown_comment_type = false;
     var slected_comment_type = false;
@@ -29,13 +29,19 @@
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
     var programtic_cursor = false;
-    function select_cursor() {
+    function select_cursor(force) {
         // window['functions'].get_trace(1);
         $('.topbar:first .active:not(.cursor)').removeClass('active');
-        if (!$('.topbar:first .cursor:first').hasClass('active')) {
-            programtic_cursor = true;
-            $('.topbar:first .cursor:first').click();                        
-        }        
+        programtic_cursor = true;
+        if(force)
+        {
+            $('.topbar:first .cursor:first').click();
+        }
+        else{
+            if (!$('.topbar:first .cursor:first').hasClass('active')) {                
+                $('.topbar:first .cursor:first').click();                        
+            }   
+        }     
     }
 
     $(document).on('click', '.topbar .cursor:first', function(e){
@@ -228,6 +234,41 @@
             bootbox.alert("Please report this issue2 with " + key + " for " + documentId);
         }
         return temp_key;
+    }
+    
+
+    function on_penLeave(){
+        var drawing_pages = [];
+        var localAnnots = _getAnnotations(documentId);
+        if(localAnnots.length)
+        {
+            var last_item = localAnnots[localAnnots.length - 1];            
+            if(last_item.type == 'drawing')
+            {
+                for(var item of localAnnots)
+                {
+                    if(item.type == 'drawing')
+                    {
+                        if(drawing_pages.indexOf(item.page) == -1)
+                        {
+                            drawing_pages.push(item.page);
+                        }
+                    }
+                }
+                if(drawing_pages.length)
+                {
+                    for(var item of drawing_pages)
+                    {
+                        UI.renderPage(item, RENDER_OPTIONS);
+                    }
+                }
+                if($('.topbar .pen:first').hasClass('active'))
+                {                    
+                    select_cursor();
+                }
+            }
+            updateAnnotations(documentId, localAnnots, 'op=pen leave');
+        }
     }
 
     function supportsComments(target) {
@@ -462,8 +503,8 @@
                                     saveAnnotationsAtServer();
                                 }
                             });
-                    }
-                }                    
+                        }
+                    }                    
 
                     saveAnnotationsAtServer = function(save_type) {
                         if(save_type != 'reset')
@@ -477,7 +518,7 @@
                         if (!documentId) {
                             console.log("Save must be called after document id is set")
                             return;
-                        }
+                        }                        
 
                         var document_version = getDocumentVersion(documentId);
                         var input_data = {
@@ -513,6 +554,10 @@
                     window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
                     var last_save_call = {};
                     function call_save_annotations(input_data, annotations=[]){
+                        // if($('.topbar .pen.active:first').length)
+                        // {
+                        //     on_penLeave();
+                        // }
                         if(!input_data['reset'])
                         {
                             if(!isDocumentDirty(documentId))
@@ -540,6 +585,7 @@
                         else{
                             console.log('Saving, reset');
                         }
+                        already_saving = true;
                         var dt_now = new Date();
                         if(last_save_call.dt){
                             var diff = dt_now - last_save_call.dt;
@@ -565,7 +611,7 @@
                             args: args,
                             no_loader: 1,
                             params: input_data
-                        };                        
+                        };
 
                         dn_rpc_object({
                             data: final_input_data,
@@ -575,6 +621,7 @@
                                 {
                                     console.log('Saved');
                                     unSetDocDirty(documentId);
+                                    already_saving = false;
                                 }
                                 onAnnotationsUploaded(data);                                
                             },
@@ -601,7 +648,7 @@
             $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
                 document.execCommand("copy");
                 $(this).closest('.ContextMenuPopup').hide();
-            });
+            });            
 
             $(document).mousedown(function(e) {
                 // console.log(contextMenuShown, 4544);
@@ -609,7 +656,11 @@
                     return;
                 var $target = $(e.target);
                 if ($target.closest('#viewer').length == 0) {
-                    $target.closest('#viewer').css('cursor', 'auto');
+                    $target.closest('#viewer').css('cursor', 'auto');                    
+                    if($('.topbar .pen.active:first').length)
+                    {
+                        on_penLeave();
+                    }
                 }
                 if (comment_item_focused) {
                     var not_in_comments = $target.closest('#comment-wrapper').length == 0;
@@ -647,10 +698,6 @@
                     });
                 }
             });
-
-            function onPenLeave() {
-
-            }
 
             var setPen = function(a, b) {}
 
@@ -1336,7 +1383,7 @@
                     var target = $(e.target);
                     target = target.closest('button');
                     if (target.hasClass('pen') && active_btn.hasClass('pen')) {
-                        select_cursor();
+                        on_penLeave();
                         return;
                     } else {
                         var tooltype = $(e.target).closest('[data-tooltype]').data('tooltype');
@@ -4330,65 +4377,70 @@
                      * @param {Element} target The annotation element to apply overlay for
                      */
                     function createEditOverlay(target) {
-                        // console.log(targe166);
-                        destroyEditOverlay();
-                        overlay = document.createElement('div');
-                        var anchor = document.createElement('a');
-                        var svgTaret = (0, _utils.findSVGContainer)(target);
-                        var parentNode = svgTaret.parentNode;
-                        var id = target.getAttribute('data-pdf-annotate-id');
-                        var rect = (0, _utils.getAnnotationRect)(target);
-                        var styleLeft = rect.left - OVERLAY_BORDER_SIZE;
-                        var styleTop = rect.top - OVERLAY_BORDER_SIZE;
-                        overlay.setAttribute('id', 'pdf-annotate-edit-overlay');
-                        overlay.setAttribute('data-target-id', id);
-                        overlay.style.boxSizing = 'content-box';
-                        overlay.style.position = 'absolute';
-                        overlay.style.top = styleTop + 'px';
-                        overlay.style.left = styleLeft + 'px';
-                        overlay.style.width = rect.width + 'px';
-                        overlay.style.height = rect.height + 'px';
-                        overlay.style.border = OVERLAY_BORDER_SIZE + 'px solid ' + _utils.BORDER_COLOR;
-                        overlay.style.borderRadius = OVERLAY_BORDER_SIZE + 'px';
-                        anchor.innerHTML = '×';
-                        anchor.setAttribute('href', 'javascript://');
-                        anchor.style.background = '#fff';
-                        anchor.style.borderRadius = '20px';
-                        anchor.style.border = '1px solid #bbb';
-                        anchor.style.color = '#bbb';
-                        anchor.style.fontSize = '16px';
-                        anchor.style.padding = '2px';
-                        anchor.style.textAlign = 'center';
-                        anchor.style.textDecoration = 'none';
-                        anchor.style.position = 'absolute';
-                        anchor.style.top = '-13px';
-                        anchor.style.right = '-13px';
-                        anchor.style.width = '25px';
-                        anchor.style.height = '25px';
-                        overlay.appendChild(anchor);
-                        parentNode.appendChild(overlay);
-                        document.addEventListener('click', click29);
-                        document.addEventListener('keyup', key_up29);
-                        document.addEventListener('mousedown', mouse_down29);
-                        anchor.addEventListener('click', deleteAnnotation);
-                        anchor.addEventListener('mouseover', function() {
-                            anchor.style.color = '#35A4DC';
-                            anchor.style.borderColor = '#999';
-                            anchor.style.boxShadow = '0 1px 1px #ccc';
-                        });
-                        anchor.addEventListener('mouseout', function() {
+                        try{
+                            destroyEditOverlay();
+                            overlay = document.createElement('div');
+                            var anchor = document.createElement('a');
+                            var svgTaret = (0, _utils.findSVGContainer)(target);
+                            var parentNode = svgTaret.parentNode;
+                            var id = target.getAttribute('data-pdf-annotate-id');
+                            var rect = (0, _utils.getAnnotationRect)(target);
+                            var styleLeft = rect.left - OVERLAY_BORDER_SIZE;
+                            var styleTop = rect.top - OVERLAY_BORDER_SIZE;
+                            overlay.setAttribute('id', 'pdf-annotate-edit-overlay');
+                            overlay.setAttribute('data-target-id', id);
+                            overlay.style.boxSizing = 'content-box';
+                            overlay.style.position = 'absolute';
+                            overlay.style.top = styleTop + 'px';
+                            overlay.style.left = styleLeft + 'px';
+                            overlay.style.width = rect.width + 'px';
+                            overlay.style.height = rect.height + 'px';
+                            overlay.style.border = OVERLAY_BORDER_SIZE + 'px solid ' + _utils.BORDER_COLOR;
+                            overlay.style.borderRadius = OVERLAY_BORDER_SIZE + 'px';
+                            anchor.innerHTML = '×';
+                            anchor.setAttribute('href', 'javascript://');
+                            anchor.style.background = '#fff';
+                            anchor.style.borderRadius = '20px';
+                            anchor.style.border = '1px solid #bbb';
                             anchor.style.color = '#bbb';
-                            anchor.style.borderColor = '#bbb';
-                            anchor.style.boxShadow = '';
-                        });
-                        overlay.addEventListener('mouseover', function() {
-                            if (!isDragging) {
-                                anchor.style.display = '';
-                            }
-                        });
-                        overlay.addEventListener('mouseout', function() {
-                            anchor.style.display = 'none';
-                        });
+                            anchor.style.fontSize = '16px';
+                            anchor.style.padding = '2px';
+                            anchor.style.textAlign = 'center';
+                            anchor.style.textDecoration = 'none';
+                            anchor.style.position = 'absolute';
+                            anchor.style.top = '-13px';
+                            anchor.style.right = '-13px';
+                            anchor.style.width = '25px';
+                            anchor.style.height = '25px';
+                            overlay.appendChild(anchor);
+                            parentNode.appendChild(overlay);
+                            document.addEventListener('click', click29);
+                            document.addEventListener('keyup', key_up29);
+                            document.addEventListener('mousedown', mouse_down29);
+                            anchor.addEventListener('click', deleteAnnotation);
+                            anchor.addEventListener('mouseover', function() {
+                                anchor.style.color = '#35A4DC';
+                                anchor.style.borderColor = '#999';
+                                anchor.style.boxShadow = '0 1px 1px #ccc';
+                            });
+                            anchor.addEventListener('mouseout', function() {
+                                anchor.style.color = '#bbb';
+                                anchor.style.borderColor = '#bbb';
+                                anchor.style.boxShadow = '';
+                            });
+                            overlay.addEventListener('mouseover', function() {
+                                if (!isDragging) {
+                                    anchor.style.display = '';
+                                }
+                            });
+                            overlay.addEventListener('mouseout', function() {
+                                anchor.style.display = 'none';
+                            });
+                        }
+                        catch(er){
+                            console.log(er);
+                            select_cursor(1);
+                        }
                     }
 
 
@@ -4397,6 +4449,11 @@
                      */
                     function destroyEditOverlay() {
                         if (overlay) {
+                            if(!overlay.parentNode)
+                            {
+                                select_cursor(1);
+                                return;
+                            }
                             overlay.parentNode.removeChild(overlay);
                             overlay = null;
                         }
@@ -4704,6 +4761,7 @@
                      * Handle document.mousedown event
                      */
                     var old_svg = undefined;
+                    var drawing_gone_out = false;
                     function mouse_down30(e) {
                         //console.log(e, 777);
                         if (is_mobile_device)
@@ -4714,23 +4772,7 @@
                         {
                             return;
                         }
-                        var svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY);
-                        var local_annots = _getAnnotations(documentId);
-                        if(local_annots.length > 0)
-                        {
-                            var last_item = local_annots[local_annots.length - 1];
-                            if(old_svg && old_svg != svg)
-                            {
-                                last_item.to_merge = 0;
-                            }
-                            else{
-                                if(last_item.type == 'drawing')
-                                {
-                                    last_item.to_merge = 1;
-                                }                                
-                            }
-                        }                        
-                        old_svg = svg;
+
                         path = null;
                         lines = [];                        
 
@@ -4780,12 +4822,13 @@
                                 if (path) {
                                     svg.removeChild(path);
                                 }
-                                (0, _appendChild2.default)(svg, annotation);                                
+                                (0, _appendChild2.default)(svg, annotation);                               
                                 var merged = 0;
                                 if(local_annots.length > 1)
                                 {
                                     var second_last = local_annots[local_annots.length - 2];
-                                    if(second_last.to_merge)
+                                    var same_svg = old_svg && svg.parentNode.id == old_svg.parentNode.id;
+                                    if(second_last.type == 'drawing' && same_svg && second_last.to_merge)
                                     {
                                         second_last.lines = second_last.lines.concat(annotation.lines);
                                         local_annots[local_annots.length - 2] = second_last;
@@ -4795,9 +4838,7 @@
                                 }
                                 local_annots[local_annots.length - 1].to_merge = 1;
                                 updateAnnotations(documentId, local_annots, 'op=drawing');
-                                if(merged){
-                                    UI.renderPage(annotation.page, RENDER_OPTIONS);
-                                }
+                                old_svg = svg;
                             });
                         }
                         document.removeEventListener('mousemove', mouse_move30);
@@ -4815,11 +4856,16 @@
                      */
 
                     function mouse_move30(e) {
+                        if(drawing_gone_out)
+                        {
+                            // console.log('No use');
+                            return;
+                        }
                         e.preventDefault();
                         //console.log(e); 
                         if (e.touches) {
                             e = e.touches[0];
-                        }
+                        }                        
                         savePoint(e.clientX, e.clientY);
                     }
                     /**
@@ -4851,6 +4897,28 @@
                             x: x - rect.left,
                             y: y - rect.top
                         });
+                        // console.log(444, point.y)
+                        if(point.y < 0)
+                        {
+                            if(lines.length)
+                            {
+                                var last_line = lines[lines.length - 1];
+                                mouse_up30({
+                                    e:{ 
+                                        clinetX : last_line[0],
+                                        clinetY : last_line[1],
+                                        changedTouches :[
+                                            {
+                                                clinetX : last_line[0],
+                                                clinetY : last_line[1],
+                                            }
+                                        ]
+                                    }
+                                });
+                            }
+                            
+                            return;
+                        }
                         lines.push([point.x, point.y]);
                         if (lines.length <= 1) {
                             return;

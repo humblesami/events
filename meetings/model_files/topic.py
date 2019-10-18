@@ -103,7 +103,7 @@ class Topic(PositionalSortMixIn, CustomModel):
         else:
             days_to_hours = topic_duration.days * 24
             time = str(datetime.timedelta(seconds=topic_duration.seconds)).split(":")
-            hour = time[0]+days_to_hours
+            hour = int(time[0])+int(days_to_hours)
             time = str(hour) + ":" + str(time[1])
         return time
 
