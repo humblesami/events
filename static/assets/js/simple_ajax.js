@@ -223,7 +223,7 @@ function dn_rpc_object(options) {
         }
         // if(!site_config.trace_request)
         // {
-        console.log(input_data.args);
+        // console.log(input_data.args);
         if(options.type == 'GET' && url_with_params.length < 1500)
         {
             console.log(url_with_params);

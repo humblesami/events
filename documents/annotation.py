@@ -13,7 +13,7 @@ from mainapp.models import CustomModel
 
 class AnnotationDocument(CustomModel):
     version = models.IntegerField(default=0)
-    document = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
+    file = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     doc_name = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
@@ -69,7 +69,7 @@ class AnnotationDocument(CustomModel):
         with transaction.atomic():
             user_rectangles = RectangleAnnotation.get_rectangles(doc.id, user_id)
             line_drawings = DrawingAnnotation.get_drawings(doc.id, user_id)
-            note_points = PointAnnotation.get_point_annotations(doc_id=doc.id)
+            note_points = PointAnnotation.get_point_annotations(document_id=doc.id)
         res = {
             'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles,
             'comments': comments_points
@@ -84,7 +84,7 @@ class AnnotationDocument(CustomModel):
         document_version = params.get('version') or 0
         if not str(document_version).isnumeric():
             document_version = 0
-        doc = AnnotationDocument.objects.filter(user_id = user_id, document_id = doc_id)
+        doc = AnnotationDocument.objects.filter(user_id = user_id, file_id = doc_id)
         if doc:
             doc = doc[0]
             reset = params.get('reset')
@@ -97,7 +97,7 @@ class AnnotationDocument(CustomModel):
         else:
             doc = AnnotationDocument(
                 version=1
-                , document_id=doc_id
+                , file_id=doc_id
                 , doc_name=doc_name
                 , user_id=user_id
             )
@@ -152,9 +152,12 @@ class AnnotationDocument(CustomModel):
             else:
                 raise ValidationError('Invalid annotation type '+user_annot['type'])            
                 
+        res = False
         with transaction.atomic():
             doc.annotation_set.remove()
             for obj in point_annotations:
+                if not obj.sub_type:
+                    raise ValidationError('Invalid point annotation')
                 obj.save()
             for obj in drawing_annotations:
                 obj.save()
@@ -166,28 +169,28 @@ class AnnotationDocument(CustomModel):
 
             save_annotations = DrawingAnnotation.objects.filter(user_id=user_id, document_id=doc.id, type='drawing')
             res = cls.save_lines(save_annotations, user_annotations)
-            if res:
-                transaction.rollback()
-                return res
-
-            save_annotations = RectangleAnnotation.objects.filter(type__in = ['highlight','strikeout', 'underline'], user_id=user_id, document_id=doc.id)
-            res = cls.save_dimensions(save_annotations, user_annotations)
-            if res:
-                transaction.rollback()
-                return res
-
-            doc.version = document_version
-            doc.save()
-        return 'done'
+            if not res:
+                save_annotations = RectangleAnnotation.objects.filter(type__in = ['highlight','strikeout', 'underline'], user_id=user_id, document_id=doc.id)
+                res = cls.save_dimensions(save_annotations, user_annotations)
+                if not res:
+                    doc.version = document_version
+                    doc.save()
+        if res:
+            transaction.rollback()
+            return res
+        else:
+            return 'done'
 
     @classmethod
     def save_lines(cls, saved_annotations, user_annotations):
         children = []
+        drawing = 0
         if not saved_annotations:
             return
         for item in user_annotations:
             if item['type'] != 'drawing':
                 continue
+            drawing += 1
             for obj in saved_annotations.filter(uuid=item["uuid"]):
                 if len(item['lines']) == 0:
                     return 'Invalid drawing object'
@@ -212,16 +215,19 @@ class AnnotationDocument(CustomModel):
         if len(children) > 0:
             Line.objects.bulk_create(children)
         else:
-            return 'Invalid drawing object'
+            if drawing > 0:
+                return 'Invalid drawing object'
 
     @classmethod
     def save_dimensions(cls, saved_annotations, user_annotations):
         if not saved_annotations:
             return
         children = []
+        rectangles = 0
         for item in user_annotations:
             if item['type'] not in ('highlight','strikeout', 'underline'):
                 continue
+            rectangles += 1
             for obj in saved_annotations.filter(uuid=item["uuid"]):
                 dimensions = item.get('rectangles')
                 if dimensions is None:
@@ -240,14 +246,17 @@ class AnnotationDocument(CustomModel):
         if len(children) > 0:
             Dimension.objects.bulk_create(children)
         else:
-            return 'Invalid rectangle object'
+            if rectangles > 0:
+                return 'Invalid rectangle object'
 
     @classmethod
     def save_notes(cls, saved_annotations, user_annotations, user_id):
         children = []
+        note_count = 0
         for item in user_annotations:
             if item['type'] != 'point':
                 continue
+            note_count += 1
             point_id = item.get("uuid")
             for obj in saved_annotations.filter(uuid = point_id):
                 for comment in item['comments']:
@@ -263,6 +272,9 @@ class AnnotationDocument(CustomModel):
                     children.append(child_to_save)
         if len(children) > 0:
             CommentAnnotation.objects.bulk_create(children)
+        else:
+            if note_count > 0:
+                return 'Note must have some comment'
 
 
 class Annotation(CustomModel):
@@ -277,7 +289,7 @@ class Annotation(CustomModel):
         if not self.pk:
             objs = Annotation.objects.filter(uuid=self.uuid)
             if objs:
-                raise Exception('Duplicate addition of same annotation')
+                print('Duplicate addition of same annotation '+ str(objs[0]))
         if not self.document_id:
             raise Exception('Invalid document id')
         super(Annotation, self).save(*args, **kwargs)
@@ -430,11 +442,11 @@ class PointAnnotation(Annotation):
         type = point.get('type')
         new_point = False
 
-        document = AnnotationDocument.objects.filter(document_id=file_id, user_id=user_id)
+        document = AnnotationDocument.objects.filter(file_id=file_id, user_id=user_id)
         if document:
             document = document[0]
         else:
-            document = AnnotationDocument.objects.create(document_id=file_id, doc_name=doc_name, user_id=user_id)
+            document = AnnotationDocument.objects.create(file_id=file_id, doc_name=doc_name, user_id=user_id)
 
         user_point = PointAnnotation.objects.filter(uuid=uuid, document_id=document.id)
         if user_point:
@@ -449,17 +461,19 @@ class PointAnnotation(Annotation):
             return {'point_id': user_point.id, 'new_point': new_point}
 
     @classmethod
-    def get_point_annotations(cls, pdf_id=None, doc_id=None):
+    def get_point_annotations(cls, pdf_id=None, document_id=None):
         point_objects = []
         sub_type = None
-        if doc_id:
+        if pdf_id:
             point_objects = PointAnnotation.objects.filter(pdf_id=pdf_id)
             sub_type = ''
             return_sub_type = False
-        else:
-            point_objects = PointAnnotation.objects.filter(docuument_id=doc_id)
+        elif document_id:
+            point_objects = PointAnnotation.objects.filter(document_id=document_id)
             sub_type = 'personal'
             return_sub_type = 'personal'
+        else:
+            return []
 
         notes_data = []
         for point in point_objects:
@@ -526,7 +540,7 @@ class CommentAnnotation(CustomModel):
                     res['new_point'] = 1
                 doc_type = params['doc_type']
                 res_model = ''
-                document_id = params['document_id']
+                file_id = params['file_id']
 
                 if len(comment_body) > 20:                    
                     comment_body = '=> '+ comment_body[0: 20] + '...'
@@ -534,12 +548,12 @@ class CommentAnnotation(CustomModel):
                 if doc_type == 'meeting':
                     res_model = 'MeetingDocument'
                     model = apps.get_model('meetings', res_model)
-                    obj = model.objects.get(pk = document_id)
+                    obj = model.objects.get(pk = file_id)
                     text += ' meeting document '+obj.name+ ' in '+obj.meeting.name
                 elif doc_type == 'topic':
                     res_model = 'AgendaDocument'
                     model = apps.get_model('meetings', res_model)
-                    obj = model.objects.get(pk = document_id)
+                    obj = model.objects.get(pk = file_id)
                     text += ' an agenda-topic-document '+obj.name+ ' in meeting=>'+obj.agenda.event.name
                 else:
                     raise ValidationError('Invalid document type '+doc_type)
@@ -547,7 +561,7 @@ class CommentAnnotation(CustomModel):
                     'res_app': 'documents',
                     'res_model': 'PointAnnotation',
                     'res_id' : point_id,
-                    'parent_post_id': document_id,
+                    'parent_post_id': file_id,
                     'file_type': doc_type,
                     'notification_type': 'comment'
                 }

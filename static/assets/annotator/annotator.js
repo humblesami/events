@@ -7,7 +7,6 @@
     var slected_comment_type = false;
     var comment_sub_type = false;
     var contextMenuShown = false;
-    var comment_doc_id = false;
     var comment_item_focused = false;
     var select_comment_item = undefined;
     var activeAnnotationId = undefined;
@@ -45,7 +44,7 @@
             programtic_cursor = false;
             return;
         }
-        console.log(isDocumentDirty(documentId), 555667);
+        // console.log(isDocumentDirty(documentId), 555667);
         if (isDocumentDirty(documentId)) {
             saveAnnotationsAtServer();
         }
@@ -140,29 +139,11 @@
                 return;
             }
             
-            var i = 0;
-            var l1 = annotations.length;
-            for(var i=0; i< l1; i++)
-            {
-                var j = 0;
-                var l2 = annotations.length;
-                for(var j=0; j < l2; j++)
-                {
-                    if(i != j)
-                    {
-                        if(annotations[i].uuid == annotations[j].uuid)
-                        {
-                            console.log('Invalid scene');
-                            annotations.splice(j, 1);
-                            j--;
-                            l2--;
-                            l1--;
-                        }
-                    }
-                    j++;
-                }
-                i++;
+            var res = checkDuplication(annotations);
+            if(res){
+                return;
             }
+
             var val = JSON.stringify(annotations);
             localStorage.setItem(documentId + '/annotations', val);
             setDocDirty(documentId);
@@ -176,6 +157,32 @@
         }
         catch(er){
             console.log(er, 'Invalid annotations', annotations);
+        }
+    }
+
+    function checkDuplication(annotations){
+        var i = 0;
+        var l1 = annotations.length;
+        for(var i=0; i< l1; i++)
+        {
+            var j = 0;
+            var l2 = annotations.length;
+            for(var j=i+1; j < l2; j++)
+            {
+                if(i != j)
+                {
+                    if(annotations[i].uuid == annotations[j].uuid)
+                    {
+                        console.log('Invalid scene');
+                        annotations.splice(j, 1);
+                        j--;
+                        i--;
+                        l2--;
+                        l1--;
+                    }
+                }
+                j++;
+            }
         }
     }
 
@@ -456,24 +463,22 @@
                             unSetDocDirty(documentId);
                             console.log("Saved");
                         }
-                    }
+                    }                    
 
-                    saveAnnotationsAtServer = function(save_type) {                        
-                        console.log('Saving');
+                    saveAnnotationsAtServer = function(save_type) {
                         if(save_type != 'reset')
                         {
-                            if (isDocumentDirty(documentId) != 1)
+                            if (!isDocumentDirty(documentId))
                             {
                                 return;
                             }
                             select_cursor();
                         }
-
-                        unSetDocDirty(documentId);
                         if (!documentId) {
                             console.log("Save must be called after document id is set")
                             return;
                         }
+                        console.log('Saving');
 
                         var document_version = getDocumentVersion(documentId);
                         var input_data = {
@@ -497,46 +502,73 @@
                         } else {                            
                             var non_comment = annotations_array.filter(function(el) {
                                 return el.type != 'point' || el.sub_type;
-                            });
-                            console.log(non_comment, ' saved aonts');                                
-                            input_data['annotations'] = JSON.stringify(non_comment);                            
+                            });                                                        
                             if (document_version == 0) {
                                 setDocVersion(documentId, 1);
                             }
                             input_data['version'] = document_version;
-                            call_save_annotations(input_data);
+                            call_save_annotations(input_data, non_comment);
                         }                        
                     }
 
                     window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
                     var last_save_call = {};
-                    function call_save_annotations(input_data){
+                    function call_save_annotations(input_data, annotations=[]){
+                        if(!input_data['reset'])
+                        {
+                            if(!isDocumentDirty(documentId))
+                            {
+                                console.log('Should not reach here');
+                                return;
+                            }
+                            if(annotations.length)
+                            {
+                                var res = checkDuplication(annotations);
+                                if(res){
+                                    return;
+                                }
+                                else{
+                                    input_data['annotations'] = annotations;
+                                    console.log('No duplication');
+                                }
+                            }
+                            else{
+
+                            }
+                        }
+                        input_data['annotations'] = JSON.stringify();
                         var dt_now = new Date();
                         if(last_save_call.dt){
                             var diff = dt_now - last_save_call.dt;
                             if(diff <= annotation_save_wait_time)
                             {
-                                var trace_now = undefined;
-                                try { var a = {}; a.debug(); } catch(ex) { trace_now = ex.stack; }
-                                console.log(last_save_call.trace, trace_now);
+                                console.log('Why saving again')
+                                console.trace();
+                                // var trace_now = undefined;
+                                // try { var a = {}; a.debug(); } catch(ex) { trace_now = ex.stack; }
+                                // console.log(last_save_call.trace, trace_now);
                                 return;
                             }
                         }
-                        last_save_call.dt = dt_now;
-                        try { var a = {}; a.debug(); } catch(ex) { last_save_call.trace = ex.stack; }
+                        last_save_call.dt = dt_now;                         
+                        clearTimeout(annot_save_timeout);
                         var args = {
                             app: 'documents',
                             model: 'AnnotationDocument',
                             method: 'add_annotation'
                         };
+                        // console.log(input_data);
                         var final_input_data = {
                             args: args,
+                            no_loader: 1,
                             params: input_data
-                        };
+                        };                        
+
                         dn_rpc_object({
                             data: final_input_data,
                             no_loader: 1,
                             onSuccess: function(data) {
+                                unSetDocDirty(documentId);
                                 onAnnotationsUploaded(data);                                
                             },
                             type: 'post'
@@ -783,8 +815,7 @@
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
-                    comment_list = comments_wrapper.find('.comment-list-container:first');
-                    comment_doc_id = doc_data.type + '-' + doc_data.id + '.pdf';
+                    comment_list = comments_wrapper.find('.comment-list-container:first');                    
                     documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
@@ -1329,7 +1360,7 @@
                     if (!annot_doc) {
                         return;
                     }
-                    if (annotation_mode != 1 || !annot_doc || data.point.comment_doc_id != comment_doc_id) {
+                    if (annotation_mode != 1 || !annot_doc || data.point.doc_name != documentId) {
                         return;
                     }
                     var annot_id = comment_list.attr('annotation-id');
@@ -2976,8 +3007,8 @@
                                         var doc_info = documentId.split('-');
                                         var input_data = {
                                             doc_type: doc_info[0],
-                                            document_id: doc_info[1],
-                                            comment_doc_name: comment_doc_id,
+                                            file_id: doc_info[1],
+                                            doc_name: documentId,
                                         };
                                         // console.log(input_data);
 
@@ -3008,9 +3039,8 @@
                                         }
                                         // console.log(comment);
                                         point.comment = comment;
-                                        point.doc_id = documentId;
-                                        point.document_id = doc_info[1];
-                                        point.comment_doc_id = comment_doc_id;
+                                        point.doc_name = documentId;
+                                        point.file_id = doc_info[1];
                                         input_data['point'] = point;
                                         input_data['mentioned_list'] = mention_list;
                                         var is_comment = point.sub_type != 'personal';
