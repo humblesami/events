@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="duration"> <b>Duration</b> </label><!--check_duration($event,$event.target.value)-->
-                        <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="sum_agenda_duration($event.target.value) && modified_topic_data.duration=$event.target.value" type="text" placeholder="Enter Agenda Duration" id="duration"  >
+                        <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="sum_agenda_duration($event.target.value)" type="text" placeholder="Enter Agenda Duration" id="duration"  >
                     </div>
                     <div class="col-md-12">
                         <label for="description"> <b>Description</b> </label>
