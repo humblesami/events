@@ -39,12 +39,13 @@ class Topic(PositionalSortMixIn, CustomModel):
                 a_doc = agenda_doc_model(agenda_id=topic.id)
                 a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
+        topic_duration = cls.set_duration_to_hour_min(topic.duration)
         data = {
             'id': topic.id,
             'name': topic.name,
             'description': topic.description,
             'lead': topic.lead,
-            'duration': str(topic.duration),
+            'duration': topic_duration,
             'docs':list(topic.documents.values())
         }
         return data
@@ -75,12 +76,13 @@ class Topic(PositionalSortMixIn, CustomModel):
                 a_doc = agenda_doc_model(agenda_id=topic.id)
                 a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
+        topic_duration = cls.set_duration_to_hour_min(topic.duration)
         data = {
             'id': topic.id,
             'name': topic.name,
             'description': topic.description,
             'lead': topic.lead,
-            'duration': str(topic.duration),
+            'duration': topic_duration,
             'docs':list(topic.documents.values())
         }
         return data
@@ -103,7 +105,7 @@ class Topic(PositionalSortMixIn, CustomModel):
         else:
             days_to_hours = topic_duration.days * 24
             time = str(datetime.timedelta(seconds=topic_duration.seconds)).split(":")
-            hour = int(time[0])+int(days_to_hours)
+            hour = time[0]+days_to_hours
             time = str(hour) + ":" + str(time[1])
         return time
 
@@ -187,7 +189,8 @@ class Topic(PositionalSortMixIn, CustomModel):
             topic_id = params['id']
             topic_orm = Topic.objects.get(pk=topic_id)
             topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'description', 'duration', 'event__exectime', 'event__name', 'event__id'])
-            topic['duration'] = str(topic['duration'])
+            topic_duration = cls.set_duration_to_hour_min(topic['duration'])
+            topic['duration'] = topic_duration
             topic_docs = list(topic_orm.documents.values())
             meeting_type = ''
             try:

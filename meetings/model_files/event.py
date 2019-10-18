@@ -302,7 +302,7 @@ class Event(CustomModel):
         meeting_object['description'] = meeting_object_orm.description
         meeting_object['location'] = location
         meeting_object['duration'] = duration
-        meeting_object['duration_data'] = topic_model.check_duration( request ,params={"meeting_id":meeting_object_orm.id})
+        # meeting_object['duration_data'] = topic_model.check_duration( request ,params={"meeting_id":meeting_object_orm.id})
 
         meeting_object['street'] = meeting_object_orm.street
         meeting_object['city'] = meeting_object_orm.city
