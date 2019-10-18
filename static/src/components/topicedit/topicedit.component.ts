@@ -269,11 +269,12 @@ export class TopiceditComponent implements OnInit {
                 setTimeout(()=>{
                     $("#duration").val(available_time_string);
                     },10);
-                console.log(available_time_string);
+                // console.log(available_time_string);
             }
 
         }else{
-            console.log('Invalid duration')
+            var message = "Not Valid Time."
+            window['bootbox'].alert(message);
         }
 
         // sum += obj_this.topic.duration;
@@ -388,7 +389,7 @@ export class TopiceditComponent implements OnInit {
                 obj_this.apply_drag_drop();
             }, 10);
         }
-        console.log(obj_this.meeting_obj);
+        // console.log(obj_this.meeting_obj);
         obj_this.sum_agenda_duration(null);
         window['app_libs']['mask'].load(()=>{
             $('#duration').mask('00:00');
