@@ -340,22 +340,30 @@
 
     $(function() {
         var last_active_was_comment = false;
-        $(document).on('mouseup', '#viewer', function(e) {
+        $(document).mouseup(function(e){
+            if($('.ContextMenuPopup:visible:first').length && $(e.target).closest('.ContextMenuPopup').length){                                                
+                $('.ContextMenuPopup').hide();
+                contextMenuShown = false;
+                return;
+            }
+        });
+        $(document).on('mouseup', '#viewer', function(e) {            
             if (e.button == 2)
                 return;
             if (annotation_mode != 1)
-                return;
+                return;            
             setTimeout(function() {
                 var selection = window.getSelection();
-                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
+                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {                    
                     var ctxMenu = $('.annotation-options.ContextMenuPopup');
                     ctxMenu.css({
                         'left': e.pageX - ctxMenu.width() / 2,
                         'top': e.clientY + 12
                     }).show();
-                    // console.log(ctxMenu.position());
-                    contextMenuShown = true;
+                    contextMenuShown = true;                
                 } else {
+                    $('.annotation-options:first').hide();
+                    contextMenuShown = false;
                     var comment_active = $('.toolbar .comment').hasClass('active');
                     if (comment_active) {
                         if (last_active_was_comment)
