@@ -729,9 +729,9 @@
                     var x_dim = horizontal + ':' + point_left + 'px;';
                     var style = y_dim + x_dim;
                     //to be changed
-                    // if (c_point.counter == 0) {
-                    //     style += 'display:none;'
-                    // }
+                    if (c_point.counter == 0) {
+                        style += 'display:none;'
+                    }
                     notif_counters_html += ' style="' + style + '" comment_count="' + c_point.counter + '">' + c_point.counter + '</div>';
                     $('#pageContainer' + pange_number + ' .canvasWrapper').append(notif_counters_html);
                 }
