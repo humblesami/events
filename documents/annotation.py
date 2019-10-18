@@ -90,9 +90,7 @@ class AnnotationDocument(CustomModel):
             reset = params.get('reset')
             if reset:
                 doc.version = 0
-                with transaction.atomic():
-                    for obj in doc.annotation_set.all():
-                        obj.delete()
+                doc.annotation_set.all().delete()
                 return 'done'
         else:
             doc = AnnotationDocument(
@@ -154,7 +152,7 @@ class AnnotationDocument(CustomModel):
                 
         res = False
         with transaction.atomic():
-            doc.annotation_set.remove()
+            doc.annotation_set.all().delete()
             for obj in point_annotations:
                 if not obj.sub_type:
                     raise ValidationError('Invalid point annotation')

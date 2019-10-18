@@ -146,7 +146,10 @@
 
             var val = JSON.stringify(annotations);
             localStorage.setItem(documentId + '/annotations', val);
-            setDocDirty(documentId);
+            if(operation != 'op=init')
+            {
+                setDocDirty(documentId);
+            }
             if(annot_save_timeout)
             {
                 clearTimeout(annot_save_timeout);
@@ -459,9 +462,6 @@
                                     saveAnnotationsAtServer();
                                 }
                             });
-                        } else {
-                            unSetDocDirty(documentId);
-                            console.log("Saved");
                         }
                     }                    
 
@@ -477,8 +477,7 @@
                         if (!documentId) {
                             console.log("Save must be called after document id is set")
                             return;
-                        }
-                        console.log('Saving');
+                        }                        
 
                         var document_version = getDocumentVersion(documentId);
                         var input_data = {
@@ -525,18 +524,22 @@
                             {
                                 var res = checkDuplication(annotations);
                                 if(res){
+                                    console.log('Could not save, duplication found', annotations);
                                     return;
                                 }
                                 else{
-                                    input_data['annotations'] = annotations;
-                                    console.log('No duplication');
+                                    input_data['annotations'] = JSON.stringify(annotations);
+                                    // console.log('No duplication');
                                 }
                             }
                             else{
 
                             }
+                            console.log('Saving', annotations);
                         }
-                        input_data['annotations'] = JSON.stringify();
+                        else{
+                            console.log('Saving, reset');
+                        }
                         var dt_now = new Date();
                         if(last_save_call.dt){
                             var diff = dt_now - last_save_call.dt;
@@ -562,13 +565,17 @@
                             args: args,
                             no_loader: 1,
                             params: input_data
-                        };                        
+                        };
 
                         dn_rpc_object({
                             data: final_input_data,
                             no_loader: 1,
                             onSuccess: function(data) {
-                                unSetDocDirty(documentId);
+                                if(data == 'done')
+                                {
+                                    console.log('Saved');
+                                    unSetDocDirty(documentId);
+                                }
                                 onAnnotationsUploaded(data);                                
                             },
                             type: 'post'
