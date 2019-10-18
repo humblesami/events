@@ -462,8 +462,8 @@
                                     saveAnnotationsAtServer();
                                 }
                             });
-                        }
-                    }                    
+                    }
+                }                    
 
                     saveAnnotationsAtServer = function(save_type) {
                         if(save_type != 'reset')
@@ -477,7 +477,7 @@
                         if (!documentId) {
                             console.log("Save must be called after document id is set")
                             return;
-                        }                        
+                        }
 
                         var document_version = getDocumentVersion(documentId);
                         var input_data = {
@@ -565,7 +565,7 @@
                             args: args,
                             no_loader: 1,
                             params: input_data
-                        };
+                        };                        
 
                         dn_rpc_object({
                             data: final_input_data,
@@ -5108,7 +5108,38 @@
                             var range = selection.getRangeAt(0);
                             var rects = range.getClientRects();
                             if (rects.length > 0 && rects[0].width > 0 && rects[0].height > 0) {
-                                return rects;
+                                let dist_rects = []
+                                for (let rect of rects)
+                                {
+                                    let matched = false;
+                                    let index = 0;
+                                    let matched_index = -1;
+                                    if (dist_rects.length)
+                                    {
+                                        for(let dist_rect of dist_rects)
+                                        {
+                                            if (dist_rect.left==rect.left && dist_rect.right==rect.right && dist_rect.x==rect.x)
+                                            {
+                                                matched=true;
+                                                matched_index = index;
+                                            }
+                                            index++;
+                                        }
+                                        if (!matched)
+                                        {
+                                            dist_rects.push(rect);
+                                        }
+                                        else
+                                        {
+                                            dist_rects[matched_index] = rect;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        dist_rects.push(rect)
+                                    }
+                                }
+                                return dist_rects;
                             }
                         } catch (e) {}
                         return null;
