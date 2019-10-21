@@ -51,15 +51,12 @@ class Survey(Actions):
         except:
             raise
 
-    # def get_audience(self):
-    #     res = []
-    #     if self.meeting:
-    #         for obj in self.meeting.attendees.all():
-    #             res.append(obj.profile.id)
-    #     else:
-    #         for obj in self.respondents.all():
-    #             res.append(obj.profile.id)
-    #     return res
+    def is_attempted(self, survey_obj, user_id):
+        is_attempted = False
+        question_answered = survey_obj.questions.filter(answers__isnull=False, answers__response__user__id=user_id)
+        if question_answered:
+            is_attempted = True
+        return is_attempted
 
 
     def get_updated_audience(self):

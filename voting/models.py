@@ -157,15 +157,13 @@ class Voting(Actions):
         return new_added_respondets, removed_respondents
     
     
-    # def get_audience(self):
-    #     res = []
-    #     if self.meeting:
-    #         for obj in self.meeting.attendees.all():
-    #             res.append(obj.profile.id)
-    #     else:
-    #         for obj in self.respondents.all():
-    #             res.append(obj.profile.id)
-    #     return res
+    def get_my_status(self, voting_id, user_id):
+        my_status = ''
+        user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=user_id)
+        if len(user_answer) > 0:
+            user_answer = user_answer[0]
+            my_status = user_answer.user_answer.name
+        return my_status
 
     @classmethod
     def get_details(cls, request, params):

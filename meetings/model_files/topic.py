@@ -192,12 +192,40 @@ class Topic(PositionalSortMixIn, CustomModel):
     def get_details(cls, request, params):
         try:
             topic_id = params['id']
+            user_id = request.user.id
             topic_orm = Topic.objects.get(pk=topic_id)
             topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'description', 'duration', 'event__exectime', 'event__name', 'event__id'])
             topic_duration = cls.set_duration_to_hour_min(topic['duration'])
             topic['duration'] = topic_duration
             topic_docs = list(topic_orm.documents.values())
             meeting_type = ''
+            votings = topic_orm.voting_set.all()
+            topic_votings = []
+            for voting in votings:
+                topic_votings.append({
+                    'id': voting.id,
+                    'name': voting.name,
+                    'open_date': voting.open_date,
+                    'close_date': voting.close_date,
+                    'voting_type__name': voting.voting_type.name,
+                    'is_respondent': voting.is_respondent(user_id),
+                    'my_status': voting.get_my_status(voting.id, user_id)
+                })
+            topic['votings'] = topic_votings
+            surveys = topic_orm.survey_set.all()
+            topic_surveys = []
+            for survey in surveys:
+                topic_surveys.append({
+                    'id': survey.id,
+                    'name': survey.name,
+                    'open_date': survey.open_date,
+                    'close_date': survey.close_date,
+                    'is_published': survey.is_published,
+                    'description': survey.description,
+                    'is_attempted': survey.is_attempted(survey, user_id),
+                    'my_status': survey.my_status(user_id)
+                })
+            topic['surveys'] = topic_surveys
             try:
                 meeting_type = topic_orm.event.exectime
             except:

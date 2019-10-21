@@ -8,7 +8,7 @@ declare var $: any;
 
 @Component({
     selector: 'app-topics',
-    styleUrls:['./topics.css'],
+    styleUrls:['./topics.css', '../meetingdetails/meetingdetails.css'],
     templateUrl: './topics.component.html'
 })
 export class TopicsComponent implements OnInit {
@@ -20,6 +20,7 @@ export class TopicsComponent implements OnInit {
         name: '',
         docs:[],
         votings:[],
+        surveys: []
     };
     bread_crumb = {
         items: [],
@@ -105,15 +106,60 @@ export class TopicsComponent implements OnInit {
             }, null);
         }
     }
+
+    visible_limit = {
+        survey : 1,
+        sign_doc : 1,
+        news_doc : 1,
+        news_video: 1,
+        voting: 1,
+    };
+    start_indices = {
+        survey : 0,
+        sign_doc : 0,
+        news_doc : 0,
+        news_video: 0,
+        voting: 0,
+    };
+    ending_indices = {
+        survey : 0,
+        sign_doc : 0,
+        news_doc : 0,
+        news_video: 0,
+        voting: 0,
+    }
+
+    update_indices(){
+
+    }
+
+    get_slider_start_index(flag, items, item_type){
+        
+        if(!items)
+        {
+            return;
+        }
+        if(this.start_indices[item_type] + flag * this.visible_limit[item_type] >= items.length)
+        {
+            this.start_indices[item_type] = 0;
+        }
+        else if(this.start_indices[item_type] + flag * this.visible_limit[item_type] < 0)
+        {
+            this.start_indices[item_type] = items.length % this.visible_limit[item_type] > 0 ? items.length - items.length % this.visible_limit[item_type] : items.length - this.visible_limit[item_type];
+        }
+        else
+        {
+            this.start_indices[item_type] += flag * this.visible_limit[item_type];
+        }
+        this.ending_indices[item_type] =  this.start_indices[item_type] + this.visible_limit[item_type];
+        console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
+    }
+
     ngOnInit() {
         const obj_this = this;
         const req_url = '/topic/details-json';
         const input_data = {id : obj_this.route.snapshot.params.id};
         const success_cb = function (result) {
-            if(!result.votings)
-            {
-                result.votings = [];
-            }
             obj_this.topic = result;
             // obj_this.bread_crumb.title = obj_this.topic['name'];
             // obj_this.bread_crumb.items.push({
@@ -128,6 +174,14 @@ export class TopicsComponent implements OnInit {
             if(obj_this.meeting_type)
             {
                 obj_this.meeting_type === 'past' ? obj_this.meeting_type = 'archived' : obj_this.meeting_type;
+            }
+            for(var survey of obj_this.topic.surveys)
+            {
+                survey.open_date = window['dt_functions'].meeting_time(survey.open_date);
+            }
+            for(var voting of obj_this.topic.votings)
+            {
+                voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
             }
         };
         const failure_cb = function (error) {

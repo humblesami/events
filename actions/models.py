@@ -23,6 +23,15 @@ class Actions(CustomModel):
         return self.meeting.name + '-Action'
 
 
+    def is_respondent(self, user_id):
+        is_respondent = False
+        respondents = self.get_respondents()
+        if user_id in respondents:
+            is_respondent = True
+        return is_respondent
+
+
+
     def get_respondents(self):
         res = []
         # if self.meeting:
