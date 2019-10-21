@@ -324,9 +324,9 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
     .roster .table td:first-child{
         width: 35%;
     }
-    .cursor_chooser{
+    /* .cursor_chooser{
         display: none;
-    }
+    } */
 }
 @media screen and (max-width: 390px){
     .roster-full{
