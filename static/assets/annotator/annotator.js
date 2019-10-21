@@ -776,7 +776,7 @@
             function setViewerWrapperBottom(source) {
                 var topbar_rect = $('.toolbar.topbar')[0].getBoundingClientRect();
                 // console.log(diff, 5555, source, topbar_rect);
-                content_wrapper.height(window.innerHeight - topbar_rect.top - topbar_rect.height);
+                content_wrapper.height(window.innerHeight - topbar_rect.top);// - topbar_rect.height);
             }
 
             function hideComments() {
