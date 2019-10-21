@@ -369,7 +369,11 @@ breadcrumb
 	min-width: 80px;
 	font-size: 13px;
 	margin:0 3px;
-
+	padding: .2rem .4rem;
+}
+.edit-buttons .btn{
+	border-radius: 5px;
+	min-width: auto;
 }
 .breadcrumbSection .breadcrumb {
 	padding: 0;
@@ -2473,6 +2477,9 @@ ul.dropdown-menu.scrollable-menu {
 	background: #FF5454;
 	border-radius: 20px;
 	}
+.edit-buttons{
+	display: flex;
+}	
 .details-card.edit-mode {
 	margin: 0 0 35px;
 	}
