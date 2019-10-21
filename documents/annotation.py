@@ -116,11 +116,11 @@ class AnnotationDocument(CustomModel):
             annotation_to_save = None
             new_annotation = {
                 'user_id' : user_id,
-                'page' : 1,
+                'page' : user_annot['page'],
                 'type' : user_annot['type'],
                 'uuid' : user_annot['uuid'],
                 'document_id' : doc.id,
-            }            
+            }
             
             if user_annot['type'] == 'drawing':
                 annotation_to_save = DrawingAnnotation()
