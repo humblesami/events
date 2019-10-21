@@ -368,12 +368,12 @@ breadcrumb
 	border-radius: 20px;
 	min-width: 80px;
 	font-size: 13px;
-	margin:0 3px;
-	padding: .2rem .4rem;
+	margin:0 3px;	
 }
 .edit-buttons .btn{
 	border-radius: 5px;
-	min-width: auto;
+    min-width: auto;
+    padding: .2rem .4rem;
 }
 .breadcrumbSection .breadcrumb {
 	padding: 0;
@@ -1089,7 +1089,7 @@ div#search-modal {
 .Mobilesearchbar.hide {
 	display: none;
 	}
-.nav-icon button:hover {
+    a:hover, button:not(:disabled):hover {
 	opacity: 1;
 	}
 .dropdown>.dropdown-toggle:active {
@@ -2451,32 +2451,36 @@ ul.dropdown-menu.scrollable-menu {
 	margin-top: 30px;
 	}
 .edit-buttons.edit-mode {
-	justify-content: center;
-	position: absolute;
-	z-index: 1;
-	width: 98.2%;
-	left: 1.7%;
-	bottom: 3px;
-	border-radius: 5px;
-	background: #fff;
-	border: 1px solid #ccc;
-	padding: 7px;
-	}
-.edit-buttons.edit-mode a {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    border-radius: 5px;
+    margin-left: 0px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 3px;
+}
+.edit-modal-body .edit-buttons{
+    display: block;
+}
+.edit-buttons.edit-mode a, .edit-buttons.edit-mode button {
 	color: white;
 	margin: 5px;
 	border: 1px solid white;
 	border-radius: 0.25rem;
-	min-width: 100px;
-	}
+    min-width: 100px;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
 .edit-buttons.edit-mode a.save {
-	background: #4B74B5;
-	border-radius: 20px;
-	}
+	background: #4B74B5;	
+}
 .edit-buttons.edit-mode a.cancel {
-	background: #FF5454;
-	border-radius: 20px;
-	}
+	background: #FF5454;	
+}
 .edit-buttons{
 	display: flex;
 }	
@@ -3155,4 +3159,8 @@ a.folder.droppable:not(.draggable) .paste{
 }
 .pointer{
     cursor: pointer;
+}
+.error{
+    color: red;    
+    background: #eee;
 }

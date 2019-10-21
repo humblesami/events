@@ -38,7 +38,7 @@ hr {
 }
 
 /* Set a style for all buttons */
-button {
+/* button {
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -47,11 +47,11 @@ button {
     cursor: pointer;
     width: 100%;
     opacity: 0.9;
-}
+} */
 
-button:hover {
+/* button:hover {
     opacity:1;
-}
+} */
 
 /* Extra styles for the cancel button */
 .cancelbtn {
@@ -297,7 +297,7 @@ input[type="date"]::-webkit-clear-button {
     padding: 15px;
 }
 
-.edit-buttons.edit-mode {
+/* .edit-buttons.edit-mode {
     justify-content: center;
     position: absolute;
     z-index: 14;
@@ -308,7 +308,7 @@ input[type="date"]::-webkit-clear-button {
     background: #fff;
     border: 1px solid #ccc;
     padding: 0;
-}
+} */
 
 .top-header-author.edit-author-thumb {
     text-align: left;
