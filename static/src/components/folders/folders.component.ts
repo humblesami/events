@@ -146,7 +146,7 @@ export class FoldersComponent implements OnInit {
         var load_preselected = function(){
             
             obj_this.renameService.load_movables(obj_this.parent_id, 'folder', result.can_be_parent);
-            console.log(obj_this.renameService.objects_to_move.current_parent_id, 777, obj_this.can_be_parent);
+            // console.log(obj_this.renameService.objects_to_move.current_parent_id, 777, obj_this.can_be_parent);
             if(obj_this.renameService.objects_to_move.current_parent_id && obj_this.can_be_parent)
             {
                 var paste_button_html = '<button class="btn btn-primary paste"> Paste ';
