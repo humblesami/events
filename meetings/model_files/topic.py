@@ -32,8 +32,8 @@ class Topic(PositionalSortMixIn, CustomModel):
         description = params.get('description')
         lead = params.get('lead')
         duration = params.get('duration')
-        if duration:
-            duration = cls.set_duration_parse_to_duration(duration)
+        duration = str(duration)
+        duration = cls.set_duration_parse_to_duration(duration)
         topic = Topic(event_id = meeting_id, name=name, description=description,lead=lead,duration=duration)
         topic.save()
         agenda_docs = params.get('agenda_docs')
@@ -95,7 +95,6 @@ class Topic(PositionalSortMixIn, CustomModel):
     def set_duration_parse_to_duration(cls,duration):
         duration = duration + ":00"
         duration = parse_duration(duration)
-
         return duration
     
     @classmethod

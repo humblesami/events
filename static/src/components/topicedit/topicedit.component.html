@@ -5,9 +5,9 @@
     <div class="router-outlet">
         <div class="details-card profile-edit-container edit-mode">
             <div class="row edit-buttons edit-mode">
-                <p class="error mb-0 py-1" *ngIf="(!(topic.name && topic.lead && topic.duration))">Please fill all fields</p>
-                <a href="javascript:void(0);" class="btn btn-primary save" (click)="onAddAnother()">Save & Add another</a>
-                <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
+                <p class="error mb-0 py-1" *ngIf="(submitted && !(topic.name && topic.lead && topic.duration))">Please fill all fields</p>
+                <button [disabled]="(time_exceeded || !(topic.name && topic.lead && topic.duration))" class="btn btn-primary save" (click)="onAddAnother()">Save & Add another</button>
+                <button [disabled]="(time_exceeded || !(topic.name && topic.lead && topic.duration))" class="btn btn-primary save" (click)="onSubmit()">Save</button>
                 <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
             </div>
             <div class="label-control-form">                
@@ -25,9 +25,10 @@
                         <input value="{{topic.lead}}" [(ngModel)]="topic.lead" (change)="modified_topic_data.lead = $event.target.value" type="text" placeholder="Enter Lead Name" id="lead">
                     </div>
                     <div class="col-md-6">
-                        <label for="duration"> <b>Duration</b> </label><!--check_duration($event,$event.target.value)-->
+                        <label for="duration"> <b>Duration: </b> <span [ngClass]="{error: time_exceeded}">(Available time is {{available_duration}})</span> </label>
                         <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="sum_agenda_duration($event.target.value)" type="text" placeholder="Enter Agenda Duration" id="duration"  >
                     </div>
+
                     <div class="col-md-12">
                         <label for="description"> <b>Description</b> </label>
                         <textarea value="{{topic.description}}" [(ngModel)]="topic.description" (change)="modified_topic_data.description = $event.target.value" class="form-control" placeholder="Enter Description" id="description">

@@ -54,7 +54,6 @@ export class TopiceditComponent implements OnInit {
 
     onAddAnother() {
         this.add_another = true;
-
         this.onSubmit();
     }
 
@@ -139,15 +138,23 @@ export class TopiceditComponent implements OnInit {
     
     onSubmit() {        
         let obj_this = this;
-        if(!(obj_this.topic.name && obj_this.topic.lead && obj_this.topic.duration))
+        if(obj_this.time_exceeded || !(obj_this.topic.name && obj_this.topic.lead && obj_this.topic.duration))
         {
+            return;
+        }
+        console.log(obj_this.modified_topic_data.duration, 3444);
+        if(!obj_this.modified_topic_data.duration)
+        {
+            console.log('Invalid duration');
             return;
         }
         const form_data = obj_this.modified_topic_data;
         const input_data = {};
         for (const key in form_data) {
             if (obj_this.modified_topic_data[key] != '')
+            {
                 input_data[key] = obj_this.modified_topic_data[key];
+            }
         }
         let args = {
             app: 'meetings',
@@ -202,10 +209,9 @@ export class TopiceditComponent implements OnInit {
                             obj_this.meeting_obj.meeting_topics.push(topic);
                         }
                     }
-    
                 }
-                let check :-1
-                obj_this.topic_id = ''
+                obj_this.submitted = false;
+                obj_this.topic_id = '';                
                 obj_this.sum_agenda_duration(null);
             }
         }, null);
@@ -242,10 +248,14 @@ export class TopiceditComponent implements OnInit {
         return  rhours_string + ":" + rminutes_string;
 
         }
-        
+        time_exceeded = false;
+        submitted = false;
+        available_duration= undefined;
     sum_agenda_duration(evn){
+        // console.log(434);
         let obj_this = this;
-        var topics_duration_sum = 0;
+        obj_this.time_exceeded = false;
+        var other_topics_duration = 0;
         var topics = obj_this.meeting_obj.meeting_topics
         for(var topic of topics)
         {
@@ -253,39 +263,31 @@ export class TopiceditComponent implements OnInit {
             
             if(topic.id != obj_this.topic_id)
             {
-                topics_duration_sum += num;
+                other_topics_duration += num;
             }
         }
         var meeting_duration_minuets = obj_this.duration_to_number(obj_this.meeting_obj.meeting_duration);
-        if(meeting_duration_minuets>=topics_duration_sum){
-            let available_time = meeting_duration_minuets - topics_duration_sum;
-            var available_time_string = obj_this.timeConvert(available_time);
-            obj_this.modified_topic_data.duration =evn
+        // console.log(meeting_duration_minuets, 444);
+        let available_time = meeting_duration_minuets - other_topics_duration;
+        if(meeting_duration_minuets >= other_topics_duration){            
+            var available_time_string = obj_this.timeConvert(available_time);            
             if(evn){
-                var new_topic_duration = obj_this.duration_to_number(obj_this.modified_topic_data.duration)
-                if( available_time < new_topic_duration ){
-                    var message = "Not Valid Time. Meeting has only: " + available_time_string + " Time"
-                    window['bootbox'].alert(message);
-                    setTimeout(()=>{
-                        $("#duration").val(available_time_string);
-                        obj_this.modified_topic_data.duration = available_time_string
-                        },10);
-                    
+                var new_topic_duration = obj_this.duration_to_number(obj_this.topic.duration)
+                if( available_time < new_topic_duration ){                    
+                    obj_this.time_exceeded = true;
                 }
+                obj_this.modified_topic_data.duration = new_topic_duration + '';
             }else{
                 setTimeout(()=>{
-                    $("#duration").val(available_time_string);
-                    },10);
-                // console.log(available_time_string);
+                    obj_this.modified_topic_data.duration = available_time_string;
+                },10);
             }
-
         }else{
-            var message = "Not Valid Time."
-            window['bootbox'].alert(message);
+            obj_this.time_exceeded = true;
         }
+        obj_this.available_duration = available_time - new_topic_duration;
 
-        // sum += obj_this.topic.duration;
-
+        console.log(obj_this.modified_topic_data.duration, 333);
     }
 
     get_topic() {
@@ -356,14 +358,6 @@ export class TopiceditComponent implements OnInit {
         window['app_libs']['duration_picker'].load(function(){
             $('#duration').durationPicker();            
         });
-        // .load(()=>{
-        //     $('#duration').durationPicker();    
-        // });
-        
-        // window['app_libs']['mask'].load(()=>{
-        //     $('#duration').mask('00:00');
-            
-        // });
     }
 
 }
