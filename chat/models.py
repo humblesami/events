@@ -627,6 +627,7 @@ class Message(models.Model):
                     message_id=message.id,
                     file_type='message',
                     name=file_name,
+                    file_name=file_name,
                 )
 
                 image_data = attachment['binary']
@@ -739,6 +740,8 @@ class Message(models.Model):
         
         file = File.objects.get(pk=file_id_is)
         my_folder = Folder.objects.get(created_by_id=request.user.id, personal=True, parent_id__isnull=True)
+        if not file.file_name:
+            return "Invalid file name"
         doc = ResourceDocument(folder_id=my_folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name, personal=True)
         doc.save()
 
@@ -746,7 +749,7 @@ class Message(models.Model):
         doc.moved = True
         doc.save()
 
-        return "File Saved Successfully"
+        return {'data': 'File Saved Successfully' }
 
     @classmethod
     def move_to_other_folder(cls, request, params):

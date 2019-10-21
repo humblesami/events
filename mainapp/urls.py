@@ -46,6 +46,7 @@ urlpatterns = [
     url(r'^nested_admin/', include('nested_admin.urls')),
     url('auth-code/', include('authcode.urls')),
     url(r'^mail/', include('emailthread.urls')),
+    url(r'^chat/', include('chat.urls')),
 
 ] # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

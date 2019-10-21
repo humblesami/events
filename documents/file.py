@@ -80,7 +80,8 @@ class File(CustomModel):
                         file_changed = True
                     else:
                         self.pending_tasks = 0
-
+                elif not self.file_name:
+                    raise Exception('Invalid file name')
                 file_data = None
                 if self.cloud_url and (creating or self.file_type == 'esign'):
                     file_changed = True
