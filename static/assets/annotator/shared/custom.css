@@ -335,7 +335,6 @@
     min-width: 12px;
     width: 18px;
     border-radius: 100%;
-    z-index: 1;
     padding: 0;
     position: absolute;
     bottom: -4px;
@@ -777,4 +776,10 @@ span.pager.disabled
 #comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
     display: none;
+}
+@media screen and (max-width:576px){
+    #comment-wrapper{
+        position: absolute;
+        z-index: 1;
+    }
 }
