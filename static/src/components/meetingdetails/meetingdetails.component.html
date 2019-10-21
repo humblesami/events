@@ -190,7 +190,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div id="agenda-items" *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
             <h3>
-                <div><i class="icon-angenda text-primary"></i> Agenda Topics <i *ngIf="socketService.admin_mode" class="pointer fa fa-plus-circle text-primary" (click)='add_edit_topic(null, null, "create")'></i> </div>
+                <div><i class="icon-meeting-angenda text-primary"></i> Agenda Topics <i *ngIf="socketService.admin_mode" class="pointer fa fa-plus-circle text-primary" (click)='add_edit_topic(null, null, "create")'></i> </div>
             </h3>
             <div class="row">
                 <div class="col-sm-12">

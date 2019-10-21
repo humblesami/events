@@ -20,6 +20,11 @@ class Topic(PositionalSortMixIn, CustomModel):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.duration:
+            raise Exception('Invalid duration')
+        super(Topic, self).save(*args, **kwargs)
+
     @classmethod
     def save_agenda_topic(cls, request, params):
         meeting_id = params['meeting_id'];
