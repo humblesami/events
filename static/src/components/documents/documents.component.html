@@ -7,8 +7,39 @@
     
     <div class="row">
         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
+            <a *ngIf="doc.invalid" class="corrupt">
+                <input type="hidden" class="item_id" value="{{doc.id}}" />
+                <div class="doc-del-btn d-flex" *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly">
+                    <div class="pointer" *ngIf="parent_model == 'Folder'"
+                    title="Move"
+                    (click)="renameService.make_movable($event, parent_id, doc.id, 'files', doc.personal)">
+                        <i class="fas fa-cut" ></i>
+                    </div>
+                    <div class="pointer"
+                    title="Delete"
+                    (click)="delete_file($event, doc.id)">
+                        <i class="far fa-trash-alt" ></i>
+                    </div>                    
+                </div>
+                <div class="p-1 pos-abs" style="left:5px">
+                    <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">
+                </div>
+                <div class="DocIcon">
+                    <span class="rounded-circle">
+                        <i class="icon-doc-file"></i>
+                    </span>
+                </div>
+                <div class="DocText" (click)="renameService.prevent_default($event, personal)">
+                    <div class="DocName w-100">
+                        <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
+                            <span class="text-truncate doc-info" [ngClass]="{'mt-2': (!socketService.admin_mode && !personal)}">{{doc.name}}</span>                            
+                        </div>
+                    </div>   
+                </div>
+            </a>
             <a class="DocumentWrapper gray-bg doc" 
-            [ngClass]="{personal: doc.personal}" 
+            *ngIf="!doc.invalid"
+            [ngClass]="{personal: doc.personal}"            
             routerLink="{{roterLinkPrefix+doc.id}}"
             >
                 <input type="hidden" class="item_id" value="{{doc.id}}" />
@@ -22,7 +53,7 @@
                     title="Delete"
                     (click)="delete_file($event, doc.id)">
                         <i class="far fa-trash-alt" ></i>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="p-1 pos-abs" style="left:5px">
                     <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">

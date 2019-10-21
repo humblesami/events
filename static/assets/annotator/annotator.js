@@ -636,8 +636,8 @@
                             var diff = dt_now - last_save_call.dt;
                             if(diff <= annotation_save_wait_time)
                             {
-                                console.log('Why saving again')
-                                console.trace();
+                                console.log('Save called but returned becuase its just already committed')
+                                // console.trace();
                                 // var trace_now = undefined;
                                 // try { var a = {}; a.debug(); } catch(ex) { trace_now = ex.stack; }
                                 // console.log(last_save_call.trace, trace_now);

@@ -261,8 +261,20 @@ class File(CustomModel):
             docs = ws_methods.search_db({'kw': kw, 'search_models': {params['app']: [params['model']]}})
         else:
             docs = model.objects.filter(q_objects)
+        invalid_docs = []
+        for doc in docs:
+            is_valid = False
+            if doc.attachment:
+                if doc.attachment.url:
+                    is_valid = True
+            if not is_valid:
+                invalid_docs.append(doc.id)
+        # docs = docs.filter(~(Q(id__in=invalid_docs))).values('id', 'name', 'access_token', 'extention')
         docs = docs.values('id', 'name', 'access_token', 'extention')
         documents = list(docs)
+        for doc in documents:
+            if doc['id'] in invalid_docs:
+                doc['invalid'] = 1
         return documents
 
     @classmethod
