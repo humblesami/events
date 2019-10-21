@@ -8,7 +8,7 @@
     }
 .toolbar.topbar {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     position: relative;
     border: 0;
     color: #ffffff;
@@ -16,15 +16,18 @@
 }
 .ToolBarWrapper {
     display: flex;
-    width: 100%;
+    width: 75px;
     justify-content: center;
     align-items: center;
-    position: relative;
+    position: absolute;
+    right: 15px;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
     padding: 5px 0px;
     border-radius: 0.2rem;
     flex-wrap: wrap;
     min-height: 45px;
+    flex-direction: column;
+    z-index: 1;
 }
 .toolbar .spacer {
     display: inline-block;
@@ -274,6 +277,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     margin: 0 5px;
 }
 
@@ -772,6 +776,7 @@ span.pager.disabled
 }
 .ToolBarWrapper>div{
     display: none;
+    flex-direction: column;
 }
 #comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
@@ -780,6 +785,9 @@ span.pager.disabled
 @media screen and (max-width:576px){
     #comment-wrapper{
         position: absolute;
-        z-index: 1;
+        z-index: 2;
+    }
+    .ToolBarWrapper{
+        right: 0;
     }
 }
