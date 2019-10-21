@@ -122,12 +122,14 @@ class AuthUser(models.Model):
             user_data['photo'] = user.image.url
             user_data['user_photo'] = user_data['photo']
         except:
-            pass
+            pass        
         """ Creating Peronsl Folder if not exists """
         folder_model = ws_methods.get_model('resources', 'Folder')
         method_to_call =  getattr(folder_model, 'create_personal_folder')
         request.user = user
         method_to_call(folder_model, request, {})
+        """Deleting All Temp Files"""
+        ws_methods.detele_all_temp_files(request, user.id)
         return user_data
 
     @classmethod
@@ -252,6 +254,7 @@ class AuthUser(models.Model):
 
     @classmethod
     def logout_user(cls, request, params):
+        ws_methods.detele_all_temp_files(request, request.user.id)
         logout(request)
         return {'error': '', 'data': 'ok'}
 

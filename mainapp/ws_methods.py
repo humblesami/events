@@ -605,6 +605,14 @@ def duplicate_file(a, file_ptr, file_type):
     a.pending_tasks = 0
     return a
 
+
+def detele_all_temp_files(request, user_id):
+    file_model = get_model('documents', 'File')
+    method_to_call =  getattr(file_model, 'delete_all_tem_files')
+    params = {'user_id': user_id}
+    method_to_call(request, params)
+    return 'done'
+
 # class SearchModel:
 #     name = ''
 #     fields = []

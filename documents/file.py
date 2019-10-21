@@ -165,6 +165,13 @@ class File(CustomModel):
             res = ws_methods.get_error_message()
             raise Exception(res)
 
+    @classmethod
+    def delete_all_tem_files(cls, request, params):
+        user_id = params['user_id']
+        File.objects.filter(file_type='temp', created_by_id=user_id).delete()
+        return 'done'
+
+
     def get_pdf(self):
         tmp = self.attachment.url.split('.')
         ext = tmp[len(tmp) - 1]
