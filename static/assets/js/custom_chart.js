@@ -1,7 +1,7 @@
 (function(){
     window['chart_colors'] = [
-        '#7CD122',
         '#EF6262',
+        '#7CD122',
         '#F9BB10',
         '#05B0D8',
         '#fdff09',
@@ -62,8 +62,8 @@
         };
         if (canvas_selector == '#progress-chart'){
             chart_type = 'doughnut'
-            chartData.datasets[0].backgroundColor = ['#EF6262', '#7CD122'];
-            chartData.datasets[0].hoverBackgroundColor = ['#EF6262', '#7CD122'];
+            // chartData.datasets[0].backgroundColor = ['#EF6262', '#7CD122'];
+            // chartData.datasets[0].hoverBackgroundColor = ['#EF6262', '#7CD122'];
             // chartData.datasets[0].borderColor = 'D3D3D3';
             // chartData.datasets[0].borderWidth = '.5px';
             // chartData.datasets[0].weight = 1;
