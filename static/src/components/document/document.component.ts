@@ -172,7 +172,10 @@ export class DocumentComponent implements OnInit {
                         let el = $('.active-mention');                
                         let tag = $('<a class="mention" mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
                         el.append(tag);
-                        el.html(el.html().replace('@', ''));
+                        let inputValue = el.html();
+                        let secondString = inputValue.substring(inputValue.lastIndexOf('@'), inputValue.length-1);
+                        let replaceValue = secondString.substring(0, secondString.indexOf('<'));
+                        el.html(el.html().replace(replaceValue, ''));
                         obj_this.placeCursorAtEnd();
                         window['should_save'] = false;
                         return '';
