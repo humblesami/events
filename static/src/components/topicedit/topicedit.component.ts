@@ -353,10 +353,17 @@ export class TopiceditComponent implements OnInit {
         }
         // console.log(obj_this.meeting_obj);
         obj_this.sum_agenda_duration(null);
-        window['app_libs']['mask'].load(()=>{
-            $('#duration').mask('00:00');
-
+        window['app_libs']['duration_picker'].load(function(){
+            $('#duration').durationPicker();            
         });
+        // .load(()=>{
+        //     $('#duration').durationPicker();    
+        // });
+        
+        // window['app_libs']['mask'].load(()=>{
+        //     $('#duration').mask('00:00');
+            
+        // });
     }
 
 }

@@ -142,6 +142,15 @@ var app_libs = window['app_libs'] = {
             var obj_this = this;    
             js_utils.load_lib(obj_this, on_load);
         }
+    },
+    duration_picker: {
+        script_paths : ['static/assets/libs/duration-picker/duration-picker.js'],
+        style_paths : ['static/assets/libs/duration-picker/duration-picker.css'],
+        load: function(on_load){            
+            var obj_this = this;
+            console.log(43343);
+            js_utils.load_lib(obj_this, on_load);
+        }
     }
 };
 
