@@ -9,6 +9,7 @@ import { ChatgroupComponent } from '../chatgroup/chatgroup.component';
 import { ViewmembersComponent } from '../viewmembers/viewmembers.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MovetomyfolderComponent } from '../movetomyfolder/movetomyfolder.component';
+import { UserService } from 'src/app/user.service';
 declare var $: any;
 
 @Component({
@@ -33,13 +34,14 @@ export class MessengerComponent implements OnInit {
         private _location: Location,
 		private httpService: HttpService,
         private ss: SocketService,
+        public userServie: UserService,
         private modalService: NgbModal
 
         ) {
             window['app_libs']['emoji_picker'].load();
             window['app_libs']['rtc'].load();            
             var obj_this = this;
-            obj_this.socketService = ss;
+            obj_this.socketService = ss;            
             var socketService = ss;
             function registerChatEventListeners()
             {

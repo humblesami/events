@@ -130,7 +130,7 @@
         <div class="chat chat-container-wrppaer" *ngIf="active_chat_user">
             <div class="chat-full-height">
                 <div class="chat-user-title">
-                    <div class="MessengerTitle">
+                    <div class="MessengerTitle pointer" (click)="userServie.show_profile_summary(active_chat_user.id)">
                         <span class="backchatlist" (click)="set_chat_mode('none')"><i class="fas fa-arrow-left"></i></span>
                         <img *ngIf="!active_chat_user.is_group" src="{{socketService.server_url}}{{active_chat_user.photo}}" />
                         <span class="user-name">{{active_chat_user.name}}</span>                    

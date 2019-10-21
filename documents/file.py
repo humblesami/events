@@ -271,8 +271,8 @@ class File(CustomModel):
         invalid_docs = []
         for doc in docs:
             is_valid = False
-            if doc.attachment:
-                if doc.attachment.url:
+            if doc.pdf_doc:
+                if doc.pdf_doc.url:
                     is_valid = True
             if not is_valid:
                 invalid_docs.append(doc.id)
