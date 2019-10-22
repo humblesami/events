@@ -1,6 +1,21 @@
 #annotated-doc-conatiner * {
     box-sizing: border-box;
     }
+/* width */
+.ToolBarWrapper::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+.ToolBarWrapper::-webkit-scrollbar-track {
+    background: #fff; 
+}
+
+/* Handle */
+.ToolBarWrapper::-webkit-scrollbar-thumb {
+    background: #ddd !important; 
+    border-radius: 0px !important;
+}    
 .toolbar {
     border-bottom: 1px solid #e6e6e6;
     padding: 0;
@@ -14,18 +29,29 @@
     color: #ffffff;
     background-color: #fafafa;
 }
+.toolbar.topbar .doc-manage-btn-wrap{
+    margin-bottom: .9rem;
+}
+.toolbar.topbar .doc-manage-btn-wrap > *{
+    margin-top: .5rem;
+}
+.toolbar.topbar .doc-manage-btn-wrap > *:first-child{
+    margin-top: 0;
+}
 .ToolBarWrapper {
-    display: flex;
-    width: 75px;
+    display: block;
+    width: 40px;
     align-items: center;
     position: relative;
     right: 0;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
     padding: 5px 0px;
     flex-wrap: wrap;
-    min-height: 45px;
+    height: calc(100vh - 110px);
     flex-direction: column;
     z-index: 1;
+    overflow: auto;
+
 }
 .toolbar .spacer {
     display: inline-block;
@@ -83,33 +109,7 @@
     top: 4px;
     left: 4px;
 }
-/*
-.toolbar button.highlight:after {
-    width: 17px;
-    height: 17px;
-    background: yellow;
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    }
 
-.toolbar button.strikeout:after {
-    width: 15px;
-    height: 1px;
-    background: red;
-    position: absolute;
-    top: 12px;
-    left: 4px;
-}
-
-.toolbar button.underline:after {
-    width: 20px;
-    height: 1px;
-    background: green;
-    position: absolute;
-    bottom: 2px;
-    left: 4px;
-}*/
 .toolbar button.text:after {
     content: 'T';
     font-family: 'Times New Roman';
@@ -269,27 +269,11 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 0 5px;
 }
 
-.toolbar button, .toolbar a, .topbar .paginator {
-    margin: 0 7px;
-}
-
-.topbar .paginator .pager {
-    padding: 0 7px;
-    cursor: pointer;
-    }
-/* .topbar .paginator .pager.prev {
-    margin-left: 7px;
-}
-.topbar .paginator .pager.next {
-    margin-right: 7px;
-} */
 .topbar .paginator input {
     width: 42px;
     height: 25px;
-    /* margin-right: 7px; */
     padding-left: 5px;
     border: 0;
 }
@@ -326,18 +310,16 @@
 
 .toolbar button.add-point-button {
     background: #7c7bad;
-    height: 18px;
-    min-width: 12px;
-    width: 18px;
+    height: 15px;
+    min-width: 15px;
+    width: 15px;
     border-radius: 100%;
     padding: 0;
     position: absolute;
-    bottom: -4px;
-    right: 0;
+    bottom: 0px;
+    right: 7px;
 }
-/*.toolbar .paginator .pager:hover, .toolbar button:hover, .toolbar a:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}*/
+
 .toolbar button.add-point-button:hover {
     background-color: green;
 }
@@ -358,8 +340,6 @@ body.pdf-viewer {
 #viewer-wrapper {
     position: relative;
     flex:1;
-    /*display: flex;
-    flex-direction: row-reverse;*/
     }
 #content-wrapper {
     position: relative;
@@ -398,7 +378,6 @@ body.pdf-viewer {
 }
 .comment-header {
     padding: 10px;
-    /* border-bottom: 1px solid #cccccc; */
     background: linear-gradient(to bottom, #6c6968, #6a6969);
     box-shadow: inset 0 -1px 0 0 #cfd8dc;
 }
@@ -421,7 +400,6 @@ body.pdf-viewer {
 }
 #viewer {
     margin: 0 auto;
-    /*margin-top: 53px;*/
 }
 #viewer.pen_active
 {
@@ -755,7 +733,7 @@ a.list-group-item.contact.active {
     top: -35px;
     right: 0;
     background: #4b74b5;
-    padding: 5px 10px;
+    padding: .3rem .85rem;
     cursor: pointer;
 }
 .comment-list-item>div>span {
@@ -776,7 +754,6 @@ span.pager.disabled
 .ToolBarWrapper>div{
     display: none;
     flex-direction: column;
-    margin-bottom: 2px;
 }
 #comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
