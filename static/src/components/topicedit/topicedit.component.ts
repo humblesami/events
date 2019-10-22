@@ -181,19 +181,21 @@ export class TopiceditComponent implements OnInit {
         }
         $(".popover").removeClass('show');
         obj_this.httpService.get(final_input_data, (data) => {
+            console.log(data,54);
             if (data != 'done') {
+                obj_this.meeting_obj.meeting_topics.push(data);
                 obj_this.added_topics.push(data);
             }
             if (!obj_this.add_another) {
-                if (!obj_this.added_topics.length) {
-                    obj_this.activeModal.close('saved');
+                if (!obj_this.added_topics.length) {                    
+                    obj_this.activeModal.close('saved');                     
                 } else {
                     obj_this.activeModal.close(obj_this.added_topics);
                 }
             } else {
 
                 obj_this.clear_form();
-                obj_this.sum_agenda_duration(null);
+
                 data = obj_this.added_topics
                 if (isArray(data))
                 {
@@ -219,7 +221,7 @@ export class TopiceditComponent implements OnInit {
                 }
                 obj_this.submitted = false;
                 obj_this.topic_id = '';                
-                
+                obj_this.sum_agenda_duration(null);                
             }
         }, null);
     }

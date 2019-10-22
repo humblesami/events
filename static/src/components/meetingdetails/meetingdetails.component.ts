@@ -58,9 +58,17 @@ export class MeetingDetailsComponent implements OnInit {
         });
     }
 
-
     delete_agenda_topic(evt, topic_id)
     {
+        let obj_this = this;
+        window['bootbox'].confirm('Are you sure to delete agenda item?', function(dr){
+            if(dr){
+                obj_this.delete_topic(evt, topic_id);
+            }
+        })
+    }
+
+    delete_topic(evt, topic_id){
         evt.stopPropagation();
         evt.preventDefault();
         let obj_this = this;
@@ -81,58 +89,34 @@ export class MeetingDetailsComponent implements OnInit {
             args: args
         }
         obj_this.httpService.get(final_input, (data)=>{
-            obj_this.meeting_object.topics = obj_this.meeting_object.topics.filter((el)=>{
-                return el.id != topic_id;
-            });
+            obj_this.meeting_object.topics = data;            
         }, null)
     }
 
-    add_edit_topic(evt, topic_id, action){
+    add_edit_topic(evt, topic_id, action){        
         if(evt){
             evt.stopPropagation();
             evt.preventDefault();
         }
         let obj_this = this;
         var on_topic_closed = function(data){
-            if(!data){
-                return;
-            }
-            if (isArray(data))
-            {
-                for (let topic of data)
-                {
-                    let index = -1;
-                    obj_this.meeting_object.topics.filter((el, i)=>{
-                        // console.log(el, i, topic);
-                        if (el.id == topic.id)
-                        {
-                            index = i;
-                        }
-                    })
-                    if (index != -1)
-                    {
-                        obj_this.meeting_object.topics[index] = topic;
-                    }
-                    else
-                    {
-                        obj_this.on_topic_added(topic)                        
-                    }
-                }
-
-            }
+            
         };
         var fun = function(){
             // console.log(44343);
             const modalRef = obj_this.modalService.open(TopiceditComponent, { backdrop: 'static' });
             modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
             modalRef.componentInstance.meeting_name = obj_this.meeting_object.name;
-            modalRef.componentInstance.meeting_obj = {"meeting_duration":obj_this.meeting_object.duration, "meeting_topics":obj_this.meeting_object.topics};
+            modalRef.componentInstance.meeting_obj = 
+            {
+                "meeting_duration":obj_this.meeting_object.duration,
+                "meeting_topics":obj_this.meeting_object.topics
+            };
             modalRef.componentInstance.action = action;
             modalRef.componentInstance.topic_id = topic_id;
             modalRef.result.then(on_topic_closed);
         }
         fun();
-        // window['app_libs']['duration_picker'].load(fun);
     }
 
     open_topic_edit()
@@ -303,14 +287,6 @@ export class MeetingDetailsComponent implements OnInit {
                 {
                     voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
                 }
-                
-                
-                var len = obj_this.meeting_object.topics.length;
-                if(len)
-                {
-                    obj_this.meeting_object.topics[len - 1].last = true;
-                    obj_this.meeting_object.topics[0].first = true;
-                }
 
                 setTimeout(function(){
                     if (obj_this.meeting_object.publish)
@@ -323,7 +299,7 @@ export class MeetingDetailsComponent implements OnInit {
                     }
                     $('#agenda_tbody').sortable({
                         stop: function (event, ui) {
-                            obj_this.find_moved_rows();
+                            obj_this.save_positions();
                         },
                     });                    
                 }, 100);
@@ -335,84 +311,37 @@ export class MeetingDetailsComponent implements OnInit {
 		this.httpService.get(input_data, on_data, null);
     }
 
-    find_moved_rows(){
+    save_positions(evn = undefined, dir = undefined){
+
         let obj_this = this;
-        if($('#agenda_tbody tr').length < 2)
-        {
-            return;
+        var data = [];
+        if(dir == 'down'){
+            $(evn.target).closest('tbody').append($(evn.target).closest('tr').prev())
         }
-        var last_pos = -1;
-        var i = 0;
-        var i1 = -1;
-        var i2 = -1;        
+        if(dir == 'up'){
+            $(evn.target).closest('tbody').append($(evn.target).closest('tr').next())
+        }
+        var temp_topics = [];
         $('#agenda_tbody tr').each(function(i, el){
-            // console.log(i, el);
-            var pos = parseFloat($(el).find('.position').html());        
-            if(last_pos > pos){
-                if(i1 == -1)
-                {
-                    i1 = i - 1;
-                    i2 = i;
-                }
-                else{
-                    i2 = i;
-                }
-            }
-            last_pos = pos;
-            i++;
+            data.push({
+                id:$(el).find('input.id:first').val(),
+                position: i
+            });            
+            var topic = obj_this.meeting_object.topics.find(function(item){
+                return item.id == data[i].id;
+            });
+            topic.position = i;
+            
+            temp_topics.push(topic);
         });
-        // console.log(i1, i2);
-        if(i1 != -1 && i2 != -1)
-        {
-            obj_this.save_positions(i1, i2);
-        }
-    }
-
-    move_down(evn, topic){
-        let obj_this = this;
-        var i = $(evn.target).closest('tr').index();
-        obj_this.save_positions(i, i+1);
-    }
-
-    move_up(evn, topic){
-        let obj_this = this;
-        var i = $(evn.target).closest('tr').index();        
-        obj_this.save_positions(i, i-1);
-    }
-
-    save_positions(i1, i2){
-        let obj_this = this;
-
-        var temp = obj_this.meeting_object.topics[i1];
-        obj_this.meeting_object.topics[i1] = obj_this.meeting_object.topics[i2];
-        obj_this.meeting_object.topics[i2] = temp;
+        obj_this.zone.run(()=>{
+            // console.log(temp_topics, 33);
+            obj_this.meeting_object.topics = temp_topics;        
+        });        
         
-        var pos = obj_this.meeting_object.topics[i1].position;
-        obj_this.meeting_object.topics[i1].position = obj_this.meeting_object.topics[i2].position;
-        obj_this.meeting_object.topics[i2].position = pos;
-
-        obj_this.meeting_object.topics[i1].first = false;
-        obj_this.meeting_object.topics[i1].last = false;
-        obj_this.meeting_object.topics[i2].first = false;
-        obj_this.meeting_object.topics[i2].last = false;
-
-        var len = obj_this.meeting_object.topics.length;
-        obj_this.meeting_object.topics[0].first = true;
-        obj_this.meeting_object.topics[len - 1].last = true;
-
-        var temp_topics = obj_this.meeting_object.topics;
-        obj_this.zone.run(() => obj_this.meeting_object.topics = temp_topics);        
-
         obj_this.httpService.get({
             params:{
-                topic1:{
-                    id: temp_topics[i1].id,
-                    position: temp_topics[i1].position
-                },
-                topic2:{
-                    id: temp_topics[i2].id,
-                    position: temp_topics[i2].position
-                },
+                topics: data,
             },
             args:{
                 app: 'meetings',
@@ -420,7 +349,7 @@ export class MeetingDetailsComponent implements OnInit {
                 method:'update_positions'
             },
         }, function(){
-            // obj_this.meeting_object.topics = temp_topics;
+            
         }, null);
     }
 

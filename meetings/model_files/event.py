@@ -329,30 +329,9 @@ class Event(CustomModel):
         meeting_object['attendee_status'] = attendance_status['state']
         meeting_object['my_event'] = attendance_status['my_event']
 
-        topic_orm = list(meeting_object_orm.topic_set.all())
-        topics = []
+
+        topics = cls.get_topics(meeting_object_orm)
         errors = []
-        try:
-            for t in topic_orm:
-                topic = ws_methods.obj_to_dict(t)
-                del topic['updated_at']
-                del topic['created_at']
-                del topic['updated_by']
-                del topic['created_by']
-                del topic['description']
-                topic_duration = 0
-                try:
-                    topic_duration =topic['duration']
-                except:
-                    errors.append('Invalid duration of topic '+t.name+'-'+str(t.id))
-                topic['duration'] = topic_duration
-                topic['docs'] = list(t.documents.values())
-                for doc in topic['docs']:
-                    doc['created_at'] = str(doc['created_at'])
-                topics.append(topic)
-        except:
-            err = ws_methods.get_error_message()
-            errors.append(err)
         meeting_docs = list(meeting_object_orm.documents.values())
 
         """attendee needs fix"""
@@ -396,6 +375,33 @@ class Event(CustomModel):
         meeting_object['has_active_action'] = meeting_object_orm.has_active_action()
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
         return {'data': data, 'errors': errors}
+
+    @classmethod
+    def get_topics(cls, meeting_object_orm):
+        topic_orm = list(meeting_object_orm.topic_set.all())
+        topics = []
+        try:
+            for t in topic_orm:
+                topic = ws_methods.obj_to_dict(t)
+                del topic['updated_at']
+                del topic['created_at']
+                del topic['updated_by']
+                del topic['created_by']
+                del topic['description']
+                topic_duration = 0
+                try:
+                    topic_duration =topic['duration']
+                except:
+                    print('Invalid duration of topic '+t.name+'-'+str(t.id))
+                topic['duration'] = topic_duration
+                topic['docs'] = list(t.documents.values())
+                for doc in topic['docs']:
+                    doc['created_at'] = str(doc['created_at'])
+                topics.append(topic)
+        except:
+            err = ws_methods.get_error_message()
+            print(err)
+        return topics
 
     @classmethod
     def get_attendance_status(cls, meeting, uid):

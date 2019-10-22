@@ -57,41 +57,31 @@
         return dist_rects;
     }
 
-    function get_merge_rects(original_rects)
+    function get_merge_rects(dist_rects)
     {
-        var dist_rects = get_dist_rects(original_rects);
-        // let merged_rects = [];
-        // let index = -1;
-        // for (let rect of dist_rects)
-        // {
-        //     if (merged_rects.length)
-        //     {
-        //         let bottom_diff = 0
-        //         if (merged_rects[index].bottom - rect.bottom > 0)
-        //         {
-        //             bottom_diff = merged_rects[index].bottom - rect.bottom;
-        //         }
-        //         else
-        //         {
-        //             bottom_diff = rect.bottom - merged_rects[index].bottom;
-        //         }
-        //         if(merged_rects[index].bottom==rect.bottom|| bottom_diff <= 7)
-        //         {
-        //             merged_rects[index].width += rect.width;
-        //         }
-        //         else
-        //         {
-        //             index++;
-        //             merged_rects.push(rect);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         merged_rects.push(rect);
-        //         index++;
-        //     }
-        // }
-        return dist_rects;
+        let merged_rects = [];
+        let index = -1;
+        for (let rect of dist_rects)
+        {
+            if (!merged_rects.length)
+            {
+                merged_rects.push(rect);
+                index++;
+                continue;
+            }
+
+            if(Math.abs(merged_rects[index].y - rect.y) <= 6)
+            {
+                merged_rects[index].width += rect.width;
+                merged_rects[index].right = rect.right;
+            }
+            else
+            {                    
+                merged_rects.push(rect);
+                index++;
+            }
+        }
+        return merged_rects;
     }
     var programtic_cursor = false;
     function select_cursor(force) {
@@ -106,7 +96,7 @@
             if (!$('.topbar:first .cursor:first').hasClass('active')) {                
                 $('.topbar:first .cursor:first').click();                        
             }   
-        }     
+        }
     }
 
     $(document).on('click', '.topbar .cursor:first', function(e){
@@ -5077,10 +5067,15 @@
                      * @param {Event} The DOM event to be handled
                      */
                     function mouse_up31(e) {
+
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
-                        input = document.createElement('input');
+                        // console.log($(e.target).closest('#viewer').length, 4343);
+                        if(!$(e.target).closest('#viewer').length){
+                            return;
+                        }
+                        input = document.createElement('input');                        
                         input.setAttribute('id', 'pdf-annotate-point-input');
                         input.setAttribute('placeholder', 'Enter comment');
                         input.style.border = '3px solid ' + _utils.BORDER_COLOR;
@@ -5250,7 +5245,8 @@
                             var range = selection.getRangeAt(0);
                             var rects = range.getClientRects();
                             if (rects.length > 0 && rects[0].width > 0 && rects[0].height > 0) {                                
-                                rects = get_merge_rects(rects);
+                                rects = get_dist_rects(rects);
+                                // rects = get_merge_rects(rects);
                                 return rects;
                             }
                         } catch (e) {}

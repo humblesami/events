@@ -190,14 +190,19 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div id="agenda-items" *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
             <h3>
-                <div><i class="icon-meeting-angenda text-primary"></i> Agenda Topics <i *ngIf="socketService.admin_mode" class="pointer fa fa-plus-circle text-primary" (click)='add_edit_topic(null, null, "create")'></i> </div>
+                <div>
+                    <i class="icon-meeting-angenda text-primary"></i> Agenda Topics 
+                    <i *ngIf="socketService.admin_mode" 
+                    class="pointer fa fa-plus-circle text-primary" 
+                    (click)='add_edit_topic(null, null, "create")'></i>
+                </div>
             </h3>
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table boardsheet-table">
                         <thead class="thead-light">
                         <tr>
-                            <th>Reorder</th>
+                            <th *ngIf="meeting_object.topics.length > 1">Reorder</th>
                             <th>Title</th>
                             <th>Lead</th>
                             <th>Duration</th>
@@ -208,12 +213,15 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         </thead>
                         <tbody id="agenda_tbody">
                             <tr class="pointer" *ngFor="let topic of meeting_object.topics">
-                                <td>
+                                <td *ngIf="meeting_object.topics.length > 1">
+                                    <input type="hidden" class="id" value="{{topic.id}}" />
                                     <span class="up-down">
-                                        <span *ngIf="!topic.first" (click)="move_up($event, topic)">
+                                        <span *ngIf="topic.position != 0" 
+                                        (click)="save_positions($event, 'down')">
                                             <i class="fas fa-arrow-up"></i>
                                         </span>
-                                        <span *ngIf="!topic.last" (click)="move_down($event, topic)">
+                                        <span *ngIf="topic.position != (meeting_object.topics.length - 1)" 
+                                        (click)="save_positions($event, 'up')">
                                             <i class="fas fa-arrow-down"></i>
                                         </span>
                                     </span>
@@ -223,7 +231,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <a routerLink="/topic/{{topic.id}}">{{topic.name}}</a>                                                                        
                                 </td>
                                 <td>{{topic.lead}}</td>
-                                <td >{{topic.duration}}</td>
+                                <td >{{topic.duration | hm}}</td>
                                 <td>
                                     <div class="talbe-docs-wrapper">
                                         <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
