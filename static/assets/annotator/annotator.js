@@ -20,7 +20,6 @@
     var documentId = undefined;
     var annot_save_timeout = undefined;
     var annotation_save_wait_time = 8000;
-    var merge_rects = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -29,39 +28,69 @@
     };
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
-    merge_rects = function(rects)
+    
+
+    function get_dist_rects(original_rects)
     {
         let dist_rects = [];
-        let index = -1;
-        for (let rect of rects)
+        // console.log(3433);
+        for (let rect of original_rects)
         {
-            if (dist_rects.length)
-            {
-                let bottom_diff = 0
-                if (dist_rects[index].bottom - rect.bottom > 0)
-                {
-                    bottom_diff = dist_rects[index].bottom - rect.bottom;
-                }
-                else
-                {
-                    bottom_diff = rect.bottom - dist_rects[index].bottom;
-                }
-                if(dist_rects[index].bottom==rect.bottom|| bottom_diff <= 7)
-                {
-                    dist_rects[index].width += rect.width;
-                }
-                else
-                {
-                    index++;
-                    dist_rects.push(rect);
-                }
-            }
-            else
+            if(!dist_rects.length)
             {
                 dist_rects.push(rect);
-                index++;
+                continue;
+            }
+            // console.log(dist_rects.length, 3444);
+            var found = false;
+            for(let dist_rect of dist_rects)
+            {
+                if (Math.abs(dist_rect.x - rect.x) < 2.5 && Math.abs(dist_rect.y - rect.y) < 2.5)
+                {
+                    found = true;
+                }
+            }
+            if(!found){
+                dist_rects.push(rect);
             }
         }
+        return dist_rects;
+    }
+
+    function get_merge_rects(original_rects)
+    {
+        var dist_rects = get_dist_rects(original_rects);
+        // let merged_rects = [];
+        // let index = -1;
+        // for (let rect of dist_rects)
+        // {
+        //     if (merged_rects.length)
+        //     {
+        //         let bottom_diff = 0
+        //         if (merged_rects[index].bottom - rect.bottom > 0)
+        //         {
+        //             bottom_diff = merged_rects[index].bottom - rect.bottom;
+        //         }
+        //         else
+        //         {
+        //             bottom_diff = rect.bottom - merged_rects[index].bottom;
+        //         }
+        //         if(merged_rects[index].bottom==rect.bottom|| bottom_diff <= 7)
+        //         {
+        //             merged_rects[index].width += rect.width;
+        //         }
+        //         else
+        //         {
+        //             index++;
+        //             merged_rects.push(rect);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         merged_rects.push(rect);
+        //         index++;
+        //     }
+        // }
         return dist_rects;
     }
     var programtic_cursor = false;
@@ -5220,40 +5249,9 @@
                             var selection = window.getSelection();
                             var range = selection.getRangeAt(0);
                             var rects = range.getClientRects();
-                            if (rects.length > 0 && rects[0].width > 0 && rects[0].height > 0) {
-                                let dist_rects = []
-                                for (let rect of rects)
-                                {
-                                    let matched = false;
-                                    let index = 0;
-                                    let matched_index = -1;
-                                    if (dist_rects.length)
-                                    {
-                                        for(let dist_rect of dist_rects)
-                                        {
-                                            if (dist_rect.left==rect.left && dist_rect.right==rect.right && dist_rect.x==rect.x)
-                                            {
-                                                matched=true;
-                                                matched_index = index;
-                                            }
-                                            index++;
-                                        }
-                                        if (!matched)
-                                        {
-                                            dist_rects.push(rect);
-                                        }
-                                        else
-                                        {
-                                            dist_rects[matched_index] = rect;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        dist_rects.push(rect)
-                                    }
-                                }
-                                rects = merge_rects(dist_rects);
-                                return dist_rects;
+                            if (rects.length > 0 && rects[0].width > 0 && rects[0].height > 0) {                                
+                                rects = get_merge_rects(rects);
+                                return rects;
                             }
                         } catch (e) {}
                         return null;
