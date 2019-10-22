@@ -39,11 +39,6 @@ title="Results"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-<!--
-                <div class="canvas_warpper my-5 progress-chart">
-                    <canvas id="progress-chart" style="height:100px; weight:100px;"></canvas>
-                </div>
--->
                 <div class="row">
                   <div class="col-sm-12 mr-b20" *ngIf="esignDetails.results">
                       <div *ngFor="let result of esignDetails.results" class="row esignDetailsquestions">
@@ -51,12 +46,12 @@ title="Results"></app-breadcrumb>
                               <div class="accordion" id="accordionExample">
                                   <div class="card">
                                       <a class="card-header" data-toggle="collapse" 
-                                      [attr.data-target]="'#signature-' + result.id" 
+                                      [attr.data-target]="'#result-' + result.id" 
                                       id="headingOne" [ngClass]="{collapsed: !result.progress_data.length }">
                                         <span>{{result.name}} - {{result.attempted_signatures}}/{{result.total_signatures}}</span>
                                         <span class="float-right"><i class="fa"></i></span>
                                       </a>
-                                      <div id="result-{{result.id}}" class="collapse" [ngClass]="{show: result.progress_data.length }"
+                                      <div id="result-{{result.id}}" class="collapse" [ngClass]="{hide: result.progress_data.length }"
                                         aria-labelledby="headingOne" data-parent="#accordionExample">
                                           <div class="card-body" [ngClass]="{hideoverflow: !result.progress_data.length }">
                                               <div *ngIf="result.signature_assigned">
