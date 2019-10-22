@@ -259,7 +259,8 @@ export class FoldersComponent implements OnInit {
             return;
         }
         let obj_this = this;
-        var create_button = $('<button class="btn btn-primary" id="create_new_folder">Create Folder</button>');
+        // var create_button = $('<button class="btn btn-primary" >Create Folder</button>');
+        var create_button = $('<div class="edit-buttons icons"><a id="create_new_folder" class="btn btn-primary"><i class="fa fa-plus"></i></a></div>');
         var on_create_click = function(){
             obj_this.create_folder_popup_config();
         }
