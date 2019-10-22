@@ -122,12 +122,24 @@ export class MovetomyfolderComponent implements OnInit {
 
               var lis = '';
               for(var child_id in obj.sub_folders){
-                  lis += '<li class="p-1"><div class="row"><div class="col-3 offset-1"><i class="icon-folder" ></i> '+obj.sub_folders[child_id].name;
-                  lis += '</div><input type="hidden" value="'+child_id+'">';
-                  lis += '<div class="ml-auto"><div class="d-flex"><button  class="btn btn-info btn_open_folder">Open</button>';
-                  lis += '<button class="btn btn-primary btn_paste">Paste</button></div>';
-                  lis += '</div></div></li><hr>';
-
+                  lis += '<li class="p-1 border-bottom">';
+                    lis += '<div class="row">';
+                        lis += '<div class="col-3 offset-1">'
+                            lis += '<i class="icon-folder" ></i> '+obj.sub_folders[child_id].name;
+                        lis += '</div>'
+                        lis += '<input type="hidden" value="'+child_id+'">';
+                        lis += '<div class="ml-auto">'
+                            lis += '<div class="d-flex">';
+                            // console.log(4544);
+                                if(Object.keys(obj.sub_folders[child_id].sub_folders).length)
+                                {
+                                    lis += '<button  class="btn btn-info btn_open_folder">Open</button>';
+                                }
+                                lis += '<button class="btn btn-primary btn_paste">Paste</button>'
+                            lis += '</div>';
+                        lis += '</div>';
+                    lis += '</div>';
+                  lis += '</li>';
               }
               console.log()
               $('#ul_sub_folders').html(lis);
@@ -144,7 +156,7 @@ export class MovetomyfolderComponent implements OnInit {
                   $(this).find('.btn_open_folder').click(function(){
                       var ch_id = $(this).closest('li').find('input').val();
                       var active_sub_folder = obj.sub_folders[ch_id];
-                      console.log(active_sub_folder,obj.id, ch_id);
+                    //   console.log(active_sub_folder,obj.id, ch_id);
                       show_folder(active_sub_folder);
                   });
 
