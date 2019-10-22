@@ -20,7 +20,8 @@
             formatter: function (s) {
                 return s;
             },
-            showSeconds: false
+            showSeconds: false,
+            showDays: false
         };
         var settings = $.extend( {}, defaults, options );
 
@@ -39,7 +40,7 @@
             }
 
             var mainInputReplacer = $('<div class="bdp-input">' +
-                buildDisplayBlock('days') +
+                buildDisplayBlock('days', !settings.showDays) +
                 buildDisplayBlock('hours') +
                 buildDisplayBlock('minutes') +
                 buildDisplayBlock('seconds', !settings.showSeconds) +
@@ -95,8 +96,15 @@
                 total = Math.floor(total/60);
                 minutes = total % 60;
                 total = Math.floor(total/60);
-                hours = total % 24;
-                days = Math.floor(total/24);
+                if(settings.showDays)
+                {
+                    hours = total % 24;
+                    days = Math.floor(total/24);    
+                }
+                else
+                {
+                    hours = total;
+                }
                 updateMainInputReplacer();
                 updatePicker();
             }
@@ -126,7 +134,7 @@
 
             if (!disabled) {
                 var picker = $('<div class="bdp-popover"></div>');
-                buildNumericInput('days', false).appendTo(picker);
+                buildNumericInput('days', !settings.showDays).appendTo(picker);
                 buildNumericInput('hours', false, 23).appendTo(picker);
                 buildNumericInput('minutes', false, 59).appendTo(picker);
                 buildNumericInput('seconds', !settings.showSeconds, 59).appendTo(picker);

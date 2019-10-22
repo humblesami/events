@@ -356,7 +356,7 @@ export class TopiceditComponent implements OnInit {
         // console.log(obj_this.meeting_obj);
         obj_this.sum_agenda_duration(null);
         window['app_libs']['duration_picker'].load(function(){
-            $('#duration').durationPicker();            
+            $('#duration').durationPicker({showSeconds: false,showDays: false});
         });
     }
 
