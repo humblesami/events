@@ -197,6 +197,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <table class="table boardsheet-table">
                         <thead class="thead-light">
                         <tr>
+                            <th>Sort</th>
                             <th>Title</th>
                             <th>Lead</th>
                             <th>Duration</th>
@@ -205,9 +206,22 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <th *ngIf="socketService.admin_mode">Delete</th>
                         </tr>
                         </thead>
-                        <tbody>
-                            <tr style="cursor:pointer" routerLink="/topic/{{topic.id}}" *ngFor="let topic of meeting_object.topics">
-                                <td>{{topic.name}}</td>
+                        <tbody id="agenda_tbody">
+                            <tr class="pointer" *ngFor="let topic of meeting_object.topics">
+                                <td>
+                                    <span class="up-down">
+                                        <span *ngIf="!topic.first" (click)="move_up($event, topic)">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </span>
+                                        <span *ngIf="!topic.last" (click)="move_down($event, topic)">
+                                            <i class="fas fa-arrow-down"></i>
+                                        </span>
+                                    </span>
+                                    <span class="position">{{topic.position}}</span>
+                                </td>
+                                <td>                                    
+                                    <a routerLink="/topic/{{topic.id}}">{{topic.name}}</a>                                                                        
+                                </td>
                                 <td>{{topic.lead}}</td>
                                 <td >{{topic.duration}}</td>
                                 <td>

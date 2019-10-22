@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../../app/http.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -41,6 +41,7 @@ export class MeetingDetailsComponent implements OnInit {
 				private httpService: HttpService,
 				private sanitizer: DomSanitizer,
                 private ss: SocketService,
+                private zone: NgZone,
                 private modalService: NgbModal) 
     {	
         this.socketService = this.ss;
@@ -93,6 +94,9 @@ export class MeetingDetailsComponent implements OnInit {
         }
         let obj_this = this;
         var on_topic_closed = function(data){
+            if(!data){
+                return;
+            }
             if (isArray(data))
             {
                 for (let topic of data)
@@ -111,14 +115,14 @@ export class MeetingDetailsComponent implements OnInit {
                     }
                     else
                     {
-                        obj_this.meeting_object.topics.push(topic);
+                        obj_this.on_topic_added(topic)                        
                     }
                 }
 
             }
         };
         var fun = function(){
-            console.log(44343);
+            // console.log(44343);
             const modalRef = obj_this.modalService.open(TopiceditComponent, { backdrop: 'static' });
             modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
             modalRef.componentInstance.meeting_name = obj_this.meeting_object.name;
@@ -299,6 +303,15 @@ export class MeetingDetailsComponent implements OnInit {
                 {
                     voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
                 }
+                
+                
+                var len = obj_this.meeting_object.topics.length;
+                if(len)
+                {
+                    obj_this.meeting_object.topics[len - 1].last = true;
+                    obj_this.meeting_object.topics[0].first = true;
+                }
+
                 setTimeout(function(){
                     if (obj_this.meeting_object.publish)
                     {
@@ -308,31 +321,127 @@ export class MeetingDetailsComponent implements OnInit {
                     {
                         $('.toggle_cb').prop('checked', false);
                     }
+                    $('#agenda_tbody').sortable({
+                        stop: function (event, ui) {
+                            obj_this.find_moved_rows();
+                        },
+                    });                    
                 }, 100);
             } catch (er) {
                 console.log(er);
             }
             obj_this.meetObjLoaded = true;
         };
-
-        
 		this.httpService.get(input_data, on_data, null);
-	}
-
-	isInProgress() {
-		// var startTime = moment('8:45am', 'h:mma');
-		// var endTime = moment('9:00am', 'h:mma').add(3, 'hours');
-		// var now = moment();
-		// if(now.isBefore(endTime) && now.isAfter(startTime))
-		// console.log('In Progress!!!')
-		// else
-		// console.log('Finished!!')
-		return true;
     }
+
+    find_moved_rows(){
+        let obj_this = this;
+        if($('#agenda_tbody tr').length < 2)
+        {
+            return;
+        }
+        var last_pos = -1;
+        var i = 0;
+        var i1 = -1;
+        var i2 = -1;        
+        $('#agenda_tbody tr').each(function(i, el){
+            // console.log(i, el);
+            var pos = parseFloat($(el).find('.position').html());        
+            if(last_pos > pos){
+                if(i1 == -1)
+                {
+                    i1 = i - 1;
+                    i2 = i;
+                }
+                else{
+                    i2 = i;
+                }
+            }
+            last_pos = pos;
+            i++;
+        });
+        // console.log(i1, i2);
+        if(i1 != -1 && i2 != -1)
+        {
+            obj_this.save_positions(i1, i2);
+        }
+    }
+
+    move_down(evn, topic){
+        let obj_this = this;
+        var i = $(evn.target).closest('tr').index();
+        obj_this.save_positions(i, i+1);
+    }
+
+    move_up(evn, topic){
+        let obj_this = this;
+        var i = $(evn.target).closest('tr').index();        
+        obj_this.save_positions(i, i-1);
+    }
+
+    save_positions(i1, i2){
+        let obj_this = this;
+
+        var temp = obj_this.meeting_object.topics[i1];
+        obj_this.meeting_object.topics[i1] = obj_this.meeting_object.topics[i2];
+        obj_this.meeting_object.topics[i2] = temp;
+        
+        var pos = obj_this.meeting_object.topics[i1].position;
+        obj_this.meeting_object.topics[i1].position = obj_this.meeting_object.topics[i2].position;
+        obj_this.meeting_object.topics[i2].position = pos;
+
+        obj_this.meeting_object.topics[i1].first = false;
+        obj_this.meeting_object.topics[i1].last = false;
+        obj_this.meeting_object.topics[i2].first = false;
+        obj_this.meeting_object.topics[i2].last = false;
+
+        var len = obj_this.meeting_object.topics.length;
+        obj_this.meeting_object.topics[0].first = true;
+        obj_this.meeting_object.topics[len - 1].last = true;
+
+        var temp_topics = obj_this.meeting_object.topics;
+        obj_this.zone.run(() => obj_this.meeting_object.topics = temp_topics);        
+
+        obj_this.httpService.get({
+            params:{
+                topic1:{
+                    id: temp_topics[i1].id,
+                    position: temp_topics[i1].position
+                },
+                topic2:{
+                    id: temp_topics[i2].id,
+                    position: temp_topics[i2].position
+                },
+            },
+            args:{
+                app: 'meetings',
+                model:'Topic',
+                method:'update_positions'
+            },
+        }, function(){
+            // obj_this.meeting_object.topics = temp_topics;
+        }, null);
+    }
+
+    on_topic_added(topic){
+        let obj_this = this;
+        var last_pos = 0;
+        var len = obj_this.meeting_object.topics.length;
+        if(len){
+            last_pos = obj_this.meeting_object.topics[len - 1].position;
+            if(!last_pos)
+            {
+                last_pos = len;
+            }
+        }
+        topic.position = last_pos + 1;
+        obj_this.meeting_object.topics.push(topic);
+    }    
 
     move_to_archive(meeting_id:number)
     {
-        console.log(43);
+        // console.log(43);
         let obj_this = this;
         if (meeting_id)
         {
@@ -475,12 +584,11 @@ export class MeetingDetailsComponent implements OnInit {
             this.start_indices[item_type] += flag * this.visible_limit[item_type];
         }
         this.ending_indices[item_type] =  this.start_indices[item_type] + this.visible_limit[item_type];
-        console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
+        // console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
     }
 	ngOnInit() {
         let obj_this = this;
-        var vw = $(window).width();
-        // console.log(vw , 66);
+        var vw = $(window).width();        
         if(vw > 1200)
         obj_this.visible_limit = {
             survey : 3,

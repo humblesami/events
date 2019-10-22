@@ -316,6 +316,12 @@ h5, .h5 {
     right: 10px;
     top: 6px;
 }
+.up-down span{
+    padding-right: 5px;
+}
+.up-down span:hover{
+    color: blue;
+}
 @media (min-width: 280px){
     .MainTitleHeadWrap {
         display: flex;

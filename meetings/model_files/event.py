@@ -335,6 +335,11 @@ class Event(CustomModel):
         try:
             for t in topic_orm:
                 topic = ws_methods.obj_to_dict(t)
+                del topic['updated_at']
+                del topic['created_at']
+                del topic['updated_by']
+                del topic['created_by']
+                del topic['description']
                 topic_duration = 0
                 try:
                     topic_duration = topic_model.set_duration_to_hour_min(topic['duration'])

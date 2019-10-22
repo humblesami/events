@@ -64,6 +64,14 @@ class Topic(PositionalSortMixIn, CustomModel):
         return 'done'
 
     @classmethod
+    def update_positions(cls, request, params):
+        topic1 = params['topic1']
+        topic2 = params['topic2']
+        Topic.objects.filter(pk=topic1['id']).update(position=topic1['position'])
+        Topic.objects.filter(pk=topic2['id']).update(position=topic2['position'])
+        return 'done'
+
+    @classmethod
     def update_agenda_topic(cls, request, params):
         topic_id = params['topic_id']
         topic = Topic.objects.get(pk=topic_id)
@@ -91,6 +99,7 @@ class Topic(PositionalSortMixIn, CustomModel):
             'docs':list(topic.documents.values())
         }
         return data
+
     @classmethod
     def set_duration_parse_to_duration(cls,duration):
         duration = duration + ":00"
