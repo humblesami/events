@@ -73,7 +73,6 @@ export class DocumentComponent implements OnInit {
     {
         this._location.back();
     }
-
     loadDoc(){
         console.log(window['dt_functions'].now_full(), 'doc started');
         var obj_this = this;
@@ -292,6 +291,9 @@ export class DocumentComponent implements OnInit {
                 let page_height = $('.pdfViewer .page:first').height();
                 obj_this.page_num = Math.ceil(pdf_scroll / page_height);
             });
+        });
+        $('#toggle-tools').click(function(){
+            $('#ToolBarWrapper').toggle();
         });
     }
 }

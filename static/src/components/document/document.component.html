@@ -32,8 +32,17 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
         </div>
 
         <div id="viewer-wrapper">
-            <div class="toolbar topbar" style="display:none">
-                <div class="ToolBarWrapper">
+            <div id="content-wrapper">
+                <div class="PdfViewerWrapper">
+                    <div id="viewer" class="pdfViewer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar topbar" style="display:none">
+                <div class="toggle-tools" id="toggle-tools">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div class="ToolBarWrapper" id="ToolBarWrapper" style="display:none">
                     <div class="doc-manage-btn-wrap">
                         <a class="icon back" (click)="go_back()" title="Back">
                             <i class="fas fa-arrow-left"></i>
@@ -111,13 +120,6 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                         <path id="Subtraction_4" data-name="Subtraction 4" d="M8117.724-1576.546a5.679,5.679,0,0,1-4.573-2.283,5.682,5.682,0,0,1-1.149-3.443,5.731,5.731,0,0,1,5.723-5.727h.1a5.677,5.677,0,0,1,3.978,1.71,5.694,5.694,0,0,1,1.644,4.016A5.731,5.731,0,0,1,8117.724-1576.546Zm-2.157-6.33a.568.568,0,0,0-.567.567.566.566,0,0,0,.567.565h1.558v1.558a.568.568,0,0,0,.567.567.566.566,0,0,0,.564-.567v-1.558h1.558a.566.566,0,0,0,.567-.565.568.568,0,0,0-.567-.567h-1.558v-1.558a.566.566,0,0,0-.564-.567.568.568,0,0,0-.567.567v1.558Z" transform="translate(-7244 1705)" fill="#fff"/>
                                     </g>
                                 </svg>
-                                <!-- <svg width="28" height="25" x="461" y="185" data-pdf-annotate-id="e8114a67-e5e3-4bf3-be35-d25aa831f0e2" data-pdf-annotate-type="point" aria-hidden="true" transform="scale(1) rotate(0) translate(0, 0)">
-                                    <rect width="25" height="22" x="1.962286" y="1" style="fill:white;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-opacity:1"></rect>
-                                    <rect width="18.4" height="1.5012145" x="5.8" y="5" style="fill:#000000;fill-opacity:1;stroke:none"></rect>
-                                    <rect width="18" height="0.86" x="6" y="10" style="fill:#000000;fill-opacity:1;stroke:none"></rect>
-                                    <rect width="18.4" height="0.86" x="5.8" y="14" style="fill:#000000;fill-opacity:1;stroke:none"></rect>
-                                    <rect width="18" height="0.86" x="6" y="18" style="fill:#000000;fill-opacity:1;stroke:none"></rect>
-                                </svg> -->
                             </div>
                         </button>
                         <button data-tooltype="point" class="add-point-button annotation_button comment personal doc-manage-btn-wrap" title="Add anew note">
@@ -174,17 +176,11 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                             </div>
                         </a>
                         <button class="btn btn-sm btn-primary reset">
-                            Reset
+                            <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <div id="content-wrapper">
-                <div class="PdfViewerWrapper">
-                    <div id="viewer" class="pdfViewer"></div>
-                </div>
-            </div>
-        </div>
 
     </div>
     <div class="toolbar annotation-options ContextMenuPopup">
