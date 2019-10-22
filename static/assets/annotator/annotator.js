@@ -20,6 +20,7 @@
     var documentId = undefined;
     var annot_save_timeout = undefined;
     var annotation_save_wait_time = 8000;
+    var is_drawing = false;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -190,7 +191,7 @@
     }
 
     function updateAnnotations(documentId, annotations, operation){            
-        try{            
+        try{
             if(!Array.isArray(annotations)){
                 console.log('Invalid annotations values', annotations);
                 console.trace();
@@ -400,6 +401,14 @@
                 $('.ContextMenuPopup').hide();
                 contextMenuShown = false;
                 return;
+            }
+            if(!$(e.target).closest('#viewer').length){
+                if(is_drawing){
+                    var localAnnots = _getAnnotations(documentId);
+                    localAnnots[localAnnots.length - 1].to_merge = 0;
+                    updateAnnotations(documentId, localAnnots, 'op=drawing left');
+                }
+                is_drawing = false;
             }
         });
         $(document).on('mouseup', '#viewer', function(e) {
@@ -4836,7 +4845,7 @@
                         {
                             return;
                         }
-
+                        is_drawing = true;
                         path = null;
                         lines = [];                        
 
