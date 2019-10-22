@@ -741,7 +741,6 @@ a.list-group-item.contact.active {
     display: block;
 }
 
-
 .PenSize select{
     padding: 0 20px 0 5px;
     background-position: right 7px center !important;
@@ -770,3 +769,4 @@ span.pager.disabled
         margin-top: 5px;
     }
 }
+
