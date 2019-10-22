@@ -2918,6 +2918,10 @@ label.check-plus-label-wrap {
 .doc-del-btn>div :hover {
 	color: red;
 }
+.doc-del-btn .fa-poll{
+	margin: 5px;
+    font-size: 1.2rem;
+}
 .picker{
 	margin: .5rem;
 }
