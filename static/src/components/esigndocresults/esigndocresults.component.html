@@ -47,12 +47,12 @@ title="Results"></app-breadcrumb>
                                   <div class="card">
                                       <a class="card-header" data-toggle="collapse" 
                                       [attr.data-target]="'#result-' + result.id" 
-                                      id="headingOne" [ngClass]="{collapsed: !result.progress_data.length }">
+                                      id="heading-{{result.id}}"  [ngClass]="{collapsed: !result.progress_data.length }">
                                         <span>{{result.name}} - {{result.attempted_signatures}}/{{result.total_signatures}}</span>
                                         <span class="float-right"><i class="fa"></i></span>
                                       </a>
                                       <div id="result-{{result.id}}" class="collapse" [ngClass]="{hide: result.progress_data.length }"
-                                        aria-labelledby="headingOne" data-parent="#accordionExample">
+                                      [attr.aria-labelledby]="'heading-' + result.id" data-parent="#accordionExample">
                                           <div class="card-body" [ngClass]="{hideoverflow: !result.progress_data.length }">
                                               <div *ngIf="result.signature_assigned">
                                                   <div style="display: flex">
