@@ -125,7 +125,8 @@ class File(CustomModel):
                     self.attachment.save(self.file_name, file_data)
                     return
                 elif file_changed:
-                    self.access_token = 'Local'
+                    if self.access_token != 'Messenger':
+                        self.access_token = 'Local'
 
                 if file_data is None:
                     if not self.attachment:

@@ -75,6 +75,9 @@ export class DocumentsComponent implements OnInit {
             case "Dropbox":
                     icon_url = "/static/assets/images/cloud/dropbox.png";
                 break;
+            case "Messenger":
+                icon_url = "/static/assets/images/Chatting.svg";
+            break;
         }
         return icon_url;
     }

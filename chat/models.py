@@ -758,7 +758,7 @@ class Message(models.Model):
 
         file = File.objects.get(pk=file_id_is)
         folder = Folder.objects.get(pk=folder_id ,created_by_id=request.user.id )
-        doc = ResourceDocument(folder_id=folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name)
+        doc = ResourceDocument(folder_id=folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name, access_token='Messenger')
         doc.save()
 
         doc = MessageDocument.objects.get(pk=file_id_is)
