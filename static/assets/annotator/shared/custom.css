@@ -30,13 +30,17 @@
     background-color: #fafafa;
 }
 .toolbar.topbar .doc-manage-btn-wrap{
-    margin-bottom: .9rem;
+    margin-bottom: .75rem;
 }
 .toolbar.topbar .doc-manage-btn-wrap > *{
     margin-top: .5rem;
 }
 .toolbar.topbar .doc-manage-btn-wrap > *:first-child{
     margin-top: 0;
+}
+.pager.next.page-next-btn,
+.pager.prev.page-prev-btn{
+    cursor: pointer;
 }
 .ToolBarWrapper {
     display: block;
@@ -79,9 +83,9 @@
     color:#ffffff;
     cursor: pointer;
 }
-.topbar .paginator {
+/* .topbar .paginator {
     font-size: 17px;
-}
+} */
 .toolbar .selectBox {
     display: flex;
     font-size: 14px;
