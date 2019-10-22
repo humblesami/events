@@ -111,9 +111,13 @@
 
             function picker_changed() {
                 days = parseInt(inputs['days'].val());
+                days = days ? days : 0;
                 hours = parseInt(inputs['hours'].val());
+                hours = hours ? hours : 0;     
                 minutes = parseInt(inputs['minutes'].val());
+                minutes = minutes ? minutes : 0;
                 seconds = parseInt(inputs['seconds'].val());
+                seconds = seconds ? seconds : 0;
                 updateMainInput();
                 updateMainInputReplacer();
             }

@@ -342,9 +342,9 @@ class Event(CustomModel):
                 del topic['description']
                 topic_duration = 0
                 try:
-                    topic_duration = topic_model.set_duration_to_hour_min(topic['duration'])
+                    topic_duration =topic['duration']
                 except:
-                    errors.append('Invalid duration '+topic['duration']+' of topic '+t.name+'-'+str(t.id))
+                    errors.append('Invalid duration of topic '+t.name+'-'+str(t.id))
                 topic['duration'] = topic_duration
                 topic['docs'] = list(t.documents.values())
                 for doc in topic['docs']:

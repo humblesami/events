@@ -14,7 +14,7 @@ class Topic(PositionalSortMixIn, CustomModel):
     name = models.CharField(max_length=200)
     description=models.TextField(blank=True, null=True)
     lead = models.CharField(max_length=200, blank=True)
-    duration = models.DurationField(null=True)
+    duration = models.IntegerField(null=True)
     position = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
@@ -32,8 +32,8 @@ class Topic(PositionalSortMixIn, CustomModel):
         description = params.get('description')
         lead = params.get('lead')
         duration = params.get('duration')
-        duration = str(duration)
-        duration = cls.set_duration_parse_to_duration(duration)
+        # duration = str(duration)
+        # duration = cls.set_duration_parse_to_duration(duration)
         topic = Topic(event_id = meeting_id, name=name, description=description,lead=lead,duration=duration)
         topic.save()
         agenda_docs = params.get('agenda_docs')
@@ -44,13 +44,13 @@ class Topic(PositionalSortMixIn, CustomModel):
                 a_doc = agenda_doc_model(agenda_id=topic.id)
                 a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
-        topic_duration = cls.set_duration_to_hour_min(topic.duration)
+        # topic_duration = cls.set_duration_to_hour_min(topic.duration)
         data = {
             'id': topic.id,
             'name': topic.name,
             'description': topic.description,
             'lead': topic.lead,
-            'duration': topic_duration,
+            'duration': topic.duration,
             'docs':list(topic.documents.values())
         }
         return data
@@ -78,8 +78,7 @@ class Topic(PositionalSortMixIn, CustomModel):
         for key in params:
             if key != "agenda_docs" and key != "meeting_id" and key != "duration" :
                 setattr(topic,key,params[key])
-        if params.get("duration"):
-            topic.duration  = cls.set_duration_parse_to_duration(params.get("duration"))
+        topic.duration = params.get("duration")
         topic.save()
         agenda_docs = params.get('agenda_docs')
         agenda_doc_model = ws_methods.get_model('meetings', 'AgendaDocument')
@@ -89,17 +88,15 @@ class Topic(PositionalSortMixIn, CustomModel):
                 a_doc = agenda_doc_model(agenda_id=topic.id)
                 a_doc = ws_methods.duplicate_file(a_doc, doc, file_type='topic')
                 a_doc.save()
-        topic_duration = cls.set_duration_to_hour_min(topic.duration)
         data = {
             'id': topic.id,
             'name': topic.name,
             'description': topic.description,
             'lead': topic.lead,
-            'duration': topic_duration,
+            'duration': topic.duration,
             'docs':list(topic.documents.values())
         }
         return data
-
     @classmethod
     def set_duration_parse_to_duration(cls,duration):
         duration = duration + ":00"
@@ -203,8 +200,8 @@ class Topic(PositionalSortMixIn, CustomModel):
             user_id = request.user.id
             topic_orm = Topic.objects.get(pk=topic_id)
             topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'description', 'duration', 'event__exectime', 'event__name', 'event__id'])
-            topic_duration = cls.set_duration_to_hour_min(topic['duration'])
-            topic['duration'] = topic_duration
+            # topic_duration = cls.set_duration_to_hour_min(topic['duration'])
+            topic['duration'] = topic['duration']
             topic_docs = list(topic_orm.documents.values())
             meeting_type = ''
             votings = topic_orm.voting_set.all()

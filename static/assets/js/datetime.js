@@ -8,6 +8,21 @@ var dt_js = {
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ],
+    seconds_to_hour_minutes: function(seconds) {        
+        var minutes = Math.floor(seconds / 60);
+        var hours = Math.floor(minutes / 60);        
+        var minutes = minutes % 60;
+        var minutes_str = minutes.toString();
+        var hours_str = hours.toString();
+        
+        if (hours < 10){
+            hours_str = "0" + hours;
+        }
+        if(minutes < 10){
+            minutes_str  = "0" + minutes;
+        }
+        return  hours_str + ":" + minutes_str;
+    },
     hours_to_hoursNminutes: function (hours) {
         var res = parseInt(hours);
         var minutes = hours % res;

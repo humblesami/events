@@ -8,6 +8,7 @@ import { HashLocationStrategy, Location, LocationStrategy } from '@angular/commo
 import { FormatTimePipe } from './pipes/format-time.pipe';
 import { KeysPipe } from './pipes/keys.pipe';
 import { CamelCasePipe } from './pipes/camel.pipe'
+import { HourMinutesPipe } from './pipes/hm.pipe'
 
 import { SocketService } from './socket.service';
 import { HttpService } from './http.service';
@@ -120,6 +121,7 @@ import { EsigndocresultsComponent } from '../components/esigndocresults/esigndoc
         TopicsComponent,
         FormatTimePipe,
         CamelCasePipe,
+        HourMinutesPipe,
         PaginatorComponent,
         DocumentComponent,
         SettingsComponent,

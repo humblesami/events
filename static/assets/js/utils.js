@@ -148,7 +148,7 @@ var app_libs = window['app_libs'] = {
         style_paths : ['static/assets/libs/duration-picker/duration-picker.css'],
         load: function(on_load){            
             var obj_this = this;
-            console.log(43343);
+            // console.log(43343);
             js_utils.load_lib(obj_this, on_load);
         }
     }

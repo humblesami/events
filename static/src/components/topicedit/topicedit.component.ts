@@ -58,7 +58,8 @@ export class TopiceditComponent implements OnInit {
     }
 
     onCancel() {
-        this.activeModal.close('closed');
+        $(".popover").removeClass('show');
+        this.activeModal.close('closed');        
     }
 
     get_icon_url(source = null) {
@@ -86,6 +87,7 @@ export class TopiceditComponent implements OnInit {
             }, 10);
         }
         obj_this.add_another = false;
+        
         obj_this.topic = {
             name: '',
             description: '',
@@ -100,6 +102,8 @@ export class TopiceditComponent implements OnInit {
             duration: ''
         };
         obj_this.agenda_docs = [];
+        // console.log(32323, 5788);
+        $('#duration').val('0').trigger('change');
     }
 
     delete_file(evn, doc_id) {
@@ -142,12 +146,12 @@ export class TopiceditComponent implements OnInit {
         {
             return;
         }
-        console.log(obj_this.modified_topic_data.duration, 3444);
+        // console.log(obj_this.modified_topic_data.duration, 3444);
         if(!obj_this.modified_topic_data.duration)
         {
-            console.log('Invalid duration');
-            return;
+            obj_this.modified_topic_data.duration = obj_this.topic.duration;            
         }
+
         const form_data = obj_this.modified_topic_data;
         const input_data = {};
         for (const key in form_data) {
@@ -175,6 +179,7 @@ export class TopiceditComponent implements OnInit {
             params: input_data,
             args: args
         }
+        $(".popover").removeClass('show');
         obj_this.httpService.get(final_input_data, (data) => {
             if (data != 'done') {
                 obj_this.added_topics.push(data);
@@ -186,7 +191,9 @@ export class TopiceditComponent implements OnInit {
                     obj_this.activeModal.close(obj_this.added_topics);
                 }
             } else {
+
                 obj_this.clear_form();
+                obj_this.sum_agenda_duration(null);
                 data = obj_this.added_topics
                 if (isArray(data))
                 {
@@ -212,7 +219,7 @@ export class TopiceditComponent implements OnInit {
                 }
                 obj_this.submitted = false;
                 obj_this.topic_id = '';                
-                obj_this.sum_agenda_duration(null);
+                
             }
         }, null);
     }
@@ -223,71 +230,69 @@ export class TopiceditComponent implements OnInit {
             let duration_hours = parseInt(duration[0]);
             let duration_minuets = parseInt(duration[1]);
             if(duration_hours>0){
-                    duration_hours = duration_hours * 60;
+                    duration_hours = duration_hours * 60 * 60;
                 }
+            if(duration_minuets> 0){
+                duration_minuets = duration_minuets * 60;
+            }
             duration = duration_hours + duration_minuets;
             return duration;
         }
     }
 
-    timeConvert(n) {
-        var num = n;
-        var hours = (num / 60);
-        var rhours = Math.floor(hours);
-        var minutes = (hours - rhours) * 60;
-        var rminutes = Math.round(minutes);
-        let rhours_string =  rhours.toString();
-        let rminutes_string = rminutes.toString();
-        if (rhours < 10){
-            rhours_string = "0" + rhours;
-        }
-        if(rminutes < 10){
-            rminutes_string  = "0" + rminutes;
-
-        }
-        return  rhours_string + ":" + rminutes_string;
-
-        }
+   
         time_exceeded = false;
         submitted = false;
         available_duration= undefined;
     sum_agenda_duration(evn){
-        // console.log(434);
+        
+
         let obj_this = this;
+        // console.log(obj_this.topic.duration,2322323232323);
         obj_this.time_exceeded = false;
         var other_topics_duration = 0;
         var topics = obj_this.meeting_obj.meeting_topics
         for(var topic of topics)
         {
-            var num = obj_this.duration_to_number(topic.duration)
+            var num =  parseInt(topic.duration)
             
             if(topic.id != obj_this.topic_id)
             {
                 other_topics_duration += num;
             }
         }
-        var meeting_duration_minuets = obj_this.duration_to_number(obj_this.meeting_obj.meeting_duration);
+        var meeting_duration_seconds = obj_this.duration_to_number(obj_this.meeting_obj.meeting_duration);
         // console.log(meeting_duration_minuets, 444);
-        let available_time = meeting_duration_minuets - other_topics_duration;
-        if(meeting_duration_minuets >= other_topics_duration){            
-            var available_time_string = obj_this.timeConvert(available_time);            
+        let available_time = meeting_duration_seconds - other_topics_duration;
+        if(meeting_duration_seconds >= other_topics_duration){            
+            // var available_time_string = obj_this.timeConvert(available_time);            
             if(evn){
-                var new_topic_duration = obj_this.duration_to_number(obj_this.topic.duration)
-                if( available_time < new_topic_duration ){                    
+                var picker_duration = $("#duration");
+                var new_topic_duration = picker_duration.val();
+                
+                if( available_time < new_topic_duration || new_topic_duration == 0){                    
                     obj_this.time_exceeded = true;
+                    obj_this.available_duration = window['dt_functions'].seconds_to_hour_minutes(available_time);
+                 
+                }else{
+                    var remian = window['dt_functions'].seconds_to_hour_minutes(available_time - new_topic_duration );
+                    obj_this.available_duration = remian;
+                    obj_this.modified_topic_data.duration =  new_topic_duration;
+                    obj_this.topic.duration = new_topic_duration;
                 }
-                obj_this.modified_topic_data.duration = new_topic_duration + '';
+              
             }else{
                 setTimeout(()=>{
-                    obj_this.modified_topic_data.duration = available_time_string;
+                    obj_this.available_duration = window['dt_functions'].seconds_to_hour_minutes(available_time);
+                    var picker_duration = $("#duration");
+                    picker_duration.value = available_time;
+                    // obj_this.modified_topic_data.duration = available_time ;
                 },10);
             }
         }else{
             obj_this.time_exceeded = true;
+            obj_this.available_duration = window['dt_functions'].seconds_to_hour_minutes(available_time);
         }
-        obj_this.available_duration = available_time - new_topic_duration;
-
-        console.log(obj_this.modified_topic_data.duration, 333);
     }
 
     get_topic() {
@@ -306,7 +311,11 @@ export class TopiceditComponent implements OnInit {
             args: args
         };
         obj_this.httpService.get(final_input_data, (data) => {
-            obj_this.topic = data;            
+            obj_this.topic = data;
+            setTimeout(function(){                
+                $('#duration').trigger('change');
+            }, 10)
+            
             obj_this.event__name = data.event__name;
             if (obj_this.topic.docs.length) {                
                 obj_this.agenda_docs = obj_this.topic.docs;
@@ -340,13 +349,18 @@ export class TopiceditComponent implements OnInit {
 
 
     ngOnInit() {
-        let obj_this = this;        
+        let obj_this = this;
         if (obj_this.meeting_name) {
             obj_this.event__name = obj_this.meeting_name;
         }
-        if (obj_this.action == 'update' && obj_this.topic_id) {
+        if (obj_this.action == 'update' && obj_this.topic_id) {            
             obj_this.get_topic()
         }
+        
+        window['app_libs']['duration_picker'].load(function(){            
+            $('#duration').durationPicker({showSeconds: false,showDays: false});            
+        });
+
         // else if(obj_this.action == 'create')
         {
             setTimeout(() => {
@@ -355,8 +369,19 @@ export class TopiceditComponent implements OnInit {
         }
         // console.log(obj_this.meeting_obj);
         obj_this.sum_agenda_duration(null);
-        window['app_libs']['duration_picker'].load(function(){
-            $('#duration').durationPicker({showSeconds: false,showDays: false});
+        
+        $(document).ready(function() {
+            var $timerVal = $("#duration");
+            $timerVal.on('change',function() {
+                // console.log(677878);
+                var duration_second = $timerVal.val();
+                if(duration_second){
+                    obj_this.sum_agenda_duration(duration_second);
+                }else{
+                    duration_second = $timerVal.value = 0
+                    obj_this.sum_agenda_duration(duration_second);
+                }
+            });                    
         });
     }
 

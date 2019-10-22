@@ -26,7 +26,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="duration"> <b>Duration: </b> <span [ngClass]="{error: time_exceeded}">(Available time is {{available_duration}})</span> </label>
-                        <input value="{{topic.duration}}" [(ngModel)]="topic.duration" (change)="sum_agenda_duration($event.target.value)" type="text" placeholder="Enter Agenda Duration" id="duration"  >
+                        <input value="{{topic.duration}}" [(ngModel)]="topic.duration" type="text" placeholder="Enter Agenda Duration" id="duration"  >
                     </div>
 
                     <div class="col-md-12">
