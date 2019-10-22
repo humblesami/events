@@ -217,11 +217,11 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <input type="hidden" class="id" value="{{topic.id}}" />
                                     <span class="up-down">
                                         <span *ngIf="topic.position != 0" 
-                                        (click)="save_positions($event, 'down')">
+                                        (click)="save_positions($event, 'up')">
                                             <i class="fas fa-arrow-up"></i>
                                         </span>
                                         <span *ngIf="topic.position != (meeting_object.topics.length - 1)" 
-                                        (click)="save_positions($event, 'up')">
+                                        (click)="save_positions($event, 'down')">
                                             <i class="fas fa-arrow-down"></i>
                                         </span>
                                     </span>

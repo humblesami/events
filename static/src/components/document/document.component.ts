@@ -221,7 +221,9 @@ export class DocumentComponent implements OnInit {
     
     programatic_scroll = false;
     next_prev_page(pageToMove){        
+        // console.log(pageToMove, 4343);
         pageToMove = parseInt(this.page_num+ '') + parseInt(pageToMove);
+        // console.log(pageToMove, 3232);
         this.change_page(pageToMove);
     }
 
@@ -258,7 +260,7 @@ export class DocumentComponent implements OnInit {
                 pageToMove = 1;
             }
             let page_height = $('.pdfViewer .page:first').height();
-            let pdf_scroll = (pageToMove * page_height);
+            let pdf_scroll = pageToMove * page_height - page_height;
             this.programatic_scroll = true;
             this.page_num = pageToMove;
             $('.PdfViewerWrapper:first').scrollTop(pdf_scroll);
