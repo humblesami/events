@@ -39,7 +39,7 @@
                         '</div>';
             }
 
-            var mainInputReplacer = $('<div class="bdp-input">' +
+            var mainInputReplacer = $('<div class="bdp-input" id="foo_dur">' +
                 buildDisplayBlock('days', !settings.showDays) +
                 buildDisplayBlock('hours') +
                 buildDisplayBlock('minutes') +
@@ -122,11 +122,17 @@
                 updateMainInputReplacer();
             }
 
-            function buildNumericInput(label, hidden, max) {
+            function buildNumericInput(label, hidden, max, id, tabindex) {
                 var input = $('<input class="form-control input-sm" type="number" min="0" value="0">')
                     .change(picker_changed);
                 if (max) {
                     input.attr('max', max);
+                }
+                if(tabindex){
+                    input.attr('tabindex', tabindex);
+                }
+                if (id){
+                    input.attr('id', id);
                 }
                 inputs[label] = input;
                 var ctrl = $('<div> ' + langs[settings.lang][label] + '</div>');
@@ -139,7 +145,7 @@
             if (!disabled) {
                 var picker = $('<div class="bdp-popover"></div>');
                 buildNumericInput('days', !settings.showDays).appendTo(picker);
-                buildNumericInput('hours', false, 23).appendTo(picker);
+                buildNumericInput('hours', false, 23, 'dur_hours').appendTo(picker);
                 buildNumericInput('minutes', false, 59).appendTo(picker);
                 buildNumericInput('seconds', !settings.showSeconds, 59).appendTo(picker);
 

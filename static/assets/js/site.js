@@ -334,8 +334,18 @@ function addMainEventListeners() {
         $('body').removeClass('modal-open');
     });
 
+    $(document).on('mouseup', function(e){
+        if($('.popover.fade.show').length){
+            if(!$(e.target).closest('.popover.show').length){
+                var shown_popover_id = $('.popover.fade.show').attr('id');
+                $('.bdp-input[aria-describedby="'+shown_popover_id+'"]:first').click();
+            }
+        }
+    });
+
     $(document).on("mouseup touchend keyup", function(e) {
         refreshSession();
+        
         if(!window['js_utils'].is_public_route())
         {
             localStorage.setItem('last_activity', Date());

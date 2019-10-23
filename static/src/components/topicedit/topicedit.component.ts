@@ -57,8 +57,7 @@ export class TopiceditComponent implements OnInit {
         this.onSubmit();
     }
 
-    onCancel() {
-        $(".popover").removeClass('show');
+    onCancel() {        
         this.activeModal.close('closed');        
     }
 
@@ -138,8 +137,15 @@ export class TopiceditComponent implements OnInit {
             }, null);
         });
     }
-    
-    
+
+    dur_focus(evn){
+        let obj_this = this;
+        obj_this.modified_topic_data.lead = evn;
+        $("#foo_dur").click();        
+        setTimeout(function(){
+            $("#dur_hours").focus();
+        }, 100);
+    }    
     onSubmit() {        
         let obj_this = this;
         if(obj_this.time_exceeded || !(obj_this.topic.name && obj_this.topic.lead && obj_this.topic.duration))
@@ -179,7 +185,6 @@ export class TopiceditComponent implements OnInit {
             params: input_data,
             args: args
         }
-        $(".popover").removeClass('show');
         obj_this.httpService.get(final_input_data, (data) => {
             // console.log(data, obj_this.topic_id, 3444);
             if (obj_this.topic_id) {                
@@ -333,7 +338,7 @@ export class TopiceditComponent implements OnInit {
         }
         
         window['app_libs']['duration_picker'].load(function(){            
-            $('#duration').durationPicker({showSeconds: false,showDays: false});            
+            $('#duration').durationPicker({showSeconds: false,showDays: false});
         });
 
         // else if(obj_this.action == 'create')

@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="email"> <b>Lead</b> </label>
-                        <input value="{{topic.lead}}" [(ngModel)]="topic.lead" (change)="modified_topic_data.lead = $event.target.value" type="text" placeholder="Enter Lead Name" id="lead">
+                        <input value="{{topic.lead}}" [(ngModel)]="topic.lead" (focusout)="dur_focus($event.target.value)" (change)="modified_topic_data.lead = $event.target.value" type="text" placeholder="Enter Lead Name" id="lead">
                     </div>
                     <div class="col-md-6">
                         <label for="duration"> <b>Duration: </b> <span [ngClass]="{error: time_exceeded}">(Available time is {{available_duration}})</span> </label>
