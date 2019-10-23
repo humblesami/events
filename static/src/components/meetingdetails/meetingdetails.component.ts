@@ -101,8 +101,14 @@ export class MeetingDetailsComponent implements OnInit {
         let obj_this = this;
         var on_topic_closed = function(data){
             var temp_topics = []
+            var pos = 1;
             for(var topic of obj_this.meeting_object.topics)
             {
+                if(topic.position == undefined)
+                {
+                    topic.position = pos;
+                }
+                pos++;
                 temp_topics.push(topic);
             }
             obj_this.zone.run(()=>{
@@ -365,22 +371,7 @@ export class MeetingDetailsComponent implements OnInit {
         }, function(){
             
         }, null);
-    }
-
-    on_topic_added(topic){
-        let obj_this = this;
-        var last_pos = 0;
-        var len = obj_this.meeting_object.topics.length;
-        if(len){
-            last_pos = obj_this.meeting_object.topics[len - 1].position;
-            if(!last_pos)
-            {
-                last_pos = len;
-            }
-        }
-        topic.position = last_pos + 1;
-        obj_this.meeting_object.topics.push(topic);
-    }    
+    } 
 
     move_to_archive(meeting_id:number)
     {
