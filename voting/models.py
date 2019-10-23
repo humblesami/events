@@ -210,7 +210,7 @@ class Voting(Actions):
             voting_object['voting_options'].append({'id': option.id, 'name': option.name})
             voting_object['chart_data'].append({'option_name': option.name, 'option_result': 0, 'option_perc': 0})
 
-        voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
+        voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id, user_id__in=voting_object_orm.get_audience()).annotate(
             answer_count=Count('user_answer'))
         voting_object['results'] = {
             'answer_count': len(voting_results),
