@@ -1201,9 +1201,9 @@
 
                         function on_document_rendered() {
                             try {
-                                $('.ToolBarWrapper>div').css({
-                                    display: 'flex'
-                                });
+                                // $('.ToolBarWrapper>div').css({
+                                //     display: 'flex'
+                                // });
                                 // var rotateBy = RENDER_OPTIONS.rotate;
                                 // var rotate_degree = rotateBy % 360;
                                 showHideAnnotations();

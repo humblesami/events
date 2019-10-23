@@ -48,15 +48,18 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                             <i class="fas fa-arrow-left"></i>
                         </a>
                     </div>
-                    <div class="doc-manage-btn-wrap">
-                        <div class="paginator">
+                    <div class="paginator">
+                        <div class="doc-manage-btn-wrap">
                             <span (click)="next_prev_page(-1)" class="pager prev page-prev-btn">
                                 <img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
                             </span>
+                        </div>
+                        <div class="doc-manage-btn-wrap">
                             <span (click)="next_prev_page(1)" class="pager next page-next-btn">
                                 <img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
                             </span>
-                            
+                        </div>
+                        <div class="doc-manage-btn-wrap">
                             <input type="hidden" (change)="change_page()" (keyup.enter)="change_page()" class="form-control" 
                             [(ngModel)]="page_num" class="page-number" value="1">
                             <span>{{page_num}} / <span class="page-count">1</span></span>
@@ -91,6 +94,8 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 <option value="10"> ▇▇▇▇▇▇▇▇ </option>
                             </select>
                         </div>
+                    </div>
+                    <div class="doc-manage-btn-wrap">    
                         <div class="pen-color annotation_button prop"></div>
                     </div>
                     <div class="doc-manage-btn-wrap">
@@ -132,6 +137,8 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                         <button class="zoomout">
                             <i class="icon-zoom-out"></i>
                         </button>
+                    </div>
+                    <div class="doc-manage-btn-wrap">
                         <div class="selectBox">
                             <select class="scale" disabled>
                                 <option value="0.25">25%</option>
@@ -148,7 +155,8 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 <option value="5">500%</option>
                             </select>
                         </div>
-    
+                    </div>
+                    <div class="doc-manage-btn-wrap">
                         <button class="zoomin">
                             <i class="icon-zoom-in"></i>
                         </button>
@@ -159,6 +167,8 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 <img src="static/assets/images/docs/docs-rotate-left.svg" alt="">
                             </div>
                         </a>
+                    </div>
+                    <div class="doc-manage-btn-wrap">
                         <a href="javascript://" class="rotate-cw" title="Rotate Clockwise">
                             <div class="Icon">
                                 <img src="static/assets/images/docs/docs-rotate-right.svg" alt="">
@@ -172,6 +182,8 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 <i *ngIf="annot_hidden" class="fa fa-eye" aria-hidden="true"></i>
                             </div>
                         </a>
+                    </div>
+                    <div class="doc-manage-btn-wrap">
                         <button class="btn btn-sm btn-primary reset">
                             <i class="fas fa-sync-alt"></i>
                         </button>

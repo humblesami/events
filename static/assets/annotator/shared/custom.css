@@ -1,6 +1,4 @@
-#annotated-doc-conatiner * {
-    box-sizing: border-box;
-    }
+
 /* width */
 .ToolBarWrapper::-webkit-scrollbar {
     width: 5px;
@@ -22,21 +20,19 @@
     flex-wrap: wrap;
     }
 .toolbar.topbar {
-    display: flex;
-    justify-content: flex-end;
     position: relative;
     border: 0;
     color: #ffffff;
     background-color: #fafafa;
 }
 .toolbar.topbar .doc-manage-btn-wrap{
-    margin-bottom: .75rem;
+    text-align: center;
+    margin-bottom: .65rem;
 }
-.toolbar.topbar .doc-manage-btn-wrap > *{
-    margin-top: .5rem;
-}
-.toolbar.topbar .doc-manage-btn-wrap > *:first-child{
-    margin-top: 0;
+.doc-manage-btn-wrap > button > svg{
+    position: absolute;
+    top: 0;
+    right: 0px;
 }
 .pager.next.page-next-btn,
 .pager.prev.page-prev-btn{
@@ -45,14 +41,11 @@
 .ToolBarWrapper {
     display: block;
     width: 40px;
-    align-items: center;
     position: relative;
     right: 0;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
     padding: 5px 0px;
-    flex-wrap: wrap;
     height: calc(100vh - 110px);
-    flex-direction: column;
     z-index: 1;
     overflow: auto;
 
@@ -75,9 +68,6 @@
     background-color: transparent;
     border: 0px solid transparent;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 21px;
     line-height:1;
     color:#ffffff;
@@ -87,7 +77,6 @@
     font-size: 17px;
 } */
 .toolbar .selectBox {
-    display: flex;
     font-size: 14px;
 }
 .toolbar button:after {
@@ -269,10 +258,7 @@
     min-width: 15px
     }
 .topbar .paginator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+
 }
 
 .topbar .paginator input {
@@ -565,10 +551,6 @@ Color Popup
 
 ==================================*/
 .doc-manage-btn-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
     margin: 0;
     position: relative;
 }
@@ -625,7 +607,7 @@ mark.current {
     background: transparent;
     -webkit-appearance: none;
     -moz-appearance: none;
-    text-indent: 1px;
+    text-indent:  calc(50% - 13px);
     text-overflow: '';
     border: 0;
     color: #ffffff;
@@ -746,17 +728,13 @@ a.list-group-item.contact.active {
 }
 
 .PenSize select{
-    padding: 0 20px 0 5px;
-    background-position: right 7px center !important;
+    padding: 0px 15px 5px 5px;
+    background-position: 90% 65% !important;
     border: none;
 }
 span.pager.disabled
 {
     background-color: silver;
-}
-.ToolBarWrapper>div{
-    display: none;
-    flex-direction: column;
 }
 #comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
