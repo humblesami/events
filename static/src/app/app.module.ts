@@ -87,6 +87,7 @@ import { MovetomyfolderComponent } from '../components/movetomyfolder/movetomyfo
 import { ThankyouComponent } from '../components/thankyou/thankyou.component';
 import { TopiceditComponent } from '../components/topicedit/topicedit.component';
 import { EsigndocresultsComponent } from '../components/esigndocresults/esigndocresults.component';
+import { FeedbackComponent } from '../components/feedback/feedback.component';
 
 @NgModule({
     imports: [
@@ -164,6 +165,7 @@ import { EsigndocresultsComponent } from '../components/esigndocresults/esigndoc
         ThankyouComponent,
         TopiceditComponent,
         EsigndocresultsComponent,
+        FeedbackComponent,
     ],
     providers:[
         AuthGuard,

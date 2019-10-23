@@ -53,6 +53,7 @@ import { UserlistComponent } from '../components/userlist/userlist.component';
 import { HttpService } from "./http.service";
 import { ActionsComponent } from "src/components/actions/actions.component";
 import { ThankyouComponent } from '../components/thankyou/thankyou.component';
+import { FeedbackComponent } from '../components/feedback/feedback.component';
 import { EsigndocresultsComponent } from "src/components/esigndocresults/esigndocresults.component";
 
 
@@ -67,6 +68,7 @@ const appRoutes: Routes = [
     { path: 'set-password', component: SetpasswordComponent},
     { path: 'reset-password/:token', component: SetpasswordComponent},
     { path: 'thanks', component: ThankyouComponent},
+    { path: 'feedback', component: FeedbackComponent},
 
     { path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
     { path: 'my-profile/edit', component: ProfileeditComponent, canActivate: [AuthGuard]},	
