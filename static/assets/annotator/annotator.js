@@ -701,10 +701,7 @@
                             type: 'post'
                         });
                     }
-
                 })();
-
-
 
                 $('body').on('click', '.reset', function() {
                     setCookieStrict(documentId, documentId +'/annotations', '');                    
@@ -794,7 +791,7 @@
                     var style = y_dim + x_dim;
                     //to be changed
                     if (c_point.counter == 0) {
-                        style += 'display:none;'
+                        style += 'visibility:hidden;'
                     }
                     notif_counters_html += ' style="' + style + '" comment_count="' + c_point.counter + '">' + c_point.counter + '</div>';
                     $('#pageContainer' + pange_number + ' .canvasWrapper').append(notif_counters_html);
@@ -920,9 +917,9 @@
                         if (!cookie_only) {
                             var elem = $('.new_comments_count[point_id="' + point.uuid + '"]');
                             if (newVal == 0) {
-                                elem.hide();
+                                elem.css('visibility', 'hidden');
                             } else {
-                                elem.show();
+                                elem.css('visibility', 'visible');
                             }
                             elem.html(newVal).attr('comment_count', newVal);
                         }
