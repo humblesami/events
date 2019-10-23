@@ -27,7 +27,28 @@
 }
 .toolbar.topbar .doc-manage-btn-wrap{
     text-align: center;
-    margin-bottom: .65rem;
+    border-bottom: 1px solid;
+}
+
+.toolbar.topbar .doc-manage-btn-wrap:not(.group) > button{    
+    padding: 10px;
+}
+
+.comment.annotation_button .Icon{
+    margin-left: -4px;
+}
+
+.toolbar.topbar .doc-manage-btn-wrap.group
+{
+    padding: 8px 0;
+}
+
+button.pen-color.annotation_button.prop {
+    margin: 8px 5px;
+}
+
+.doc-manage-btn-wrap button:hover {
+    background: cornflowerblue;    
 }
 .doc-manage-btn-wrap > button > svg{
     position: absolute;
@@ -44,7 +65,6 @@
     position: relative;
     right: 0;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
-    padding: 5px 0px;
     height: calc(100vh - 110px);
     z-index: 1;
     overflow: auto;
@@ -125,6 +145,11 @@
 }
 .text-color, .pen-color {
     display: inline-block;
+}
+select.pen-size{
+    height: 20px;
+    width: 90%;
+    margin-left: 5%;
 }
 .topbar .pen-color {
     cursor: pointer;
@@ -299,21 +324,6 @@
     border-color: transparent transparent #7c7bad transparent;
 }
 
-.toolbar button.add-point-button {
-    background: #7c7bad;
-    height: 15px;
-    min-width: 15px;
-    width: 15px;
-    border-radius: 100%;
-    padding: 0;
-    position: absolute;
-    bottom: 0px;
-    right: 7px;
-}
-
-.toolbar button.add-point-button:hover {
-    background-color: green;
-}
 body.pdf-viewer {
     overflow: hidden;
 }
@@ -551,10 +561,10 @@ body.pdf-viewer {
 Color Popup
 
 ==================================*/
-.doc-manage-btn-wrap {
-    margin: 0;
+.doc-manage-btn-wrap {    
     position: relative;
 }
+
 .ColorPalettePopup .row {
     display: flex;
     margin: 2px;
@@ -652,10 +662,6 @@ a.list-group-item.contact.active {
 .abcdef{
     position:relative;
 }
-.annotation_button.selection
-{
-    height: 26px;
-}
 .annotation_button.selection.active
 {
     background-color: navy;
@@ -740,6 +746,20 @@ span.pager.disabled
 #comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
     display: none;
+}
+
+
+.toolbar.topbar .doc-manage-btn-wrap:not(.group) > button.add-point-button {
+    background: #7c7bad;
+    position: absolute;
+    top: 24px;
+    right: 0px;
+    border-radius: 100%;
+    padding: 9px;
+}
+
+.toolbar button.add-point-button:hover {
+    background-color: green;
 }
 @media screen and (max-width:576px){
     #comment-wrapper{

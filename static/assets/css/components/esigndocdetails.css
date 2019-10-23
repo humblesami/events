@@ -411,3 +411,6 @@ body.public #viewer_container{
     display: flex;
     align-items: center;
 }
+.PdfTopBtnsWrapper>div{
+    display: flex;
+}

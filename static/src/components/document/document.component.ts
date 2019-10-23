@@ -8,6 +8,7 @@ declare var $: any;
 
 @Component({
     selector: 'app-document',
+    styleUrls: ['./doc.css'],
     templateUrl: './document.component.html'
 })
 export class DocumentComponent implements OnInit {
@@ -50,7 +51,7 @@ export class DocumentComponent implements OnInit {
 	toggleAnnotations(){
 		this.annot_hidden = !this.annot_hidden;
 		window['show_annotation'] = !window['show_annotation']
-		$('.annotation_button').toggle();
+		$('.annotation-buttons-container').toggle();
 		$('.annotationLayer').toggle();
 	}
 
@@ -129,6 +130,7 @@ export class DocumentComponent implements OnInit {
                 args.method = 'get_data_with_binary';
             }
         }
+        $('#annotated-doc-conatiner').hide();
         var input_data = {            
             args: args,
             params: {id : doc_id}

@@ -339,7 +339,6 @@
             $('#annotated-doc-conatiner').hide();
             shown_comment_type = false;
             comments_wrapper.hide();
-            $('.router-outlet').show();
             saveAnnotationsAtServer('Leaving');
         }
     }
@@ -867,12 +866,12 @@
                     var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
                     var pen_color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
                     setPen(pen_size, pen_color);
-                    $('.topbar:first .annotation_button').show();
+                    $('.topbar:first .annotation-buttons-container').show();
                     $('.annot-toggler').show();
                 } else if(annotation_mode == 2){
                     $('.annot-toggler').hide();                    
                     RENDER_OPTIONS.showAnnotations = false;
-                    $('.topbar:first .annotation_button').hide();
+                    $('.topbar:first .annotation-buttons-container').hide();
                     $('.topbar:first').show();
                     if (doc_data.type == 'signature') {
                         $('.strt_sign').attr('doc_id', doc_data.id);
@@ -1010,12 +1009,12 @@
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate + 90);
                 }
 
-                function handleRotateCCWClick() {
+                function handleRotateACWClick() {
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate - 90);
                 }
 
-                document.querySelector('.toolbar .rotate-ccw').addEventListener('click', handleRotateCCWClick);
                 document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCWClick);
+                document.querySelector('.toolbar .rotate-acw').addEventListener('click', handleRotateACWClick);
 
                 $('.toolbar:first .zoomin')[0].onclick = function() {
                     if (RENDER_OPTIONS.scale >= 5)
@@ -1043,15 +1042,11 @@
                                 window['show_annotation'] = true;
                             } else {
                                 window['show_annotation'] = false
-                            }
-                            $('.topbar:first .annotation_button').hide();
-                            scroll_div.hide();
+                            }                            
                             $('.strt_sign.pdfjs').hide();
-                            $('.sign_completed.pdfjs').hide();
-                            $('.router-outlet').hide();
+                            $('.sign_completed.pdfjs').hide();                            
                             $('.doc-reseter').hide();
-                            $('.toolbar.topbar:first').show();
-                            $('#annotated-doc-conatiner').show();
+                            $('.toolbar.topbar:first').show();                            
                             select_cursor();
                             hideComments();
                             init_ScaleRotate();
@@ -1180,7 +1175,7 @@
                                     if (doc_data && doc_data.first_time) {
                                         $('body').addClass('pdf-viewer');
                                     }
-                                    scroll_div.show();
+                                    $('#annotated-doc-conatiner').show();
                                     console.log(window['dt_functions'].now_full(), 'first page rendered');
                                 }
                                 if (annotation_mode == 1) {
@@ -1254,10 +1249,10 @@
                     }
                     if (window['show_annotation']) {
                         $('.annotationLayer').show();
-                        $('.annotation_button').show();
+                        $('.topbar:first .annotation-buttons-container').show();                        
                     } else {
                         $('.annotationLayer').hide();
-                        $('.annotation_button').hide();
+                        $('.topbar:first .annotation-buttons-container').hide();                        
                     }
                 } catch (er) {
                     console.log(er);
@@ -3718,18 +3713,18 @@
                                 <g id="NOtes" transform="translate(-1057 -255)">
                                     <rect id="Rectangle_1554" data-name="Rectangle 1554" width="18" height="22" rx="3" transform="translate(1057 255)" fill="#4b74b5"/>
                                     <g id="Group_1204" data-name="Group 1204">
-                                        <path id="Path_8932" data-name="Path 8932" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 254.712)" fill="#fff"/>
-                                        <g id="Group_1203" data-name="Group 1203" transform="translate(-0.001 0)">
-                                            <path id="Path_8928" data-name="Path 8928" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 251.712)" fill="#fff"/>
-                                            <path id="Path_8931" data-name="Path 8931" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 254.712)" fill="#fff"/>
-                                            <path id="Path_8933" data-name="Path 8933" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 257.712)" fill="#fff"/>
-                                            <path id="Path_8935" data-name="Path 8935" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 260.712)" fill="#fff"/>
-                                            <path id="Path_8930" data-name="Path 8930" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 251.712)" fill="#fff"/>
-                                            <path id="Path_8934" data-name="Path 8934" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 257.712)" fill="#fff"/>
-                                            <path id="Path_8936" data-name="Path 8936" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 260.712)" fill="#fff"/>
-                                            <path id="Path_8937" data-name="Path 8937" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 263.712)" fill="#fff"/>
-                                            <path id="Path_8938" data-name="Path 8938" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 263.712)" fill="#fff"/>
-                                        </g>
+                                    <path id="Path_8932" data-name="Path 8932" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 254.712)" fill="#fff"/>
+                                    <g id="Group_1203" data-name="Group 1203" transform="translate(-0.001 0)">
+                                        <path id="Path_8928" data-name="Path 8928" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 251.712)" fill="#fff"/>
+                                        <path id="Path_8931" data-name="Path 8931" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 254.712)" fill="#fff"/>
+                                        <path id="Path_8933" data-name="Path 8933" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 257.712)" fill="#fff"/>
+                                        <path id="Path_8935" data-name="Path 8935" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 260.712)" fill="#fff"/>
+                                        <path id="Path_8930" data-name="Path 8930" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 251.712)" fill="#fff"/>
+                                        <path id="Path_8934" data-name="Path 8934" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 257.712)" fill="#fff"/>
+                                        <path id="Path_8936" data-name="Path 8936" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 260.712)" fill="#fff"/>
+                                        <path id="Path_8937" data-name="Path 8937" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 263.712)" fill="#fff"/>
+                                        <path id="Path_8938" data-name="Path 8938" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 263.712)" fill="#fff"/>
+                                    </g>
                                     </g>
                                 </g>
                             </svg>
