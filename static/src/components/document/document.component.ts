@@ -259,7 +259,11 @@ export class DocumentComponent implements OnInit {
             {
                 pageToMove = 1;
             }
-            let pdf_scroll = $('.pdfViewer>.page').eq(pageToMove-1).position().top - 5;
+            // console.log(pageToMove, 344);
+            var temp = $('.pdfViewer>.page').eq(pageToMove-1);
+            temp = temp.position().top;
+            temp = temp + $('.PdfViewerWrapper').scrollTop();
+            let pdf_scroll = temp - 5;
             this.programatic_scroll = true;
             this.page_num = pageToMove;
             $('.PdfViewerWrapper:first').scrollTop(pdf_scroll);

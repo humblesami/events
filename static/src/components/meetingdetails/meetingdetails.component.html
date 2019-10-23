@@ -188,6 +188,29 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
+        <div class="title-wrapper mt-3">
+            <app-documents
+            *ngIf="meeting_type != 'archived'" 
+            title="Meeting Documents" 
+            parent_model="Event" 
+            parent_field="meeting_id" 
+            parent_id="{{meeting_object.id}}"
+            res_app="meetings" 
+            res_model="MeetingDocument">
+            </app-documents>
+
+            <app-documents 
+            *ngIf="meeting_type == 'archived'"
+            title="Meeting Documents" 
+            parent_model="Event" 
+            parent_field="meeting_id" 
+            parent_id="{{meeting_object.id}}"
+            res_app="meetings"
+            res_model="MeetingDocument" 
+            readonly=1>
+            </app-documents>
+        </div>
+
         <div id="agenda-items" *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
             <h3>
                 <div>
@@ -252,50 +275,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
-            <div class="row" *ngIf="meeting_object.inline_roster">
-                <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
-                    <div class="kanban-card">
-                        <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
-                            <div class="kanban-profiles-user-img">
-                                <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
-                            </div>
-                            <div class="kanban-profiles-user-info">
-                                <div class="kanban-profiles-user-InfoLIST">
-                                    {{profile.name}}
-                                </div>
-                                <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
-                                    <i class="fas fa-users"></i>
-                                    <span >
-                                        {{profile.company}}
-                                    </span>
-                                </div>
-                                <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
-                                    <i class="fas fa-phone"></i>
-                                    <span >
-                                        {{profile.mobile_phone}}
-                                    </span>
-                                </div>
-                                <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
-                                <div *ngIf="profile.state" class="">
-                                    <b>Status : </b> {{profile.state}}
-                                </div>
-                                <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
-                                    <i class="fas fa-envelope"></i>
-                                    <span>
-                                        {{profile.email}}
-                                    </span>
-                                </div>
-								<div class="">
-                                    <b>Attendace : </b> Absent
-                                </div>
-                            </div>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -443,28 +422,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div class="title-wrapper mt-3">
-            <app-documents
-            *ngIf="meeting_type != 'archived'" 
-            title="Meeting Documents" 
-            parent_model="Event" 
-            parent_field="meeting_id" 
-            parent_id="{{meeting_object.id}}"
-            res_app="meetings" 
-            res_model="MeetingDocument">
-            </app-documents>
-
-            <app-documents 
-            *ngIf="meeting_type == 'archived'"
-            title="Meeting Documents" 
-            parent_model="Event" 
-            parent_field="meeting_id" 
-            parent_id="{{meeting_object.id}}"
-            res_app="meetings"
-            res_model="MeetingDocument" 
-            readonly=1>
-            </app-documents>
-        </div>
         <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
                 <form>
