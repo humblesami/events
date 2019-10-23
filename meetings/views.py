@@ -15,11 +15,13 @@ def response_invitation(request, meeting_id, response, token):
     if token:
         user_token = PostUserToken.validate_token(token)
         if not user_token:
-            context['error'] = 'Invalid Token'
+            # context['error'] = 'Invalid Token'
+            return redirect('/#/feedback/Invalid Token')
         else:
             request.user = user_token.user
             if meeting_id != user_token.post_info.res_id:
-                context['error'] = 'Invalid Token'
+                # context['error'] = 'Invalid Token'
+                return redirect('/#/feedback/Invalid Token')
             else:
                 response_valid = False
                 for state in STATE_SELECTION:
@@ -27,7 +29,8 @@ def response_invitation(request, meeting_id, response, token):
                         response_valid = True
                         break
                 if not response_valid:
-                    context['error'] = 'Invlalid Response'
+                    # context['error'] = 'Invlalid Response'
+                    return redirect('/#/feedback/Invalid Token')
                 else:
                     params = {
                         'meeting_id': meeting_id,
@@ -35,12 +38,15 @@ def response_invitation(request, meeting_id, response, token):
                         'user_id': user_token.user.id
                     }
                     if Event.respond_invitation(request, params) == 'done':
-                        context['success'] = 'Response Submitted Successfully'
+                        # context['success'] = 'Response Submitted Successfully'
+                        return redirect('/#/thanks/Thanks Your Answer is Saved Successfully..!')
                     else:
-                        context['error'] = 'Error While Submitting Response'
+                        # context['error'] = 'Error While Submitting Response'
+                        return redirect('/#/feedback/Error While Submitting Response')
     else:
-        context['error'] = 'Invalid Token'
-    return render(request, 'response_submit.html', context)
+        # context['error'] = 'Invalid Token'
+        return redirect('/#/feedback/Invalid Token')
+    # return render(request, 'response_submit.html', context)
 
 
 def topic(request, meeting_id):

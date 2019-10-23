@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-thankyou',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./thankyou.component.css']
 })
 export class ThankyouComponent implements OnInit {
-    constructor() { }
+    constructor(private route: ActivatedRoute) { }
     close_window(){
         window.close();
     }
+    message = '';
     ngOnInit() {
+        this.message = this.route.snapshot.params.message;
     }
 }

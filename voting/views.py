@@ -30,37 +30,42 @@ def respond(request, voting_id, choice_id, token):
     user_token = None
     user_token = PostUserToken.validate_token(token)
     if not user_token:
-        context['error'] = 'Error: Invalid Token or Expired'
-        return render(request, 'token_submit.html', context)
+        # context['error'] = 'Error: Invalid Token or Expired'
+        # return render(request, 'token_submit.html', context)
+        return redirect('/#/feedback/Invalid Token or Expired')
 
     if voting_id != user_token.post_info.res_id:
-        context['error'] = 'Error: Invalid Token or Expired'
-        return render(request, 'token_submit.html', context)
+        return redirect('/#/feedback/Invalid Token or Expired')
+        # context['error'] = 'Error: Invalid Token or Expired'
+        # return render(request, 'token_submit.html', context)
     voting = Voting.objects.get(id=voting_id)
     if voting.signature_required:
         return respond_with_signature(request, voting, voting_id, choice_id, token)
     if not user_token:
-        context['error'] = 'Error: Invalid Token or Expired'
-        return render(request, 'token_submit.html', context)
+        # context['error'] = 'Error: Invalid Token or Expired'
+        return redirect('/#/feedback/Invalid Token or Expired')
+        # return render(request, 'token_submit.html', context)
     user_id = user_token.user.id
     choice = voting.voting_type.votingchoice_set.filter(id=choice_id)
     if not choice:
-        context['error'] = 'Error: Invalid voting choice'
+        # context['error'] = 'Error: Invalid voting choice'
+        return redirect('/#/feedback/Invalid voting choice')
     else:
         res = None
         if not voting.signature_required:
             res = submit_choice(voting, choice_id, user_id, False)
         if res:
             if res == 'done':
-                context['success'] = 'Response submitted successfully'
+                # context['success'] = 'Response submitted successfully'
                 context['voting_id'] = voting_id
                 context['choice_id'] = choice_id
                 context['token'] = token
                 context['signature_required'] = voting.signature_required
             else:
-                context['error'] = 'Response submitted successfully'    
+                pass
+                # context['error'] = 'Response submitted successfully'
     # return render(request, 'token_submit.html', context)
-    return redirect('/#/thanks')
+    return redirect('/#/thanks/Response submitted successfully')
 
 def respond_with_signature(request, voting, voting_id, choice_id, token):
     context = {}
@@ -71,32 +76,37 @@ def respond_with_signature(request, voting, voting_id, choice_id, token):
     context['signature_required'] = voting.signature_required
     user_token = PostUserToken.validate_token(token)
     if not user_token:
-        context['error'] = 'Invalid Token'
-        return render(request, 'token_submit.html', context)
+        return redirect('/#/feedback/Invalid Token or Expired')
+        # context['error'] = 'Invalid Token'
+        # return render(request, 'token_submit.html', context)
     context['token'] = token
     # return render(request, 'token_submit.html', context)
-    return redirect('/#/thanks')
+    return redirect('/#/thanks/Response submitted successfully')
 
 
 def answer(request, voting_id):
     user_id=request.user.id
     if not user_id:
-        return HttpResponse('User not found...')
+        # return HttpResponse('User not found...')
+        return redirect('/#/feedback/User not found...')
     if request.method == 'POST':
         choice_id = request.POST.get('answer', False)
         if choice_id:
             choice_id = int(choice_id)
         else:
-            return HttpResponse('Choice Not Found..')
+            # return HttpResponse('Choice Not Found..')
+            return redirect('/#/feedback/Choice Not Found...')
         signature_data = request.POST.get('signature_data', False)
         if signature_data:
             signature_data = base64.encodebytes( signature_data.encode())
         try:
             update_Choice(choice_id, voting_id, user_id, signature_data)
-            return HttpResponse('Thanks Your Answer is Updated Successfully..!')
+            # return HttpResponse('Thanks Your Answer is Updated Successfully..!')
+            return redirect('/#/thanks/Thanks Your Answer is Updated Successfully..!')
         except VotingAnswer.DoesNotExist:
             save_Choice(choice_id, voting_id, user_id, signature_data)
-            return HttpResponse('Thanks Your Answer is Saved Successfully..!')
+            # return HttpResponse('Thanks Your Answer is Saved Successfully..!')
+            return redirect('/#/thanks/Thanks Your Answer is Saved Successfully..!')
     else:
         option_id = request.GET.get('answer_id', False)
         signature_data = request.GET.get('signature_data', False)
@@ -105,10 +115,12 @@ def answer(request, voting_id):
         if option_id:
             try:
                 update_Choice(option_id, voting_id, user_id, signature_data)
-                return HttpResponse('Answer Updated Successfully.')
+                # return HttpResponse('Answer Updated Successfully.')
+                return redirect('/#/thanks/Thanks Your Answer is Saved Successfully..!')
             except VotingAnswer.DoesNotExist:
                 save_Choice(option_id, voting_id, user_id, signature_data)
-                return HttpResponse('Answer Saved Successfully.')
+                # return HttpResponse('Answer Saved Successfully.')
+                return redirect('/#/thanks/Thanks Your Answer is Saved Successfully..!')
         else:
             try:
 

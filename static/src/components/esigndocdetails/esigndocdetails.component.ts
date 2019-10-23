@@ -671,7 +671,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         onSuccess: function(data) {
                             if (data == 'done')
                             {
-                                window.open(window['site_config'].server_base_url+'/response-sumbitted', '_self');                                
+                                window.open(window['site_config'].server_base_url+'/thanks/Response submitted successfully', '_self');
                             }
                             else{
                                 obj_this.signature_started = true;                            
@@ -925,22 +925,31 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                 },
                 onError: function(err){
-                    console.log(err);
-                    $(document).ready(()=>{
-                        $('#holder').html(`
-                        <div class="jumbotron vertical-center">
-                            <div class="container">
-                                <div class="row text-center">
-                                    <h3>${err}</h3>
-                                </div>
-                                <div class="row text-center">
-                                    <a class="btn btn-primary" href="${window['site_config'].server_base_url}">Login</a>
-                                </div>
-                            </div>
-                        </div>
-                        `).show();
+                    if (token)
+                    {
                         window['functions'].hideLoader('esign-doc');
-                    });
+                        window.open(window['site_config'].server_base_url+'/feedback/' + err, '_self');
+                    }
+                    else
+                    {
+                        console.log(err);
+                    }
+                    // console.log(err);
+                    // $(document).ready(()=>{
+                    //     $('#holder').html(`
+                    //     <div class="jumbotron vertical-center">
+                    //         <div class="container">
+                    //             <div class="row text-center">
+                    //                 <h3>${err}</h3>
+                    //             </div>
+                    //             <div class="row text-center">
+                    //                 <a class="btn btn-primary" href="${window['site_config'].server_base_url}">Login</a>
+                    //             </div>
+                    //         </div>
+                    //     </div>
+                    //     `).show();
+                    //     window['functions'].hideLoader('esign-doc');
+                    // });
                 }
             };
             if(token){
