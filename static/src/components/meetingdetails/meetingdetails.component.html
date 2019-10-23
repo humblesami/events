@@ -67,7 +67,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 				</div>
 
                 <div class="div1">
-
                     <div class="row">
                         <div *ngIf="me && me.state" class="col-md-4">
                             <div class="meet-elements">
@@ -186,35 +185,12 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="title-wrapper mt-3">
-            <app-documents
-            *ngIf="meeting_type != 'archived'" 
-            title="Meeting Documents" 
-            parent_model="Event" 
-            parent_field="meeting_id" 
-            parent_id="{{meeting_object.id}}"
-            res_app="meetings" 
-            res_model="MeetingDocument">
-            </app-documents>
-
-            <app-documents 
-            *ngIf="meeting_type == 'archived'"
-            title="Meeting Documents" 
-            parent_model="Event" 
-            parent_field="meeting_id" 
-            parent_id="{{meeting_object.id}}"
-            res_app="meetings"
-            res_model="MeetingDocument" 
-            readonly=1>
-            </app-documents>
-        </div>
+        </div>        
 
         <div id="agenda-items" *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
             <h3>
                 <div>
-                    <i class="icon-meeting-angenda text-primary"></i> Agenda Topics 
+                    <i class="icon-meeting-agenda text-primary"></i> Agenda Topics 
                     <i *ngIf="socketService.admin_mode" 
                     class="pointer fa fa-plus-circle text-primary" 
                     (click)='add_edit_topic(null, null, "create")'></i>
@@ -277,6 +253,29 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </table>
                 </div>
             </div>
+        </div>
+
+        <div class="title-wrapper mt-3">
+            <app-documents
+            *ngIf="meeting_type != 'archived'" 
+            title="Meeting Documents" 
+            parent_model="Event" 
+            parent_field="meeting_id" 
+            parent_id="{{meeting_object.id}}"
+            res_app="meetings" 
+            res_model="MeetingDocument">
+            </app-documents>
+
+            <app-documents 
+            *ngIf="meeting_type == 'archived'"
+            title="Meeting Documents" 
+            parent_model="Event" 
+            parent_field="meeting_id" 
+            parent_id="{{meeting_object.id}}"
+            res_app="meetings"
+            res_model="MeetingDocument" 
+            readonly=1>
+            </app-documents>
         </div>
 
         <div *ngIf="meeting_object.surveys.length || meeting_object.votings.length || meeting_object.sign_docs.length">

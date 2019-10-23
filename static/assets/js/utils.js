@@ -434,15 +434,3 @@ for(var key in app_libs)
     app_libs[key].loaded = 0;
     app_libs[key].call_backs = [];
 }
-$(function(){
-    app_libs['bootbox'].load(function(){
-        if(!bootbox)
-        {
-            console.log('not loaded', app_libs['bootbox']);
-        }        
-        else{
-            window['bootbox'] = bootbox;
-        }
-    });
-    app_libs['moment'].load(function(){});
-})
