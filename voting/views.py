@@ -2,7 +2,7 @@ import sys
 import base64
 import simplejson as json
 from django.db.models import Count
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from restoken.models import PostUserToken
 from .models import Voting, VotingChoice, VotingAnswer
@@ -59,7 +59,8 @@ def respond(request, voting_id, choice_id, token):
                 context['signature_required'] = voting.signature_required
             else:
                 context['error'] = 'Response submitted successfully'    
-    return render(request, 'token_submit.html', context)
+    # return render(request, 'token_submit.html', context)
+    return redirect('/#/thanks')
 
 def respond_with_signature(request, voting, voting_id, choice_id, token):
     context = {}
@@ -73,7 +74,8 @@ def respond_with_signature(request, voting, voting_id, choice_id, token):
         context['error'] = 'Invalid Token'
         return render(request, 'token_submit.html', context)
     context['token'] = token
-    return render(request, 'token_submit.html', context)
+    # return render(request, 'token_submit.html', context)
+    return redirect('/#/thanks')
 
 
 def answer(request, voting_id):

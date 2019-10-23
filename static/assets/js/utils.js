@@ -413,7 +413,7 @@ var js_utils = window['js_utils'] = {
         {
             url = get_cpath_name();
         }
-        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
+        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc', '/thanks', '/feedback'];
         for (var i in public_routes)
         {
             if (url.startsWith(public_routes[i]))
