@@ -9,12 +9,13 @@ from django.utils.dateparse import parse_duration, parse_time
 from datetime import timedelta
 import datetime
 
-# class TopicPositional(PositionalSortMixIn):
-#     def save(self, *args, **kwargs):
-#         self.position = len(self.event.topic_set.all())
-#         super(TopicPositional, self).save(*args, **kwargs)
+class TopicPositional(PositionalSortMixIn):
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.position = len(self.event.topic_set.all())
+        super(TopicPositional, self).save(*args, **kwargs)
 
-class Topic(CustomModel):
+class Topic(TopicPositional, CustomModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description=models.TextField(blank=True, null=True)
@@ -26,8 +27,8 @@ class Topic(CustomModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.position = len(self.event.topic_set.all())
+        # if not self.pk:
+        #     self.position = len(self.event.topic_set.all())
         if not self.duration:
             raise Exception('Invalid duration')
         super(Topic, self).save(*args, **kwargs)
