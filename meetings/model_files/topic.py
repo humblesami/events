@@ -9,7 +9,12 @@ from django.utils.dateparse import parse_duration, parse_time
 from datetime import timedelta
 import datetime
 
-class Topic(PositionalSortMixIn, CustomModel):
+class TopicPositional(PositionalSortMixIn):
+    def save(self, *args, **kwargs):
+        self.position = len(self.event.topic_set.all())
+        super(TopicPositional, self).save(*args, **kwargs)
+
+class Topic(TopicPositional, CustomModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description=models.TextField(blank=True, null=True)
