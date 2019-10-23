@@ -154,19 +154,6 @@ var app_libs = window['app_libs'] = {
     }
 };
 
-function get_cpath_name() {
-    var wl = window.location;
-    if(wl.toString().indexOf('localhost') > -1)
-    {
-        is_local_host = true;
-    }
-    if (wl.hash) {
-        window['pathname'] = wl.hash.substr(1, wl.hash.length);
-    } else {
-        window['pathname'] = wl.toString().replace(wl.origin, '');
-    }
-    return window['pathname'];
-}
 
 var js_utils = window['js_utils'] = {
     load_lib: function(obj_this, on_load){
@@ -407,23 +394,6 @@ var js_utils = window['js_utils'] = {
         scroll_el.animate({
             scrollTop: dy
         }, animate_time);
-    },
-    is_public_route: function (url){
-        if(!url)
-        {
-            url = get_cpath_name();
-        }
-        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc', '/thanks', '/feedback'];
-        for (var i in public_routes)
-        {
-            if (url.startsWith(public_routes[i]))
-            {
-                localStorage.removeItem('user');
-                $('body').removeClass('user').addClass('public');
-                return true;
-            }
-        }
-        return false;
     }
 }
 

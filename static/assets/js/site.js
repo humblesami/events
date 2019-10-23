@@ -85,10 +85,6 @@ var site_functions = {
         }
         return window['pathname'];
     },
-    moment: function(value, format)
-    {
-        return moment(value, format);
-    },
     readFiles: function(files, on_drop){
         for (var i = 0; i < files.length; i++) {
             var file_name = files[i].name;
@@ -158,30 +154,7 @@ var site_functions = {
         }
     },
 
-    meeting_time: function(dt) {
-        var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss')
-        var res = {
-            day: moment_time.format('DD'),
-            month_year: moment_time.format('MMM YYYY'),
-            time: moment_time.format('HH:mm A')
-        }
-        return res;
-    },
-    meeting_time_str: function(dt) {
-        var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss');
-        res = moment_time.format('MMM DD, YYYY hh:mm A');
-        return res;
-    },
-    hour_minutes: function(dt) {
-        if (typeof(dt) == "string")
-            dt = new Date(dt);
-        var hour = dt.getHours();
-        var minut = dt.getMinutes();
-        if (minut < 10) {
-            minut = '0' + minut;
-        }
-        return hour + ':' + minut;
-    },
+    
     loadingTimeOut: undefined,
     showLoader: function(nam) {
         var obj_this = this;
@@ -344,9 +317,12 @@ function addMainEventListeners() {
     });
 
     $(document).on("mouseup touchend keyup", function(e) {
+        if(!dn_current_site_user.cookie.token)
+        {
+            return;
+        }
         refreshSession();
-        
-        if(!window['js_utils'].is_public_route())
+        if(!window['is_public_route'] && window['is_public_route']())
         {
             localStorage.setItem('last_activity', Date());
         }

@@ -5,7 +5,7 @@
         $('body').removeClass('public').addClass('user');
     }
     function verifyUserToken() {
-        var public_route = window['js_utils'].is_public_route();
+        var public_route  = is_public_route();
         if(public_route)
         {
             $('body').removeClass('user').addClass('public');
@@ -72,7 +72,37 @@
             go_to_login();
         }
     }
-        
+    function get_cpath_name() {
+        var wl = window.location;
+        if(wl.toString().indexOf('localhost') > -1)
+        {
+            is_local_host = true;
+        }
+        if (wl.hash) {
+            window['pathname'] = wl.hash.substr(1, wl.hash.length);
+        } else {
+            window['pathname'] = wl.toString().replace(wl.origin, '');
+        }
+        return window['pathname'];
+    }
+    function is_public_route(url){
+        if(!url)
+        {
+            url = get_cpath_name();
+        }
+        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc', '/thanks', '/feedback'];
+        for (var i in public_routes)
+        {
+            if (url.startsWith(public_routes[i]))
+            {
+                localStorage.removeItem('user');
+                $('body').removeClass('user').addClass('public');
+                return true;
+            }
+        }
+        return false;
+    }
+    window['is_public_route'] = is_public_route;
     function go_to_login() {
         localStorage.removeItem('user');
         $('body').removeClass('user').addClass('public');

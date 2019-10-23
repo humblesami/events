@@ -8,6 +8,16 @@ var dt_js = {
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ],
+    dt_hour_minutes: function(dt) {
+        if (typeof(dt) == "string")
+            dt = new Date(dt);
+        var hour = dt.getHours();
+        var minut = dt.getMinutes();
+        if (minut < 10) {
+            minut = '0' + minut;
+        }
+        return hour + ':' + minut;
+    },
     seconds_to_hour_minutes: function(seconds) {        
         var minutes = Math.floor(seconds / 60);
         var hours = Math.floor(minutes / 60);        

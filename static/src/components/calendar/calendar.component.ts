@@ -156,7 +156,7 @@ export class CalendarComponent implements OnInit {
                     schedule_html += '<div event_id=' + events[i].id + ' class="scheduleDetailOpener row">';
                     // schedule_html += '<div class="col"> <span>' + events[i].date[1] + ' ' + events[i].date[0] +','+ events[i].date[2]+'</span></div>';
                     schedule_html += '<div class="col"> <span>' + events[i].date + '</span></div>';
-                    schedule_html += '<div class="col">' + window['functions'].hour_minutes(new Date(events[i].start)) + ' - ' + window['functions'].hour_minutes(new Date(events[i].stop)) + '</div>';
+                    schedule_html += '<div class="col">' + window['dt_functions'].dt_hour_minutes(new Date(events[i].start)) + ' - ' + window['dt_functions'].dt_hour_minutes(new Date(events[i].stop)) + '</div>';
                     schedule_html += '<div class="col">' + events[i].title + '</div>';
                     schedule_html += '</div>'
                 }

@@ -37,7 +37,9 @@
             }
             else
             {
-                dn_current_site_user.onLogin(data);
+                data = JSON.stringify(data);
+                localStorage.setItem('user', data);
+                localStorage.setItem('last_activity', Date());
                 window.location = "/";
             }
         };
