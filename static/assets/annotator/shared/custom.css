@@ -48,6 +48,7 @@
     height: calc(100vh - 110px);
     z-index: 1;
     overflow: auto;
+    overflow-x:hidden;
 
 }
 .toolbar .spacer {
