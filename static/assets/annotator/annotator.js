@@ -339,6 +339,7 @@
             $('#annotated-doc-conatiner').hide();
             shown_comment_type = false;
             comments_wrapper.hide();
+            $('.router-outlet').show();
             saveAnnotationsAtServer('Leaving');
         }
     }
@@ -929,6 +930,7 @@
             }
 
             function pdf_render(doc_data) {
+                $('#annotated-doc-conatiner').hide();
                 annotation_user_m2 = window['current_user'].cookie;
                 site_functions.hideLoader("Document Data");
                 doc_loading_step = "Document Render Data";
@@ -1009,12 +1011,12 @@
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate + 90);
                 }
 
-                function handleRotateACWClick() {
+                function handleRotateCCWClick() {
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate - 90);
                 }
 
-                document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCWClick);
-                document.querySelector('.toolbar .rotate-acw').addEventListener('click', handleRotateACWClick);
+                document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCCWClick);
+                document.querySelector('.toolbar .rotate-acw').addEventListener('click', handleRotateCWClick);
 
                 $('.toolbar:first .zoomin')[0].onclick = function() {
                     if (RENDER_OPTIONS.scale >= 5)
@@ -1042,7 +1044,9 @@
                                 window['show_annotation'] = true;
                             } else {
                                 window['show_annotation'] = false
-                            }                            
+                            }
+                            $('.topbar:first .annotation-buttons-container').hide();
+                            scroll_div.hide();
                             $('.strt_sign.pdfjs').hide();
                             $('.sign_completed.pdfjs').hide();                            
                             $('.doc-reseter').hide();
@@ -1175,8 +1179,9 @@
                                     if (doc_data && doc_data.first_time) {
                                         $('body').addClass('pdf-viewer');
                                     }
-                                    $('#annotated-doc-conatiner').show();
+                                    scroll_div.show();
                                     console.log(window['dt_functions'].now_full(), 'first page rendered');
+                                    $('#annotated-doc-conatiner').show();
                                 }
                                 if (annotation_mode == 1) {
                                     addCommentCount(annotations_of_page, pange_number);
@@ -1249,10 +1254,10 @@
                     }
                     if (window['show_annotation']) {
                         $('.annotationLayer').show();
-                        $('.topbar:first .annotation-buttons-container').show();                        
+                        $('.topbar:first .annotation-buttons-container').show();
                     } else {
                         $('.annotationLayer').hide();
-                        $('.topbar:first .annotation-buttons-container').hide();                        
+                        $('.topbar:first .annotation-buttons-container').hide();
                     }
                 } catch (er) {
                     console.log(er);
@@ -3713,18 +3718,18 @@
                                 <g id="NOtes" transform="translate(-1057 -255)">
                                     <rect id="Rectangle_1554" data-name="Rectangle 1554" width="18" height="22" rx="3" transform="translate(1057 255)" fill="#4b74b5"/>
                                     <g id="Group_1204" data-name="Group 1204">
-                                    <path id="Path_8932" data-name="Path 8932" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 254.712)" fill="#fff"/>
-                                    <g id="Group_1203" data-name="Group 1203" transform="translate(-0.001 0)">
-                                        <path id="Path_8928" data-name="Path 8928" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 251.712)" fill="#fff"/>
-                                        <path id="Path_8931" data-name="Path 8931" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 254.712)" fill="#fff"/>
-                                        <path id="Path_8933" data-name="Path 8933" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 257.712)" fill="#fff"/>
-                                        <path id="Path_8935" data-name="Path 8935" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 260.712)" fill="#fff"/>
-                                        <path id="Path_8930" data-name="Path 8930" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 251.712)" fill="#fff"/>
-                                        <path id="Path_8934" data-name="Path 8934" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 257.712)" fill="#fff"/>
-                                        <path id="Path_8936" data-name="Path 8936" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 260.712)" fill="#fff"/>
-                                        <path id="Path_8937" data-name="Path 8937" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 263.712)" fill="#fff"/>
-                                        <path id="Path_8938" data-name="Path 8938" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 263.712)" fill="#fff"/>
-                                    </g>
+                                        <path id="Path_8932" data-name="Path 8932" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 254.712)" fill="#fff"/>
+                                        <g id="Group_1203" data-name="Group 1203" transform="translate(-0.001 0)">
+                                            <path id="Path_8928" data-name="Path 8928" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 251.712)" fill="#fff"/>
+                                            <path id="Path_8931" data-name="Path 8931" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 254.712)" fill="#fff"/>
+                                            <path id="Path_8933" data-name="Path 8933" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 257.712)" fill="#fff"/>
+                                            <path id="Path_8935" data-name="Path 8935" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 260.712)" fill="#fff"/>
+                                            <path id="Path_8930" data-name="Path 8930" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 251.712)" fill="#fff"/>
+                                            <path id="Path_8934" data-name="Path 8934" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 257.712)" fill="#fff"/>
+                                            <path id="Path_8936" data-name="Path 8936" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 260.712)" fill="#fff"/>
+                                            <path id="Path_8937" data-name="Path 8937" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 263.712)" fill="#fff"/>
+                                            <path id="Path_8938" data-name="Path 8938" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 263.712)" fill="#fff"/>
+                                        </g>
                                     </g>
                                 </g>
                             </svg>

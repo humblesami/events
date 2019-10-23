@@ -44,7 +44,8 @@ var app_libs = window['app_libs'] = {
             "static/assets/annotator/annotator.js"
         ],
         style_paths:[
-            "static/assets/annotator/shared/pdf.viewer.css",            
+            "static/assets/annotator/shared/pdf.viewer.css",
+            "static/assets/annotator/shared/custom.css",
         ],
         load: function(on_load){            
             var obj_this = this;
