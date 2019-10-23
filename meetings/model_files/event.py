@@ -378,7 +378,7 @@ class Event(CustomModel):
 
     @classmethod
     def get_topics(cls, meeting_object_orm):
-        topic_orm = list(meeting_object_orm.topic_set.all())
+        topic_orm = list(meeting_object_orm.topic_set.all().order_by('position'))
         topics = []
         try:
             for t in topic_orm:
