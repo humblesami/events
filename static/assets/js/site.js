@@ -307,10 +307,10 @@ function addMainEventListeners() {
         $('body').removeClass('modal-open');
     });
 
-    $(document).on('mouseup', function(e){
-        if($('.popover.fade.show').length){
-            if(!$(e.target).closest('.popover.show').length){
-                var shown_popover_id = $('.popover.fade.show').attr('id');
+    $(document).on('mousedown', function(e){
+        if($('.popover.show').length){
+            if(!$(e.target).closest('.bdp-input').length && !$(e.target).closest('.popover.show').length){
+                var shown_popover_id = $('.popover.show').attr('id');
                 $('.bdp-input[aria-describedby="'+shown_popover_id+'"]:first').click();
             }
         }
