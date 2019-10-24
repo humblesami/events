@@ -3,7 +3,7 @@
 <head>	
     <base href="/#/" />
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Boardsheet</title>
 	<link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
@@ -12,7 +12,6 @@
     </script>
     <script type="text/javascript" src="static/assets/libs/js/jquery-2.2.4.js"></script>
     <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
-    <script type="text/javascript" src="static/assets/js/auth.js"></script>
     <!-- <script>
     (function(){
         $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
@@ -22,13 +21,16 @@
         });
     })() -->
     </script>
+
+</head>
+<body class="app sidebar-mini rtl sidenav-toggled public">
+    <script type="text/javascript" src="static/assets/js/auth.js"></script>
+    <script type="text/javascript" src="static/assets/js/libs_load.js"></script>
     <script type="text/javascript" src="static/assets/js/utils.js"></script>
     <link rel="stylesheet" type="text/css" href="static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
     <script type="text/javascript" src="/static/assets/libs/bootstrap/popper.min.js"></script>
     <script type="text/javascript" src="/static/assets/libs/bootstrap/bootstrap-4.1.1.js"></script>
 
-</head>
-<body class="app sidebar-mini rtl sidenav-toggled public">
     <div id="server-wait"
         style="position: absolute;
             z-index: 27;
@@ -59,10 +61,9 @@
         </div>
     </div>
 
-    <link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet1.css" />
+	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet1.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />
-	<link rel="stylesheet" type="text/css" href="static/assets/libs/css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-awsome-5.5.0.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-roboto-3.4.5.7.9.css" />
 
@@ -71,28 +72,16 @@
     <script type="text/javascript" src="static/assets/js/datetime.js"></script>
     <script type="text/javascript" src="static/assets/js/simple_ajax.js"></script>
     <script type="text/javascript" src="static/assets/js/site.js"></script>
-    <script async type="text/javascript" src="static/assets/libs/js/moment.js"></script>
 	<script type="text/javascript" src="static/assets/libs/js/socket.io.js"></script>
 	<script>
 		window["io"] = io;
     </script>
     <app-root></app-root>
 
-
-    <script type="text/javascript" src="static/assets/libs/js/jquery-ui.min.js"></script>
-	<script async type="text/javascript" src="static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
-	<script async type="text/javascript" src="static/assets/libs/js/jquery.mark.min.js"></script>
-    <script async type="text/javascript" src="static/assets/libs/js/mark.min.js"></script>
-    <link async rel="stylesheet" href="static/assets/libs/select2/default.theme.css" />
-
 	<script type="text/javascript" src="static/assets/js/custom_chart.js"></script>
 	<script type="text/javascript" src="static/assets/js/popup.js"></script>
+    <script src="static/assets/js/mask.js"></script>
 
-    <script src="/static/assets/js/mask.js"></script>
-
-    <script type="text/javascript" src="/static/assets/fileinput/file.js"></script>
-    <script type="text/javascript" src="/static/assets/fileinput/upload_single_file.js"></script>
-    <link href="/static/assets/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 
     <div class="onedrive_iframe" style="display:none">
         <iframe src="">
@@ -131,6 +120,6 @@
 
     <script type="text/javascript" src="static/build/runtime.js"></script>
     <script type="text/javascript" src="static/build/polyfills.js"></script>
-    <script type="text/javascript" src="static/build/main.js"></script>
+    <script type="text/javascript" src="static/build/main.js.gz"></script>
 </body>
 </html>

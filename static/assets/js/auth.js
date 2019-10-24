@@ -1,14 +1,20 @@
 (function(){
     var wl = window.location;
     var wl_str = wl.toString();
-    window['add_user_class'] = function(){
+    window['auth_js'] ={
+        add_public_class: add_public_class,
+        add_user_class: add_user_class,
+        is_public_route: is_public_route
+    } 
+    function add_public_class(){        
+        $('body').removeClass('user').addClass('public');
+    }
+    function add_user_class(){
         $('body').removeClass('public').addClass('user');
     }
     function verifyUserToken() {
-        var public_route  = is_public_route();
-        if(public_route)
-        {
-            $('body').removeClass('user').addClass('public');
+        if(is_public_route())
+        {            
             return;
         }
         var user_cookie = localStorage.getItem('user');
@@ -53,7 +59,7 @@
                         if(!error)
                         {
                             localStorage.setItem('last_activity', Date());
-                            window['add_user_class']();
+                            add_user_class();
                         }
                         else{
                             go_to_login();
@@ -96,7 +102,7 @@
             if (url.startsWith(public_routes[i]))
             {
                 localStorage.removeItem('user');
-                $('body').removeClass('user').addClass('public');
+                add_public_class();
                 return true;
             }
         }
@@ -105,7 +111,7 @@
     window['is_public_route'] = is_public_route;
     function go_to_login() {
         localStorage.removeItem('user');
-        $('body').removeClass('user').addClass('public');
+        add_public_class()
         if(!wl_str.endsWith('login'))
         {
             if(wl_str.indexOf('4200') == -1)

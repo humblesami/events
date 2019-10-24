@@ -84,11 +84,7 @@ export class DocumentsComponent implements OnInit {
 
     on_admin_mode_changed(){
         let obj_this = this;
-        // console.log(444, obj_this.parent_id);
-        if(!this.socketService.admin_mode || this.readonly || !obj_this.parent_id)
-        {
-            return;
-        }
+        // console.log(444, obj_this.parent_id);        
         setTimeout(function(){
             obj_this.init_file_drag_drop();
         }, 10)
@@ -96,23 +92,31 @@ export class DocumentsComponent implements OnInit {
 
     init_file_drag_drop(){
         let obj_this = this;
-        let file_input = $('.dlc-file-picker:not(.processed)');        
-        let resInfo = {
-            res_app: obj_this.res_app,
-            res_model: obj_this.parent_model,
-            res_id: obj_this.parent_id
+
+        if(!this.socketService.admin_mode || this.readonly || !obj_this.parent_id)
+        {            
+            return;
         }
-        file_input.attr('dragdrop', 1);
-        file_input.addClass('processed');
-        window['apply_drag_drop'](file_input, resInfo, function(data){
-            try{
-                var result = obj_this.docs.concat(data);
-                obj_this.zone.run(() => obj_this.docs = result);
+
+        window['app_libs'].doc_edit.load(function(){
+            let file_input = $('.dlc-file-picker:not(.processed)');        
+            let resInfo = {
+                res_app: obj_this.res_app,
+                res_model: obj_this.parent_model,
+                res_id: obj_this.parent_id
             }
-            catch(er){
-                console.log(er, 5455);
-            }
-        });
+            file_input.attr('dragdrop', 1);
+            file_input.addClass('processed');
+            window['apply_drag_drop'](file_input, resInfo, function(data){
+                try{
+                    var result = obj_this.docs.concat(data);
+                    obj_this.zone.run(() => obj_this.docs = result);
+                }
+                catch(er){
+                    console.log(er, 5455);
+                }
+            });
+        });        
     }
 
     delete_file(evn, doc_id)
@@ -195,8 +199,8 @@ export class DocumentsComponent implements OnInit {
             }
             else
             {
-                setTimeout(function(){
-                    obj_this.init_file_drag_drop();
+                setTimeout(function(){                    
+                    obj_this.init_file_drag_drop();                    
                 }, 10);
             }
         }, null);

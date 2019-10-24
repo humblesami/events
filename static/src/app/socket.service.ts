@@ -61,7 +61,7 @@ export class SocketService {
         obj_this.chat_users = [];
         obj_this.server_url = obj_this.site_config.server_base_url;
         obj_this.media_url = obj_this.server_url + '/media';
-        var res = window['is_public_route']();
+        var res = window['auth_js'].is_public_route();
         if(!res)
         {
             try
