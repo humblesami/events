@@ -31,7 +31,7 @@ title="{{topic.name}}"></app-breadcrumb>
 					</div>
 					<div *ngIf="topic.duration" class="col-md-6">
 						<div class="meet-elements">Duration</div>
-						<label class="meet-elementsInfo">{{topic.duration}}</label>
+						<label class="meet-elementsInfo">{{topic.duration | hm}}</label>
 					</div>
 					<div *ngIf="topic.content" class="col-md-6">
 						<div class="meet-elements">Content</div>
