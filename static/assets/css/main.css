@@ -623,33 +623,33 @@ a.kanban-committees-info-box-name {
 	padding: 3px 5px;
 	border-radius: 4px;
 	width: 24px;
-	}
+}
 #backTop:hover {
 	background-color: #7c7bad;
-	}
+}
 .overflow-hide {
 	overflow: hidden;
-	}
+}
 .modal-header {
     padding: 7px 0px 0 14px;
     min-height: 40px;
-	}
+}
 .modal-footer {
 	padding: 5px;
 	border: 1px dotted silver;
 	text-align: right;
-	}
-	.modal-header button.close {
-		color: #ffffff;
-        opacity: 0.6;
-        position: absolute;
-        top: 17px;
-        right: 18px;
-        z-index: 6;
-        padding: 3px 8px;
-        background: red;
-        border-radius: 50%;
-	}
+}
+.modal-header button.close {
+    color: red;
+    opacity: 1;
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    z-index: 6;
+    font-weight: bolder;
+    padding: 3px 8px;
+    border-radius: 50%;
+}
 .del {
 	cursor: pointer;
 	}
@@ -1606,12 +1606,15 @@ div#search-modal {
 	font-size: 15px;
 	color: #000000;
 	font-weight: 400;
-	}
-    .notification-container .chat-items.list-group {
+}
 
-        list-style: none;
+.notification-container .chat-items > li {
+    padding: 10px;
+}
 
-        }
+.notification-container .chat-items.list-group {
+    list-style: none;
+}
 
 .notification-container .chat-items.list-group li>a {
     margin: 2px 0;

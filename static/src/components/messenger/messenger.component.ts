@@ -948,11 +948,8 @@ export class MessengerComponent implements OnInit {
         {
             message.body = obj_this.sanitizer.bypassSecurityTrustHtml(message.body);
         }
-		// var is_chat_open = obj_this.active_chat_user &&
-		// 	obj_this.active_chat_user.id == sender_id &&
-		// 	!this.is_minimize;
 		var active_uid = parseInt($(".active_chat_user_id").html());
-		var is_chat_open = $(".msg_card_body").length >0 && active_uid == sender_id;
+		var is_chat_open = $(".msg_card_body:visible").length >0 && active_uid == sender_id;
         
 		if(!sender.messages)
 		{
@@ -1022,15 +1019,13 @@ export class MessengerComponent implements OnInit {
             {
                 message.body = obj_this.sanitizer.bypassSecurityTrustHtml(message.body);
             }
-            // var is_chat_open = obj_this.active_chat_user &&
-            // 	obj_this.active_chat_user.id == sender_id &&
-            // 	!this.is_minimize;
+            
             var active_gid = undefined;
             if (obj_this.active_chat_user && obj_this.active_chat_user.is_group)
             {
                 active_gid = obj_this.active_chat_user.id;
             }
-            var is_chat_open = $(".msg_card_body").length >0 && active_gid == message.chat_group.id;            
+            var is_chat_open = $(".msg_card_body:visible").length >0 && active_gid == message.chat_group.id;            
             if(!group.messages)
             {
                 group.messages = [];

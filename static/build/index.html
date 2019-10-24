@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
     <base href="/#/" />
-	<meta charset="utf-8">
+    <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Boardsheet">
+    <meta name="description" content="Boardsheet">
+    <meta name="theme-color" content="#2F3BA2" />
 	<title>Boardsheet</title>
 	<link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
@@ -12,23 +17,10 @@
     </script>
     <script type="text/javascript" src="static/assets/libs/js/jquery-2.2.4.js"></script>
     <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>    
-    <!-- <script>
-    (function(){
-        $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-            if ( options.dataType == 'script' || originalOptions.dataType == 'script' ) {
-                options.cache = true;
-            }
-        });
-    })() -->
-    </script>
-    
 </head>
 <body class="app sidebar-mini rtl sidenav-toggled public">
     <script type="text/javascript" src="static/assets/js/auth.js"></script>
-    <script type="text/javascript" src="static/assets/js/utils.js"></script>
     <link rel="stylesheet" type="text/css" href="static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
-    <script type="text/javascript" src="/static/assets/libs/bootstrap/popper.min.js"></script>
-    <script type="text/javascript" src="/static/assets/libs/bootstrap/bootstrap-4.1.1.js"></script>
     
     <div id="server-wait"
         style="position: absolute;
@@ -59,11 +51,15 @@
 
         </div>
     </div>
+
+    <script type="text/javascript" src="static/assets/js/utils.js"></script>
+    <script type="text/javascript" src="static/assets/js/libs_load.js"></script>    
+    <script type="text/javascript" src="/static/assets/libs/bootstrap/popper.min.js"></script>
+    <script type="text/javascript" src="/static/assets/libs/bootstrap/bootstrap-4.1.1.js"></script>
     
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet1.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet.css" />
-	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />
-	<link rel="stylesheet" type="text/css" href="static/assets/libs/css/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />	
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-awsome-5.5.0.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-roboto-3.4.5.7.9.css" />
 
