@@ -79,7 +79,6 @@ var js_utils = window['js_utils'] = {
             console.log(evt, 333);
         }
     },
-
     remove_items_by_indices: function(array, indices){
         for(var ind of indices)
         {
@@ -166,7 +165,6 @@ var js_utils = window['js_utils'] = {
             );
         });
     },
-
     findPos: function(obj, scroll_el) {
         var obj_this = this;
         var childPos = obj.offset();
@@ -177,7 +175,6 @@ var js_utils = window['js_utils'] = {
         }
         return childOffset;
     },
-
     scroll_to_element: function(focus_el, scroll_el){
         var obj_this = this;
         if(!(focus_el && focus_el.length && focus_el.length ==1)){
