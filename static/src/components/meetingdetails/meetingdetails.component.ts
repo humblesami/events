@@ -101,7 +101,7 @@ export class MeetingDetailsComponent implements OnInit {
         let obj_this = this;
         var on_topic_closed = function(data){
             var temp_topics = []
-            var pos = 1;
+            var pos = 0;
             for(var topic of obj_this.meeting_object.topics)
             {
                 if(topic.position == undefined)
