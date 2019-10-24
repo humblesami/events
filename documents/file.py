@@ -413,7 +413,7 @@ class File(CustomModel):
             breadcrumb.append({'title': profile_obj.name, 'link': '/' + group.name.lower() + '/' + str(profile_obj.id)})
         doc = {
             'id': file_id,
-            "doc": result,
+            "data_url": result,
             'doc_name': file_obj.name,
             'type': file_obj.file_type,
             'breadcrumb': breadcrumb,
