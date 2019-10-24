@@ -27,11 +27,24 @@
 }
 .toolbar.topbar .doc-manage-btn-wrap{
     text-align: center;
-    border-bottom: 1px solid;
 }
+.back-btn{
+    padding: 5px 0;
+    width: 100%;
+}
+/* .toolbar.topbar .doc-manage-btn-wrap:not(last-child){    
+    border-bottom: 1px solid;
+} */
 
 .toolbar.topbar .doc-manage-btn-wrap:not(.group) > button{    
-    padding: 10px;
+    padding: 1vh 0;
+}
+
+.toolbar.topbar .doc-manage-btn-wrap > button{    
+    margin-bottom: 0.8vh;
+}
+.zoom.group, .zoom .zoomin{
+    margin-top:1vh;
 }
 
 .comment.annotation_button .Icon{
@@ -47,8 +60,8 @@ button.pen-color.annotation_button.prop {
     margin: 8px 5px;
 }
 
-.doc-manage-btn-wrap button:hover {
-    background: cornflowerblue;    
+.doc-manage-btn-wrap button:hover, .icon.back:hover {
+    background: cornflowerblue;
 }
 .doc-manage-btn-wrap > button > svg{
     position: absolute;
@@ -61,7 +74,8 @@ button.pen-color.annotation_button.prop {
 }
 .ToolBarWrapper {
     display: block;
-    width: 40px;
+    width: 4.2vw;
+    min-width: 42px;
     position: relative;
     right: 0;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
@@ -69,8 +83,9 @@ button.pen-color.annotation_button.prop {
     z-index: 1;
     overflow: auto;
     overflow-x:hidden;
-
 }
+
+
 .toolbar .spacer {
     display: inline-block;
     border-left: 1px solid #c1c1c1;
@@ -492,7 +507,7 @@ body.pdf-viewer {
     min-height: 35px;
     border: indianred;
     background-color: white;
-    padding:10px 17px 10px 10px;
+    padding: 10px 17px 10px 10px;
     overflow:auto;
 }   
 .commentText1 i {
@@ -725,6 +740,7 @@ a.list-group-item.contact.active {
     z-index: 3;
     top: -35px;
     right: 0;
+    visibility: hidden;
     background: #4b74b5;
     padding: .3rem .85rem;
     cursor: pointer;
@@ -748,18 +764,28 @@ span.pager.disabled
     display: none;
 }
 
-
 .toolbar.topbar .doc-manage-btn-wrap:not(.group) > button.add-point-button {
     background: #7c7bad;
     position: absolute;
-    top: 24px;
-    right: 0px;
+    top: 65%;
+    left: 50%;
     border-radius: 100%;
     padding: 9px;
+}
+.doc-manage-btn-wrap >button:not(.not-100){
+    width: 100%;
 }
 
 .toolbar button.add-point-button:hover {
     background-color: green;
+}
+.error-feedback{
+    padding-top:30px;
+    widows: 100%;
+    text-align: center;
+}
+.error-feedback button{
+    margin-top:10px;
 }
 @media screen and (max-width:576px){
     #comment-wrapper{

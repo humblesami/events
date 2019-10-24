@@ -29,7 +29,25 @@
     };
     var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
-    
+    function report_error(){
+        bootbox.alert('Thanks, error is reported successfully');
+        $(this).hide();
+    }
+
+    function on_error_in_doc_load(er, place='')
+    {
+        console.log(place, er);
+        site_functions.hideLoader(doc_loading_step);
+        if(!er.message){
+            er.message = 'Unable to load document';
+        }
+        var feedback = $('<div class="error-feedback"></div>');
+        feedback.append('<h3>'+er.message+'</h3>');
+        var report_button = $('<button class="btn btn-primary">Report issue</button>');
+        report_button.click(report_error);
+        feedback.append(report_button);  
+        $('#annotated-doc-conatiner').show().html(feedback);                
+    }
 
     function get_dist_rects(original_rects)
     {
@@ -481,7 +499,7 @@
             var comment_list_div; // = comments_wrapper.find('.comment-list:first');
             var comment_list; // = comments_wrapper.find('.comment-list-container:first');
 
-            window['init_doc_comments'] = function() {
+            window['init_doc_comments'] = function() {                
                 comments_wrapper = $('#comment-wrapper');
                 comments_wrapper.resizable();
                 commentText = comments_wrapper.find('#commentText');
@@ -929,13 +947,16 @@
                 updateAnnotations(documentId, annotations, 'op=embed comment count');
             }
 
-            function pdf_render(doc_data) {
+            function pdf_render(doc_data) {                
                 $('#annotated-doc-conatiner').hide();
+                if(typeof data == 'string'){
+                    on_error_in_doc_load(data, ' in get data');
+                }
                 annotation_user_m2 = window['current_user'].cookie;
                 site_functions.hideLoader("Document Data");
                 doc_loading_step = "Document Render Data";
                 site_functions.showLoader(doc_loading_step);
-                if (doc_data && doc_data.first_time) {
+                if (doc_data && doc_data.first_time) {                    
                     prev_doc_url = window.location.toString();
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
@@ -1032,12 +1053,10 @@
                     scale_select.value = $(selected_option).prev().val();
                     handleScaleChange();
                 };
-            }
+            }            
 
             function render_details(doc_data) {
                 try {
-                    var pdfData = false;
-                    var pages_rendered = 0;
                     if (doc_data && doc_data.first_time) {
                         try {
                             if (doc_data.is_respondent && (doc_data.type == 'meeting' || doc_data.type == 'topic')) {
@@ -1074,7 +1093,7 @@
                             var topbar_rect = $('.toolbar.topbar')[0].getBoundingClientRect();
                             content_wrapper.height(window.innerHeight - topbar_rect.top - topbar_rect.height);
                         } catch (er) {
-                            console.log(er);
+                            on_error_in_doc_load(er, 'render detail first section');
                         }
 
                         if (doc_data.type) {
@@ -1099,18 +1118,34 @@
                                 site_functions.hideLoader(doc_loading_step);
                                 doc_loading_step = 'document content';
                                 site_functions.showLoader(doc_loading_step);
-                                PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
-                                    console.log(window['dt_functions'].now_full(), 'download completed');
-                                    pdf_doc_data = pdf_data;
-                                    $('.page-count').html(pdf_doc_data.numPages);
-                                    if (pdf_doc_data.numPages > 1) {
-                                        $('.page-next-btn').removeAttr('disabled');
-                                    }
-                                    site_functions.hideLoader(doc_loading_step);
-                                    doc_loading_step = 'document pages';
-                                    site_functions.showLoader(doc_loading_step);
-                                    renderPdfData(pdf_doc_data);
-                                });
+                                try{
+                                    PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
+                                        console.log(window['dt_functions'].now_full(), 'download completed');
+                                        try{
+                                            pdf_doc_data = pdf_data;
+                                            $('.page-count').html(pdf_doc_data.numPages);
+                                            if (pdf_doc_data.numPages > 1) {
+                                                $('.page-next-btn').removeAttr('disabled');
+                                            }
+                                            site_functions.hideLoader(doc_loading_step);
+                                            doc_loading_step = 'document pages';
+                                            site_functions.showLoader(doc_loading_step);
+                                            renderPdfData(pdf_doc_data);
+                                        }
+                                        catch(er){
+                                            on_error_in_doc_load(er, ' after get document');
+                                            return;
+                                        }
+                                        
+                                    }).then(null, function(error){
+                                        on_error_in_doc_load(error, 'in get document');
+                                        return;
+                                    });;
+                                }                                
+                                catch(er){
+                                    on_error_in_doc_load(er, ' in trying get document');
+                                    return;
+                                }
                             } catch (er) {
                                 console.log(er);
                             }

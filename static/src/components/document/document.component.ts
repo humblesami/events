@@ -128,6 +128,7 @@ export class DocumentComponent implements OnInit {
             {
                 args.method = 'get_data_with_binary';
             }
+            obj_this.annotation_doc = true;
         }
         var input_data = {            
             args: args,
@@ -209,10 +210,12 @@ export class DocumentComponent implements OnInit {
             return;
         }
         
-        obj_this.httpService.get(input_data,renderDoc, function(){
-            window['functions'].hideLoader('Documents');
+        obj_this.httpService.get(input_data, renderDoc, function(er){            
+            window['pdf_js_module'].pdf_render(er);
         });
     }
+
+    annotation_doc = false;
 
     on_page_changed(pageToMove)
     {                
@@ -277,7 +280,11 @@ export class DocumentComponent implements OnInit {
     ngOnInit() {
         var obj_this = this;
         window['app_libs']['pdf'].load(function(){
-            window['init_doc_comments']();
+
+            window['app_libs'].jquery_ui.load(function(){
+                window['init_doc_comments']();            
+            });
+            
             $('.PdfViewerWrapper:first').scroll(function() {
                 if(!this.total_pages)
                 {

@@ -3,7 +3,7 @@ rid="doc_data.doc_name"
 routes="{{breadcrumb}}"
 title="{{doc_data.doc_name}}"></app-breadcrumb>
 
-<div class="pdf-annotator" id="annotated-doc-conatiner" style="display:none;">
+<div class="pdf-annotator" id="annotated-doc-conatiner" style="display:none;">    
     <div class="ToolPdfViwerWrapper">
         <div id="comment-wrapper">
             <div class="header comment-header">
@@ -43,11 +43,10 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <i class="fa fa-bars"></i>
                 </div>
                 <div class="ToolBarWrapper" id="ToolBarWrapper">
-                    <div class="doc-manage-btn-wrap">
-                        <button class="icon back" (click)="go_back()" title="Back">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
-                    </div>
+                    <button (click)="go_back()" title="Back" 
+                    class="icon back back-btn">
+                        <i class="fas fa-arrow-left"></i>                    
+                    </button>
                     <div class="doc-manage-btn-wrap paginator group">
                         
                         <button (click)="next_prev_page(-1)" class="pager prev page-prev-btn">
@@ -73,7 +72,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 </div>
                             </button>
                         </div>
-                        <div class="doc-manage-btn-wrap">
+                        <div class="doc-manage-btn-wrap pen-tool-container">
                             <button class="pen selection annotation_button" type="button" title="Pen Tool" data-tooltype="draw">
                                 <div class="Icon">
                                     <img src="static/assets/images/docs/docs-write-pen.svg" alt="">
@@ -90,7 +89,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                     <option value="10"> ▇▇▇▇▇▇▇▇ </option>
                                 </select>
                             </div>
-                            <button class="pen-color annotation_button prop"></button>
+                            <button class="pen-color not-100 annotation_button prop"></button>
                         </div>
                         <div class="doc-manage-btn-wrap">
                             <button class="comment annotation_button" type="button" title="Show all comments">
@@ -103,7 +102,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                     </svg>
                                 </div>
                             </button>
-                            <button data-tooltype="point" class="add-point-button annotation_button comment" title="Add new comment point">
+                            <button data-tooltype="point" class="add-point-button annotation_button comment not-100" title="Add new comment point">
                                 <svg viewBox="0 0 24 24" id="add-point" width="100%" height="100%">
                                     <g fill="none" fill-rule="evenodd">
                                         <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" fill-rule="nonzero"></path>
@@ -137,7 +136,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                     </svg>
                                 </div>
                             </button>
-                            <button data-tooltype="point" class="add-point-button annotation_button comment personal" title="Add anew note">
+                            <button data-tooltype="point" class="add-point-button not-100 annotation_button comment personal" title="Add anew note">
                                 <svg viewBox="0 0 24 24" width="100%" height="100%">
                                     <g fill="none" fill-rule="evenodd">
                                         <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" fill-rule="nonzero"></path>
@@ -181,14 +180,14 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                             <img alt="" src="static/assets/images/docs/docs-rotate-left.svg">                            
                         </button>
                     </div>
-                    <div class="doc-manage-btn-wrap">                        
+                    <div class="doc-manage-btn-wrap" [ngClass]="{hidden: !annotation_doc}">
                         <button class="Icon annot-toggler" (click)="toggleAnnotations()"
                         title="Hide/Show all annotations">
                             <i *ngIf="!annot_hidden" class="fa fa-eye-slash" aria-hidden="true"></i>
                             <i *ngIf="annot_hidden" class="fa fa-eye" aria-hidden="true"></i>
                         </button>
                     </div>
-                    <div class="doc-manage-btn-wrap">
+                    <div class="doc-manage-btn-wrap hidden">
                         <button class="btn btn-sm btn-primary reset">
                             <i class="fas fa-sync-alt"></i>
                         </button>
