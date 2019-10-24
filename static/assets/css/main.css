@@ -3101,7 +3101,10 @@ a:not([href]).app-menu__item{
 	white-space: nowrap;
 	padding: .375rem .375rem;
 	}
-
+#opened_folder {
+    height: 40vh;
+    overflow-y: auto;
+}
 @media screen and (max-width:576px){
 	.MeetingHeadWrapper .btn, .MeetingBtnWrapper .btn{
 		min-width: 65px
