@@ -70,7 +70,9 @@ class Topic(CustomModel):
             'lead': topic.lead,
             'duration': topic.duration,
             'position': topic.position,
-            'docs':list(topic.documents.values())
+            'docs':topic.documents.count(),
+            'votings': topic.voting_set.count(),
+            'surveys': topic.survey_set.count()
         }
         return data
     
@@ -116,7 +118,9 @@ class Topic(CustomModel):
             'lead': topic.lead,
             'duration': topic.duration,
             'position': topic.position,
-            'docs':list(topic.documents.values())
+            'docs':topic.documents.count(),
+            'votings': topic.voting_set.count(),
+            'surveys': topic.survey_set.count()
         }
         return data
     @classmethod
