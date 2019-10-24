@@ -725,6 +725,41 @@ def download_image(file):
     except urllib.error.HTTPError as e:
         return str(e.code) + e.reason
 
+def produce_exception(msg=None):
+    if not msg:
+        eg = traceback.format_exception(*sys.exc_info())
+        errorMessage = ''
+        cnt = 0
+        for er in eg:
+            cnt += 1
+            if not 'lib/python' in er:
+                errorMessage += " " + er
+    else:
+        errorMessage = msg
+    try:
+        dir = os.path.dirname(os.path.realpath(__file__))
+        ar = dir.split('/')
+        ar = ar[:-1]
+        dir = ('/').join(ar)
+        with open(dir+'/error_log.txt', "a+") as f:
+            f.write(errorMessage + '\n')
+    except:
+        try:
+            dir = os.path.dirname(os.path.realpath(__file__))
+            ar = dir.split('\\')
+            ar = ar[:-1]
+            dir = ('\\').join(ar)
+            with open(dir + '\\error_log.txt', "a+") as f:
+                f.write(errorMessage + '\n')
+        except:
+            eg = traceback.format_exception(*sys.exc_info())
+            errorMessage = ''
+            cnt = 0
+            for er in eg:
+                cnt += 1
+                if not 'lib/python' in er:
+                    errorMessage += " " + er
+            return errorMessage
 
 #
 #

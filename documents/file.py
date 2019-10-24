@@ -58,7 +58,7 @@ class File(CustomModel):
         return self.name
 
     pending_tasks = 3
-
+    new_file = False
     def save(self, *args, **kwargs):
         try:
             file_changed = False
@@ -66,10 +66,12 @@ class File(CustomModel):
             if not self.pk:
                 file_changed = True
                 creating = True
+                self.new_file = True
             try:
                 if self.file_ptr and self.file_ptr.attachment and self.file_ptr.attachment.url:
                     file_changed = False
                     creating = False
+                    self.new_file = False
                     self.pending_tasks = 0
             except:
                 pass
@@ -148,24 +150,29 @@ class File(CustomModel):
                     self.content = self.html
                 else:
                     if not self.pdf_doc:
-                        raise Exception('File conversion failed')
-                    if not self.pdf_doc.file:
-                        raise Exception('File conversion failed.')
+                        self.file_error = 'File conversion failed 1'
+                        raise
+                    if not self.pdf_doc.url:
+                        self.file_error = 'File conversion failed 2'
+                        raise
                     try:
                         self.content = text_extractor(self.pdf_doc)
                     except:
-                        raise Exception('unable to extract file content')
+                        self.file_error = 'unable to extract file content '
+                        ws_methods.produce_exception(self.file_error + ' '+str(self.pk) + ' '+self.pdf_doc.url)
                 self.pending_tasks = 0
                 self.save()
             pass
         except:
             try:
-                if creating and self.pk:
+                ws_methods.produce_exception(self.file_error)
+                if self.new_file and self.pk:
                     self.delete()
             except:
                 pass
             res = ws_methods.get_error_message()
             raise Exception(res)
+    file_error = None
 
     @classmethod
     def delete_all_tem_files(cls, request, params):
