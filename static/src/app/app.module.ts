@@ -88,7 +88,6 @@ import { ThankyouComponent } from '../components/thankyou/thankyou.component';
 import { TopiceditComponent } from '../components/topicedit/topicedit.component';
 import { EsigndocresultsComponent } from '../components/esigndocresults/esigndocresults.component';
 import { FeedbackComponent } from '../components/feedback/feedback.component';
-import { LibsComponent } from '../components/libs/libs.component';
 
 @NgModule({
     imports: [
@@ -167,7 +166,6 @@ import { LibsComponent } from '../components/libs/libs.component';
         TopiceditComponent,
         EsigndocresultsComponent,
         FeedbackComponent,
-        LibsComponent,
     ],
     providers:[
         AuthGuard,
