@@ -201,7 +201,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <table class="table boardsheet-table">
                         <thead class="thead-light">
                         <tr>
-                            <th *ngIf="meeting_object.topics.length > 1">Reorder</th>
+                            <th *ngIf="meeting_object.topics.length > 1 && socketService.admin_mode">Reorder</th>
                             <th>Title</th>
                             <th>Lead</th>
                             <th>Duration</th>
@@ -212,7 +212,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         </thead>
                         <tbody id="agenda_tbody">
                             <tr class="pointer" *ngFor="let topic of meeting_object.topics">
-                                <td *ngIf="meeting_object.topics.length > 1">
+                                <td *ngIf="meeting_object.topics.length > 1 && socketService.admin_mode">
                                     <input type="hidden" class="id" value="{{topic.id}}" />
                                     <span class="up-down">
                                         <span *ngIf="topic.position != 0" 

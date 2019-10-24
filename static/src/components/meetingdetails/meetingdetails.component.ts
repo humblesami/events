@@ -309,11 +309,14 @@ export class MeetingDetailsComponent implements OnInit {
                     {
                         $('.toggle_cb').prop('checked', false);
                     }
-                    $('#agenda_tbody').sortable({
-                        stop: function (event, ui) {
-                            obj_this.save_positions();
-                        },
-                    });
+                    if (obj_this.socketService.admin_mode)
+                    {
+                        $('#agenda_tbody').sortable({
+                            stop: function (event, ui) {
+                                obj_this.save_positions();
+                            },
+                        });
+                    }
                 }, 100);
             } catch (er) {
                 console.log(er);
@@ -520,6 +523,24 @@ export class MeetingDetailsComponent implements OnInit {
         this.ending_indices[item_type] =  this.start_indices[item_type] + this.visible_limit[item_type];
         // console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
     }
+
+    on_admin_mode_changed()
+    {
+        let obj_this = this;
+        if (this.socketService.admin_mode)
+        {
+            $('#agenda_tbody').sortable({
+                stop: function (event, ui) {
+                    obj_this.save_positions();
+                },
+            });
+        }
+        else
+        {
+            $('#agenda_tbody').sortable('destroy');
+        }
+    }
+
 	ngOnInit() {
         let obj_this = this;
         var vw = $(window).width();        
@@ -568,6 +589,10 @@ export class MeetingDetailsComponent implements OnInit {
         {
             obj_this.ending_indices[item_type] = obj_this.visible_limit[item_type];
         }
+
+        obj_this.socketService.call_backs_on_mode_changed['handle_sortable'] = function(){
+            obj_this.on_admin_mode_changed();
+        };
         // console.log(obj_this.visible_limit, obj_this.ending_indices,1122);
 	}
 
