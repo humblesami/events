@@ -106,16 +106,13 @@ export class DocumentComponent implements OnInit {
         var doc_type = obj_this.route.snapshot.params.doc_type;        
         let doc_id = obj_this.route.snapshot.params.res_id;
         let point_id = undefined;
-        var is_dev_host = window.location.toString().indexOf('4200') > -1
+        var is_dev_host = window.location.toString().indexOf('4200') > -1;
+        is_dev_host = true;
         let args = {
             app: 'documents',
             model: 'File',
             // method: 'get_binary'
             method: 'get_file_data'
-        }
-        if (is_dev_host)
-        {
-            args.method = 'get_binary';
         }
         if(doc_type == 'meeting' || doc_type == 'topic')
         {
@@ -124,15 +121,14 @@ export class DocumentComponent implements OnInit {
                 model: 'AnnotationDocument',
                 method: 'get_data'
             }
-            if (is_dev_host)
-            {
-                args.method = 'get_data_with_binary';
-            }
             obj_this.annotation_doc = true;
         }
         var input_data = {            
             args: args,
-            params: {id : doc_id}
+            params: {
+                id : doc_id,
+                data_url: is_dev_host
+            }
         };                
 
         if(obj_this.route.toString().indexOf('discussion') > -1)
@@ -140,7 +136,10 @@ export class DocumentComponent implements OnInit {
             point_id = doc_id;
             input_data = {            
                 args: args,
-                params: {id : doc_id}
+                params: {
+                    id : doc_id,
+                    data_url: is_dev_host
+                }
             }; 
         }
         if(doc_type == 'meeting' || doc_type == 'topic'){

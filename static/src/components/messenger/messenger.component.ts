@@ -38,7 +38,7 @@ export class MessengerComponent implements OnInit {
         private modalService: NgbModal
 
         ) {
-            window['app_libs']['emoji_picker'].load();
+            window['app_libs']['emoji_picker'].load();            
             window['app_libs']['rtc'].load();            
             var obj_this = this;
             obj_this.socketService = ss;            
@@ -483,37 +483,27 @@ export class MessengerComponent implements OnInit {
             console.log("No user selected with "+target.id+' from ',obj_this.socketService.chat_users);
             return;
         }
-        // if(obj_this.active_chat_user.messages)
-        // {
-        //     //obj_this.active_chat_user needed for $( ".msg_card_body") in dom
-        //     // but will take some time to make above dom ready, so wait 10 ms please
-        //     setTimeout(function(){
-        //         obj_this.onUserSelected(obj_this.active_chat_user.messages, 1);
-        //     },10)            
-        // }
-        // else
-        {
-            let args = {
-                app: 'chat',
-                model: 'message',
-                method: 'get_friend_messages'
-            }
-            let input_data = {
-                params: {target_id: target.id},
-                args: args
-            };
-            var call_on_user_selected_event = function(data){
-                if(!Array.isArray(data))
-                {
-                    data = [];
-                }
-                obj_this.is_request_sent = false;
-                obj_this.active_chat_user.messages = [];
-                obj_this.onUserSelected(data);                
-            }
-            input_data['no_loader'] = 1;
-            obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);
+        
+        let args = {
+            app: 'chat',
+            model: 'message',
+            method: 'get_friend_messages'
         }
+        let input_data = {
+            params: {target_id: target.id},
+            args: args
+        };
+        var call_on_user_selected_event = function(data){
+            if(!Array.isArray(data))
+            {
+                data = [];
+            }
+            obj_this.is_request_sent = false;
+            obj_this.active_chat_user.messages = [];
+            obj_this.onUserSelected(data);
+        }
+        input_data['no_loader'] = 1;
+        obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);        
     }
     
     activate_chat_user(chat_client: ChatClient){        
@@ -1099,6 +1089,29 @@ export class MessengerComponent implements OnInit {
 	ngOnInit() {        
         var obj_this = this;
         obj_this.is_mobile_device = true;
-        $('.popup.messenger').hide();        
+        $('.popup.messenger').hide();
+
+        if(!window['messenger-input'])
+        {
+            $(document).on('click', '.emoji-wysiwyg-editor', function(){                
+                var target = obj_this.active_chat_user;
+                if(target.unseen)
+                {
+                    obj_this.socketService.update_unseen_message_count ('user-selected', obj_this.active_chat_user);
+                    let args = {
+                        app: 'chat',
+                        model: 'message',
+                        method: 'get_friend_messages'
+                    }
+                    let input_data = {
+                        params: {target_id: target.id},
+                        no_loader:1,
+                        args: args
+                    };
+                    obj_this.httpService.get(input_data, null, null); 
+                }
+                window['messenger-input'] = 1;
+            })
+        }
     }
 }

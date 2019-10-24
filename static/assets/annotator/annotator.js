@@ -1098,9 +1098,12 @@
 
                         if (doc_data.type) {
                             try {
-                                if (!doc_data.url) {
-                                    if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
-                                        doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
+                                if (doc_data.data_url) {
+                                    if (doc_data.data_url.startsWith('data:application/pdf;base64,')) {
+                                        doc_data.doc = doc_data.data_url.replace('data:application/pdf;base64,', '');
+                                    }
+                                    else{
+                                        doc_data.doc = doc_data.data_url;
                                     }
                                     var raw = atob(doc_data.doc);
                                     var uint8Array = new Uint8Array(raw.length);
@@ -1207,7 +1210,6 @@
 
                         function onPageDone(annotations_of_page, pange_number) {
                             try {
-                                pages_rendered++;
                                 if (pange_number == 1) {
                                     site_functions.hideLoader(doc_loading_step);
                                     first_page_rendered = 1;
