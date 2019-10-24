@@ -109,7 +109,12 @@ export class DocumentsComponent implements OnInit {
             file_input.addClass('processed');
             window['apply_drag_drop'](file_input, resInfo, function(data){
                 try{
-                    var result = obj_this.docs.concat(data);
+                    var result = [];
+                    for (let file of data)
+                    {
+                        obj_this.docs.unshift(file);
+                    }
+                    result = obj_this.docs;
                     obj_this.zone.run(() => obj_this.docs = result);
                 }
                 catch(er){
