@@ -393,10 +393,9 @@ class Event(CustomModel):
                     topic_duration =topic['duration']
                 except:
                     print('Invalid duration of topic '+t.name+'-'+str(t.id))
-                topic['duration'] = topic_duration
-                topic['docs'] = list(t.documents.values())
-                for doc in topic['docs']:
-                    doc['created_at'] = str(doc['created_at'])
+                topic['votings'] = t.voting_set.count()
+                topic['surveys'] = t.survey_set.count()
+                topic['docs'] = t.documents.count()
                 topics.append(topic)
         except:
             err = ws_methods.get_error_message()

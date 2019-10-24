@@ -206,6 +206,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <th>Lead</th>
                             <th>Duration</th>
                             <th>Attachment</th>
+                            <th>Actions</th>
                             <th *ngIf="socketService.admin_mode">Edit</th>
                             <th *ngIf="socketService.admin_mode">Delete</th>
                         </tr>
@@ -233,8 +234,16 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <td >{{topic.duration | hm}}</td>
                                 <td>
                                     <div class="talbe-docs-wrapper">
-                                        <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
+                                        <div *ngIf="topic.docs != 0">
                                             <i class="icon-doc-file"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="talbe-docs-wrapper">
+                                        <div>
+                                            <i *ngIf="topic.votings != 0" style="margin-right: 5px;" class="icon-voting" title="{{topic.votings}}-Voting(s)"></i>
+                                            <i *ngIf="topic.surveys != 0" class="icon-action" title="{{topic.surveys}}-Survey(s)"></i>
                                         </div>
                                     </div>
                                 </td>
