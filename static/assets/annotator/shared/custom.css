@@ -13,7 +13,7 @@
 .ToolBarWrapper::-webkit-scrollbar-thumb {
     background: #ddd !important; 
     border-radius: 0px !important;
-}    
+}
 .toolbar {
     border-bottom: 1px solid #e6e6e6;
     padding: 0;
@@ -29,7 +29,7 @@
     text-align: center;
 }
 .back-btn{
-    margin-top: 10px;
+    margin-top: 1vh;
     padding: 5px 0;
     width: 100%;
 }
@@ -74,16 +74,16 @@ button.pen-color.annotation_button.prop {
     cursor: pointer;
 }
 .ToolBarWrapper {
-    display: block;
     width: 4.2vw;
     min-width: 42px;
     position: relative;
     right: 0;
+    margin-top: -40px;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
-    height: calc(100vh - 110px);
+    height: calc(100vh - 72px);
     z-index: 1;
     overflow: auto;
-    overflow-x:hidden;
+    overflow-x: hidden;
 }
 
 
@@ -498,7 +498,7 @@ body.pdf-viewer {
     box-shadow: 0 0 0 1px gainsboro;
 }
 .AddCommentTextWrap {
-    width: 85%;
+    width: 94%;
     float: left;
 }
 #commentText {
@@ -512,11 +512,15 @@ body.pdf-viewer {
     overflow:auto;
 }   
 .commentText1 i {
-    padding: 10px 10px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 50%;
     cursor: pointer;
     margin-top: 0.2rem;
+    position: relative;
+    margin-left: -20px;
+    background: white;
+    z-index: 1;
 }
 /****** Full Discussein *******/
 .comments .full-discussion .comment-list-item {
@@ -649,9 +653,7 @@ mark.current {
     position: absolute;
     font-weight: bold;
 }
-.annotation-options {
-    width: 220px;
-}
+
 .annotation-options .Icon{
     color:#000000;
     width:25px;

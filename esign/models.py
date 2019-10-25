@@ -433,13 +433,12 @@ class SignatureDoc(File, Actions):
         doc_data['doc_name'] = doc_obj.name
         doc_data['doc_id'] = doc_obj.id
 
-        if token:
-            pdf_doc = doc_obj.pdf_doc
-            pdf_doc = pdf_doc.read()
-            pdf_doc = base64.b64encode(pdf_doc)
-            result = pdf_doc.decode('utf-8')
-            doc_data['binary'] = result
-            return doc_data
+
+        pdf_doc = doc_obj.pdf_doc
+        pdf_doc = pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        result = pdf_doc.decode('utf-8')
+        doc_data['binary'] = result
 
         if doc_data.get('signature_started'):
             return doc_data

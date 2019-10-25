@@ -863,9 +863,11 @@ export class EsignDocDetailsComponent implements OnInit {
                     obj_this.doc.sign_count = doc_data.length;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
 
-                    if(data.binary)
-                    {
-                        pdf_url = 'data:application/pdf;base64,' + data.binary;
+                    var file_path = window['site_config'].server_base_url + data.file_url;
+                    console.log('Dcownloading doc from '+file_path, Date());
+                    pdf_url = 'data:application/pdf;base64,' + data.binary;
+                    if(token)
+                    {                        
                         window['app_libs']['pdf'].load(function(){
                             renderPDF(pdf_url);
                         });
@@ -875,9 +877,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         obj_this.all_profile_users = data.all_profile_users;
                         obj_this.all_users_list = obj_this.users_list = users = data.users;
                         meeting_id = data.meeting_id;
-                        send_to_all = data.send_to_all;
-                        pdf_url = window['site_config'].server_base_url + data.file_url;
-                        console.log('Dcownloading doc from '+pdf_url, Date());
+                        send_to_all = data.send_to_all;                        
                         window['app_libs']['pdf'].load(function(){
                             renderPDF(pdf_url);
                         });
