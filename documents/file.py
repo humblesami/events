@@ -314,12 +314,10 @@ class File(CustomModel):
         file_obj = File.objects.get(id=file_id)
         url = file_obj.pdf_doc.url
 
-        data_url = None
-        if params.get('data_url'):
-            pdf_doc = file_obj.pdf_doc
-            pdf_doc = pdf_doc.read()
-            pdf_doc = base64.b64encode(pdf_doc)
-            data_url = pdf_doc.decode('utf-8')
+        pdf_doc = file_obj.pdf_doc
+        pdf_doc = pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        data_url = pdf_doc.decode('utf-8')
 
         breadcrumb = []
         mention_list = []

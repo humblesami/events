@@ -57,7 +57,6 @@ class EmailThread(threading.Thread):
         self.token_info = thread_data['post_info']
         threading.Thread.__init__(self)
 
-
     def run (self):
         try:
             subject = self.subject
@@ -111,7 +110,6 @@ class ThreadEmail(threading.Thread):
         self.template_name = thread_data['template_name']
         threading.Thread.__init__(self)
 
-
     def run (self):
         try:
             subject = self.subject
@@ -120,7 +118,6 @@ class ThreadEmail(threading.Thread):
         except:
             pass
             produce_exception('')
-
 
 
 class DocumentThread(threading.Thread):
