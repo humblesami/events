@@ -1,7 +1,7 @@
 <div class="roster">
     <div class="main-full-seachbar">
     <input type="text"
-        (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
+        (keyup)="user_serach($event.target.value)"
         placeholder="Search..."  class="form-control"/>
     </div>
     <div class="MeetingBtnWrapper">

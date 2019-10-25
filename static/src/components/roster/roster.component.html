@@ -2,7 +2,7 @@
 <div class="roster">
     <div class="main-full-seachbar">
         <input type="text"
-            (keyup)="$event.target.value; $event.keyCode == 13 ? search_roster($event.target.value): null" 
+            (keyup)="search_roster($event.target.value)" 
             placeholder="Search..."  class="form-control"/>
     </div>
     <div class="bg-heading roster-bg">

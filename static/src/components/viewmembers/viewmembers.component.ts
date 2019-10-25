@@ -108,6 +108,11 @@ export class ViewmembersComponent implements OnInit {
     user_serach(val)
     {
         let obj_this = this;
+        if (!val)
+        {
+            obj_this.shown_users = obj_this.all_users;
+            return;
+        }
         obj_this.shown_users = obj_this.shown_users.filter((el)=>{
             var mail_matched = false;
             if(el.email && el.email.toLowerCase().indexOf(val) != -1)
