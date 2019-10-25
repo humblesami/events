@@ -18,7 +18,7 @@ export class VideoCall{
     is_audio_call = false;            
     incoming_call = undefined;
 
-    start(uid, audio_only){
+    make_call(uid, audio_only){
         let video_call = this;
         // console.log(uid, audio_only, 88);
         video_call.drag_enabled = false;
@@ -35,6 +35,9 @@ export class VideoCall{
         var the_user = video_call.socketService.get_user_by_id(uid)
         if(!the_user.online)
         {
+            let to = the_user.id;
+            let message = video_call.get_missed_call_body();
+            video_call.send_messeage(to, message);
             video_call.show_notification(the_user.name +' is not online yet, but will be informed when online')
             return;
         }
@@ -59,14 +62,14 @@ export class VideoCall{
             video_call.message = "Called person is not online but will be informed about your call when he/she will be online";                    
         }
         video_call.state = 'outgoing';
-        video_call.initialize();                
+        video_call.initialize_call();                
         
         
         setTimeout(function(){
             // console.log(video_call.state, video_call.callee.id, 727);
             if(video_call.state == 'outgoing')
             {
-                video_call.cancel('Not available');
+                video_call.cancel('no response');
             }
         }, video_call.timeout);        
     }
@@ -74,7 +77,7 @@ export class VideoCall{
     init(uid, audio_only){        
         let obj_this = this;
         window['app_libs']['rtc'].load(function(){
-            obj_this.start(uid, audio_only);
+            obj_this.make_call(uid, audio_only);
         })
     }
 
@@ -83,7 +86,8 @@ export class VideoCall{
         var video_call = this;        
         if(video_call.ongoing_call || video_call.state != 'available')
         {
-            video_call.show_notification('Another incoming call');
+            // video_call.show_notification('Another incoming call');
+            video_call.reject(data);
             return;
         }
         // console.log(data, 1334);
@@ -93,7 +97,7 @@ export class VideoCall{
         video_call.caller = video_call.socketService.get_user_by_id(data.caller_id);
         video_call.callee = video_call.socketService.user_data;
         window['app_libs']['rtc'].load(function(){
-            video_call.initialize();
+            video_call.initialize_call();
         });
     }
 
@@ -162,7 +166,7 @@ export class VideoCall{
         let video_call = this;
         // console.log('Cancelling', this.caller.id, this.callee.id);
         video_call.socketService.emit_rtc_event('cancelled', '', [video_call.callee.id]);
-        this.quit();
+        this.quit(message);
     }
 
     cancelled(data){
@@ -170,15 +174,27 @@ export class VideoCall{
         this.quit();
     }
 
-    reject(){
+    reject(data=undefined){
         var video_call = this;
-        var data = { message: 'Sorry busy'};
+        var audience = []
+        if(data)
+        {
+            audience = [data.caller_id];
+            data = { message: 'User is busy in an other call ', already_in_call:true, callee_id: data.callee_id};
+        }
+        else{
+            audience = [video_call.caller.id]
+            data = { message: 'Sorry busy'}
+        }
         if(!video_call.caller.id)
         {
             console.log('No caller id to send in reject');
         }
-        video_call.socketService.emit_rtc_event('rejected', data, [video_call.caller.id]);
-        this.quit();
+        video_call.socketService.emit_rtc_event('rejected', data, audience);
+        if(!data.already_in_call)
+        {
+            video_call.quit();
+        }
     }
 
 
@@ -221,13 +237,16 @@ export class VideoCall{
     }
 
     quit(request_type=undefined){
+
         let video_call = this;                
-        // console.log(video_call.ongoing_call, request_type, 193);
+        console.log(video_call.ongoing_call, request_type, 193);
         if(video_call.ongoing_call && request_type != 'terminating')
         {
             video_call.terminate();
         }
         video_call.drag_enabled = false;
+        let from = video_call.caller.name;
+        let to = video_call.callee.id;
         video_call.caller = undefined;
         video_call.callee = undefined;
         if(video_call.ongoing_call)
@@ -246,10 +265,76 @@ export class VideoCall{
         video_call.ongoing_call = undefined;                 
         $('#videos-container').html('');
         $('#rtc-container').removeClass('ongoing_call').hide();
+        if (request_type == 'no response')
+        {
+            if (video_call.id)
+            {
+                let message = video_call.get_missed_call_body();
+                // let message = 'missed call from ' + from;
+                video_call.send_messeage(to,message)
+            }
+        }
     }
 
+    get_missed_call_body()
+    {
+        return `<div class="missed-call">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="15.458" viewBox="0 0 20.899 15.458">
+                    <g id="missed-call-phone-receiver-with-left-arrow" transform="translate(0 -80.325)">
+                        <g id="phone-missed" transform="translate(0 80.325)">
+                            <path id="Path_8723" data-name="Path 8723" d="M5.613,82.484l4.75,4.75,6.045-6.045-.864-.864-5.182,5.182L6.477,81.62H9.5v-1.3H4.318v5.182h1.3Zm14.854,9.672a14.606,14.606,0,0,0-20.208,0,.835.835,0,0,0,0,1.209l2.159,2.159a.784.784,0,0,0,.6.259.784.784,0,0,0,.6-.259,11.3,11.3,0,0,1,2.332-1.641.993.993,0,0,0,.518-.777V90.429a11.965,11.965,0,0,1,3.973-.6,14.707,14.707,0,0,1,3.973.6v2.677a.83.83,0,0,0,.518.777,8.765,8.765,0,0,1,2.332,1.641.835.835,0,0,0,1.209,0l2.159-2.159a.784.784,0,0,0,.259-.6C20.9,92.5,20.64,92.329,20.467,92.156Z" transform="translate(0 -80.325)" fill="#ffffff"/>
+                        </g>
+                    </g>
+                </svg>
+                <span>missed a call</span>
+                </div>`;
+    }
 
-    initialize(){
+    send_messeage(to, message)
+    {
+        var date = new Date();
+        var components = [
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+            date.getMilliseconds()
+        ];
+        var timestamp = components.join("");        
+        var input_data = {
+            body: message,
+            uuid : timestamp,
+            attachments: [],
+			to: to,
+            create_date: new Date(),
+            no_loader: 1,
+            message_type: 'notification'
+        };
+        let args = {
+            app: 'chat',
+            model: 'message',
+            method: 'send',
+            no_loader:1,
+        }
+        try{
+            var options =
+            {
+                data:{
+                    params: input_data,
+                    args : args
+                }
+            }
+            window['dn_rpc_object'](options);
+        }
+        catch(er)
+        {
+            console.log(er)
+        }
+    }
+
+    initialize_call(){
         this.maximize();
         $('#rtc-container').show();
     }
@@ -267,15 +352,26 @@ export class VideoCall{
     }
 
     rejected(data){
-        if(this.state == 'outgoing')
+        let video_call = this;
+        if(video_call.state == 'outgoing')
         {
-            this.show_notification('User is busy, try later');
+            if (data.already_in_call)
+            {
+                let message = video_call.get_missed_call_body();
+                console.log(video_call.callee.id, data.callee_id, 666);
+                video_call.send_messeage(video_call.callee.id, message);
+                video_call.show_notification('User is busy in another call');
+            }
+            else
+            {
+                video_call.show_notification('User is busy, try later');
+            }
         }
         else
         {
-            console.log(this.state, ' Not calling how cancelled');
+            console.log(video_call.state, ' Not calling how cancelled');
         }
-        this.quit(data.message);
+        video_call.quit(data.message);
     }
 
     minimize(){

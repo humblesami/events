@@ -1,6 +1,7 @@
 import sys
 import traceback
 from django.db import models
+from django.db.models import Q
 from django.apps import apps
 from datetime import datetime
 from mainapp import ws_methods
@@ -604,6 +605,7 @@ class Message(models.Model):
     read_status = models.BooleanField(default=False)
     create_date = models.DateTimeField(null=True, auto_now_add=True)
     chat_group = models.ForeignKey(ChatGroup, null=True, on_delete=models.CASCADE)
+    message_type = models.CharField(max_length=20, null=True)
 
     @classmethod
     def send(cls, request, params):
@@ -612,7 +614,8 @@ class Message(models.Model):
         target_id = params.get('to')
         body = params['body']
         uuid = params['uuid']
-        message = Message(sender_id=uid, body=body, create_date=datetime.now())
+        message_type = params.get('message_type')
+        message = Message(sender_id=uid, body=body, create_date=datetime.now(), message_type=message_type)
         if group_id:
             message.chat_group_id = group_id
         else:
@@ -724,7 +727,8 @@ class Message(models.Model):
         target_id = int(target_id)
         user_ids = [target_id, uid]
         ar = []
-        messages = Message.objects.filter(sender_id__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
+        messages = Message.objects.filter(Q(to__in=user_ids) & ((Q(message_type='notification') & ~Q(sender_id=uid)) | (Q(message_type__isnull=True) & Q(sender_id__in=[uid, target_id])))).order_by('-id')[offset: offset + 20][::-1]
+        #  & (((Q(message_type='notification') & ~Q(sender_id=uid)) | (Q(message_type__isnull=True) & Q(sender_id__in=[uid, target_id]))))
         ar = cls.get_processed_messages(messages, uid)
         return ar
 
