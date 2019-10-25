@@ -695,7 +695,8 @@ class Message(models.Model):
                     'photo': obj.sender.image.url
                 },
                 'create_date': str(obj.create_date),
-                'attachments': []
+                'attachments': [],
+                'message_type': obj.message_type
             }
             if obj.chat_group:
                 status = obj.messagestatus_set.filter(message_id=obj.id, user_id=uid)
@@ -727,7 +728,12 @@ class Message(models.Model):
         target_id = int(target_id)
         user_ids = [target_id, uid]
         ar = []
-        messages = Message.objects.filter(Q(to__in=user_ids) & ((Q(message_type='notification') & ~Q(sender_id=uid)) | (Q(message_type__isnull=True) & Q(sender_id__in=[uid, target_id])))).order_by('-id')[offset: offset + 20][::-1]
+        messages = Message.objects.filter(sender_id__in=user_ids, to__in=user_ids)
+        if messages:
+            notification_messages = messages.filter(Q(message_type='notification') & ~Q(sender_id=uid))
+            general_messages = messages.filter(Q(message_type__isnull=True) & Q(sender_id__in=[uid, target_id]))
+            messages = general_messages | notification_messages
+            messages = messages.distinct().order_by('-id')[offset: offset + 20][::-1]
         #  & (((Q(message_type='notification') & ~Q(sender_id=uid)) | (Q(message_type__isnull=True) & Q(sender_id__in=[uid, target_id]))))
         ar = cls.get_processed_messages(messages, uid)
         return ar
