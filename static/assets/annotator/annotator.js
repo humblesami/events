@@ -353,8 +353,7 @@
 
     var comments_wrapper; // = $('#comment-wrapper');
     function on_leave_document() {
-        if (comments_wrapper && comments_wrapper.length > 0) {
-            $('#annotated-doc-conatiner').hide();
+        if (comments_wrapper && comments_wrapper.length > 0) {            
             shown_comment_type = false;
             comments_wrapper.hide();
             $('.router-outlet').show();
@@ -865,6 +864,7 @@
                 var rotate_degree = rotateBy % 360;
                 if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {
                     annotation_mode = 1;
+                    $('#annotated-doc-conatiner').removeClass('no_annotation').addClass('annotator');
                 }
                 else{                                   
                     if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
@@ -874,6 +874,7 @@
                     else{
                         annotation_mode = 0;
                     }
+                    $('#annotated-doc-conatiner').removeClass('annotator').addClass('no_annotation');
                 }
             }
 
@@ -948,7 +949,8 @@
             }
 
             function pdf_render(doc_data) {                
-                $('#annotated-doc-conatiner').hide();
+                $('#ToolBarWrapper').hide();
+                $('#content-wrapper').hide();
                 if(typeof data == 'string'){
                     on_error_in_doc_load(data, ' in get data');
                 }
@@ -1156,7 +1158,7 @@
                             bootbox.alert("Invalid document data ", doc_data);
                             site_functions.hideLoader(doc_loading_step);
                             return;
-                        }
+                        }                        
                     } else {
                         if (RENDER_OPTIONS.document_data) {
                             pdfData = RENDER_OPTIONS.document_data.doc;
@@ -1176,7 +1178,8 @@
                                 alert("PDF not loaded");
                                 site_functions.hideLoader(doc_loading_step);
                                 return;
-                            }
+                            }                            
+
                             RENDER_OPTIONS.pdfDocument = pdfContent;
                             var viewer = document.getElementById('viewer');
                             viewer.innerHTML = '';
@@ -1187,7 +1190,6 @@
                             }
                             sclae_value = $('select.scale').val();
                             var rotateBy = RENDER_OPTIONS.rotate;
-
                             var rotate_degree = rotateBy % 360;
 
                             switch (rotate_degree) {
@@ -1213,12 +1215,14 @@
                                 if (pange_number == 1) {
                                     site_functions.hideLoader(doc_loading_step);
                                     first_page_rendered = 1;
+                                    $('#ToolBarWrapper').show();
+                                    $('#content-wrapper').show();                                    
                                     if (doc_data && doc_data.first_time) {
                                         $('body').addClass('pdf-viewer');
+                                        $('#annotated-doc-conatiner').show();
                                     }
                                     scroll_div.show();
-                                    console.log(window['dt_functions'].now_full(), 'first page rendered');
-                                    $('#annotated-doc-conatiner').show();
+                                    console.log(window['dt_functions'].now_full(), 'first page rendered');                                    
                                 }
                                 if (annotation_mode == 1) {
                                     addCommentCount(annotations_of_page, pange_number);
@@ -1288,14 +1292,7 @@
                         } catch (er) {
                             console.log(er);
                         }
-                    }
-                    if (window['show_annotation']) {
-                        $('.annotationLayer').show();
-                        $('.topbar:first .annotation-buttons-container').show();
-                    } else {
-                        $('.annotationLayer').hide();
-                        $('.topbar:first .annotation-buttons-container').hide();
-                    }
+                    }                    
                 } catch (er) {
                     console.log(er);
                 }

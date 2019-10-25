@@ -73,7 +73,8 @@ button.pen-color.annotation_button.prop {
 .pager.prev.page-prev-btn{
     cursor: pointer;
 }
-.ToolBarWrapper {
+
+.toolbar.topbar {
     width: 4.2vw;
     min-width: 42px;
     position: relative;
@@ -85,7 +86,6 @@ button.pen-color.annotation_button.prop {
     overflow: auto;
     overflow-x: hidden;
 }
-
 
 .toolbar .spacer {
     display: inline-block;
@@ -343,8 +343,7 @@ select.pen-size{
 body.pdf-viewer {
     overflow: hidden;
 }
-#annotated-doc-conatiner {
-    display: none;
+#annotated-doc-conatiner {    
     background: #fff;
     position: relative;
     width: 100%;
@@ -790,6 +789,24 @@ span.pager.disabled
 .error-feedback button{
     margin-top:10px;
 }
+
+
+
+#annotated-doc-conatiner.no_annotation .annotationLayer,
+#annotated-doc-conatiner.no_annotation .annotation-buttons-container,
+#annotated-doc-conatiner.no_annotation #comment-wrapper
+{
+    display: none !important;
+}
+
+
+#annotated-doc-conatiner.annotator .annotationLayer, 
+#annotated-doc-conatiner.annotator .annotation-buttons-container,
+#annotated-doc-conatiner.annotator #comment-wrapper
+{
+    display: block;
+}
+
 @media screen and (max-width:576px){
     #comment-wrapper{
         position: absolute;

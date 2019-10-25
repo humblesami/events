@@ -1184,6 +1184,7 @@ export class EsignDocDetailsComponent implements OnInit {
             page_zoom = newScale;
             var doc_page_url = window.location.toString().replace(window.location.hostname, '');
             localStorage.setItem(doc_page_url, newScale);
+            window['functions'].showLoader('zoomin');
 
             pdfDoc.getPage(pageNum).then(function(page) {
                 var viewport = page.getViewport(newScale);
@@ -1194,10 +1195,12 @@ export class EsignDocDetailsComponent implements OnInit {
                     canvasContext: ctx,
                     viewport: viewport
                 };
-                page.render(renderContext);
-                var saved_new_signs = $('.sign_container:visible,.new_sign');
-                $.each(saved_new_signs, function() {
-                    set_position_on_page(this);
+                page.render(renderContext).then(function(){
+                    var saved_new_signs = $('.sign_container:visible,.new_sign');
+                    $.each(saved_new_signs, function() {
+                        set_position_on_page(this);
+                    });
+                    window['functions'].hideLoader('zoomin');                    
                 });
             });
         }
