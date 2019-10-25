@@ -38,8 +38,9 @@ export class MessengerComponent implements OnInit {
         private modalService: NgbModal
 
         ) {
+            // console.log('Recodd');
             window['app_libs']['emoji_picker'].load();            
-            window['app_libs']['rtc'].load();            
+            window['app_libs']['rtc'].load();
             var obj_this = this;
             obj_this.socketService = ss;            
             var socketService = ss;

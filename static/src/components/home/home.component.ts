@@ -175,7 +175,7 @@ export class HomeComponent implements OnInit {
 
     open() {
         let obj_this = this;
-		const modalRef = this.modalService.open(UserlistComponent, { backdrop: 'static' });
+		const modalRef = this.modalService.open(UserlistComponent, { keyboard: false, backdrop: 'static' });
         modalRef.componentInstance.input_users = [];
 		modalRef.result.then((result) => {
             if (result){

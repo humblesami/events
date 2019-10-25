@@ -16,7 +16,7 @@ export class RosterComponent implements OnInit {
     @Input() meeting_type: string;    
     server_url = window['server_url'];
     httpService: HttpService;
-    constructor(private httpServ: HttpService,        
+    constructor(private httpServ: HttpService,
             public socketService: SocketService, 
             private activeModal: NgbActiveModal,
             private userServie: UserService) {
@@ -39,7 +39,7 @@ export class RosterComponent implements OnInit {
 
     get_list(){
         let obj_this = this;
-        function success(data){            
+        function success(data){
             obj_this.httpService.count = Number(data.total);
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;

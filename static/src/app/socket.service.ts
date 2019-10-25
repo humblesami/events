@@ -445,7 +445,7 @@ export class SocketService {
             });
         }
 
-        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static' });
+        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static', keyboard: false });
         let user_cookie = localStorage.getItem('user');
         let cuser = undefined;
         if(user_cookie)
@@ -706,7 +706,8 @@ export class SocketService {
         var socket = window['socket_manager'].socket;
 		if(socket && socket.connected){
 			socket.disconnect();
-			socket = false;
+            socket = false;
+            this.messenger_active = 0;
         }
         this.user_data = undefined;
     }

@@ -29,7 +29,7 @@ export class UserService {
 
     show_profile_summary(profile_id){
         let obj_this = this;
-        const modalRef = obj_this.modalService.open(ProfilesummaryComponent);
+        const modalRef = obj_this.modalService.open(ProfilesummaryComponent, { keyboard: false});
         modalRef.componentInstance.user_id = profile_id;
         // console.log(profile_id, 8);
     }

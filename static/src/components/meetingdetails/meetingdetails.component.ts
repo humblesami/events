@@ -50,7 +50,7 @@ export class MeetingDetailsComponent implements OnInit {
 
     open_roster(){
         let obj_this = this;
-		const modalRef = this.modalService.open(RosterComponent, { backdrop: 'static' });
+		const modalRef = this.modalService.open(RosterComponent, { keyboard: false, backdrop: 'static' });
         modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
         modalRef.componentInstance.meeting_type = obj_this.meeting_object.exectime;
         modalRef.result.then(function(data){
@@ -117,7 +117,7 @@ export class MeetingDetailsComponent implements OnInit {
         };
         var fun = function(){
             // console.log(44343);
-            const modalRef = obj_this.modalService.open(TopiceditComponent, { backdrop: 'static' });
+            const modalRef = obj_this.modalService.open(TopiceditComponent, { keyboard: false, backdrop: 'static' });
             modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
             modalRef.componentInstance.meeting_name = obj_this.meeting_object.name;
             modalRef.componentInstance.meeting_obj = 

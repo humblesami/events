@@ -316,10 +316,10 @@ function addMainEventListeners() {
         }
     });
 
-    $(document).on("mouseup touchend keyup", function(e) {
-        if(!dn_current_site_user.cookie.token)
+    $(document).on("mouseup touchend keyup", function(e) {        
+        if(!(dn_current_site_user && dn_current_site_user.cookie && dn_current_site_user.cookie.token))
         {
-            return;
+            return
         }
         refreshSession();
         if(!window['auth_js'].is_public_route())
