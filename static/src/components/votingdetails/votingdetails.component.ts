@@ -31,11 +31,18 @@ export class VotingdetailsComponent implements OnInit {
     Chart: any;
     conference_not_active = false;
     chart_data: any;
-
+    token = '';
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private httpService: HttpService,
-                private socketService: SocketService) {        
+                private socketService: SocketService) {
+        try
+        {
+            this.token = this.route.snapshot.params.token;
+        }
+        catch(e){
+            this.token = '';
+        }
         this.route.params.subscribe(params => this.get_data());
     }
 
@@ -52,9 +59,15 @@ export class VotingdetailsComponent implements OnInit {
         }
         
         const obj_this = this;
-        const input_data = {id: this.route.snapshot.params.id};
-        
+        const input_data = {
+            id: this.route.snapshot.params.id,
+            token: obj_this.token
+        };
         let on_data = function(result) {
+            if (obj_this.token && result == 'done')
+            {
+                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+            }
             try {               
                 if(result.message)
                 {
@@ -112,7 +125,15 @@ export class VotingdetailsComponent implements OnInit {
             params: input_data,
             args: args
         };
-        obj_this.httpService.get(final_input_data, on_data, null);
+        if (!obj_this.token)
+        {
+            obj_this.httpService.get(final_input_data, on_data, null);
+        }
+        else
+        {
+            obj_this.httpService.post_public(final_input_data, on_data, (result)=>{
+            });
+        }
         function make_bread_crumb(page_title) {
             const bread_crumb_items = obj_this.bread_crumb.items;
             if(obj_this.voting_object.topic.name)
@@ -168,41 +189,52 @@ export class VotingdetailsComponent implements OnInit {
             },
             params: {
                 voting_id: voting_id,
-                voting_option_id: response
+                voting_option_id: response,
+                token: obj_this.token
             }
         }
-
+        function on_success(update_results){
+            if (update_results == 'done')                
+            {
+                window.open(window['site_config'].server_base_url+'/thanks/Response submitted successfully', '_self');
+            }
+            obj_this.voting_object.my_status = option_name;
+            console.log(update_results);
+            obj_this.voting_object.chart_data = update_results.chart_data;
+            if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
+            {                 
+                var chart_colors = window['chart_colors'];
+                    var p =0;
+                    let question = obj_this.voting_object;
+                    for(let j in question.chart_data){
+                        if(p>=chart_colors.length)
+                        {
+                            p = 0;
+                        }
+                        question.chart_data[j].color = chart_colors[p++];
+                    }
+                if(update_results.progress_data)
+                {
+                    obj_this.voting_object.progress_data = update_results.progress_data;
+                    window['app_libs']['chart'].load(()=>{
+                        window['drawChart'](obj_this.voting_object.progress_data, '#progress-chart');
+                    });
+                }
+                window['app_libs']['chart'].load(()=>{
+                    window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
+                });
+                $('.voting-chart:first').show();
+            }
+        }
         function submit_response(voting_response_data)
         {
-            obj_this.httpService.post(voting_response_data, function(update_results){                
-                obj_this.voting_object.my_status = option_name;
-                console.log(update_results);
-                obj_this.voting_object.chart_data = update_results.chart_data;
-                if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
-                {                 
-                    var chart_colors = window['chart_colors'];
-                        var p =0;
-                        let question = obj_this.voting_object;
-                        for(let j in question.chart_data){
-                            if(p>=chart_colors.length)
-                            {
-                                p = 0;
-                            }
-                            question.chart_data[j].color = chart_colors[p++];
-                        }
-                    if(update_results.progress_data)
-                    {
-                        obj_this.voting_object.progress_data = update_results.progress_data;
-                        window['app_libs']['chart'].load(()=>{
-                            window['drawChart'](obj_this.voting_object.progress_data, '#progress-chart');
-                        });
-                    }
-                    window['app_libs']['chart'].load(()=>{
-                        window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
-                    });
-                    $('.voting-chart:first').show();
-                }
-            }, null);
+            if (!obj_this.token)
+            {
+                obj_this.httpService.post(voting_response_data, on_success, null);
+            }
+            else{
+                obj_this.httpService.post_public(voting_response_data, on_success, null);
+            }
         }
         
         if(!obj_this.voting_opened(obj_this.voting_object.open_date)

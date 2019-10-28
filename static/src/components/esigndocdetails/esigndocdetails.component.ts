@@ -930,7 +930,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     if (token)
                     {
                         window['functions'].hideLoader('esign-doc');
-                        window.open(window['site_config'].server_base_url+'/feedback/' + err, '_self');
+                        window.open(window['site_config'].server_base_url+'/#/feedback/' + err, '_self');
                     }
                     else
                     {

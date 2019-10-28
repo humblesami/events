@@ -22,7 +22,12 @@ public_methods = {
     },
     'voting': {
         'VotingAnswer': {
-            'submit_public': 1
+            'submit_public': 1,
+            'submit': 1,
+        },
+        'Voting': {
+            'get_details': 1,
+            'submit': 1,
         }
     },
     'esign': {

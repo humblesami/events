@@ -133,7 +133,8 @@ const appRoutes: Routes = [
     
     { path: 'actions', data:{app:'voting', model:'Voting', search_models:{survey:['Survey', 'Question'], esign: ['SignatureDoc'],voting: ['Voting','VotingChoice','VotingType']}}, component: ActionsComponent, canActivate: [AuthGuard]},
 
-    { path: 'voting/:id', component: VotingdetailsComponent},
+    { path: 'voting/:id', component: VotingdetailsComponent, canActivate: [AuthGuard]},
+    { path: 'public-voting/:id/:token', component: VotingdetailsComponent},
     { path: 'voting/:id/results', component: VotingresultsComponent},
     { path: 'survey/:id/results', component: SurveyresultsComponent},
     { path: 'signdoc/:id', component: EsignDocDetailsComponent, canActivate: [AuthGuard]},

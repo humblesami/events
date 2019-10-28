@@ -13,6 +13,7 @@ from meetings.models import Profile, Event, Topic
 from mainapp.ws_methods import send_email_on_creation
 from actions.models import Actions
 from mainapp.models import CustomModel
+from restoken.models import PostUserToken
 
 
 class VotingType(CustomModel):
@@ -167,9 +168,22 @@ class Voting(Actions):
 
     @classmethod
     def get_details(cls, request, params):
-        uid = request.user.id
         voting_id = params['id']
         voting_object_orm = None
+        token = params.get('token')
+        if token:
+            post_info = {
+                'id': voting_id,
+                'model': 'Voting',
+                'app': 'voting'
+            }
+            res = PostUserToken.validate_token_for_post(token, post_info)
+            if type(res) is str:
+                return res
+            else:
+                request.user = res.user
+        
+        uid = request.user.id
         if voting_id == 'new':
             if not uid:
                 return 'Invalid resolution id'
@@ -415,12 +429,25 @@ class VotingAnswer(models.Model):
     def submit(cls, request, params):
         voting_id = params.get('voting_id')
         user_answer_id = params.get('voting_option_id')
+        token = params.get('token')
+        if token:
+            post_info = {
+                'id': voting_id,
+                'model': 'Voting',
+                'app': 'voting'
+            }
+            res = PostUserToken.validate_token(token)
+            if type(res) is str:
+                return res
+            else:
+                request.user = res.user
+        user_id = request.user.id
         chart_data = []
         res_data = {'error': 'Unknown result'}
         if voting_id:
             voting_object = Voting.objects.get(pk=voting_id)
             if voting_object:
-                voting_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id = request.user.id)
+                voting_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id = user_id)
                 if user_answer_id:
                     signature_data = ''
                     if voting_object.signature_required:
@@ -432,7 +459,7 @@ class VotingAnswer(models.Model):
                         cls.update_Choice(voting_answer, user_answer_id, signature_data)
                         res = 'Update'
                     else:
-                        voting_answer = cls.save_Choice(user_answer_id, voting_id, request.user.id, signature_data)
+                        voting_answer = cls.save_Choice(user_answer_id, voting_id, user_id, signature_data)
                         res = 'Created'
 
                 voting_options = list(voting_object.voting_type.votingchoice_set.values())
@@ -470,6 +497,8 @@ class VotingAnswer(models.Model):
         else:
             return 'Invalid voting id'
 
+        if token:
+            return 'done'
         return res_data
 
 

@@ -25,7 +25,7 @@ class PostUserToken(models.Model):
         user_id = params['user_id']
         post_info = PostInfo.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
         if not post_info:
-            post_info = PostInfo(res_app=res_app, res_model=res_model, res_id=res_id)
+            post_info = PostInfo(res_app=res_app.lower(), res_model=res_model.lower(), res_id=res_id)
             post_info.save()
         else:
             post_info = post_info[0]
@@ -51,7 +51,7 @@ class PostUserToken(models.Model):
     @classmethod
     def validate_token_for_post(cls, token, post_info):
         if token:
-            post_info = PostInfo.objects.get(res_app=post_info.get('app'), res_model=post_info.get('model'),res_id=post_info.get('id'))
+            post_info = PostInfo.objects.get(res_app=post_info.get('app').lower(), res_model=post_info.get('model').lower(),res_id=post_info.get('id'))
             if not post_info:
                 return 'Not token for the post '+ post_info.get('app')+'.'+ post_info.get('model')+'.' + post_info.get('id')
 

@@ -96,12 +96,22 @@
         {
             url = get_cpath_name();
         }
-        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc', '/thanks', '/feedback'];
+        let public_routes = [
+            '/user/login',
+            '/user/forgot-password',
+            '/user/reset-password',
+            '/login','/forgot-password',
+            '/logout','/reset-password',
+            '/token-sign-doc',
+            '/thanks',
+            '/feedback',
+            '/public-voting/'
+        ];
         for (var i in public_routes)
         {
             if (url.startsWith(public_routes[i]))
             {
-                localStorage.removeItem('user');
+                // localStorage.removeItem('user');
                 add_public_class();
                 return true;
             }

@@ -1,4 +1,4 @@
-<app-breadcrumb *ngIf="voting_object" app="voting" model="voting" 
+<app-breadcrumb *ngIf="voting_object && !token" app="voting" model="voting" 
 rid="{{voting_object.id}}" edit="1" delete="1" 
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Resolutions", "link":"/votings"}]'
 title="{{voting_object.name}}"></app-breadcrumb>
@@ -130,7 +130,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
 
                 <div class="title-wrapper">
                     <app-documents 
-                    *ngIf="socketService.admin_mode || (voting_object.voting_docs && voting_object.voting_docs.length)" 
+                    *ngIf="!token && (socketService.admin_mode || (voting_object.voting_docs && voting_object.voting_docs.length))" 
                     title="Voting Documents"
                     parent_model="Voting" 
                     parent_field="voting_id" 
@@ -142,6 +142,6 @@ title="{{voting_object.name}}"></app-breadcrumb>
                 
             </div>
         </div>
-        <app-comments *ngIf="voting_object && voting_object.enable_discussion" res_app="{{discussion_params.res_app}}" res_model="{{discussion_params.res_model}}" res_id="{{discussion_params.res_id}}"></app-comments>
+        <app-comments *ngIf="!token && voting_object && voting_object.enable_discussion" res_app="{{discussion_params.res_app}}" res_model="{{discussion_params.res_model}}" res_id="{{discussion_params.res_id}}"></app-comments>
     </div>
 </div>
