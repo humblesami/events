@@ -14,6 +14,7 @@ declare var $: any;
 export class ViewmembersComponent implements OnInit {
     @Input() selection_input_str = '';
     @Input() user_input_str = '';
+    @Input() title = '';
 
   // @Output() group_users_changed : EventEmitter <any> = new EventEmitter();
     server_url = window['server_url'];

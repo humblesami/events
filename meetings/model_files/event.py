@@ -546,8 +546,9 @@ class Event(CustomModel):
         for obj in records:
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,
-                fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image']
+                fields=['id', 'name', 'email','mobile_phone', 'company', 'image']
             )
+            attendee_data['status'] = obj.get_state_display() or  'No Response'
             attendee_data['attendance'] = obj.attendance
             attendee_data['photo'] = attendee_data['image']
             attendees_list.append(attendee_data)

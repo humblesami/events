@@ -126,7 +126,7 @@ jQuery(document).ready(function(e) {
                 reset();
             });
         }
-  };
+    };
 });
 
 
@@ -178,7 +178,7 @@ function init_sign(config) {
         var clear_btn = $('#clear-signature-btn');
         signature_editor.find('canvas').sign({
             resetButton: clear_btn,
-            lineWidth:4
+            lineWidth:8
         });
         clear_btn.click();
 

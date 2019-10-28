@@ -2933,7 +2933,7 @@ label.check-plus-label-wrap {
 }
 .modal.fade .modal-dialog
 {
-    min-width: 50%;
+    min-width: 60%;
 }
 #signature_modal .modal-dialog {
     min-width: auto;

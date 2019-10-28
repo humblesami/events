@@ -1,4 +1,4 @@
-<label class="pop-heading">Users List</label>
+<label class="pop-heading"> {{title ? title: 'User List' }} </label>
 <div class="roster">
     <div class="user-modal-container">
         <div class="main-full-seachbar">
@@ -7,7 +7,7 @@
             placeholder="Search..."  class="form-control"/>
         </div>
             
-        <div class="bg-heading" *ngIf="shown_users.length">
+        <div class="bg-heading">
             <div>
                 User Info
             </div>
@@ -16,9 +16,9 @@
             </div>
         </div>            
         <div class="roster-height">  
-            <div *ngIf="!shown_users.length" class="row no-data">
+            <!-- <div *ngIf="!shown_users.length" class="row no-data">
                 <h4>No Users</h4>
-            </div>
+            </div> -->
             <div class="d-flex py-2 mb-1 bg-roster rounded"
             *ngFor="let obj of shown_users">
                 <div class="col-9">

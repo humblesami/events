@@ -430,7 +430,8 @@ export class MessengerComponent implements OnInit {
             else
             {
                 diaolog_options = {
-                    selected_users: obj_this.selected_chat_group.members,
+                    selected_users: obj_this.selected_chat_group.members,                    
+                    extra_input: {title : 'Chat Group : ' + group.name},
                     user_list: obj_this.selected_chat_group.members,
                     component: ViewmembersComponent
                 };

@@ -10,6 +10,8 @@ export class ChatgroupComponent implements OnInit {
     @Input() user_input_str = '';
     @Input() selection_input_str = '';
     @Input() group_name = '';
+
+    careated_group_name = '';
     constructor(public activeModal: NgbActiveModal) {
         
     }
@@ -20,7 +22,7 @@ export class ChatgroupComponent implements OnInit {
 
     sendRecord(){
         let obj_this = this;
-        this.activeModal.close({group_name: obj_this.group_name, selectd_users: this.selected_users});
+        this.activeModal.close({group_name: obj_this.careated_group_name, selectd_users: this.selected_users});
     }
 
     ngOnInit() {
