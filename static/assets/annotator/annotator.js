@@ -1082,6 +1082,10 @@
                                 rotate: getCookieStrict(documentId, documentId + '/rotate'),
                                 pdfDocument: null
                             }
+                            if(window['show_annotation'])
+                            {
+                                RENDER_OPTIONS.rotate = 0;
+                            }
                             if (!RENDER_OPTIONS.rotate) {
                                 RENDER_OPTIONS.rotate = 360;
                                 setCookieStrict(documentId, documentId + '/rotate', 360);
