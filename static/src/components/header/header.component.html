@@ -51,13 +51,6 @@
                     </button>
                     <span class="un-read-msg" *ngIf="socketService.unseen_messages !=0 ">{{socketService.unseen_messages}}</span>
                 </div>
-                <!-- <div class="hidden" id="messenger-icon-target">
-                    <div>
-                        <span>Hun</span>
-                        <li (click)="show_messenger()"></li>
-                    </div>                    
-                </div> -->
-
                 <app-chat></app-chat>
                 <div class="navbar-profile-menu dropdown">
                     <button class="profile-icon showmouseawaybutton img-flex" (click)="show_profile_menu($event)">
@@ -68,7 +61,6 @@
 						<div class="arrow"></div>
                         <a class="dropdown-item border-0" routerLink="/my-profile">
                             <div class="drop-down-user">
-                                <!-- <img class="img-thumbnail-sm" src="{{socketService.user_photo}}"> -->
                                 <h5>{{socketService.user_data.name}}</h5>
                             </div>
                         </a>
@@ -110,11 +102,11 @@
                         </span>
                     </div>        
                 </div>
-                <div *ngIf="show_search_results && socketService.search_bar_shown" class="show_search_results">
+                <div *ngIf="show_search_results && socketService.search_bar_shown" class="show_search_results app-content">
                 <div *ngIf="no_search" class="no-search">
                     <h1>No Result Found!</h1>
                 </div>
-                <div *ngIf="!no_search" class="close-button" (click)="hide_search()">
+                <div *ngIf="!no_search" class="close-button close-fixed" (click)="hide_search()">
                     <i class="fa fa-times"></i>
                 </div>
                 <div *ngIf="!no_search" class="container">

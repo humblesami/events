@@ -885,6 +885,7 @@ input#search-box {
 	font-size: 13px;
 	font-weight: 500;
 	background: linear-gradient(to bottom, #6a6967, #6a6868);
+	word-break: break-all;
 	}
 .result-box-info h3 a:hover {
 	background: linear-gradient(to bottom, #dddddd, #dddddd);
@@ -926,6 +927,11 @@ div#search-modal {
 	background: rgba(255, 255, 255, 1);
 	color: #000000;
 	}
+.close-fixed{
+	position: fixed;
+	top: 130px;
+	right: 20px;
+}	
 .no-search {
 	text-align: center;
 	color: #ffffff;
@@ -1129,6 +1135,7 @@ div#search-modal {
 	}
 .content_search {
 	background: #ffffff;
+	margin-top: 1rem;
 	}
 .result-box-info {
 	margin: 10px -5px;
@@ -2105,9 +2112,9 @@ body.public .router-outlet{
 	overflow-y: auto;
     overflow-x: hidden;
 	}
-.app-content {
+/* .app-content {
 	position: relative;
-	}
+	} */
 /* Start Of Upcoming Meeting  */
 
 .Info p {
@@ -2933,7 +2940,7 @@ label.check-plus-label-wrap {
 }
 .modal.fade .modal-dialog
 {
-    min-width: 60%;
+    min-width: 50%;
 }
 #signature_modal .modal-dialog {
     min-width: auto;

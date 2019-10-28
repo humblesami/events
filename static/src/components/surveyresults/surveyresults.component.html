@@ -7,32 +7,21 @@ title="Results"></app-breadcrumb>
     <div class="container" *ngIf="surveyDetails">
         <div class="form-details">
             <div class="meeting-details-form">
-                <div class="container">
-                    <div class="row">
-                        <div *ngIf="surveyDetails.name" class="col-sm-12">
-                            <div class="kanban-headings row justify-content-between">
-                                <h3>
-                                    <i class="icon-action text-primary"></i> {{surveyDetails.name}}
-                                </h3>
-                                <div style="height: 50px;width:50px;">
-                                    <canvas id="progress-chart"></canvas>
-                                </div>
-                                <div class="MeetingBtnWrapper m-top" *ngIf="surveyDetails.publish">
-                                    <div class="btn-group">
-                                        <a *ngIf="surveyDetails && surveyDetails.is_respondent && surveyDetails.is_attempted" id="{{surveyDetails.id}}" class="btn" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
-                                    </div>
-                                </div>                            
-                            </div>
+                <div *ngIf="surveyDetails.name" class="kanban-headings justify-content-between">                        
+                    <h3>
+                        <i class="icon-action text-primary"></i> {{surveyDetails.name}}
+                    </h3>
+                    <div style="height: 50px;width:50px;">
+                        <canvas id="progress-chart"></canvas>
+                    </div>
+                    <div class="MeetingBtnWrapper m-top" *ngIf="surveyDetails.publish">
+                        <div class="btn-group">
+                            <a *ngIf="surveyDetails && surveyDetails.is_respondent && surveyDetails.is_attempted" id="{{surveyDetails.id}}" class="btn" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
                         </div>
                     </div>
                 </div>
-<!--
-                <div class="canvas_warpper my-5 progress-chart">
-                    <canvas id="progress-chart" style="height:100px; weight:100px;"></canvas>
-                </div>
--->
-                <div class="row">
 
+                <div class="row">
                     <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
                         <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
                             <div class="col-sm-12 UserProfileDiscription">
