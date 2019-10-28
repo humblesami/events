@@ -62,22 +62,24 @@
 
         <div id="rtc-container" style="display:none" class="make-center full">            
             <link type="text/css" rel="stylesheet" href="/static/assets/rtc/getHTMLMediaElement.css"/>    
-            <div class="closer max">
+            <div class="closer max" title="Docuble click to toggle mode" (dblclick)="socketService.video_call.toggle_size()">
                 <div class="minimizer">
                     <span (click)="socketService.video_call.minimize()">
                     <i class="fa fa-window-minimize"></i>
-                    </span>
-                    <span (click)="socketService.video_call.quit()">
-                    <i class="fa fa-window-close"></i>
-                    </span>                       
+                    </span>                 
                 </div>
                 <div class="maximizer">
                     <span (click)="socketService.video_call.maximize()" >
                     <i class="fa fa-window-maximize"></i>
                     </span>
+                </div>
+                <div>
                     <span (click)="socketService.video_call.quit()">
-                    <i class="fa fa-window-close"></i>
+                        <i class="fa fa-window-close"></i>
                     </span>
+                </div>
+                <div *ngIf="socketService.video_call.im_caller">
+                    <span (click)="socketService.video_call.show_users()"><i class="fa fa-plus"></i></span>
                 </div>
             </div>
 

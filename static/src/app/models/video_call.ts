@@ -1,3 +1,5 @@
+import { UserlistmodalComponent } from "src/components/userlistmodal/userlistmodal.component";
+
 declare var $;
 export class VideoCall{
     socketService: any;
@@ -21,8 +23,7 @@ export class VideoCall{
     make_call(uid, audio_only){
         let video_call = this;
         // console.log(uid, audio_only, 88);
-        video_call.drag_enabled = false;
-        video_call.maximize();
+        video_call.drag_enabled = false;        
         if(audio_only)
         {
             video_call.is_audio_call = true;
@@ -62,7 +63,7 @@ export class VideoCall{
             video_call.message = "Called person is not online but will be informed about your call when he/she will be online";                    
         }
         video_call.state = 'outgoing';
-        video_call.initialize_call();                
+        video_call.initialize_call();
         
         
         setTimeout(function(){
@@ -75,7 +76,7 @@ export class VideoCall{
     }
 
     init(uid, audio_only){        
-        let obj_this = this;
+        let obj_this = this;        
         window['app_libs']['rtc'].load(function(){
             obj_this.make_call(uid, audio_only);
         })
@@ -101,10 +102,9 @@ export class VideoCall{
         });
     }
 
-    
-
     accept(){
         var video_call = this;
+        video_call.im_caller = false;
         var data = { 
             user_id: video_call.socketService.user_data.id
         };        
@@ -113,12 +113,13 @@ export class VideoCall{
         video_call.message = 'Connecting caller';
     }
 
+    im_caller = false;
     
 
     start_for_me(data){
         // console.log(data, 156);
         var video_call = this;
-        video_call.state = 'ongoing';
+        video_call.state = 'ongoing';        
         if(!video_call.id)
         {
             console.log(video_call.state, 'Invalid call id, it must has been alreasy set');
@@ -139,11 +140,13 @@ export class VideoCall{
         video_call.ongoing_call = video_call.id;
         // console.log(video_call.socketService.rtc_multi_connector, 190);
 
-        var on_started = undefined;
+        var on_started = function(){
+            video_call.maximize();
+        };
         if(video_call.caller.id == params.uid)
         {
             on_started = function(){
-                // console.log(data, 14);
+                video_call.participants = [video_call.caller, video_call.callee];
                 if(data)
                 {
                     data = {
@@ -153,13 +156,15 @@ export class VideoCall{
                     }
                     // console.log(data, 14889);
                     video_call.socketService.emit_rtc_event('started_by_caller', data, [data.user_id]);
+                    video_call.im_caller = true;
                 }
+                video_call.maximize();
             }
         }
         $('#rtc-container').addClass('ongoing_call');
-        video_call.socketService.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);                
+        video_call.socketService.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);        
     }
-
+    
     
 
     cancel(message=undefined){
@@ -238,14 +243,14 @@ export class VideoCall{
 
     quit(request_type=undefined){
 
-        let video_call = this;                
-        console.log(video_call.ongoing_call, request_type, 193);
+        let video_call = this;
+        video_call.im_caller = false;
+        // console.log(video_call.ongoing_call, request_type, 193);
         if(video_call.ongoing_call && request_type != 'terminating')
         {
             video_call.terminate();
         }
         video_call.drag_enabled = false;
-        let from = video_call.caller.name;
         let to = video_call.callee.id;
         video_call.caller = undefined;
         video_call.callee = undefined;
@@ -261,7 +266,7 @@ export class VideoCall{
             }                    
         }
         
-        video_call.state = 'available';                
+        video_call.state = 'available';
         video_call.ongoing_call = undefined;                 
         $('#videos-container').html('');
         $('#rtc-container').removeClass('ongoing_call').hide();
@@ -339,7 +344,7 @@ export class VideoCall{
         $('#rtc-container').show();
     }
     accepted(data){
-        this.start_for_me(data);
+        this.start_for_me(data);        
     }
 
     started_by_caller(data){
@@ -374,22 +379,70 @@ export class VideoCall{
         video_call.quit(data.message);
     }
 
-    minimize(){
-        $('#rtc-container').removeClass('full').addClass('min');
-        window['rtc-call-max'] = undefined;                
-        $('#rtc-container').draggable({'containment':[0, 0, '100vw', window.innerHeight - 10]});
-        $('#rtc-container').css({top:'unset',left:'unset',bottom:'10px',right:'10px'}).draggable('enable');
-        this.drag_enabled = true;
-    }
-    maximize(){
-        if(this.drag_enabled)
-        {
-            $('#rtc-container').draggable('disable');
-            this.drag_enabled = false;
+    toggle_size(){
+        if($('#rtc-container').hasClass('full')){
+            this.minimize();
         }
-        $('#rtc-container').css({top:0,left: 0});
-        $('#rtc-container').removeClass('min').addClass('full');
+        else{
+            this.maximize();
+        }
+    }
+
+    minimize(){
+        var rtc_container = $('#rtc-container');
+        rtc_container.css({left: 'unset', top: 'unset', bottom : 0, right: 0});
+        rtc_container.removeClass('min').removeClass('full').addClass('min');
+        window['rtc-call-max'] = 0;        
+        if(rtc_container.hasClass('ui-draggable'))
+        {
+            rtc_container.draggable('enable');
+        }
+        else{
+            rtc_container.draggable({'containment':[0, 0, window.innerWidth - 20, window.innerHeight - 20]});
+        }
+        if($('.media-container.self:first').hasClass('ui-draggable')){
+            $('.media-container.self:first').draggable('disable');
+        }
+    }
+
+    maximize(){
+        // console.log(3444);
+        var rtc_container = $('#rtc-container');
+        rtc_container.css({left: 'unset', top: 'unset', bottom : 0, right: 0});
+        if(rtc_container.hasClass('ui-draggable'))
+        {
+            rtc_container.draggable('disable');
+        }
+        if($('.media-container.self:first').hasClass('ui-draggable')){
+            $('.media-container.self:first').draggable('enable');    
+        }
+        else{
+            $('.media-container.self:first').draggable({'containment':[0, 0, window.innerWidth - 20, window.innerHeight - 20]});
+        }
+        $('.media-container.self:first').css({top: '30px', left: '10px'});
+        rtc_container.removeClass('min').removeClass('full').addClass('full');
         window['rtc-call-max'] = 1;
+    }
+
+    show_users() {
+        let obj_this = this;
+        var on_modal_closed = function(result){
+            console.log(result, 444);
+            obj_this.participants = result;
+        };
+
+        var diaolog_options = {
+            call_back: on_modal_closed,
+            selected_users: obj_this.participants,
+            component: UserlistmodalComponent
+        }
+        obj_this.socketService.user_selection_dialog(diaolog_options);
+    }
+
+    participants = undefined;
+
+    add_participants() {
+        
     }
 
     show_notification(message){

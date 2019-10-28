@@ -34,15 +34,8 @@
                     });
                 });
             };
-    
-            // document.getElementById('leave-room').onclick = function(){
-            //     close_window()
-            // };
-            
-            // ......................................................
-            // ..................RTCMultiConnection Code.............
-            // ......................................................
-            
+
+
             var connection = new RTCMultiConnection();
             connection.enableLogs = false;
             
@@ -121,8 +114,7 @@
                     buttons: ['full-screen'],
                     // width: width,
                     showOnMouseEnter: false
-                });                
-                
+                });
             
                 connection.videosContainer.appendChild(mediaElement);
 
@@ -527,9 +519,5 @@
                 window['rtc-call-max'] = undefined;                
             }
         }
-    });
-    $('#rtc-container').mouseup(function(){
-        $('#rtc-container').removeClass('min').addClass('full');
-        window['rtc-call-max'] = 1;            
     });
 })();                            

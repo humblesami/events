@@ -459,8 +459,23 @@ export class SocketService {
             default_selected = true;
             owner = dialog_options.owner;
         }
-        if(!dialog_options.user_list.length)
+        if(dialog_options.user_list && dialog_options.user_list.length)
         {
+            if (cuser)
+            {
+                dialog_options.user_list.filter((el)=>{
+                    if (el.id==cuser.id)
+                    {
+                        el.current_user = owner;
+                        el.selected = default_selected;
+                    }
+                });
+            }
+            
+        }
+        else
+        {
+            dialog_options.user_list = [];
             if (obj_this.chat_users.length)
             {
                 for(var usr of obj_this.chat_users)
@@ -483,19 +498,6 @@ export class SocketService {
                         selected: default_selected
                     })
                 }
-            }
-        }
-        else
-        {
-            if (cuser)
-            {
-                dialog_options.user_list.filter((el)=>{
-                    if (el.id==cuser.id)
-                    {
-                        el.current_user = owner;
-                        el.selected = default_selected;
-                    }
-                });
             }
         }
         

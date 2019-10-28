@@ -172,7 +172,7 @@ export class FoldersComponent implements OnInit {
     {
         let obj_this = this;
         var folders = obj_this.records;
-        console.log(folders);
+        // console.log(folders);
         let config = {
             on_load: function(){
                 obj_this.load_create_folder_popup();

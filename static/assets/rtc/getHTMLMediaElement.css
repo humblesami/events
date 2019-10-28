@@ -84,7 +84,7 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     margin-top: 2px;
     position: absolute;
     margin-left: 5px;
-    z-index: 100;
+    z-index: 1;
     opacity: 0;
 }
 
@@ -247,20 +247,20 @@ input[type="range"]::-webkit-slider-thumb {
     position: fixed;    
     color: #ffffff;
     display: none;
-    z-index: 41;
+    z-index: 2;
     background: #638FC9;  /* fallback for old browsers */    
 }
 
 #rtc-container.full{
     width: 100%;
     height: 100vh;
-    width: 100vw;    
+    width: 100vw;
 }
 #rtc-container.full.ongoing_call #ongoing_controls{
     display: block;    
 }
 #rtc-container.min{    
-    z-index: 77;
+    z-index: 6;
     height: 200px;
     width: 200px;
 }
@@ -272,26 +272,31 @@ input[type="range"]::-webkit-slider-thumb {
 {
     display: none;
 }
+#rtc-container .closer{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    background:rgba(0, 0, 0, 0.3);
+    border-bottom-left-radius: 5px;
+}
+#rtc-container .closer>div
+{
+    padding: 0;
+    margin: 5px;
+}
 #rtc-container .closer span
 {
-    padding: 3px;
-    margin: 2px;
+    padding: 5px;    
     cursor: pointer;
     font-size: 12px;
     background: #ffffff;
     color: #000000;
-    display: block;
     height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#rtc-container .closer>div
-{
-    margin: 5px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #setup-buttons {
@@ -338,31 +343,10 @@ input[type="range"]::-webkit-slider-thumb {
 }
 div#ongoing_controls {
     position: absolute;
-    z-index: 2222;
+    z-index: 1;
     right: 46vw;
     bottom: 20px;
     display: none;
-}
-
-#rtc-container.full .closer{
-    position: absolute;
-    right: 0;
-    top:0;
-    z-index: 200;
-    width: 70px;
-    background:rgba(0, 0, 0, 0.43);
-    border-bottom-left-radius: 5px;
-}
-
-#rtc-container.min .closer{
-    position: absolute;
-    right: 0;
-    /* width: 48px; */
-    background: #000000;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    text-align: center;
-    z-index: 200;
 }
 
 #rtc-container.min .closer span{
@@ -374,7 +358,7 @@ div#ongoing_controls {
     left: 0;
     top: 0vh;
     height: 93vh;
-    z-index: 10003;
+    z-index: 2;
     right: 0;
 
     display: flex;
@@ -436,17 +420,16 @@ div#ongoing_controls {
     100% {left:100%;}
   }
 
-  .media-container.self {
+.media-container.self {
     position: absolute;
     width: 267px !important;
     height: 200px !important;
-    top: 30px;
-    left: 10px;
+    cursor: pointer;    
     background: #000000;
     padding: 0;
     border-radius: 0;
     display: block;
-    z-index: 999;
+    z-index: 3;
 }
 .media-container:nth-child(2){
     position: absolute;

@@ -111,7 +111,7 @@ function dn_rpc_object(options) {
                     console.log(response, er);
                 }
             } else if(site_config.show_logs.indexOf('ajax_success')){
-                console.log(response);
+                // console.log(response);
             }
         }
         else {
