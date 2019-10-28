@@ -345,27 +345,29 @@ export class EsignDocDetailsComponent implements OnInit {
                 on_dropped(new_signature[0], 'creating');
             }
 
-            $('.drag').draggable({
-                helper: "clone",
-                scroll: true,
-                cursor: 'move'
+            window['app_libs'].jquery_ui.load(function(){
+                //End Dragable
+                $('.drag').draggable({
+                    helper: "clone",
+                    scroll: true,
+                    cursor: 'move'
+                });
+                $("#page_container").droppable({
+                    drop: function(evn, ui){
+                        // console.log(ui.helper);
+                        if($(ui.helper).hasClass('drag'))
+                        {
+                            handleDropEvent(evn, ui);
+                        }
+                        else{
+                            on_dropped($(ui.helper));
+                        }
+                    },
+                    accept: ".drag,.new_sign",
+                    tolerance: "touch",
+                });
             });
-            $("#page_container").droppable({
-                drop: function(evn, ui){
-                    // console.log(ui.helper);
-                    if($(ui.helper).hasClass('drag'))
-                    {
-                        handleDropEvent(evn, ui);
-                    }
-                    else{
-                        on_dropped($(ui.helper));
-                    }
-                },
-                accept: ".drag,.new_sign",
-                tolerance: "touch",
-            });            
-            //End Dragable
-
+            
             $(document).off("click", ".save_doc_data")
             $(document).on("click", ".save_doc_data", function(e) {
                 var new_divs = $('.new_sign');
@@ -867,8 +869,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     console.log('Dcownloading doc from '+file_path, Date());
                     pdf_url = 'data:application/pdf;base64,' + data.binary;
                     if(token)
-                    {                        
-                        window['app_libs']['pdf'].load(function(){
+                    {
+                        window['app_libs'].pdf.load(function(){
                             renderPDF(pdf_url);
                         });
                     }
@@ -878,10 +880,10 @@ export class EsignDocDetailsComponent implements OnInit {
                         obj_this.all_users_list = obj_this.users_list = users = data.users;
                         meeting_id = data.meeting_id;
                         send_to_all = data.send_to_all;                        
-                        window['app_libs']['pdf'].load(function(){
+                        window['app_libs'].pdf.load(function(){
                             renderPDF(pdf_url);
                         });
-
+                        
                         if(!data.meetings){
                             return;
                         }
@@ -957,8 +959,8 @@ export class EsignDocDetailsComponent implements OnInit {
             }
             window['dn_rpc_object'](ajax_options);
         }
-        loadData();
-
+        loadData();        
+        
         function on_sign_saved(signature_dom, data){
             var sign_img = signature_dom.find('img:first');
             var sign_img_src = 'data:image/png;base64,' + data.image;

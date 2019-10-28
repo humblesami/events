@@ -113,10 +113,10 @@ export class EsignDocsComponent implements OnInit {
         });
     }
 
-    ngOnInit() {        
-        // console.log(Date(), 3433);
+    ngOnInit() {
         this.get_list();
-        window['app_libs']['pdf'].load();
+        window['app_libs'].pdf.load();
+        window['app_libs'].jquery_ui.load();
         window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     }
 }
