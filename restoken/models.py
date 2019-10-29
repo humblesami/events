@@ -51,9 +51,11 @@ class PostUserToken(models.Model):
     @classmethod
     def validate_token_for_post(cls, token, post_info):
         if token:
-            post_info = PostInfo.objects.get(res_app=post_info.get('app').lower(), res_model=post_info.get('model').lower(),res_id=post_info.get('id'))
+            post_info = PostInfo.objects.filter(res_app=post_info.get('app').lower(), res_model=post_info.get('model').lower(),res_id=post_info.get('id'))
             if not post_info:
                 return 'Not token for the post '+ post_info.get('app')+'.'+ post_info.get('model')+'.' + post_info.get('id')
+            else:
+                post_info = post_info[0]
 
             user_token = PostUserToken.objects.filter(token=token, post_info_id=post_info.id)
             if not user_token:
