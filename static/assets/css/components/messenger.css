@@ -247,13 +247,14 @@
 	}
 .messenger-container .msg-send-box-text, .messenger-container .msg-box-text {	
     border-radius: 0.5rem;
-    padding: 0.5rem;
+    padding: 0.5rem 0.8rem;
     font-size: 12px;
     background-color: #2699FB;
 	color: #ffffff;
 	display: inline-block;
 	max-width: 70%;
 	text-align: left;
+	border-top-left-radius: 0;
 }
 
 .file_name {
@@ -727,7 +728,9 @@ a.contact-item {
 }
 .messenger-container .me .msg-send-box-text{
     background: #ddd;
-    color: black;
+	color: black;
+	border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0;
 }
 /* .chat-message .me .file_name i{
 	display: none;
