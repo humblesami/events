@@ -10,6 +10,7 @@ from django_countries.fields import CountryField
 from django.db.models.signals import m2m_changed
 from django.utils.translation import gettext_lazy as _
 from mainapp.models import CustomModel
+from restoken.models import PostUserToken
 
 # Create your models here.
 
@@ -241,7 +242,20 @@ class Event(CustomModel):
         user_response = params.get('response')
         user_attendance = params.get('attendance')
         response_by = params.get('response_by')
+        token = params.get('token')
+
         user_id = 0
+        if token:
+            post_info = {
+                'id': meeting_id,
+                'model': 'Event',
+                'app': 'meetings'
+            }
+            res = PostUserToken.validate_token(token)
+            if type(res) is str:
+                return res
+            else:
+                request.user = res.user
         if request.user.id:
             user_id = request.user.id
         else:
@@ -282,6 +296,18 @@ class Event(CustomModel):
     @classmethod
     def get_details(cls, request, params):
         meeting_id = params['id']
+        token = params.get('token')
+        if token:
+            post_info = {
+                'id': meeting_id,
+                'model': 'Event',
+                'app': 'meetings'
+            }
+            res = PostUserToken.validate_token_for_post(token, post_info)
+            if type(res) is str:
+                return res
+            else:
+                request.user = res.user
         user_id = request.user.id
         meeting_object_orm = None
         if meeting_id == 'new':
@@ -345,6 +371,11 @@ class Event(CustomModel):
             attendee_obj['my_event'] = attendance_status['my_event']
             attendees.append(attendee_obj)
         meeting_object['topics'] = topics
+        
+        if token:
+            data = {"meeting": meeting_object, "next": 0, "prev": 0}
+            return {'data': data, 'errors': errors}
+            
         meeting_object['meeting_docs'] = []
         for doc in meeting_docs:
             doc['created_at'] = str(doc['created_at'])

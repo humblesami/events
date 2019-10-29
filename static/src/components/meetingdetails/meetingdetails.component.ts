@@ -17,7 +17,8 @@ declare var $: any;
 
 export class MeetingDetailsComponent implements OnInit {
 	meeting_object: any;
-	meetObjLoaded = false;
+    meetObjLoaded = false;
+    token = '';
 	notes = [];
 	new_reply = '';
 	next = '';
@@ -44,7 +45,15 @@ export class MeetingDetailsComponent implements OnInit {
                 private zone: NgZone,
                 private modalService: NgbModal) 
     {	
+
         this.socketService = this.ss;
+        try
+        {
+            this.token = this.route.snapshot.params.token;
+        }
+        catch(e){
+            this.token = '';
+        }
         this.route.params.subscribe(params => this.get_data());
     }
 
@@ -228,12 +237,20 @@ export class MeetingDetailsComponent implements OnInit {
             method: 'get_details'
         }
 		let input_data = {
-            params: {id: obj_this.route.snapshot.params.id, meeting_type: obj_this.flag},
+            params: {
+                id: obj_this.route.snapshot.params.id, 
+                meeting_type: obj_this.flag,
+                token: obj_this.token,
+            },
             args: args
         };
 
         let on_data = function(result) {
             // console.log(result,1122);
+            if (obj_this.token && typeof(result) == 'string')
+            {
+                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+            }
             try {
                 if(result.message)
                 {
@@ -263,24 +280,27 @@ export class MeetingDetailsComponent implements OnInit {
                 var pp = 0
                 var cur_user_object = undefined;
                 var myindex = -1;
-                var attendees = meeting_object.attendees
-                attendees.forEach(att => {
-                    if (att.uid == uid) {
-                        myindex = pp;
-                        cur_user_object = att;
-                    }
-                    pp++;
-                });
-                if(!cur_user_object)
+                var attendees = meeting_object.attendees;
+                if (attendees)
                 {
-                    obj_this.is_attendee = false;
+                    attendees.forEach(att => {
+                        if (att.uid == uid) {
+                            myindex = pp;
+                            cur_user_object = att;
+                        }
+                        pp++;
+                    });
+                    if(!cur_user_object)
+                    {
+                        obj_this.is_attendee = false;
+                    }
+                    else{
+                        obj_this.is_attendee = true;
+                    }
+                    attendees.splice(myindex, 1);
+                    attendees.splice(0, 0, cur_user_object);
+                    obj_this.me_as_respondant = attendees[0];
                 }
-                else{
-                    obj_this.is_attendee = true;
-                }
-                attendees.splice(myindex, 1);
-                attendees.splice(0, 0, cur_user_object);
-                obj_this.me_as_respondant = attendees[0];
                 if (obj_this.meeting_object.publish)
                 {
                     obj_this.meeting_status = 'Published';
@@ -291,13 +311,19 @@ export class MeetingDetailsComponent implements OnInit {
                     obj_this.meeting_status = 'Unpublished';
                     obj_this.applicable_publish_action = 'Publish';
                 }
-                for(var survey of meeting_object.surveys)
+                if (meeting_object.surveys)
                 {
-                    survey.open_date = window['dt_functions'].meeting_time(survey.open_date);
+                    for(var survey of meeting_object.surveys)
+                    {
+                        survey.open_date = window['dt_functions'].meeting_time(survey.open_date);
+                    }
                 }
-                for(var voting of meeting_object.votings)
+                if (meeting_object.votings)
                 {
-                    voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
+                    for(var voting of meeting_object.votings)
+                    {
+                        voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
+                    }
                 }
 
                 setTimeout(function(){
@@ -323,7 +349,16 @@ export class MeetingDetailsComponent implements OnInit {
             }
             obj_this.meetObjLoaded = true;
         };
-		this.httpService.get(input_data, on_data, null);
+        if (!obj_this.token)
+        {
+            this.httpService.get(input_data, on_data, null);
+        }
+        else
+        {
+            obj_this.httpService.post_public(input_data, on_data, (result)=>{
+                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+            });
+        }
     }
 
     save_positions(evn = undefined, dir = undefined){

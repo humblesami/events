@@ -1,10 +1,10 @@
 ﻿<app-breadcrumb app="meetings" model="event" 
-*ngIf="meeting_type == 'upcoming' || meeting_type == 'draft' || meeting_type == 'ongoing'"
+*ngIf="!token && (meeting_type == 'upcoming' || meeting_type == 'draft' || meeting_type == 'ongoing')"
 rid="{{meeting_object.id}}" edit="1" delete="1" 
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 <app-breadcrumb app="meetings" model="event" 
-*ngIf="meeting_type == 'archived' || meeting_type == 'completed'"
+*ngIf="!token && (meeting_type == 'archived' || meeting_type == 'completed')"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 
@@ -26,7 +26,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <h3 class="text-dark mb-2">
                                 <i class="icon-meeting text-primary"></i> {{meeting_object.name}}
                             </h3>
-                            <div class="ml-auto d-flex">
+                            <div *ngIf="!token" class="ml-auto d-flex">
                                 <button 
                                     *ngIf="(socketService.admin_mode && meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
                                     class="check-status meet-elements position-relative"
@@ -51,6 +51,9 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 (click)="move_to_archive(meeting_object.id)">
                                     <span name="archive">Move to Archive</span>
                                 </button>
+                            </div>
+                            <div *ngIf="token && meeting_object" class="ml-auto d-flex">
+                                <app-meetingresponse my_event="{{meeting_object.my_event}}" *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" token="{{token}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
                             </div>
                         </div>
                         <div class="d-flex">
@@ -228,7 +231,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span class="position hidden">{{topic.position}}</span>
                                 </td>
                                 <td>
-                                    <a routerLink="/topic/{{topic.id}}">{{topic.name}}</a>                                                                        
+                                    <span *ngIf="token">{{topic.name}}</span>
+                                    <a *ngIf="!token" routerLink="/topic/{{topic.id}}">{{topic.name}}</a>
                                 </td>
                                 <td>{{topic.lead}}</td>
                                 <td >{{topic.duration | hm}}</td>
@@ -266,7 +270,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div class="title-wrapper mt-3">
             <app-documents
-            *ngIf="meeting_type != 'archived'" 
+            *ngIf="!token && meeting_type != 'archived'" 
             title="Meeting Documents" 
             parent_model="Event" 
             parent_field="meeting_id" 
@@ -276,7 +280,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </app-documents>
 
             <app-documents 
-            *ngIf="meeting_type == 'archived'"
+            *ngIf="!token && meeting_type == 'archived'"
             title="Meeting Documents" 
             parent_model="Event" 
             parent_field="meeting_id" 
@@ -287,7 +291,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </app-documents>
         </div>
 
-        <div *ngIf="meeting_object.surveys.length || meeting_object.votings.length || meeting_object.sign_docs.length">
+        <div *ngIf="(meeting_object.surveys && meeting_object.surveys.length) || (meeting_object.votings && meeting_object.votings.length) || (meeting_object.sign_docs && meeting_object.sign_docs.length)">
             <h3 class="mt-3 attachedActions">
                 <i class="icon-business text-primary"></i> 
                 Attached Actions
@@ -448,6 +452,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <app-comments *ngIf="is_attendee && meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
+        <app-comments *ngIf="!token && is_attendee && meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
     </div>
 </div>

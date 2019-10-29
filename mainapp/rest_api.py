@@ -20,6 +20,12 @@ public_methods = {
             'set_password': 1
         }
     },
+    'meetings': {
+        'Event': {
+            'get_details': 1,
+            'respond_invitation': 1
+        },
+    },
     'voting': {
         'VotingAnswer': {
             'submit_public': 1,

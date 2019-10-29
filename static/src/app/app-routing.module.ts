@@ -121,6 +121,7 @@ const appRoutes: Routes = [
 
 	{ path: 'meetings/completed/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
     { path: 'meetings/archived/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
+    { path: 'public-meeting/:id/:token', component: MeetingDetailsComponent},
 	
     { path: 'edit/:app/:model/:id/:action', component: RecordEditComponent, canActivate: [AuthGuard]},
     { path: 'edit/:app/:model/add', component: RecordEditComponent, canActivate: [AuthGuard]},

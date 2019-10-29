@@ -105,7 +105,8 @@
             '/token-sign-doc',
             '/thanks',
             '/feedback',
-            '/public-voting/'
+            '/public-voting/',
+            '/public-meeting/',
         ];
         for (var i in public_routes)
         {

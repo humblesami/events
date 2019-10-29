@@ -11,6 +11,7 @@ export class MeetingresponseComponent implements OnInit {
     @Input() attendee_status: string;
     @Input() meeting_id: string;
     @Input() my_event: string;
+    @Input() token: string;
 
     httpService: HttpService;
     constructor(private http_ervice: HttpService) {
@@ -22,7 +23,8 @@ export class MeetingresponseComponent implements OnInit {
         let obj_this = this;
         let input_data = {
             meeting_id: meet_id,
-            response: response
+            response: response,
+            token: obj_this.token,
         };
         
         if (response) {
@@ -37,8 +39,19 @@ export class MeetingresponseComponent implements OnInit {
                 no_loader: 1,
             };
             obj_this.attendee_status = response;
-            obj_this.httpService.get(final_input_data, function(data) {
-            }, null);
+            if (!obj_this.token)
+            {
+                obj_this.httpService.get(final_input_data, function(data) {
+                }, null);
+            }
+            else
+            {
+                obj_this.httpService.post_public(final_input_data, function(data) {
+                    window.open(window['site_config'].server_base_url+'/#/thanks/Response submitted successfully', '_self');
+                }, (er)=>{
+                    window.open(window['site_config'].server_base_url+'/#/feedback/' + er, '_self');
+                });
+            }
         }
     }
 
