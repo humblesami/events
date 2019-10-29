@@ -193,11 +193,16 @@ function dn_rpc_object(options) {
 
 
     function handleError(response)
-    {
+    {        
         if(response.error && response.error.data)
         {
             console.log(response.error.data);
             response.error = response.error.message;
+        }
+        var report_str_index = response.error.indexOf('report_error_dev');
+        if(report_str_index > -1)
+        {
+            response.error.substr(0, report_str_index + 1);
         }
         if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
             bootbox.alert('Token expired, please login again '+ options.url);            

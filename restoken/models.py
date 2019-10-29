@@ -63,7 +63,7 @@ class PostUserToken(models.Model):
 
             user_token = PostUserToken.objects.filter(token=token, post_info_id=post_info.id)
             if not user_token:
-                return 'Token not found-' + str(token) +'-'+ str(post_info.id)
+                return 'Token not found. report_error_dev ' + str(token) +'-'+ str(post_info.id)
             user_token = user_token[0]
             return user_token
         else:
