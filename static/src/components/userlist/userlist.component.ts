@@ -94,6 +94,7 @@ export class UserlistComponent implements OnInit {
     activate_tab(el){
         $('.user-types:first>a').removeClass('active');
         $(el).addClass('active');
+        this.available_tab = 0;
     }
 
     all_selected_users(el)
@@ -102,8 +103,10 @@ export class UserlistComponent implements OnInit {
         obj_this.shown_users = obj_this.all_users.filter((el)=>{
             return el.selected == true;
         });
-        obj_this.activate_tab(el);
+        obj_this.activate_tab(el);        
     }
+
+    available_tab = 0;
 
     all_available_users(el)
     {
@@ -112,6 +115,7 @@ export class UserlistComponent implements OnInit {
             return el.selected == false;
         });
         obj_this.activate_tab(el);
+        this.available_tab = 1;
     }
 
     all_profile_users(el)

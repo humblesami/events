@@ -3149,6 +3149,7 @@ a.folder.droppable:not(.draggable) .paste{
 	height:calc(100vh - 350px);
     overflow-y: auto;
     font-size: 13px;
+    position: relative;
 }
 .no-data.roster-height{
 	height: calc(100vh - 305px);

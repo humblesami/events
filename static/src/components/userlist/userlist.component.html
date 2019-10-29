@@ -26,11 +26,11 @@
     </div>
         <!-- Attendance -->
     <div class="roster-height" [ngClass]="{'no-data': shown_users.length===0}">
-        <!-- <div *ngIf="!shown_users.length" class="row no-data">
-            <h4>No Users</h4>
-        </div> -->
+        <div class="hider" [ngClass]="{show: !available_tab && add_only}">
+            
+        </div>
         <div class="d-flex py-2 mb-1 bg-roster" 
-            *ngFor="let obj of shown_users"
+            *ngFor="let obj of shown_users"            
             [ngClass]="{disabled_row: obj.current_user}">
             <div class="col-9">
                 <div class="d-flex left-margin" 
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div [attr.disabled]="add_only ? 'disabled': null" class="col-3 custom-control custom-checkbox" (click)="obj.current_user ? null: toggle_user_selection(obj)">
+            <div class="col-3 custom-control custom-checkbox" (click)="obj.current_user ? null: toggle_user_selection(obj)">
                 <input type="checkbox"                
                 [checked]="obj.selected == true"
                 [(ngModel)]="obj.selected"

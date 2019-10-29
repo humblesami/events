@@ -59,3 +59,17 @@
     font-size: 12px;
     font-weight: bold;
 }
+.hider{
+    height: 100vh;
+    width:100%; 
+    z-index: 1;
+    position: absolute;
+    top:0;
+    left:0; 
+    display: none;
+    background: rgb(0,0,0, 0.2);
+}
+.hider.show
+{
+    display: block;
+}
