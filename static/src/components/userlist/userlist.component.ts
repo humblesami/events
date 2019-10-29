@@ -11,6 +11,7 @@ declare var $: any;
 export class UserlistComponent implements OnInit {
     @Input() selection_input_str = '';
     @Input() user_input_str = '';
+    @Input() add_only = 0;
 
     @Output() group_users_changed : EventEmitter <any> = new EventEmitter();
     server_url = window['site_config'].server_base_url;

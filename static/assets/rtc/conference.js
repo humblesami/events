@@ -508,16 +508,4 @@
 
     video_caller.init = setup_call;
     window['video_caller'] = video_caller;
-
-    $(document).on('mousedown touchstart', function(e) {
-        if(window['rtc-call-max'])
-        {
-            var target = e.target;
-            if($(target).closest('#rtc-container').length == 0)
-            {
-                $('#rtc-container').removeClass('full').addClass('min');
-                window['rtc-call-max'] = undefined;                
-            }
-        }
-    });
 })();                            

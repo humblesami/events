@@ -434,7 +434,8 @@ export class VideoCall{
         var diaolog_options = {
             call_back: on_modal_closed,
             selected_users: obj_this.participants,
-            component: UserlistmodalComponent
+            component: UserlistmodalComponent,
+            extra_input: { add_only: 1 }
         }
         obj_this.socketService.user_selection_dialog(diaolog_options);
     }

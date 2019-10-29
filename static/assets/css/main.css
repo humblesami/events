@@ -446,16 +446,16 @@ a.kanban-committees-info-box-name {
 	animation: loading 2s linear infinite;
 	}
 .modal {
-	z-index: 4;
+	z-index: 5;
 	}
-.modal-backdrop.fade {
-	opacity: .5;
-	z-index: 2;
-	}
-.modal-backdrop
-{
-	z-index: 2 !important;
+    .modal-backdrop
+    {
+        z-index: 3 !important;
+    }
+    .modal-backdrop.fade {
+	opacity: .5;	
 }
+
 .modal.fade .modal-dialog:not(.modal-top-fixed) {
 	-webkit-transform: translate(0, 0);
 	transform: translate(0, 0);
@@ -839,7 +839,7 @@ input#search-box {
     background: rgb(241, 241, 241);
     display: flex;
     left: 0;
-    z-index: 11;
+    z-index: 3;
     right: 0;
 	}
 .show_search_results {
@@ -1148,7 +1148,7 @@ div#search-modal {
 	width: 100%;
 	left: 0;
 	right: 0;
-	z-index: 2;
+	z-index: 3;
 	padding: 3px 15px;
 	}
 .searchbar-full-width .lowerheader.input-group {
@@ -1588,7 +1588,7 @@ div#search-modal {
 .notification-container .notification-list {
 	position: absolute;
 	display: none;
-	z-index: 14;
+	z-index: 4;
 	top: 50px;
 	right: -10px;
 	max-width: 380px;
@@ -1763,7 +1763,7 @@ button {
 	left: 0;
 	width: 230px;
 	overflow: auto;
-	z-index: 1;
+	z-index: 3;
 	background-color: var(--toggle-left-menu-bg);
 	-webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
 	box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
@@ -2754,9 +2754,6 @@ select {
 	font-size: 14px;
     color: #000;
 }
-#appModal {
-	z-index: 5;
-	}
 h4.title-h4 {
 	color: #3059C9;
 	font-size: 1.3rem;
@@ -2978,7 +2975,7 @@ hr{
     border:2px dotted gray;
     font-weight: bold;
     color:black;
-    z-index:1;
+    z-index: 1;
     overflow:hidden;
     background-color: antiquewhite;
 }

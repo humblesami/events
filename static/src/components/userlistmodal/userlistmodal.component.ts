@@ -9,6 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class UserlistmodalComponent implements OnInit {
     @Input() user_input_str = '';
     @Input() selection_input_str = '';
+    @Input() add_only = 0;
     constructor(public activeModal: NgbActiveModal) {
         
     }

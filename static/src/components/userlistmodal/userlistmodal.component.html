@@ -1,7 +1,8 @@
 <label class="pop-heading">Users List</label>
 <div class="roster">
     <app-userlist 
-    user_input_str="{{user_input_str}}" 
+    user_input_str="{{user_input_str}}"
+    add_only = "{{add_only}}"
     selection_input_str="{{selection_input_str}}"
     (group_users_changed)="on_user_selected($event)"
     ></app-userlist>
