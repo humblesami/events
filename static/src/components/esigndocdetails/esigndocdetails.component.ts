@@ -673,7 +673,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         onSuccess: function(data) {
                             if (data == 'done')
                             {
-                                window.open(window['site_config'].server_base_url+'/thanks/Response submitted successfully', '_self');
+                                obj_this.router.navigate(['/thanks/Response submitted successfully']);
                             }
                             else{
                                 obj_this.signature_started = true;                            

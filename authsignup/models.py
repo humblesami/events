@@ -137,7 +137,7 @@ class AuthUser(models.Model):
         username = params.get('login')
         password = params.get('password')
         auth_code = params.get('auth_code')
-        referer_address = request.META['HTTP_REFERER']
+        referer_address = request.META.get('HTTP_REFERER') or ''
         user = None
         if auth_code:
             uuid = params.get('uuid')
