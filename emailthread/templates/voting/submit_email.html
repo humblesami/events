@@ -18,15 +18,28 @@
                             <h2>{{name}}</h2>
                         </td>
                     </tr>
-                   <tr>
+                    <tr>
                         <td>
-                        {% for choice in choices %}
-                            <a href="{{server_base_url}}/voting/{{id}}/{{choice.id}}/{{token}}"
-                            style="background: #4b74b5;color:#fff;text-decoration: none;padding:7px;border-radius: 20px;display: inline-block;min-width: 70px;margin-left:5px">{{choice.name}}</a>
-                        {% endfor %}
-                    </td>
-                   </tr>
-
+                            {% for choice in choices %}
+                                <a href="{{server_base_url}}/voting/{{id}}/{{choice.id}}/{{token}}"
+                                style="background: #4b74b5;color:#fff;text-decoration: none;padding:7px;border-radius: 20px;display: inline-block;min-width: 70px;margin-left:5px">{{choice.name}}</a>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="{{server_base_url}}/#/public-voting/{{id}}/{{token}}"
+                            style="
+                                padding: 7px;
+                                border-radius: 20px;
+                                display: inline-block;
+                                min-width: 70px;
+                                font-size: 16px;
+                                font-weight: bold;
+                            ">
+                            View Details</a>
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>

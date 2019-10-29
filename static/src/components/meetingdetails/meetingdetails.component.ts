@@ -229,7 +229,6 @@ export class MeetingDetailsComponent implements OnInit {
 		if (['upcoming', 'completed', 'archived'].indexOf(obj_this.flag) === -1) {
 			obj_this.flag = '';
 		}
-
 		
         let args = {
             app: 'meetings',
@@ -249,7 +248,7 @@ export class MeetingDetailsComponent implements OnInit {
             // console.log(result,1122);
             if (obj_this.token && typeof(result) == 'string')
             {
-                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+                obj_this.router.navigate(['/feedback/' + result]);
             }
             try {
                 if(result.message)
@@ -257,7 +256,7 @@ export class MeetingDetailsComponent implements OnInit {
                     $('.router-outlet').html('<h2 style="text-align:center">'+result.message+'</h2>');
                     return;
                 }
-                var meeting_object = obj_this.meeting_object = result.meeting;                                                
+                var meeting_object = obj_this.meeting_object = result.meeting;                
                 obj_this.next = result.next;
                 obj_this.prev = result.prev;
                 if (result.meeting && result.meeting.name) {
@@ -344,6 +343,7 @@ export class MeetingDetailsComponent implements OnInit {
                         });
                     }
                 }, 100);
+                // console.log(meeting_object, obj_this.token, 333);
             } catch (er) {
                 console.log(er);
             }
@@ -356,7 +356,7 @@ export class MeetingDetailsComponent implements OnInit {
         else
         {
             obj_this.httpService.post_public(input_data, on_data, (result)=>{
-                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+                obj_this.router.navigate(['/feedback/' + result]);
             });
         }
     }

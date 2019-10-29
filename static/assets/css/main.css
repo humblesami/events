@@ -2203,15 +2203,9 @@ span.kanban-upcoming-meeting-date {
 	padding: 5px;
 	min-width: 280px;
 	}
-.btn-meeting {
-	background: #638FC9;
-	color: #ffffff;
-	border-radius: 25px;
-	}
-.btn-meeting:hover {
-	background: #638FC9;
-	color: #ffffff;
-}
+    .HeadingWrap-status .upcomingButton{
+        border-top: 0;
+    }
 .page-link{
 	color: #638FC9;
 }

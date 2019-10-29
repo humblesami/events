@@ -295,11 +295,6 @@ h5, .h5 {
     font-size: 0.85rem;
 }
 
-.btn-meeting
-{
-    font-weight: bold;
-    font-size: 0.9rem;
-}
 
 .table > tbody > tr{
     border: 1px solid #dee2e6
@@ -322,6 +317,7 @@ h5, .h5 {
 .up-down span:hover{
     color: blue;
 }
+
 @media (min-width: 280px){
     .MainTitleHeadWrap {
         display: flex;

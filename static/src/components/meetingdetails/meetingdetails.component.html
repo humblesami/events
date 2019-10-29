@@ -52,8 +52,13 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span name="archive">Move to Archive</span>
                                 </button>
                             </div>
-                            <div *ngIf="token && meeting_object" class="ml-auto d-flex">
-                                <app-meetingresponse my_event="{{meeting_object.my_event}}" *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" token="{{token}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                            <div *ngIf="token && (meeting_type == 'upcoming' || meeting_type == 'ongoing')" class="ml-auto d-flex">
+                                <app-meetingresponse 
+                                my_event="{{meeting_object.my_event}}" 
+                                token = "{{token}}" 
+                                meeting_id="{{meeting_object.id}}"
+                                attendee_status="{{meeting_object.attendee_status}}"
+                                ></app-meetingresponse>
                             </div>
                         </div>
                         <div class="d-flex">

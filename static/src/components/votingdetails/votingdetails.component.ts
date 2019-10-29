@@ -66,7 +66,7 @@ export class VotingdetailsComponent implements OnInit {
         let on_data = function(result) {
             if (obj_this.token && result == 'done')
             {
-                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+                obj_this.router.navigate(['/feedback/' + result]);
             }
             try {               
                 if(result.message)
@@ -132,7 +132,7 @@ export class VotingdetailsComponent implements OnInit {
         else
         {
             obj_this.httpService.post_public(final_input_data, on_data, (result)=>{
-                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
+                obj_this.router.navigate(['/feedback/' + result]);
             });
         }
         function make_bread_crumb(page_title) {
@@ -197,7 +197,7 @@ export class VotingdetailsComponent implements OnInit {
         function on_success(update_results){
             if (update_results == 'done')                
             {
-                window.open(window['site_config'].server_base_url+'/#/thanks/Response submitted successfully', '_self');
+                obj_this.router.navigate(['/thanks/Response submitted successfully'])
             }
             obj_this.voting_object.my_status = option_name;
             console.log(update_results);
@@ -235,7 +235,7 @@ export class VotingdetailsComponent implements OnInit {
             }
             else{
                 obj_this.httpService.post_public(voting_response_data, on_success, (err)=>{
-                    window.open(window['site_config'].server_base_url+'/#/feedback/' + err, '_self');
+                    obj_this.router.navigate(['/feedback/' + err]);
                     return;
                 });
             }

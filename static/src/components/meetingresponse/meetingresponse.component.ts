@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-meetingresponse',
@@ -14,7 +15,7 @@ export class MeetingresponseComponent implements OnInit {
     @Input() token: string;
 
     httpService: HttpService;
-    constructor(private http_ervice: HttpService) {
+    constructor(private http_ervice: HttpService, private router: Router) {
         this.httpService = http_ervice;        
     }
 
@@ -46,16 +47,17 @@ export class MeetingresponseComponent implements OnInit {
             }
             else
             {
-                obj_this.httpService.post_public(final_input_data, function(data) {
-                    window.open(window['site_config'].server_base_url+'/#/thanks/Response submitted successfully', '_self');
+                obj_this.httpService.post_public(final_input_data, function(data) {                    
+                    obj_this.router.navigate(['/thanks/Response submitted successfully']);
                 }, (er)=>{
-                    window.open(window['site_config'].server_base_url+'/#/feedback/' + er, '_self');
+                    obj_this.router.navigate(['/feedback/' + er]);
                 });
             }
         }
     }
 
-    ngOnInit() {        
+    ngOnInit() {
+        // console.log(this.my_event, this.token);
     }
 
 }

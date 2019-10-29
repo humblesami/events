@@ -25,10 +25,25 @@
                                     <td>
                                         {% for response in response_invitations %}
                                             <a href="{{server_base_url}}/meeting/{{id}}/{{response.value}}/{{token}}"
-                                               style="background: #4b74b5;color:#fff;text-decoration: none;padding:7px;border-radius: 20px;display: inline-block;min-width: 70px;margin-left:5px">
+                                            style="background: #4b74b5;color:#fff;text-decoration: none;padding:7px;border-radius: 20px;display: inline-block;min-width: 70px;margin-left:5px">
                                                 {{response.name}}
                                             </a>
                                         {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{server_base_url}}/#/public-meeting/{{id}}/{{token}}"
+                                        style="
+                                                padding: 7px;
+                                                border-radius: 20px;
+                                                display: inline-block;
+                                                min-width: 70px;
+                                                font-size: 16px;
+                                                font-weight: bold;
+                                            ">
+                                            View Meeting Details
+                                        </a>
                                     </td>
                                 </tr>
                             </table>

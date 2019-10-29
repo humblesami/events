@@ -1,13 +1,4 @@
 
-.btn-meeting {
-	background: #638FC9;
-	color: #ffffff;
-	border-radius: 25px;
-}
-.btn-meeting:hover {
-	background: #3059C9;
-	color: #ffffff;
-}
 
 .upcomingButton{
     display: flex;
