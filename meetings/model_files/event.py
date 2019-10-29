@@ -553,11 +553,11 @@ class Event(CustomModel):
         meeting_id = params['meeting_id']
         publish_status = params['publish_status']
         meeting_obj = Event.objects.get(pk=meeting_id)
-        if meeting_obj:
-            meeting_obj.publish = publish_status
-            meeting_obj.save()
-            return {'publish': publish_status}
-        return 'Something went wrong while updating meeting publish status'
+        meeting_obj.publish = publish_status
+        meeting_obj.save()
+        if meeting_obj.publish:
+            meeting_obj.response_invitation_email(meeting_obj.get_audience())
+        return {'publish': publish_status}
 
     @classmethod
     def get_roster_details(cls, request, params):
@@ -685,19 +685,21 @@ class Event(CustomModel):
 
 def attendees_saved(sender, instance, action, pk_set, **kwargs):
     if action == 'post_remove':
-        removed_respondents = list(pk_set)
-        instance.response_invitation_email(removed_respondents, 'removed')
-        Invitation_Response.objects.filter(attendee_id__in=removed_respondents).delete()
+        if instance.exectime in ['ongoing', 'upcoming'] and instance.publish and not instance.archived:
+            removed_respondents = list(pk_set)
+            instance.response_invitation_email(removed_respondents, 'removed')
+            Invitation_Response.objects.filter(attendee_id__in=removed_respondents).delete()
     if action == "post_add":
-        new_added_respondets = list(pk_set)
-        if new_added_respondets:
-            instance.response_invitation_email(new_added_respondets)
-            respond_objs = []
-            for user_id in new_added_respondets:
-                respond_obj = Invitation_Response(event_id=instance.id, attendee_id=user_id)
-                respond_objs.append(respond_obj)
-            if respond_objs:
-                Invitation_Response.objects.bulk_create(respond_objs)
+        if instance.exectime in ['ongoing', 'upcoming'] and instance.publish and not instance.archived:
+            new_added_respondets = list(pk_set)
+            if new_added_respondets:
+                instance.response_invitation_email(new_added_respondets)
+                respond_objs = []
+                for user_id in new_added_respondets:
+                    respond_obj = Invitation_Response(event_id=instance.id, attendee_id=user_id)
+                    respond_objs.append(respond_obj)
+                if respond_objs:
+                    Invitation_Response.objects.bulk_create(respond_objs)
 
 
 m2m_changed.connect(attendees_saved, sender=Event.attendees.through)
