@@ -29,9 +29,9 @@ var dn_current_site_user = {
         data = JSON.stringify(data);
         localStorage.setItem('user', data);
         refreshSession();
-        localStorage.setItem('last_activity', Date());
-        $('body').removeClass('public').addClass('user');
+        localStorage.setItem('last_activity', Date());        
         $('.popup.messenger').hide();
+        $('body').removeClass('public').addClass('user');
     },
     logout: function(navigate) {
         if(location_now().endsWith('user/login'))
@@ -72,7 +72,26 @@ var dn_current_site_user = {
 
 
 var site_functions = {
-    processes: [],    
+    processes: [],
+    get_public_feedback: function(res){
+        if(res && res.error)
+        {
+            res = res.error;
+        }
+        if (typeof res == 'string')
+        {
+            if(res.length > 200)
+            {
+                console.log(res);
+                res = 'Invalid operation';
+                window.location = '/feedback/'+res;
+            }
+            return true;
+        }
+        else{            
+            return false;
+        }
+    },
     get_path_name: function() {
         if(location_now().indexOf('localhost') > -1)
         {

@@ -136,6 +136,10 @@ export class SocketService {
             id:authorized_user.id,
             group: undefined
         }
+        if(!authorized_user.groups)
+        {
+            authorized_user.groups = [];
+        }
         if(authorized_user.groups.length > 0)
         {
             me.group = authorized_user.groups[0].name;

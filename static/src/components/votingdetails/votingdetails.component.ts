@@ -66,7 +66,7 @@ export class VotingdetailsComponent implements OnInit {
         let on_data = function(result) {
             if (obj_this.token && result == 'done')
             {
-                obj_this.router.navigate(['/feedback/' + result]);
+                window['functions'].get_public_feedback(result);
             }
             try {               
                 if(result.message)
@@ -132,7 +132,7 @@ export class VotingdetailsComponent implements OnInit {
         else
         {
             obj_this.httpService.post_public(final_input_data, on_data, (result)=>{
-                obj_this.router.navigate(['/feedback/' + result]);
+                window['functions'].get_public_feedback(result);
             });
         }
         function make_bread_crumb(page_title) {
@@ -235,7 +235,7 @@ export class VotingdetailsComponent implements OnInit {
             }
             else{
                 obj_this.httpService.post_public(voting_response_data, on_success, (err)=>{
-                    obj_this.router.navigate(['/feedback/' + err]);
+                    window['functions'].get_public_feedback(err);
                     return;
                 });
             }

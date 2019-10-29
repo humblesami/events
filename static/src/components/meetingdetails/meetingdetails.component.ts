@@ -246,10 +246,11 @@ export class MeetingDetailsComponent implements OnInit {
 
         let on_data = function(result) {
             // console.log(result,1122);
-            if (obj_this.token && typeof(result) == 'string')
+            if (obj_this.token)
             {
-                obj_this.router.navigate(['/feedback/' + result]);
+                window['functions'].get_public_feedback(result);
             }
+            
             try {
                 if(result.message)
                 {
@@ -356,7 +357,7 @@ export class MeetingDetailsComponent implements OnInit {
         else
         {
             obj_this.httpService.post_public(input_data, on_data, (result)=>{
-                obj_this.router.navigate(['/feedback/' + result]);
+                window['functions'].get_public_feedback(result);
             });
         }
     }

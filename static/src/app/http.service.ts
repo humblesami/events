@@ -61,12 +61,12 @@ export class HttpService {
             params: input_data
         }
         var options = httpservie.makeOptions_public(input_data, success_cb, failure_cb);
-        options.onSuccess = function(data){
-            window['current_user'].onLogin(data);
+        options.onSuccess = function(data){            
             if(success_cb)
             {
                 success_cb(data);
             }
+            window['current_user'].onLogin(data);
         };
         options.type = 'get';
         options.onComplete = complete_cb;

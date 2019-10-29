@@ -50,7 +50,7 @@ export class MeetingresponseComponent implements OnInit {
                 obj_this.httpService.post_public(final_input_data, function(data) {                    
                     obj_this.router.navigate(['/thanks/Response submitted successfully']);
                 }, (er)=>{
-                    obj_this.router.navigate(['/feedback/' + er]);
+                    window['functions'].get_public_feedback(er);
                 });
             }
         }
