@@ -50,7 +50,7 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     position: absolute;
 }
 .media-container .video_controls:not(.self){
-    left: 54vw;
+    left: 50vw;
     bottom: 20px;
 }
 .media-container .video_controls.self{
@@ -281,7 +281,7 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    background:rgba(0, 0, 0, 0.3);
+    background:transparent;
     border-bottom-left-radius: 5px;
 }
 #rtc-container .closer>div
@@ -344,7 +344,7 @@ input[type="range"]::-webkit-slider-thumb {
 div#ongoing_controls {
     position: absolute;
     z-index: 1;
-    right: 46vw;
+    right: 50vw;
     bottom: 20px;
     display: none;
 }
@@ -452,6 +452,7 @@ div#ongoing_controls {
     top: -1px;
     width: -webkit-calc(100% + 2px);
     width: calc(100% + 2px);
+    object-fit: cover;
 }
 .media-box>h2:first-child{
    display: none;
