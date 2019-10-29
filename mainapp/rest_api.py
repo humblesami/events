@@ -27,7 +27,6 @@ public_methods = {
         },
         'Voting': {
             'get_details': 1,
-            'submit': 1,
         }
     },
     'esign': {

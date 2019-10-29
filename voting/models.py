@@ -440,6 +440,8 @@ class VotingAnswer(models.Model):
             if type(res) is str:
                 return res
             else:
+                if not res:
+                    return 'Invalid or expired token'
                 request.user = res.user
         user_id = request.user.id
         chart_data = []

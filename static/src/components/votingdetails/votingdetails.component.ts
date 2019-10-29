@@ -132,6 +132,7 @@ export class VotingdetailsComponent implements OnInit {
         else
         {
             obj_this.httpService.post_public(final_input_data, on_data, (result)=>{
+                window.open(window['site_config'].server_base_url+'/#/feedback/' + result, '_self');
             });
         }
         function make_bread_crumb(page_title) {
@@ -196,7 +197,7 @@ export class VotingdetailsComponent implements OnInit {
         function on_success(update_results){
             if (update_results == 'done')                
             {
-                window.open(window['site_config'].server_base_url+'/thanks/Response submitted successfully', '_self');
+                window.open(window['site_config'].server_base_url+'/#/thanks/Response submitted successfully', '_self');
             }
             obj_this.voting_object.my_status = option_name;
             console.log(update_results);
@@ -233,7 +234,10 @@ export class VotingdetailsComponent implements OnInit {
                 obj_this.httpService.post(voting_response_data, on_success, null);
             }
             else{
-                obj_this.httpService.post_public(voting_response_data, on_success, null);
+                obj_this.httpService.post_public(voting_response_data, on_success, (err)=>{
+                    window.open(window['site_config'].server_base_url+'/#/feedback/' + err, '_self');
+                    return;
+                });
             }
         }
         

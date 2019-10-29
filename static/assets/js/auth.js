@@ -111,7 +111,7 @@
         {
             if (url.startsWith(public_routes[i]))
             {
-                // localStorage.removeItem('user');
+                localStorage.removeItem('user');
                 add_public_class();
                 return true;
             }
