@@ -132,6 +132,7 @@ jQuery(document).ready(function(e) {
 
 function init_sign(config) {
     var sign_lib = 0;
+    var fabric_canvas = new fabric.Canvas('signature_canvas', { isDrawingMode: true });
     if($('#signature_modal').length >0)
     {
         $('#signature_modal').hide();

@@ -441,8 +441,6 @@ class SignatureDoc(File, Actions):
         doc_data = res
         doc_data['doc_name'] = doc_obj.name
         doc_data['doc_id'] = doc_obj.id
-        doc_data['status'] = doc_obj.status
-
 
         pdf_doc = doc_obj.pdf_doc
         pdf_doc = pdf_doc.read()

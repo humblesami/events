@@ -186,7 +186,10 @@
             }
         },
         signature: {
-            script_paths: ['static/assets/js/custom_signature.js'],
+            script_paths: [
+                'static/assets/js/fabric.js',
+                'static/assets/js/custom_signature.js'
+            ],
             style_paths: [],
             load: function(on_load){
                 var obj_this = this;
