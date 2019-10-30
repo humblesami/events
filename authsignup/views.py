@@ -8,12 +8,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def login(request, next=None):
-    context = {}
-    return render(request, 'login.html', context)
+    return render(request, 'login.html')
 
 def logout_user(request):
     logout(request)
     return redirect('/user/login')
+
+def offline_layout(request):
+	return render(request, 'offline.html')
 
 def forgot_password(request):
     context = {}

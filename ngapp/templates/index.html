@@ -1,8 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>	
+
+<head>    
     <base href="/#/" />
     <meta charset="utf-8">
+
+    <link rel="manifest" href="/static/assets/manifest.json">
+    <link rel="apple-touch-icon" href="/static/assets/test.jpg" sizes="160x160">
+    <meta name="theme-color" content="#0A0302">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Board Sheet">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <script type="text/javascript">
+        (function(){
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/serviceworker.js', {
+                    scope: '.' // <--- THIS BIT IS REQUIRED
+                }).then(function (registration) {
+                    // Registration was successful
+                    console.log('Progressive-web-app: ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    // registration failed :(
+                    console.log('Progressive-web-app: ServiceWorker registration failed: ', err);
+                });
+            }
+        })()
+        
+    </script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Boardsheet">
+    <meta name="description" content="Boardsheet">
+    <meta name="theme-color" content="#2F3BA2" />
+
+    <title>Boardsheet</title>
+
+    <script type="text/javascript">
+        (function(){
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/serviceworker.js', {
+                    scope: '.' // <--- THIS BIT IS REQUIRED
+                }).then(function (registration) {
+                    // Registration was successful
+                    console.log('Progressive-web-app: ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    // registration failed :(
+                    console.log('Progressive-web-app: ServiceWorker registration failed: ', err);
+                });
+            }
+        })()
+        
+    </script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">

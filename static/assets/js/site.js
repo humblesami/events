@@ -140,7 +140,7 @@ var site_functions = {
         {
             if(location_now().indexOf('4200') == -1)
             {
-                window.location = window['site_config'].server_base_url+'/user/logout';
+                window.location = window['site_config'].server_base_url+'/user/login';
             }
             else{
                 window.location = '/#/login';

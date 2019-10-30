@@ -20,13 +20,14 @@ from django.conf.urls import include,url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
-from django.urls import path
+from django.urls import path, include
 
 from mainapp import views
 from .import rest_api
 
 urlpatterns = [
     url(r'', include('ngapp.urls')),
+    url(r'', include('pwa.urls')),
     url(r'^admin/', admin.site.urls, name='admin'),
     path('rest/public', rest_api.public, name = 'public'),
     path('rest/secure', rest_api.secure, name = 'secure'),
