@@ -1,25 +1,29 @@
-import io
 import os
 import sys
 import json
+import urllib
 import base64
-from random import randint
-from django.core.files import File as DjangoFile
-from django.core.files.base import ContentFile
+import requests
 import traceback
+from random import randint
+from urllib.parse import urlsplit
+from urllib.request import urlopen
+from urllib.parse import quote, unquote
+from PIL import ImageFont, Image, ImageDraw
+from rest_framework.authtoken.models import Token
+
 from django.apps import apps
 from datetime import datetime
-from django.db.models import  Q
+from django.db.models import Q
+from django.db import connection
 from django.contrib.auth import login
-from emailthread.models import EmailThread, DocumentThread
-from django.core.files.base import ContentFile
-from rest_framework.authtoken.models import Token
-from PIL import ImageFont, Image, ImageDraw
-
-
-import requests
-from urllib.parse import quote, unquote
+from django.core.mail import send_mail
 from django.forms.models import model_to_dict
+from django.core.files.base import ContentFile
+from django.core.files.temp import NamedTemporaryFile
+
+from mainapp.settings import SOCKET_SERVER_URL
+from emailthread.models import EmailThread, DocumentThread
 
 
 def now_str():
@@ -41,7 +45,7 @@ def get_user_name(user):
         name = user.username
     return name
 
-from django.core.mail import send_mail
+
 def send_email(subject, html_message, recipients):
     if not subject:
         return 'No Subject to mail'
@@ -51,13 +55,13 @@ def send_email(subject, html_message, recipients):
               , fail_silently=False,
               html_message=html_message)
 
-from mainapp.settings import SOCKET_SERVER_URL
+
 socket_server = {
     'url': SOCKET_SERVER_URL,
     'connected': False
 }
 
-from django.db import connection
+
 def execute_update(query):
     cr = connection.cursor()
     res = cr.execute(query)
@@ -102,9 +106,6 @@ def choices_to_list(choice_list):
     return lst
 
 
-from urllib.parse import urlsplit
-
-
 def http(req_url, headers=None):
     try:
         res = ''
@@ -117,6 +118,7 @@ def http(req_url, headers=None):
         res = 'Request failed because ' + str(sys.exc_info())
         print(res)
     return res
+
 
 def http_request(req_url):
     try:
@@ -233,9 +235,8 @@ def obj_to_dict_search(obj,fields=None,to_str=None,related=None):
                 #handled non url file fields (saved as binary string)
         if type(dict[field_name]) is str or type(dict[field_name]) is int:
             res_dict[field_name] = val
-
-
     return res_dict
+
 
 def queryset_to_list_search(queryset,fields=None,to_str=None,related=None):
     list = []
@@ -245,212 +246,6 @@ def queryset_to_list_search(queryset,fields=None,to_str=None,related=None):
             list.append(dict)
 
     return list
-
-
-# def mfile_url(model, field, id, file_type):
-#     res = model + '/' + str(id) + '/' + field + '/' + request.db + '/' + request.token
-#     res = get_main_url() + '/' + file_type + '/' + res
-#     return res
-#
-# def execute_update(query):
-#     cr = request.env.cr
-#     res = cr.execute(query)
-#     return res
-#
-#
-# def execute_read(query):
-#     cr = request.env.cr
-#     cr.execute(query)
-#     res = cr.dictfetchall()
-#     return res
-#
-#
-# def http_response(er, data=False):
-#     try:
-#         if er:
-#             result = {"error": er}
-#         else:
-#             result = {"data": data, "error": ""}
-#         if request.httprequest.content_type != 'application/json':
-#             result = json.dumps(result)
-#         return result
-#     except:
-#         eg = traceback.format_exception(*sys.exc_info())
-#         errorMessage = ''
-#         for er in eg:
-#             errorMessage += "\n" + er
-#         return http_response(errorMessage)
-#
-#
-# def not_logged_in():
-#     return http_response('Session expired, please login and join again')
-#
-#
-# def handle(ero=False):
-#     eg = traceback.format_exception(*sys.exc_info())
-#     errorMessage = ''
-#     for er in eg:
-#         errorMessage += "\n" + er
-#     if ero:
-#         errorMessage = ero + '\n' + errorMessage
-#     return http_response(errorMessage)
-#
-#
-# def handle_silently(rec=False):
-#     if not rec:
-#         eg = traceback.format_exception(*sys.exc_info())
-#         errorMessage = ''
-#         for er in eg:
-#             errorMessage += "\n" + er
-#         er = eg[1] + er
-#         mesgtosend = er
-#     else:
-#         mesgtosend = rec
-#     d3 = threading.Thread(target=send_mail, args=[mesgtosend])
-#     d3.start()
-#
-#
-# def encode(key, str):
-#     enc = []
-#     for i in range(len(str)):
-#         key_c = key[i % len(key)]
-#         enc_c = chr((ord(str[i]) + ord(key_c)) % 256)
-#         enc.append(enc_c)
-#     return base64.urlsafe_b64encode("".join(enc))
-#
-#
-# def decode(key, enc):
-#     dec = []
-#     enc = base64.urlsafe_b64decode(enc)
-#     for i in range(len(enc)):
-#         key_c = key[i % len(key)]
-#         dec_c = chr((256 + ord(enc[i]) - ord(key_c)) % 256)
-#         dec.append(dec_c)
-#     return "".join(dec)
-#
-#
-# def objects_list_to_json_list(objects, props):
-#     json_obj_list = []
-#     for obj in objects:
-#         json_obj = object_to_json_object(obj, props)
-#         json_obj_list.append(json_obj)
-#     return json_obj_list
-#
-#
-# def objects_list_to_array(objects, prop):
-#     json_obj_list = []
-#     for obj in objects:
-#         json_obj_list.append(obj[prop])
-#     return json_obj_list
-#
-#
-# # [{'a':1}, {'b':2}]
-# # ['partner_id','user_Id','login']
-#
-# def object_to_json_object(object, props):
-#     json_obj = {}
-#     tz = request.httprequest.args.get('time_zone')
-#     model = object._name
-#     try:
-#         for prop in props:
-#             obj = object
-#             ar = prop.split('.')
-#             if ar[0].endswith('_id') and ar[0] != 'res_id' and ar[0] != 'notification_id' and ar[0] != 'parent_id':
-#                 str = ar[0].replace('_id', '')
-#             else:
-#                 str = ar[0]
-#             i = 0
-#             for sub_prop in ar:
-#                 field_type = object._fields[sub_prop].type
-#                 if field_type == 'binary':
-#                     obj = obj[sub_prop]
-#                     if obj:
-#                         if sub_prop in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo',
-#                                         'signature_img']:
-#                             obj = mfile_url(model, sub_prop, object.id, 'image')
-#                         else:
-#                             obj = obj.decode('utf-8')
-#                 elif tz and field_type == 'datetime':
-#                     if obj[sub_prop]:
-#                         obj = dn_dt.convert_time_zone(tz, obj[sub_prop])
-#                     else:
-#                         obj = False
-#                 else:
-#                     obj = obj[sub_prop]
-#                 if not obj:
-#                     break
-#                 if i > 0:
-#                     str += "_" + sub_prop
-#                 i = i + 1
-#             if not obj:
-#                 json_obj[str] = ''
-#             else:
-#                 json_obj[str] = obj
-#     except:
-#         a = 1
-#         raise
-#     return json_obj
-#
-#
-# def youtube_url(url):
-#     return url.replace('/watch?v=', '/embed/')
-#
-#
-# def log_error(er):
-#     er = "Logged " + er
-#     print(er)
-#
-#
-# def check_auth(values):
-#     for val in values:
-#         if val in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
-#             arr = values[val].split(',')
-#             if len(arr) > 1:
-#                 values[val] = values[val].split(',')[1]
-#             else:
-#                 values[val] = values[val]
-#
-#     uid = values.get('uid')
-#     if uid:
-#         uid = int(uid)
-#     if uid and request.uid == uid:
-#         return request.uid
-#     if request.uid and request.uid != 4:
-#         return request.uid
-#     if not values:
-#         return False
-#
-#     token = values.get('token')
-#     if not token:
-#         return False
-#     db = values.get('db')
-#     if not db:
-#         return False
-#     token = str(token)
-#     if not hasattr(request, 'token'):
-#         request.token = token
-#
-#     filters = [('auth_token', '=', token), ('user_id', '=', uid)]
-#     user = request.env['dnspusers'].sudo().search(filters)
-#     if not user:
-#         return False
-#     uid = request.session.authenticate(db, user.login, user.password)
-#     if not hasattr(request, 'conf'):
-#         request.conf = {'uid': uid, 'db': request.db, 'token': token}
-#     return uid
-#
-#
-# host_url = False
-#
-#
-# def get_main_url():
-#     global host_url
-#     if host_url:
-#         return host_url
-#     host_url = tools.config['server_web_url']
-#     return host_url
-#
-#
 
 
 def get_model(app_name, model_name):
@@ -496,6 +291,7 @@ def send_email_on_creation(email_data):
     }
     EmailThread(thread_data).start()
 
+
 def validate_token(token, kw=None, do_not_expire=None):
     post_user_token = get_model('restoken', 'PostUserToken')
     if type(post_user_token) is str:
@@ -508,6 +304,7 @@ def validate_token(token, kw=None, do_not_expire=None):
         if int(post_res_id) != user_token.post_info.res_id:
             return 'Token is not valid'
     return user_token.user
+
 
 def get_user_by_token(request, kw=None, do_not_expire=None):
     token = ''
@@ -613,14 +410,6 @@ def detele_all_temp_files(request, user_id):
     method_to_call(request, params)
     return 'done'
 
-# class SearchModel:
-#     name = ''
-#     fields = []
-#
-# class SearchApp:
-#     name = ''
-#     models = []
-
 
 search_apps = {
     'meetings':
@@ -707,10 +496,6 @@ def bytes_to_json(my_bytes_value):
         pass
     return my_json
 
-from django.core.files.temp import NamedTemporaryFile
-from urllib.request import urlopen
-import urllib
-
 def download_image(file):
     img_temp = NamedTemporaryFile(delete=True)
     try:
@@ -760,38 +545,3 @@ def produce_exception(msg=None):
                 if not 'lib/python' in er:
                     errorMessage += " " + er
             return errorMessage
-
-#
-#
-# def authenticate(data):
-#     db = data.get('db')
-#     login = data.get('login')
-#     password = data.get('password')
-#     uid = request.session.authenticate(db, login, password)
-#     return uid
-#
-#
-# from dateutil import parser
-#
-#
-# def change_datetime_format(val, format):
-#     dt = parser.parse(val)
-#     res = dt.strftime(format)
-#     return res
-#
-#
-# def to_datetime(val):
-#     dt = parser.parse(val)
-#     return dt
-#
-#
-# # Socket Connetion
-
-#
-#
-# def add_user_to_socket_list(user_data):
-#     try:
-#         # user_data = json.dumps(user_data)
-#         requests.get(socket_server['url'] + '/odoo_event', params=user_data)
-#     except:
-#         print('odoo event failed')

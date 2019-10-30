@@ -3669,90 +3669,34 @@
                      * @param {Object} a The annotation definition
                      * @return {SVGPathElement} The path to be rendered
                      */
-                    
-                    var buffer = [];
-                    var strPath = '';
-                    var bufferSize = 2;
-                    function appendToBuffer(pt) {
-                        buffer.push(pt);
-                        while (buffer.length > bufferSize) {
-                            buffer.shift();
-                        }
-                    };
-                    function getAveragePoint(offset) {
-                        var len = buffer.length;
-                        if (len % 2 === 1 || len >= bufferSize) {
-                            var totalX = 0;
-                            var totalY = 0;
-                            var pt, i;
-                            var count = 0;
-                            for (i = offset; i < len; i++) {
-                                count++;
-                                pt = buffer[i];
-                                totalX += pt.x;
-                                totalY += pt.y;
-                            }
-                            return {
-                                x: totalX / count,
-                                y: totalY / count
-                            }
-                        }
-                        return null;
-                    };
-                    
-                    function updateSvgPath(path, pt) {                        
-                        
-                        // Get the smoothed part of the path that will not change
-                        strPath += " L" + pt.x + " " + pt.y;
-                
-                        // Get the last part of the path (close to the current mouse position)
-                        // This part will change if the mouse moves again
-                        var tmpPath = "";
-                        for (var offset = 2; offset < buffer.length; offset += 2) {
-                            pt = getAveragePoint(offset);
-                            tmpPath += " L" + pt.x + " " + pt.y;
-                        }
-                
-                        // Set the complete current path coordinates
-                        path.setAttribute("d", strPath + tmpPath);
-                        
-                        return path;
-                    }
-                    
-                    
                     function renderPath(a) {
-                        strPath = '';
+                        var d = [];
                         var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                        (0, _setAttributes2.default)(path, {                            
-                            stroke: (0, _normalizeColor2.default)(a.color || '#000'),
-                            strokeWidth: a.width || 1,
-                            fill: 'none'
-                        });
-                        for (var i = 0, l = a.lines.length; i < l; i++) {                            
+                        for (var i = 0, l = a.lines.length; i < l; i++) {
                             var p1 = a.lines[i];
-                            appendToBuffer(p1);
-                            strPath += "M" + p1[0] + " " + p1[1];
-                            path = updateSvgPath(path, {x:p1[0], y:p1[1]});
-                            // appendToBuffer(p2);
-                            // path = updateSvgPath(path, p2);
-
-                            // var p2 = a.lines[i + 1];
-                            // if(p1 && p2 && p1.length > 1 && p2.length > 1)
+                            var p2 = a.lines[i + 1];
+                            if(p1 && p2 && p1.length > 1 && p2.length > 1)
                             {
-                                // var diff1 = Math.abs(p1[0] - p2[0]);
-                                // var diff2 = Math.abs(p1[1] - p2[1]);
+                                var diff1 = Math.abs(p1[0] - p2[0]);
+                                var diff2 = Math.abs(p1[1] - p2[1]);
                                 // console.log(diff1, diff2)
-                                // if(len(p1) != 3)
-                                // if(diff1 < 40 &&  diff2 < 40)
-                                // {                                    
-                                //     d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
-                                // }                                
+                                if(diff1 < 40 &&  diff2 < 40)
+                                {
+                                    d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
+                                }
                             }
 
                             // if (p1 && p1.length != 3 && p2 && p2.length != 3) {
                             //     d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
-                            // }                            
+                            // }
                         }
+
+                        (0, _setAttributes2.default)(path, {
+                            d: d.join(' ') + 'Z',
+                            stroke: (0, _normalizeColor2.default)(a.color || '#000'),
+                            strokeWidth: a.width || 1,
+                            fill: 'none'
+                        });
                         return path;
                     }
                     module.exports = exports['default']; /***/
