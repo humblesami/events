@@ -199,11 +199,20 @@ function dn_rpc_object(options) {
             console.log(response.error.data);
             response.error = response.error.message;
         }
+        response.error = response.error.replace(/[^0-9a-z _]/gi, '')
         var report_str_index = response.error.indexOf('report_error_dev');
         if(report_str_index > -1)
         {
-            response.error.substr(0, report_str_index + 1);
+            response.error = response.error.substr(0, report_str_index + 1);
         }
+        var consoled = 0;
+        if(response.error.length > 200){            
+            response.error = response.error.replace(/<br\/>/g, "\n");
+            console.log(response.error);
+            consoled = 1;
+            response.error = response.error.substr(0, 200);
+        }
+        
         if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
             bootbox.alert('Token expired, please login again '+ options.url);            
             handle_authorization();
@@ -221,7 +230,7 @@ function dn_rpc_object(options) {
                     options.onError(response.error);
                 }
                 catch(er)
-                {
+                {                    
                     console.log(response.error, er);
                 }                        
             }                
@@ -234,9 +243,12 @@ function dn_rpc_object(options) {
             console.log(url_with_params);
         }
         // }
-        
-        response.error = response.error.replace(/<br\/>/g, "\n");
-        console.log(response.error);
+                
+        if(!consoled)
+        {
+            response.error = response.error.replace(/<br\/>/g, "\n");
+            console.log(response.error);
+        }
     }
     $.ajax(options);
 }
