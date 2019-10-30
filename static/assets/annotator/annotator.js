@@ -3731,7 +3731,7 @@
                         for (var i = 0, l = a.lines.length; i < l; i++) {                            
                             var p1 = a.lines[i];
                             appendToBuffer(p1);
-                            strPath += "M" + pt.x + " " + pt.y;
+                            strPath += "M" + p1[0] + " " + p1[1];
                             path = updateSvgPath(path, {x:p1[0], y:p1[1]});
                             // appendToBuffer(p2);
                             // path = updateSvgPath(path, p2);

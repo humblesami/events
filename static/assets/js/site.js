@@ -83,9 +83,9 @@ var site_functions = {
             if(res.length > 200)
             {
                 console.log(res);
-                res = 'Invalid operation';
-                window.location = '/feedback/'+res;
+                res = 'Invalid operation';                
             }
+            window.location = '/#/feedback/'+res;
             return true;
         }
         else{            
