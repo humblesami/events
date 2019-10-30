@@ -7,7 +7,7 @@ from django.db.models import Q
 from documents.file import File
 from django.db.models import Count
 from django.db.models.signals import m2m_changed
-
+from django_currentuser.middleware import get_current_user
 from mainapp import ws_methods
 from meetings.models import Profile, Event, Topic
 from mainapp.ws_methods import send_email_on_creation
@@ -20,6 +20,8 @@ class VotingType(CustomModel):
     name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
+
+
 
 class VotingChoice(CustomModel):
     name = models.CharField('Voting Choice', max_length = 100)
@@ -38,6 +40,16 @@ class Voting(Actions):
     my_status = models.CharField(max_length=50, default='pending')
 
     previous_respondents = []
+
+
+    @property
+    def state(self):
+        user_id = get_current_user().id
+        user_pendings = 1 - self.votinganswer_set.filter(user_id=user_id).count()
+        total_pendings = len(self.get_audience()) - self.votinganswer_set.all().count()
+        return self._calculate_action_state(total_pendings, user_pendings)
+
+
     def __str__(self):
         return self.name
 

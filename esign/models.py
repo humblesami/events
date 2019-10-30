@@ -14,7 +14,7 @@ from django.db import models
 from django.apps import apps
 from django.contrib.auth.models import Group
 from django.core.files import File as DjangoFile
-
+from django_currentuser.middleware import get_current_user
 from documents.file import File
 from actions.models import Actions
 from restoken.models import PostUserToken
@@ -33,6 +33,15 @@ class SignatureDoc(File, Actions):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     send_to_all = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
+    published = models.BooleanField(default=False, null=True)
+
+
+    @property
+    def state(self):
+        user_id = get_current_user().id
+        user_pendings = self.signature_set.filter(user_id=user_id, signed=False).count()
+        total_pendings = self.signature_set.filter(signed=False).count()
+        return self._calculate_action_state(total_pendings, user_pendings)
 
     def save(self, *args, **kwargs):
         create = False
@@ -432,6 +441,7 @@ class SignatureDoc(File, Actions):
         doc_data = res
         doc_data['doc_name'] = doc_obj.name
         doc_data['doc_id'] = doc_obj.id
+        doc_data['status'] = doc_obj.status
 
 
         pdf_doc = doc_obj.pdf_doc
@@ -656,6 +666,7 @@ class SignatureDoc(File, Actions):
 
     @classmethod
     def get_records(cls, request, params):
+        # state = params['status']
         user_id = request.user.id
         kw = params.get('kw')
         docs = []
@@ -663,7 +674,6 @@ class SignatureDoc(File, Actions):
             docs = search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
         else:
             docs = cls.objects.all().order_by('-pk')
-
         total_cnt = docs.count()
         offset = params.get('offset')
         limit = params.get('limit')
@@ -771,6 +781,12 @@ class SignatureDoc(File, Actions):
             'progress_data': progress_data
         }
         return data
+
+
+    @classmethod
+    def change_action_status(cls, request, params):
+        params = cls.change_status(cls, params)        
+        return cls.get_records(request, params)
 
 
 class Signature(CustomModel):

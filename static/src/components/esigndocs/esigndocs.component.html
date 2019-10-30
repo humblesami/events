@@ -22,6 +22,15 @@ title="e-Signature"></app-breadcrumb>
 
     <div class="container">
     <app-search *ngIf="!loaded_as_child" (onsearch)="get_list()"></app-search>
+    
+    <div class="MeetingBtnWrapper">
+        <div class="btn-group">
+            <a (click)="get_records($event.target, 'active')" class="btn active">To Do</a>
+            <a (click)="get_records($event.target, 'closed')" class="btn">In Progress</a>
+            <a (click)="get_records($event.target, 'completed')" class="btn">Completed</a>
+            <a (click)="get_records($event.target, 'draft')" class="btn">Draft</a>
+        </div>
+    </div>
 
     <div class="cards">
 		<div class="row">
@@ -32,9 +41,15 @@ title="e-Signature"></app-breadcrumb>
                             (click)="delete_file($event, doc.id)">
                             <i class="far fa-trash-alt pointer" ></i>
                         </div>
-                        <div *ngIf="doc.all.total" class="doc-del-btn"
-                            (click)="open_results($event, doc.id)">
-                            <i class="fas fa-poll"></i>
+                        <div class="doc-del-btn d-flex">
+                            <div *ngIf="doc.all.total"
+                                (click)="open_results($event, doc.id)">
+                                <i class="fas fa-poll"></i>
+                            </div>
+                            <div *ngIf="doc.all.status == 'Completed'"
+                            (click)="move_to_archive($event, doc.id)">
+                                <i class="fas fa-archive"></i>
+                            </div>
                         </div>
 						<div class="DocIcon">
 							<span class="rounded-circle">

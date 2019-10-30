@@ -11,15 +11,14 @@ from mainapp.settings import server_base_url
 from django.db.models.signals import m2m_changed
 from django.utils.translation import ugettext_lazy as _
 from actions.models import Actions
+from django_currentuser.middleware import get_current_user
 
 
 class Survey(Actions):
-    is_published = models.BooleanField(_("Publish"), default=False)
     topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"), default=False)
-    # voting = models.ForeignKey('voting.Voting', on_delete=models.CASCADE, null=True, blank=True)
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)
 
     class Meta(object):
@@ -27,6 +26,21 @@ class Survey(Actions):
         verbose_name_plural = _("surveys")
 
     previous_respondents = []
+
+
+    @property
+    def state(self):
+        user_id = get_current_user().id
+        user_answers = 0
+        user_response = self.responses.filter(user_id=user_id)
+        if user_response:
+            user_answers = user_response[0].answers.count()
+        total_questions = self.questions.count()
+        user_pendings = total_questions - user_answers
+
+        total_pendings = len(self.get_audience()) - self.responses.all().count()
+        return self._calculate_action_state(total_pendings, user_pendings)
+
 
     def __str__(self):
         return self.name

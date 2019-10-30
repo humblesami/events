@@ -15,6 +15,23 @@ class Actions(CustomModel):
     name = models.CharField(_("Name"), max_length=400)
     description = models.TextField(_("Description"), default='')
     respondents = models.ManyToManyField('meetings.Profile', blank=True)
+    is_published = models.BooleanField(_("Publish"), default=False)
+
+
+    def _calculate_action_state(self, total_pendings, user_pendings):
+        utc=pytz.UTC
+        today = utc.localize(datetime.datetime.now())
+        close_date = self.close_date
+        if not self.is_published:
+            return 'draft'
+        elif total_pendings == 0:
+            return 'completed'
+        elif total_pendings > 0 and today > close_date:
+            return 'incomplete'
+        elif user_pendings > 0:
+            return 'to do'
+        elif user_pendings == 0 and total_pendings > 0:
+            return 'in progress'
 
     def save(self, *args, **kwargs):
         super(Actions, self).save(*args, **kwargs)
@@ -22,15 +39,12 @@ class Actions(CustomModel):
     def __str__(self):
         return self.meeting.name + '-Action'
 
-
     def is_respondent(self, user_id):
         is_respondent = False
         respondents = self.get_respondents()
         if user_id in respondents:
             is_respondent = True
         return is_respondent
-
-
 
     def get_respondents(self):
         res = []
@@ -75,3 +89,16 @@ class Actions(CustomModel):
                 exclude_ids.append(action.id)
         query_result = query_result.exclude(id__in=exclude_ids)
         return query_result
+    
+
+    @classmethod
+    def change_status(self, action, params):
+        status = params['status']
+        action_id = params['id']
+        action = action.objects.get(pk=action_id)
+        if not action:
+            return 'Action not Found'
+        action.status = status
+        action.save()
+        params['status'] = not status
+        return params

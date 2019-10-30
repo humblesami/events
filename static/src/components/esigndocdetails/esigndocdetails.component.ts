@@ -9,7 +9,7 @@ declare var $:any;
 
 
 @Component({
-    styleUrls:['./esigndocdetails.css'],
+    styleUrls:['./esigndocdetails.css', '../meetings/meetings.css'],
     templateUrl: 'esigndocdetails.component.html'
 })
 export class EsignDocDetailsComponent implements OnInit {
