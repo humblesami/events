@@ -581,7 +581,8 @@ a.fc-more:hover {
 .fc-toolbar .fc-right {
 	float: right;
 	display: flex;
-    align-items: center;
+	align-items: center;
+	margin-top: -0.17rem;
 }
 
 .fc-toolbar .fc-center {
@@ -1257,4 +1258,28 @@ th.fc-day-header.fc-widget-header {
 }
 .fc th {
     border-color: #f5f6fa;
+}
+@media screen and (max-width:850px){
+    .fc-toolbar .fc-center{
+        display: block;
+        padding-top: 3rem;
+    }
+}
+@media screen and (max-width:508px){
+    .fc-toolbar .fc-right{
+        padding-top: 0.5rem;
+    }
+}
+@media screen and (max-width:480px){
+	.fc-toolbar{
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+	.fc-toolbar .fc-right{
+		padding-top: 1rem;
+	}
+	.fc-toolbar .fc-center{
+		padding-top: 0.5rem;
+	}
 }
