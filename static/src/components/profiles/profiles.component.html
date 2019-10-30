@@ -23,7 +23,8 @@ title="{{breadcrumb_title|firstToUpper}}"></app-breadcrumb>
             </div>
         </div>
         <app-search (onsearch)="get_list()"></app-search>
-
+        <app-paginator *ngIf="records.length" (reload_data)="get_list()">
+        </app-paginator>
         <div *ngIf="records && records.length" class="d-none d-sm-block">
             <div class="bg-profile">
                 <div class="col-3">
@@ -118,9 +119,6 @@ title="{{breadcrumb_title|firstToUpper}}"></app-breadcrumb>
             </div>		
         </div>
         <!-- End Mobile View-->
-
-        <app-paginator *ngIf="records.length" (reload_data)="get_list()">
-        </app-paginator>
     </div>
 
     <div class="container" *ngIf="no_prof">

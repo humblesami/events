@@ -1,19 +1,17 @@
-.board-sheet-paginator{
-    float: right;
+.paging-meta{
+    display: flex;
+    justify-content: flex-end;
 }
-.paging-meta .page-limit
-{
-    float: left;
-}
-.paging-meta .pages
-{
-    float: left;
+.page-limit{
+    margin-right: 5px;
 }
 .paging-meta select
 {
-    width: 75px;
+    width: 50px;
     display: inline;    
     margin: 0 5px;
+    background-position: right 5px center !important;
+    border: 1px solid #ddd;
 }
 .board-sheet-paginator li.page-item.disabled .page-link{
     background-color: #e6e6e6;

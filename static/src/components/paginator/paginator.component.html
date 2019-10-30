@@ -1,5 +1,12 @@
 <div class="board-sheet-paginator" *ngIf="httpService.count > limit_options[0]">
     <div class="paging-meta">
+        <div class="page-limit mb-2">
+            <!-- <span>Page Size</span> -->
+            <select (change)="change_limit($event)" [(ngModel)]="httpService.limit" class="form-control-sm">
+                <option *ngFor="let opt of limit_options">{{opt}}</option>
+            </select>
+            <span>/ {{httpService.count}}</span>
+        </div>
         <div *ngIf="httpService.limit < httpService.count" class="pages" aria-label="Page navigation example">
             <ul class="pagination  pagination-sm justify-content-center" >
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
@@ -32,13 +39,6 @@
                     </button>
                 </li>
             </ul>
-        </div>
-        <div class="page-limit mb-2">
-            <span>Page Size</span>
-            <select (change)="change_limit($event)" [(ngModel)]="httpService.limit" class="form-control-sm">
-                <option *ngFor="let opt of limit_options">{{opt}}</option>
-            </select>
-            <span>{{httpService.count}} Records Found</span>
         </div>
     </div>
 </div>
