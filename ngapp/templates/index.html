@@ -12,7 +12,21 @@
     <meta name="apple-mobile-web-app-title" content="Board Sheet">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
+    <script type="text/javascript">
+        (function(){
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/serviceworker.js', {
+                    scope: '.'
+                }).then(function (registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            }
+        })()
+        
+    </script> 
     <title>Boardsheet</title>
     <meta name="description" content="Boardsheet">
     <meta name="theme-color" content="#2F3BA2" />
