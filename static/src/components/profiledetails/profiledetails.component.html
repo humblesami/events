@@ -90,8 +90,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										<div *ngIf="profile_data.location" class="single-form-field mb-2 wordBreak">
 											<i class="fas fa-map-marker-alt"></i>   {{profile_data.location}}
 										</div>
-										<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2 wordBreak">
-											<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
+										<div *ngIf="my_profile" class="single-form-field mb-2 wordBreak">
+											<i class="fas fa-user-lock"></i>{{(profile_data.two_factor_auth && profile_data.two_factor_auth.name)? profile_data.two_factor_auth.name: 'None'}} (Two Factor Authentication Type)
 										</div>
 									</div>
 								</div>
