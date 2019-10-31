@@ -32,6 +32,8 @@ class Actions(CustomModel):
             return 'to do'
         elif user_pendings == 0 and total_pendings > 0:
             return 'in progress'
+        else:
+            return 'in progress'
 
     def save(self, *args, **kwargs):
         super(Actions, self).save(*args, **kwargs)
