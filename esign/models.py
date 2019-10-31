@@ -112,6 +112,8 @@ class SignatureDoc(File, Actions):
             last_sign_bottom = self.get_sign_stats_send_to_all(sign_count)
             page_width, page_height, added_pages = self.add_pages_for_sign1(last_sign_bottom, user.id)
             user_ids = self.add_signature_send_to_all(users, user.id, added_pages, page_width, page_height)
+            self.is_published = True
+            self.save()
             return self.on_signature_assigned(user, user_ids, params)
         else:
             return self.assign_signature(user, params)
@@ -394,6 +396,8 @@ class SignatureDoc(File, Actions):
         return 'done'
 
     def remove_all_signature(self):
+        self.is_published = False
+        self.save()
         self.signature_set.all().delete()
 
     @classmethod

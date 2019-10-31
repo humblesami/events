@@ -60,8 +60,7 @@ class SignDocAdmin(BaseAdmin):
         'respondents',
         'send_to_all',
         'open_date',
-        'close_date',
-        'is_published',
+        'close_date'
     ]
     autocomplete_fields = ['respondents']
     change_form_template = 'admin/actions_change_form.html'
