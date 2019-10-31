@@ -135,8 +135,8 @@ class Survey(Actions):
         if params.get('meeting_id'):
             meeting_id = params.get('meeting_id')
             survey_list = survey_list.filter(meeting_id=meeting_id)
-        cls.get_actions_against_states(survey_list, states)
-        total = survey_list.count()
+        survey_list = cls.get_actions_against_states(survey_list, states)
+        total = len(survey_list)
         offset = params.get('offset')
         limit = params.get('limit')
         if limit:
