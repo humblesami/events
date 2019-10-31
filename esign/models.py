@@ -662,9 +662,18 @@ class SignatureDoc(File, Actions):
             i = i + 1
         return {"file_url": pdf_doc.url, "doc_data": signatures, 'id': self.id}
 
+
+    def get_docs_against_states(docs, states):
+        to_be_return_docs = []
+        for doc in docs:
+            if doc.state in states:
+                to_be_return_docs.append(doc)
+        return to_be_return_docs
+
+
     @classmethod
     def get_records(cls, request, params):
-        # state = params['status']
+        states = params['states']
         user_id = request.user.id
         kw = params.get('kw')
         docs = []
@@ -677,7 +686,14 @@ class SignatureDoc(File, Actions):
         limit = params.get('limit')
         if limit:
             docs = docs[offset: offset + int(limit)]
-        current_cnt = docs.count()
+        if not states:
+            states.append('to do')
+        # docs = cls.objects.all()
+        # for doc in docs:
+        #     doc.is_published = True
+        #     doc.save()
+        docs = cls.get_docs_against_states(docs, states)
+        current_cnt = len(docs)
         sign_docs = []
         for sign_doc in docs:
             doc = sign_doc.get_pending_sign_count(request.user.id)

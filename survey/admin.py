@@ -48,12 +48,12 @@ class SurveyAdmin(BaseAdmin):
             'fields': [
                 'name',
                 'description',
-                'is_published',
                 'meeting',
                 'topic',
                 'respondents',
                 'open_date',
-                'close_date'
+                'close_date',
+                'is_published',
                 ]})]
     formfield_overrides = {
         models.TextField: {'widget': Textarea(

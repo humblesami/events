@@ -33,7 +33,7 @@ title="e-Signature"></app-breadcrumb>
     </div>
 
     <div class="cards">
-        <app-paginator
+            <app-paginator
             *ngIf="records.length && !loaded_as_child"
             (reload_data)="get_list()">
         </app-paginator>

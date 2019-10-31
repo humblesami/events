@@ -55,7 +55,8 @@ class VotingAdmin(BaseAdmin):
                 'close_date',
                 'signature_required',
                 'enable_discussion',
-                'public_visibility'
+                'public_visibility',
+                'is_published',
                 ]})]
     autocomplete_fields = ['voting_type', 'respondents']
     change_form_template = 'admin/actions_change_form.html'

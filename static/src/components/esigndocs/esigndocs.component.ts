@@ -118,12 +118,22 @@ export class EsignDocsComponent implements OnInit {
 
     get_records(el, state)
     {
+        let obj_this = this;
         $(el).parent().find('.active').removeClass('active');
         $(el).addClass('active');
-
+        let states = [];
+        if (state == 'completed')
+        {
+            states = [state, 'incomplete']
+        }
+        else
+        {
+            states = [state]
+        }
+        obj_this.get_list(states);
     }
 
-    get_list()
+    get_list(states=[])
     {
         const obj_this = this;        
         let args = {
@@ -132,7 +142,7 @@ export class EsignDocsComponent implements OnInit {
             method: 'get_records'
         }			
         let final_input_data = {
-            params: {},
+            params: {states: states},
             args: args
         };
         obj_this.httpService.get(final_input_data,
