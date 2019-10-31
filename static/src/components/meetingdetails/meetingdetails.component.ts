@@ -22,7 +22,8 @@ export class MeetingDetailsComponent implements OnInit {
 	notes = [];
 	new_reply = '';
 	next = '';
-	prev = '';
+    prev = '';
+    is_sortable_applied = false;
 	title = '';
     flag = '';
     meeting_type = '';
@@ -565,6 +566,7 @@ export class MeetingDetailsComponent implements OnInit {
         let obj_this = this;
         if (this.socketService.admin_mode)
         {
+            obj_this.is_sortable_applied = true;
             $('#agenda_tbody').sortable({
                 stop: function (event, ui) {
                     obj_this.save_positions();
@@ -573,7 +575,10 @@ export class MeetingDetailsComponent implements OnInit {
         }
         else
         {
-            $('#agenda_tbody').sortable('destroy');
+            if(obj_this.is_sortable_applied)
+            {
+                $('#agenda_tbody').sortable('destroy');
+            }
         }
     }
 
