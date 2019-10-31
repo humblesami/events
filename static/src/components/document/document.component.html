@@ -79,7 +79,9 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                 </div>
                             </button>
                             <div class="PenSize pen-child annotation_button prop">
-                                <select class="pen-size">
+                                <input type="range" class="slider" id="range-slider" value="4" min="1" max="20" title="Pen Size">
+                                <span id="output_value"></span>
+                                <!-- <select class="pen-size">
                                     <option value="2">▁▁▁▁▁▁▁▁</option>
                                     <option value="4"> ▂▂▂▂▂▂▂▂</option>
                                     <option value="6"> ▃▃▃▃▃▃▃▃ </option>
@@ -87,7 +89,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                                     <option value="8"> ▅▅▅▅▅▅▅▅ </option>
                                     <option value="9"> ▆▆▆▆▆▆▆▆ </option>
                                     <option value="10"> ▇▇▇▇▇▇▇▇ </option>
-                                </select>
+                                </select> -->
                             </div>
                             <button class="pen-color not-100 annotation_button prop"></button>
                         </div>

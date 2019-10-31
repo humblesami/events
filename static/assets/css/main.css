@@ -3168,3 +3168,29 @@ a.folder.droppable:not(.draggable) .paste{
     color: red;    
     background: #eee;
 }
+.slider {
+    -webkit-appearance: none;
+    width: 40px;
+    height: 5px;
+    background: #d3d3d3;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    cursor: pointer;
+    border-radius:20px;
+}
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    cursor: pointer;
+    border-radius:20px;
+} 

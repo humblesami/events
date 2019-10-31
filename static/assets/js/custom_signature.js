@@ -14,7 +14,7 @@ function init_sign(config) {
                     <button id="upload-sig-btn" class="btn btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
                     <input id="upload-sig" accept=".jpg,.png,.jpeg" style="display:none" type="file">
                     <button class="btn btn-primary DocsBtn" id="auto-signature-btn">Auto</button>
-                    <input type="range" class="slider" id="range-slider" value="4" min="1" max="20">
+                    <input type="range" class="slider range-slider" id="range-slider" value="4" min="1" max="20" title="Pen Size">
                     <span id="output_value"></span>
                 </div>
                 <button type="button" class="close" data-dismiss="modal">×</button>
