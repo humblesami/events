@@ -806,7 +806,7 @@ span.pager.disabled
 {
     display: block;
 }
-.canvas-container{
+.pdfViewer .page .canvas-container{
     position: absolute !important;
     top:0;
     left:0;
