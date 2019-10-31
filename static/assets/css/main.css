@@ -2929,6 +2929,9 @@ label.check-plus-label-wrap {
 .picker{
 	margin: .5rem;
 }
+.local_picker.picker {
+    border-radius: 20px;
+}
 .btn-danger:not(:disabled):not(.disabled):active:focus{
 	box-shadow: 0 0 0;
 }
