@@ -806,7 +806,13 @@ span.pager.disabled
 {
     display: block;
 }
-
+.canvas-container{
+    position: absolute !important;
+    top:0;
+    left:0;
+    background: transparent;
+    z-index: 12;
+}
 @media screen and (max-width:576px){
     #comment-wrapper{
         position: absolute;

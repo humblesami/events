@@ -79,9 +79,6 @@
         jquery_ui: {
             script_paths:[
                 "static/assets/libs/js/jquery-ui.min.js",
-                "static/assets/libs/js/jquery.ui.touch-punch.min.js",
-                "static/assets/libs/js/jquery.mark.min.js",
-                "static/assets/libs/js/mark.min.js",            
             ],
             style_paths:[
                 "static/assets/libs/css/jquery-ui.css",
@@ -131,7 +128,9 @@
             ],
             load: function(on_load){            
                 var obj_this = this;
-                load_lib(obj_this, on_load);
+                app_libs.signature.load(function(){
+                    load_lib(obj_this, on_load);
+                });
             }
         },
         file_input:{
@@ -246,6 +245,7 @@
         app_libs[key].call_backs = [];
     }
     app_libs.jquery_ui.load();
+    app_libs.signature.load();
     app_libs.doc_edit.load();
     app_libs.bootbox.load(function(){
         if(!bootbox)
@@ -256,5 +256,5 @@
             window['bootbox'] = bootbox;
         }
     });
-    app_libs.moment.load();
+    app_libs.moment.load();    
 })()

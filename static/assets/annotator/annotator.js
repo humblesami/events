@@ -1,7 +1,6 @@
 (function() {
     var annotation_user_m2;
     var annotation_mode = 0;
-    var already_saving = false;
     var prev_doc_url = '';
     var shown_comment_type = false;
     var slected_comment_type = false;
@@ -21,6 +20,8 @@
     var annot_save_timeout = undefined;
     var annotation_save_wait_time = 8000;
     var is_drawing = false;
+    var pen_active = false;
+    var canvases = [];
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -344,6 +345,10 @@
             }
             updateAnnotations(documentId, localAnnots, 'op=pen leave');
         }
+        for(var can of canvases){
+            can.isDrawingMode = false;
+        }
+        pen_active = false;
     }
 
     function supportsComments(target) {
@@ -455,8 +460,8 @@
                     }
                     contextMenuShown = false;
                     $('.annotation-options.ContextMenuPopup').hide();
-                    var pen_active = $('.toolbar .pen').hasClass('active');
-                    if(!pen_active){
+                    var penactive = $('.toolbar .pen').hasClass('active');
+                    if(!penactive){
                         select_cursor();
                     }
                 }
@@ -675,7 +680,6 @@
                         else{
                             console.log('Saving, reset');
                         }
-                        already_saving = true;
                         var dt_now = new Date();
                         if(last_save_call.dt){
                             var diff = dt_now - last_save_call.dt;
@@ -711,7 +715,6 @@
                                 {
                                     console.log('Saved');
                                     unSetDocDirty(documentId);
-                                    already_saving = false;
                                 }
                                 onAnnotationsUploaded(data);                                
                             },
@@ -1254,7 +1257,7 @@
                                 }
                                 if (!annotation_mode) {
                                     return;
-                                }
+                                }                                
                                 
                                 window['route_changing'] = false;
                                 process_notification_url(window.location.toString());
@@ -4073,6 +4076,11 @@
                             return true;
                         } // Fall back to inserting between elements
                         var svg = document.querySelector('svg[data-pdf-annotate-page="' + pageNumber + '"]');
+                        if(!svg)
+                        {
+                            console.log('SVG not found in insertElementWithinChildren');
+                            return false;
+                        }
                         var rect = svg.getBoundingClientRect();
                         var nodes = [].concat(_toConsumableArray(svg.parentNode.querySelectorAll('.textLayer > div')));
                         y = (0, _utils.scaleUp)(svg, {
@@ -4185,7 +4193,11 @@
                      */
                     function textLayerElementFromPoint(x, y, pageNumber) {
                         var svg = document.querySelector('svg[data-pdf-annotate-page="' + pageNumber + '"]');
-                        // console.log(pageNumber, 443, 2);
+                        if(!svg)
+                        {
+                            console.log('SVG not found in textLayerElementFromPoint');
+                            return [];
+                        }
                         var rect = svg.getBoundingClientRect();
                         y = (0, _utils.scaleUp)(svg, {
                             y: y
@@ -5014,8 +5026,10 @@
                      */
                     function savePoint(x, y) {
                         var svg = (0, _utils.findSVGAtPoint)(x, y);
-                        if (!svg) {
-                            return;
+                        if(!svg)
+                        {
+                            console.log('SVG not found in savePoint');
+                            return [];
                         }
                         var rect = svg.getBoundingClientRect();
                         var point = (0, _utils.scaleDown)(svg, {
@@ -5040,8 +5054,7 @@
                                         ]
                                     }
                                 });
-                            }
-                            
+                            }                            
                             return;
                         }
                         lines.push([point.x, point.y]);
@@ -5073,6 +5086,7 @@
                     /**
                      * Enable the pen behavior
                      */
+                    
                     function enablePen() {
                         //console.log(777);                    
                         if (_enabled) {
@@ -5081,6 +5095,22 @@
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
                         _enabled = true;
+                        pen_active = true;
+                        canvases = [];
+
+                        var cnt_canv = 1;
+                        // $('#viewer .page').each(function(){
+                        //     // console.log(this);
+                        //     $(this).css('position', 'relative');
+                        //     var canvas_id = 'dcanvas'+(cnt_canv);
+                        //     cnt_canv++;
+                        //     var drawing_canvas = $('<canvas id='+canvas_id+' height='+$(this).height()+' width='+$(this).width()+' />');                            
+                        //     $(this).prepend(drawing_canvas);
+                        //     console.log(canvas_id);
+                        //     var patternCanvas = new fabric.Canvas(canvas_id, {isDrawingMode: true});
+                        //     patternCanvas.freeDrawingBrush.width = 6;
+                        //     // console.log(canvas_id, drawing_canvas[0], patternCanvas);
+                        // });
                         document.addEventListener('mousedown', mouse_down30);
                         document.addEventListener('touchstart', mouse_down30);
                         (0, _utils.disableUserSelect)();
