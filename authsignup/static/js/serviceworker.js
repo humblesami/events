@@ -5,7 +5,8 @@ self.addEventListener('install', function(event) {
         console.log('Opened cache');
         return cache.addAll([
             'user/offline',
-            '/static/assets/favicon.ico'
+            '/static/assets/favicon.ico',
+            '/static/assets/css/login.css',
         ]).then(function(){
             console.log('Assets added to cache');
         }).catch(err => console.log('Error while fetching assets', err));
