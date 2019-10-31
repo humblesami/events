@@ -102,3 +102,12 @@ class Actions(CustomModel):
         action.save()
         params['status'] = not status
         return params
+    
+    def get_actions_against_states(actions, states):
+        to_be_return_actions = []
+        if not states:
+            states = ['to do']
+        for action in actions:
+            if action.state in states:
+                to_be_return_actions.append(action)
+        return to_be_return_actions

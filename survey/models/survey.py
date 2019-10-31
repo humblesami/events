@@ -111,6 +111,7 @@ class Survey(Actions):
     def get_records(cls, request, params):
         surveys = []
         kw = params.get('kw')
+        states = params['states']
         uid = request.user.id
         groups = request.user.groups.values('name')
         results_visibility = False
@@ -134,6 +135,7 @@ class Survey(Actions):
         if params.get('meeting_id'):
             meeting_id = params.get('meeting_id')
             survey_list = survey_list.filter(meeting_id=meeting_id)
+        cls.get_actions_against_states(survey_list, states)
         total = survey_list.count()
         offset = params.get('offset')
         limit = params.get('limit')

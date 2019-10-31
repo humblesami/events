@@ -2,11 +2,12 @@ import { Component, OnInit,Input } from '@angular/core';
 import { HttpService } from "../../app/http.service";
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SocketService } from 'src/app/socket.service';
+declare var $:any;
 
 @Component({
     selector: 'app-surveys',
     templateUrl: './surveys.component.html',
-    styleUrls: ['./surveys.css']
+    styleUrls: ['./surveys.css', '../esigndocs/esigndocs.css']
 })
 export class SurveysComponent implements OnInit {
     @Input() meeting_id: number;
@@ -31,9 +32,26 @@ export class SurveysComponent implements OnInit {
         this.socketService = sock;
     }
 
-    get_list(){
+    get_records(el, state)
+    {
         let obj_this = this;
-        let input_data = {meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+        $(el).parent().find('.active').removeClass('active');
+        $(el).addClass('active');
+        let states = [];
+        if (state == 'completed')
+        {
+            states = [state, 'incomplete']
+        }
+        else
+        {
+            states = [state]
+        }
+        obj_this.get_list(states);
+    }
+
+    get_list(states=[]){
+        let obj_this = this;
+        let input_data = { states: states, meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
         if(obj_this.meeting_id){
             input_data['meeting_id']=obj_this.meeting_id;
         }

@@ -21,10 +21,21 @@ title="Resolutions"></app-breadcrumb>
     
 	<div class="container">
 		<app-search *ngIf="!loaded_as_child" (onsearch)="get_list()"></app-search>
+
+		<div class="MeetingBtnWrapper">
+			<div class="btn-group">
+				<a (click)="get_records($event.target, 'active')" class="btn active">To Do</a>
+				<a (click)="get_records($event.target, 'closed')" class="btn">In Progress</a>
+				<a (click)="get_records($event.target, 'completed')" class="btn">Completed</a>
+				<a (click)="get_records($event.target, 'draft')" class="btn">Draft</a>
+			</div>
+		</div>
+
 		<app-paginator
 		*ngIf="records.length && !loaded_as_child" 
 			(reload_data)="get_list()">
 		</app-paginator>
+
 		<div class="row">
 			<div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let voting of records">
 				<div class="kanban-card">

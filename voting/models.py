@@ -291,18 +291,19 @@ class Voting(Actions):
     @classmethod
     def get_records(cls, request, params):
         kw = params.get('kw')
+        states = params['states']
         docs = []
         votings = []
         if kw:
             votings = ws_methods.search_db({'kw': kw, 'search_models': {'voting': ['Voting']}})
         else:
             votings = Voting.objects.all().order_by('-pk')
-
+            
         votings = Actions.gt_my_open_actions(votings, request.user)
-
+        votings = cls.get_actions_against_states(votings, states)
         offset = params.get('offset')
         limit = params.get('limit')
-        total_cnt = votings.count()
+        total_cnt = len(votings)
         uid = request.user.id
         if limit:
             votings = votings[offset: offset + int(limit)]

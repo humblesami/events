@@ -3,10 +3,12 @@ import { HttpService } from "../../app/http.service";
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SocketService } from 'src/app/socket.service';
 
+declare var $: any;
+
 @Component({
     selector: 'app-votings',
     templateUrl: './votings.component.html',
-    styleUrls: ['./votings.css']
+    styleUrls: ['./votings.css', '../esigndocs/esigndocs.css']
 })
 export class VotingsComponent implements OnInit {
     @Input() loaded_as_child: any;
@@ -30,11 +32,28 @@ constructor(private httpServ: HttpService,
     this.socketService = sock;
 }
 
-get_list()
+get_records(el, state)
+{
+    let obj_this = this;
+    $(el).parent().find('.active').removeClass('active');
+    $(el).addClass('active');
+    let states = [];
+    if (state == 'completed')
+    {
+        states = [state, 'incomplete']
+    }
+    else
+    {
+        states = [state]
+    }
+    obj_this.get_list(states);
+}
+
+get_list(states=[])
 {
     let obj_this = this;
     // let req_url = '/meeting/list-json';
-    let input_data = { meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+    let input_data = { states: states, meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
     var success_cb = function (result) {
         //console.log(result);
         for(var i in result.records)
