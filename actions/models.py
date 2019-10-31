@@ -26,14 +26,14 @@ class Actions(CustomModel):
             return 'draft'
         elif total_pendings == 0:
             return 'completed'
-        elif total_pendings > 0 and today > close_date:
-            return 'incomplete'
+        elif today > close_date:
+            return 'incomplete'            
         elif user_pendings > 0:
             return 'to do'
-        elif user_pendings == 0 and total_pendings > 0:
-            return 'in progress'
         else:
             return 'in progress'
+        # else:
+        #     return 'in progress'
 
     def save(self, *args, **kwargs):
         super(Actions, self).save(*args, **kwargs)
@@ -65,7 +65,7 @@ class Actions(CustomModel):
         return list(dict.fromkeys(audience))
 
     @classmethod
-    def gt_my_open_actions(self, query_result, user, home_page=None):
+    def get_my_open_actions(self, query_result, user, home_page=None):
         exclude_ids = []
         if not home_page:
             groups = user.groups.all().values('name')
@@ -105,8 +105,9 @@ class Actions(CustomModel):
         params['status'] = not status
         return params
     
-    def get_actions_against_states(actions, states):
+    def get_actions_against_states(actions, states, user):
         to_be_return_actions = []
+        actions = Actions.get_my_open_actions(actions, user)
         if not states:
             states = ['to do']
         for action in actions:

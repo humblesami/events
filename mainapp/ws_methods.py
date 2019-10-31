@@ -449,7 +449,7 @@ search_apps = {
 }
 
 def search_db(params, search_fields=None):
-    results = []
+    results = None
     search_text = params['kw'].lower()
     search_models = params.get('search_models')
     

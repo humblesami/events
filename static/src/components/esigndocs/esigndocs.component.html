@@ -50,10 +50,6 @@ title="e-Signature"></app-breadcrumb>
                                 (click)="open_results($event, doc.id)">
                                 <i class="fas fa-poll"></i>
                             </div>
-                            <div *ngIf="doc.all.status == 'Completed'"
-                            (click)="move_to_archive($event, doc.id)">
-                                <i class="fas fa-archive"></i>
-                            </div>
                         </div>
 						<div class="DocIcon">
 							<span class="rounded-circle">

@@ -110,7 +110,7 @@ class Voting(Actions):
     @classmethod
     def get_pending_votings(cls, user):
         uid = user.id
-        votings = Actions.gt_my_open_actions(Voting.objects.all(), user, 'home')
+        votings = Actions.get_my_open_actions(Voting.objects.all(), user, 'home')
         pending_votings = []
         for voting in votings:
             if voting:
@@ -292,6 +292,7 @@ class Voting(Actions):
     def get_records(cls, request, params):
         kw = params.get('kw')
         states = params['states']
+        user_id = request.user.id
         docs = []
         votings = []
         if kw:
@@ -299,8 +300,8 @@ class Voting(Actions):
         else:
             votings = Voting.objects.all().order_by('-pk')
             
-        votings = Actions.gt_my_open_actions(votings, request.user)
-        votings = cls.get_actions_against_states(votings, states)
+        # votings = Actions.get_my_open_actions(votings, request.user)
+        votings = cls.get_actions_against_states(votings, states, request.user)
         offset = params.get('offset')
         limit = params.get('limit')
         total_cnt = len(votings)

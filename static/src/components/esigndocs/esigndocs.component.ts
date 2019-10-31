@@ -32,31 +32,6 @@ export class EsignDocsComponent implements OnInit {
         this.router.navigate(['/signdoc/'+doc_id+'/results']);
     }
 
-    move_to_archive(evt, doc_id)
-    {
-        let obj_this = this;
-        evt.stopPropagation();
-        evt.preventDefault();
-        let input_data = {
-            id: doc_id, 
-            status: false
-        }
-        let args ={
-            app: 'esign',
-            model: 'SignatureDoc',
-            method: 'change_action_status'
-        }
-        let final_input_data = {
-            params: input_data,
-            args: args
-        }
-        obj_this.httpServ.get(final_input_data, (data)=>{            
-            obj_this.records = data.records;
-        }, (err)=>{
-            // console.log(err, 6567);
-        })
-    }
-    
 
     delete_file(ev, doc_id){
         ev.preventDefault();

@@ -672,7 +672,6 @@ class SignatureDoc(File, Actions):
         states = params['states']
         user_id = request.user.id
         kw = params.get('kw')
-        docs = []
         if kw:
             docs = search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
         else:
@@ -680,9 +679,9 @@ class SignatureDoc(File, Actions):
         total_cnt = docs.count()
         offset = params.get('offset')
         limit = params.get('limit')
+        docs = cls.get_actions_against_states(docs, states, request.user)
         if limit:
             docs = docs[offset: offset + int(limit)]
-        docs = cls.get_actions_against_states(docs, states)
         current_cnt = len(docs)
         sign_docs = []
         for sign_doc in docs:

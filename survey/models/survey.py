@@ -113,29 +113,29 @@ class Survey(Actions):
         kw = params.get('kw')
         states = params['states']
         uid = request.user.id
-        groups = request.user.groups.values('name')
-        results_visibility = False
-        survey_list = []
-        for group in groups:
-            if group['name'] in ['Admin', 'Staff']:
-                results_visibility = True
+        # groups = request.user.groups.values('name')
+        # results_visibility = False
+        # survey_list = []
+        # for group in groups:
+        #     if group['name'] in ['Admin', 'Staff']:
+        #         results_visibility = True
         if kw:
             survey_list = ws_methods.search_db({'kw': kw, 'search_models': {'survey': ['Survey']}})
         else:
             # docs = cls.objects.all()    
-            if results_visibility:
-                survey_list = Survey.objects.all().order_by('-pk').distinct()
-            else:
-                survey_list = Survey.objects.filter(
-                    (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                        |
-                        (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                        |
-                        Q(respondents__id=uid)).order_by('-pk').distinct()
+            # if results_visibility:
+            survey_list = Survey.objects.all().order_by('-pk').distinct()
+            # else:
+            #     survey_list = Survey.objects.filter(
+            #         (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+            #             |
+            #             (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+            #             |
+            #             Q(respondents__id=uid)).order_by('-pk').distinct()
         if params.get('meeting_id'):
             meeting_id = params.get('meeting_id')
             survey_list = survey_list.filter(meeting_id=meeting_id)
-        survey_list = cls.get_actions_against_states(survey_list, states)
+        survey_list = cls.get_actions_against_states(survey_list, states, request.user)
         total = len(survey_list)
         offset = params.get('offset')
         limit = params.get('limit')
@@ -213,7 +213,7 @@ class Survey(Actions):
         #     Q(respondents__id=uid),
         #     Q(close_date__gte=datetime.datetime.now())
         # )
-        surveys = Actions.gt_my_open_actions(Survey.objects.all(), user, 'home')
+        surveys = Actions.get_my_open_actions(Survey.objects.all(), user, 'home')
         pending_survey = []
         for survey in surveys:
             user_response = survey.questions.filter(answers__isnull=False, answers__response__user__id=user.id)
