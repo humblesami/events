@@ -7,6 +7,10 @@
             </h3>  
         </div>
         <app-search (onsearch)="get_list()"></app-search>
+        <app-paginator
+            *ngIf="records.length"
+            (reload_data)="get_list()">
+        </app-paginator>
         <div class="row">
             <div class="kanban-committees col-12 col-md-6 col-lg-4"
                     *ngFor="let committee of records">
@@ -32,10 +36,6 @@
                 </a>
             </div>   
         </div>
-        <app-paginator
-            *ngIf="records.length"
-            (reload_data)="get_list()">
-         </app-paginator>
     </div>
         <div class="container" *ngIf="no_committees">
             <div class="row">

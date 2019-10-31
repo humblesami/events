@@ -18,6 +18,10 @@
 
 	<div class="container">
         <app-search (onsearch)="get_list()"></app-search>
+        <app-paginator
+        *ngIf="meeting_list.length"
+            (reload_data)="get_list()">
+        </app-paginator>
         <div class="row">
             <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let meeting_object of meeting_list">
                 <div class="kanban-card kanban-meeting-info">
@@ -58,10 +62,5 @@
                 <hr>
             </div>		
         </div>
-
-        <app-paginator
-        *ngIf="meeting_list.length"
-            (reload_data)="get_list()">
-        </app-paginator>
 	</div>
 </div>

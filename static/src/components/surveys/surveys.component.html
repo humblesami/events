@@ -21,6 +21,8 @@ title="Surveys"></app-breadcrumb>
     
 	<div class="container">
         <app-search *ngIf="!loaded_as_child" (onsearch)="get_list()"></app-search>
+        <app-paginator *ngIf="records.length && !loaded_as_child" (reload_data)="get_list()">
+        </app-paginator>
         <div class="row">
             <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let survey of records">
                 <div class="kanban-card position-relative">
@@ -68,8 +70,6 @@ title="Surveys"></app-breadcrumb>
                 </div>
             </div>
         </div>
-        <app-paginator *ngIf="records.length && !loaded_as_child" (reload_data)="get_list()">
-    </app-paginator>
     </div>
     <div class="container" *ngIf="no_meet" >
             <div class="row">

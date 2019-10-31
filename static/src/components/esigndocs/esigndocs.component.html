@@ -33,6 +33,10 @@ title="e-Signature"></app-breadcrumb>
     </div>
 
     <div class="cards">
+        <app-paginator
+            *ngIf="records.length && !loaded_as_child"
+            (reload_data)="get_list()">
+        </app-paginator>
 		<div class="row">
 			<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"  *ngFor="let doc of records">
 				<a routerLink="/signdoc/{{doc.id}}" class="">
@@ -76,9 +80,4 @@ title="e-Signature"></app-breadcrumb>
         <h1>There are no resources for now!</h1>
         <hr>
     </div>
-    <app-paginator
-        *ngIf="records.length && !loaded_as_child"
-            (reload_data)="get_list()">
-    </app-paginator>
-
 </div>
