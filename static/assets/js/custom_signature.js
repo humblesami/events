@@ -20,7 +20,7 @@ function init_sign(config) {
                 <div id="signature-body" class="modal-body" >
                     
                     <div id="signature-editor-div" class="kbw-signature">
-                        <canvas id="signature_canvas" height="100" width="100"></canvas>
+                        <canvas id="signature_canvas" height="300" width="465"></canvas>
                     </div>
                     
                 </div>
@@ -148,8 +148,8 @@ function init_sign(config) {
         // });
 
         var patternCanvas = new fabric.Canvas('signature_canvas', {isDrawingMode: true});
-        patternCanvas.freeDrawingBrush.width = 16;
-        patternCanvas.freeDrawingBrush.color = '#f0f';
+        patternCanvas.freeDrawingBrush.width = 6;
+        // patternCanvas.freeDrawingBrush.color = '#f0f';
 
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
