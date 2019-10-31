@@ -10,11 +10,13 @@ function init_sign(config) {
             <div class="modal-content">
                 <div class="modal-header">
                 <div class="mb-1">
-                        <button class="btn btn-primary DocsBtn" id="draw-sig">Draw</button>
-                        <button id="upload-sig-btn" class="btn btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
-                        <input id="upload-sig" accept=".jpg,.png,.jpeg" style="display:none" type="file">
-                        <button class="btn btn-primary DocsBtn" id="auto-signature-btn">Auto</button>
-                    </div>   
+                    <button class="btn btn-primary DocsBtn" id="draw-sig">Draw</button>
+                    <button id="upload-sig-btn" class="btn btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
+                    <input id="upload-sig" accept=".jpg,.png,.jpeg" style="display:none" type="file">
+                    <button class="btn btn-primary DocsBtn" id="auto-signature-btn">Auto</button>
+                    <input type="range" class="slider" id="range-slider" value="4" min="1" max="20">
+                    <span id="output_value"></span>
+                </div>
                 <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
                 <div id="signature-body" class="modal-body" >
@@ -33,8 +35,9 @@ function init_sign(config) {
         </div>
     </div>`);
 
+    
+
     var dataURL = '';
-    var doc_id = 0;
     var img = new Image();
     
     var signature_editor = $('#signature-editor-div');
@@ -60,7 +63,7 @@ function init_sign(config) {
         }
     }
 
-
+    var patternCanvas = undefined;
     function setup_signature(){
         var save_btn = $('#save-signature-btn');
         var upload_clicker = $('#upload-sig-btn');
@@ -147,10 +150,9 @@ function init_sign(config) {
         //     lineWidth:4
         // });
 
-        var patternCanvas = new fabric.Canvas('signature_canvas', {isDrawingMode: true});
-        patternCanvas.freeDrawingBrush.width = 6;
-        // patternCanvas.freeDrawingBrush.color = '#f0f';
-
+        patternCanvas = new fabric.Canvas('signature_canvas', {isDrawingMode: true});
+        patternCanvas.freeDrawingBrush.width = parseInt($('#range-slider').val());
+        
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
             // $('#signature_modal').show();
@@ -158,8 +160,18 @@ function init_sign(config) {
     };
 
     $('#signature_modal').modal('show');
+    $('#range-slider').change(function(){
+        // patternCanvas.freeDrawingBrush.color = '#f0f';
+        patternCanvas.freeDrawingBrush.width = parseInt(this.value);
+    })
     $( "#signature_modal" ).on('shown.bs.modal', setup_signature);
     // $('#signature_modal').hide();
+    var slider = document.getElementById("range-slider");
+    var output = document.getElementById("output_value");
+    output.innerHTML = slider.value;
 
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+    }
 };
 window['init_sign'] = init_sign;
