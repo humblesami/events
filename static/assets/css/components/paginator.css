@@ -1,6 +1,9 @@
 .board-sheet-paginator{
     padding-top: 0;
 }
+.pagination{
+    margin-bottom: .3rem;
+}
 .paging-meta{
     display: flex;
     justify-content: flex-end;
