@@ -30,6 +30,11 @@
 .board-sheet-paginator .pagination-sm .page-link{
 	padding:4px 10px;
 }
+.record-found{
+    display: flex;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+}
 @media screen and (max-width:420px){
     .board-sheet-paginator .pagination-sm .page-link{
         padding: 0px 5px;
