@@ -154,7 +154,7 @@ function init_sign(config) {
                 <div id="signature-body" class="modal-body" >
                     
                     <div id="signature-editor-div" class="kbw-signature">
-                        <canvas height="100" width="100"></canvas>
+                        <canvas id="signature_canvas" height="100" width="100"></canvas>
                     </div>
                     
                 </div>
@@ -177,10 +177,10 @@ function init_sign(config) {
 
     function load_signature(signature_value) {
         var clear_btn = $('#clear-signature-btn');
-        signature_editor.find('canvas').sign({
-            resetButton: clear_btn,
-            lineWidth:8
-        });
+        // signature_editor.find('canvas').sign({
+        //     resetButton: clear_btn,
+        //     lineWidth:8
+        // });
         clear_btn.click();
 
         if (signature_value && signature_value.length > 0) {
@@ -276,10 +276,14 @@ function init_sign(config) {
 
         var myCanvas = signature_editor.find('canvas')[0];        
         var canvas_context = myCanvas.getContext('2d');
-        signature_editor.find('canvas').sign({
-            resetButton: clear_btn,
-            lineWidth:4
-        });
+        // signature_editor.find('canvas').sign({
+        //     resetButton: clear_btn,
+        //     lineWidth:4
+        // });
+
+        var patternCanvas = new fabric.Canvas('signature_canvas', {isDrawingMode: true});
+        patternCanvas.freeDrawingBrush.width = 16;
+        patternCanvas.freeDrawingBrush.color = '#f0f';
 
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
