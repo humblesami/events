@@ -25,8 +25,8 @@ title="e-Signature"></app-breadcrumb>
     
     <div class="MeetingBtnWrapper">
         <div class="btn-group">
-            <a (click)="get_records($event.target, 'active')" class="btn active">To Do</a>
-            <a (click)="get_records($event.target, 'closed')" class="btn">In Progress</a>
+            <a (click)="get_records($event.target, 'to do')" class="btn active">To Do</a>
+            <a (click)="get_records($event.target, 'in progress')" class="btn">In Progress</a>
             <a (click)="get_records($event.target, 'completed')" class="btn">Completed</a>
             <a (click)="get_records($event.target, 'draft')" class="btn">Draft</a>
         </div>
