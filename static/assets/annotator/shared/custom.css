@@ -79,12 +79,14 @@ button.pen-color.annotation_button.prop {
     min-width: 42px;
     position: relative;
     right: 0;
-    margin-top: -40px;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
     height: calc(100vh - 72px);
     z-index: 1;
     overflow: auto;
     overflow-x: hidden;
+}
+.pen-tool-container > *:not(.pen){
+    display: none;
 }
 
 .toolbar .spacer {
@@ -158,9 +160,6 @@ button.pen-color.annotation_button.prop {
     margin-top: -1px;
     margin-left: -2px;
     margin-right: -2px;
-}
-.text-color, .pen-color {
-    display: inline-block;
 }
 select.pen-size{
     height: 20px;

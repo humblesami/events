@@ -349,6 +349,7 @@
             can.isDrawingMode = false;
         }
         pen_active = false;
+        $('.pen-tool-container > *:not(.pen)').css('display', 'none');
     }
 
     function supportsComments(target) {
@@ -5096,6 +5097,8 @@
                             $('body').css('overflow', 'hidden');
                         _enabled = true;
                         pen_active = true;
+                        console.log(4443);
+                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');
                         canvases = [];
 
                         var cnt_canv = 1;
