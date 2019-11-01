@@ -510,6 +510,10 @@ a.kanban-committees-info-box-name {
 .scheduleDetailOpener span {
 	padding-right: 10px;
 	}
+.MeetingBtnWrapper .btn-group a:not([href]):not([tabindex]):focus
+ {
+		color: #fff;
+	}
 .VotingsInfoBoxTitle {
 	padding: 15px;
 	}
@@ -1614,11 +1618,6 @@ div#search-modal {
 	color: #000000;
 	font-weight: 400;
 }
-
-.notification-container .chat-items > li {
-    padding: 10px;
-}
-
 .notification-container .chat-items.list-group {
     list-style: none;
 }
@@ -1634,7 +1633,8 @@ div#search-modal {
     cursor: pointer;
 }
 .notification-container .chat-items.list-group li:last-child>a{
-    border-bottom: 0;
+	border-bottom: 0;
+	padding: 10px;
 }
 .notification-container .chat-items.list-group li>a:hover{
     background: #487db6;
@@ -2095,6 +2095,7 @@ body.public .router-outlet{
 	}
 .MeetingBtnWrapper .btn-group {
 	overflow: auto;
+	margin-top: 1rem;
 	}
 .btn-group{
 	display: flex;
@@ -2391,6 +2392,9 @@ a.kanban-card.profiledataresume {
 	flex: 0 0 100%;
 	max-width: 100%;
 	}
+.doc_container h3 {
+	margin-bottom: 0.5rem !important;
+}
 a.kanban-card.profiledataresume .DocumentWrapper {
 	border: 1px solid #A2A2A2;
 	}
