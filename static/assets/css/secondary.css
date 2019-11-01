@@ -303,13 +303,13 @@ mention-list.dropup{
     margin-bottom: 1rem;
 }
 
+.breadcrumbSection + .router-outlet > .container > .kanban-headings,
 app-breadcrumb + .router-outlet > .container > .kanban-headings {
-    padding-top: 1rem;
+    padding-top: 2rem;
     padding-bottom: 1rem;
     margin-bottom: 0;
 }
-.board-sheet-paginator,
-.breadcrumbSection + .router-outlet > .container > .kanban-headings {
+.board-sheet-paginator {
     padding-top: 1rem;
 }
 

@@ -1173,7 +1173,7 @@ div#search-modal {
 @media (min-width: 768px) and (max-width: 991.98px) {
 	.searchbar-full-width .lowerheader.input-group {
 		width: 85%;
-		}
+		}	
 	}
 @media (min-width: 768px) and (max-width: 1070px) {
 	.lowerheader {
@@ -2036,7 +2036,10 @@ i.icon-folder.app-menu__icon {
 	.app-content {
 		min-width: 100%;
 		}
+	.MeetingBtnWrapper .btn-group{
+		margin-top: 1rem;
 	}
+}
 .bs-btnwrap {
 	display: flex;
 	border-top: 1px solid rgba(99, 143, 201, 0.25);
@@ -2095,7 +2098,6 @@ body.public .router-outlet{
 	}
 .MeetingBtnWrapper .btn-group {
     overflow: auto;
-    margin-top: 1rem;
 	}
 .btn-group{
 	display: flex;
@@ -2241,7 +2243,17 @@ span.kanban-upcoming-meeting-date {
 	font-size:12px;
 	margin-right:5px;
 }
-
+.home_actions{
+	color: #2B2B2B;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	margin-bottom: 1.5rem;
+	border-bottom: 1px solid #E1E1E1;
+}
+.home_actions h3{
+	margin-bottom: 1rem;
+}
 .res-message {
 	border: 2px solid;
 	padding: 5%;

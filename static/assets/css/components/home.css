@@ -609,3 +609,7 @@ ul {list-style-type: none;}
 #to-do>div:not(:last-child){
     border-bottom: 1px solid #ddd;
 }
+.sub_actions{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
