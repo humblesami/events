@@ -5,10 +5,12 @@
         <div id="welcome" *ngIf="home_data">
             <section class="HomepageDocumentSection">
                 <div class="row">
-                    <div class="col-md-7 WelcomeContent">
-                    <h3 class="text-dark pb-1 mb-3">
+                    <div class="col-md-7 WelcomeContent">                    
+                    <div class="kanban-headings">
+                        <h3>
                             <i class="icon-newspaper text-primary"></i> {{home_data.news.name}}
-                    </h3>
+                        </h3>
+                    </div>
                     <div class="HomePageDiscription">
                         <div *ngIf="home_data.description" class="HomePageContentText">
                             <div class="HomePageContentImg img-flex">                        

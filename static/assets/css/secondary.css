@@ -297,6 +297,10 @@ mention-list.dropup{
     justify-content: space-between;
     align-items: center;
 }
+#main-div>app-calendar>.container>.kanban-headings{
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
 .router-outlet .kanban-headings {
     padding-top: 1rem;
     padding-bottom: 1rem;

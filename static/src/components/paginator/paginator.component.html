@@ -1,6 +1,6 @@
 <div class="board-sheet-paginator" *ngIf="httpService.total > limit_options[0]">
-    <div class="paging-meta">
-        <div class="page-limit" >
+    <div class="paging-meta" [ngClass]="{'justify-content-end' : httpService.limit >= httpService.total}">
+        <div class="page-limit">
             <!-- <span>Page Size</span> -->
             <div class="c1">
                 <div class="d-none d-md-block">
@@ -12,7 +12,7 @@
                     <span class="c12"> {{httpService.total}}</span> 
                 </div>
             </div>            
-            <div class="c2">
+            <div class="c2 pl-3">
                 <span class="c21">Page Size</span>
                 <select class="c22 form-control-sm" (change)="change_limit($event)" [(ngModel)]="httpService.limit">
                     <option *ngFor="let opt of limit_options">{{opt}}</option>
