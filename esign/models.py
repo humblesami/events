@@ -679,7 +679,7 @@ class SignatureDoc(File, Actions):
         offset = params.get('offset')
         limit = params.get('limit')
         docs = cls.get_actions_against_states(docs, states, request.user)
-        total_cnt = docs.count()
+        total_cnt = len(docs)
         if limit:
             docs = docs[offset: offset + int(limit)]
         sign_docs = []
