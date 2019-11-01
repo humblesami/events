@@ -116,7 +116,9 @@ function init_sign(config) {
 
             //load_signature(config.signature);
         });
-
+        clear_btn.click((e)=>{
+            patternCanvas.clear();
+        });
         insert_sign.click(function (e) {
             load_signature(config.signature);
         });
