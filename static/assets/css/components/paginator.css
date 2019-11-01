@@ -2,16 +2,23 @@
     padding-top: 0;
 }
 .pagination{
-    margin-bottom: .3rem;
+    margin-bottom: 0;
 }
 .paging-meta{
     display: flex;
     justify-content: space-between;    
     align-items: flex-end;
-    margin-top: -6px;
+    margin-bottom: 1rem;
+}
+.page-limit > *{
+    margin-right: 1rem;
+}
+.page-limit > *:last-child{
+    margin-right: 0;
 }
 .page-limit{
-    margin-right: 5px;
+    display: flex;
+    align-items: baseline;
 }
 .paging-meta select{
     width: 50px;
@@ -33,6 +40,14 @@
     display: flex;
     margin-bottom: 1rem;
     justify-content: flex-end;
+}
+@media screen and (max-width:768px){
+    .paging-meta{
+        flex-direction: column;
+    }
+    .page-limit{
+        margin-bottom: 1rem;
+    }
 }
 @media screen and (max-width:420px){
     .board-sheet-paginator .pagination-sm .page-link{

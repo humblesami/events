@@ -2039,6 +2039,7 @@ i.icon-folder.app-menu__icon {
 	.MeetingBtnWrapper .btn-group{
 		margin-top: 1rem;
 	}
+	
 }
 .bs-btnwrap {
 	display: flex;
@@ -2261,6 +2262,11 @@ span.kanban-upcoming-meeting-date {
 @media (max-width: 576px) {
 	.main-nav-header img.logo {
 		width: 30vw;
+		}
+		.kanban-profiles-user-InfoLIST{
+			display: flex;
+			align-items: center;
+			margin-bottom: 0.2rem;
 		}
 	}
 .main-nav-header {

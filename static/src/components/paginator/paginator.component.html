@@ -1,10 +1,16 @@
 <div class="board-sheet-paginator" *ngIf="httpService.count > limit_options[0]">
     <div class="paging-meta">
-        <div class="page-limit mb-2 d-flex" >
+        <div class="page-limit" >
             <!-- <span>Page Size</span> -->
             <div class="c1">
-                <span class="c11">Showing {{6111}}-{{6113}}</span>                        
-                <span class="c12"> out of 000{{httpService.count}}</span>
+                <div class="d-none d-md-block">
+                    <span class="c11">Showing {{6111}}-{{6113}} </span> 
+                    <span class="c12"> out of 000{{httpService.count}}</span>
+                </div>
+                <div class="d-md-none">
+                    <span class="c11">{{6111}} / </span>        
+                    <span class="c12"> 000{{httpService.count}}</span> 
+                </div>
             </div>            
             <div class="c2">
                 <span class="c21">Page Size</span>
