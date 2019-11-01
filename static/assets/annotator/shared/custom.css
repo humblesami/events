@@ -768,7 +768,7 @@ span.pager.disabled
 .toolbar.topbar .doc-manage-btn-wrap:not(.group) > button.add-point-button {
     background: #7c7bad;
     position: absolute;
-    top: 65%;
+    top: 45%;
     left: 50%;
     border-radius: 100%;
     padding: 9px;
