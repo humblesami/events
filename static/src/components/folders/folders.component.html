@@ -4,6 +4,9 @@
             <h4>
                 <i class="icon-folder text-primary"></i> Folders
             </h4>
+            <div *ngIf="records && records.length">
+                {{records.length}} Folder<span *ngIf="records.length > 1">s</span>
+            </div>
         </div>
     </div>
     <div class="sub cards container">
@@ -70,9 +73,6 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <div *ngIf="records && records.length" class="mb-4">
-            {{records.length}} Folders
         </div>
     </div>
 </div>

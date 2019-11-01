@@ -315,9 +315,9 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
 
 
 @media screen and (max-width:768px){
-    .kanban-headings{
+    /* .kanban-headings{
         display: block;
-    }
+    } */
 }
 @media screen and (max-width:480px){
     .roster .table th:first-child,

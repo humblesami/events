@@ -3,6 +3,9 @@
         <h3>
             <i class="icon-doc-file text-primary"></i> {{title}}
         </h3>
+        <div *ngIf="docs && docs.length" class="doc_length">
+            {{docs.length}} Document<span *ngIf="docs.length > 1">s</span>
+        </div>
     </div>
     
     <div class="row">
@@ -94,9 +97,6 @@
                 </div>
             </a>
         </div>
-    </div>
-    <div *ngIf="docs && docs.length">
-        {{docs.length}} Documents
     </div>
     <div *ngIf="(personal || socketService.admin_mode) && !readonly">        
         <input class="dlc-file-picker" type="file" name='files[]' multiple/>

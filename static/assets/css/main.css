@@ -2252,6 +2252,7 @@ span.kanban-upcoming-meeting-date {
 	margin-bottom: 1.5rem;
 	border-bottom: 1px solid #E1E1E1;
 }
+.doc_length,
 .home_actions h3{
 	margin-bottom: 1rem;
 }
@@ -2267,6 +2268,10 @@ span.kanban-upcoming-meeting-date {
 			display: flex;
 			align-items: center;
 			margin-bottom: 0.2rem;
+		}
+		.home_actions{
+			flex-direction: column;
+			align-items: flex-start;
 		}
 	}
 .main-nav-header {
