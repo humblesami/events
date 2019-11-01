@@ -26,13 +26,12 @@ export class ChatComponent implements OnInit {
         togglerelated('.container.notification-list'); 
     }
 
-    mark_notifications_read(li){
-        return;
+    mark_notifications_read(li){        
         let obj_this = this;
         if(li.html().trim() == 'No New Notifications')
         {
             return;
-        }        
+        }
         let item = obj_this.socketService.notificationList[li.index()];
         if(!item)
         {
@@ -66,7 +65,7 @@ export class ChatComponent implements OnInit {
                             break;
                         }
                     }
-                }                
+                }
             }
         }
         window['dn_rpc_object'](options);        
