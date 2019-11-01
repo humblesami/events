@@ -19,7 +19,6 @@
     var documentId = undefined;
     var annot_save_timeout = undefined;
     var annotation_save_wait_time = 8000;
-    var is_drawing = false;
     var pen_active = false;
     var canvases = [];
     var loadALlCommentsOnDocument = function() {
@@ -311,8 +310,21 @@
         }
         return temp_key;
     }
-    
 
+    function togglePen(bool){
+        // console.log(bool);
+        pen_active = bool;
+        if(pen_active)
+        {
+            $('.canvas-container').css({'z-index': 12});
+            $('.canvas-container canvas').css({'cursor': 'crosshair'});
+        }
+        else{
+            $('.canvas-container').css({'z-index': -1});
+            $('.canvas-container canvas').css({'cursor': 'auto'});
+        }
+    }
+    
     function on_penLeave(){
         var drawing_pages = [];
         var localAnnots = _getAnnotations(documentId);
@@ -348,7 +360,7 @@
         for(var can of canvases){
             can.isDrawingMode = false;
         }
-        pen_active = false;
+        togglePen(false);
         $('.pen-tool-container > *:not(.pen)').css('display', 'none');
     }
 
@@ -426,12 +438,15 @@
                 return;
             }
             if(!$(e.target).closest('#viewer').length){
-                if(is_drawing){
-                    var localAnnots = _getAnnotations(documentId);
-                    localAnnots[localAnnots.length - 1].to_merge = 0;
-                    updateAnnotations(documentId, localAnnots, 'op=drawing left');
+                if(pen_active){
+                    var localAnnots = _getAnnotations(documentId);                    
+                    if(localAnnots.length && localAnnots[localAnnots.length - 1].to_merge)
+                    {
+                        localAnnots[localAnnots.length - 1].to_merge = 0;
+                        updateAnnotations(documentId, localAnnots, 'op=drawing left');
+                    }
+                    togglePen(false);
                 }
-                is_drawing = false;
             }
         });
         $(document).on('mouseup', '#viewer', function(e) {
@@ -865,12 +880,13 @@
                 var doc_data = RENDER_OPTIONS.document_data;
                 var doc_type = doc_data.type;                
                 var rotateBy = RENDER_OPTIONS.rotate;
-                var rotate_degree = rotateBy % 360;
+                var rotate_degree = rotateBy % 360;                
                 if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {
                     annotation_mode = 1;
                     $('#annotated-doc-conatiner').removeClass('no_annotation').addClass('annotator');
                 }
-                else{                                   
+                else{
+                    togglePen(false);
                     if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
                     {
                         annotation_mode = 2;
@@ -1247,21 +1263,44 @@
 
                         function on_document_rendered() {
                             try {
-                                // $('.ToolBarWrapper>div').css({
-                                //     display: 'flex'
-                                // });
-                                // var rotateBy = RENDER_OPTIONS.rotate;
-                                // var rotate_degree = rotateBy % 360;
                                 showHideAnnotations();
                                 if (!(doc_data && doc_data.first_time)) {
                                     return;
                                 }
                                 if (!annotation_mode) {
                                     return;
-                                }                                
-                                
+                                }
+
+                                // canvases = [];
+                                // var cnt_canv = 1;
+                                // $('#viewer .page').each(function(){
+                                //     var the_page = $(this);
+
+
+                                    // var myCanvas = the_page.find('.canvasWrapper canvas:first')[0];
+                                    // console.log(myCanvas)
+                                    // var patternCanvas = new fabric.Canvas(myCanvas.id);
+                                    // patternCanvas.freeDrawingBrush.width = 6;
+                                    // canvases.push(patternCanvas);
+
+                                    // $(the_page).css('position', 'relative');
+                                    // var canvas_id = 'dcanvas'+(cnt_canv);
+                                    // cnt_canv++;
+                                    // var drawing_canvas = '<div style="position:absolute"><div>';
+                                    // drawing_canvas += '<canvas id='+canvas_id;
+                                    // drawing_canvas += ' height='+$(the_page).height()+' width='+$(this).width()
+                                    // drawing_canvas += ' />';
+                                    // drawing_canvas += '</div></div>';
+                                    // $(the_page).prepend(drawing_canvas);
+                                    // console.log(canvas_id);
+                                    // var patternCanvas = new fabric.Canvas(canvas_id, {isDrawingMode : true});
+                                    // patternCanvas.freeDrawingBrush.width = 6;
+                                    // canvases.push(patternCanvas);
+                                    // console.log(canvas_id, drawing_canvas[0], patternCanvas);
+                                // });
+                                // console.log(window.annotation_save_wait_time, window.patternCanvas);
                                 window['route_changing'] = false;
-                                process_notification_url(window.location.toString());
+                                process_notification_url(window.location.toString());                                
 
                                 var socket_manager = window['socket_manager'];
                                 socket_manager.execute_on_verified(function() {
@@ -4910,7 +4949,6 @@
                         {
                             return;
                         }
-                        is_drawing = true;
                         path = null;
                         lines = [];                        
 
@@ -5096,24 +5134,8 @@
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
                         _enabled = true;
-                        pen_active = true;
-                        console.log(4443);
-                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');
-                        canvases = [];
-
-                        var cnt_canv = 1;
-                        // $('#viewer .page').each(function(){
-                        //     // console.log(this);
-                        //     $(this).css('position', 'relative');
-                        //     var canvas_id = 'dcanvas'+(cnt_canv);
-                        //     cnt_canv++;
-                        //     var drawing_canvas = $('<canvas id='+canvas_id+' height='+$(this).height()+' width='+$(this).width()+' />');                            
-                        //     $(this).prepend(drawing_canvas);
-                        //     console.log(canvas_id);
-                        //     var patternCanvas = new fabric.Canvas(canvas_id, {isDrawingMode: true});
-                        //     patternCanvas.freeDrawingBrush.width = 6;
-                        //     // console.log(canvas_id, drawing_canvas[0], patternCanvas);
-                        // });
+                        togglePen(true);
+                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');                        
                         document.addEventListener('mousedown', mouse_down30);
                         document.addEventListener('touchstart', mouse_down30);
                         (0, _utils.disableUserSelect)();
