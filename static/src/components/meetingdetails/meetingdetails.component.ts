@@ -60,7 +60,7 @@ export class MeetingDetailsComponent implements OnInit {
 
     open_roster(){
         let obj_this = this;
-		const modalRef = this.modalService.open(RosterComponent, { keyboard: false, backdrop: 'static' });
+		const modalRef = this.modalService.open(RosterComponent, { windowClass: 'roster-modal', keyboard: false,  backdrop: 'static' });
         modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
         modalRef.componentInstance.meeting_type = obj_this.meeting_object.exectime;
         modalRef.result.then(function(data){

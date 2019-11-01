@@ -8,6 +8,7 @@ export class HttpService {
     offset: number;
     limit: number;
     count: number;
+    total: number;
     search_kw = '';
     @Output() on_paged_data: EventEmitter<any> = new EventEmitter();
 
@@ -119,7 +120,8 @@ export class HttpService {
                 }
                 if(data.total)
                 {
-                    obj_this.count = Number(data.total);
+                    obj_this.total = Number(data.total);
+                    obj_this.count = Number(data.count);
                     try{
                         obj_this.on_paged_data.emit();
                     }
@@ -130,6 +132,7 @@ export class HttpService {
                 }
                 else if(data.total == 0)
                 {
+                    obj_this.total = 0;
                     obj_this.offset = 0;
                     obj_this.count = 0;
                 }

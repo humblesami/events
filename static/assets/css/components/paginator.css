@@ -10,9 +10,7 @@
     align-items: flex-end;
     margin-bottom: 1rem;
 }
-.page-limit > *{
-    margin-right: 1rem;
-}
+
 .page-limit > *:last-child{
     margin-right: 0;
 }
@@ -24,11 +22,15 @@
     width: 50px;
     display: inline;    
     margin: 0 5px;
+    background: transparent;
     background-position: right 5px center !important;
     border: 1px solid #ddd;
 }
 .board-sheet-paginator li.page-item.disabled .page-link{
     background-color: #e6e6e6;
+}
+.paging-meta .pages{
+    padding-top: 10px;
 }
 .board-sheet-paginator .pagination li.page-item {
     margin: 0 3px;
@@ -44,9 +46,6 @@
 @media screen and (max-width:768px){
     .paging-meta{
         flex-direction: column;
-    }
-    .page-limit{
-        margin-bottom: 1rem;
     }
 }
 @media screen and (max-width:420px){

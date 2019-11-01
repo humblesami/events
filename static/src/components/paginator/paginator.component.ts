@@ -34,7 +34,7 @@ export class PaginatorComponent implements OnInit {
     all_pages(){
         let obj_this = this;
         obj_this.total_pages = [];
-        let lPage= Math.ceil(obj_this.httpServ.count/obj_this.httpService.limit);
+        let lPage= Math.ceil(obj_this.httpServ.total/obj_this.httpService.limit);
         for (let i = 1; i <= lPage; i++) {            
             obj_this.total_pages.push(i)
         }

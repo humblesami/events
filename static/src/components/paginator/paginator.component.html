@@ -1,15 +1,15 @@
-<div class="board-sheet-paginator" *ngIf="httpService.count > limit_options[0]">
+<div class="board-sheet-paginator" *ngIf="httpService.total > limit_options[0]">
     <div class="paging-meta">
         <div class="page-limit" >
             <!-- <span>Page Size</span> -->
             <div class="c1">
                 <div class="d-none d-md-block">
-                    <span class="c11">Showing {{6111}}-{{6113}} </span> 
-                    <span class="c12"> out of 000{{httpService.count}}</span>
+                    <span class="c11">Showing {{httpService.offset + 1}}-{{httpService.offset + httpService.count}} </span> 
+                    <span class="c12"> out of {{httpService.total}}</span>
                 </div>
                 <div class="d-md-none">
-                    <span class="c11">{{6111}} / </span>        
-                    <span class="c12"> 000{{httpService.count}}</span> 
+                    <span class="c11">{{httpService.offset + 1}}-{{httpService.offset + httpService.count}} / </span>
+                    <span class="c12"> {{httpService.total}}</span> 
                 </div>
             </div>            
             <div class="c2">
@@ -19,7 +19,7 @@
                 </select>
             </div>
         </div>
-        <div *ngIf="httpService.limit < httpService.count" class="pages" aria-label="Page navigation example">
+        <div *ngIf="httpService.limit < httpService.total" class="pages" aria-label="Page navigation example">
             <ul class="pagination  pagination-sm justify-content-center" >
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
                     <button (click)="first_Page(0)" class="page-link">
@@ -39,13 +39,13 @@
                         </button>
                     </li>
                 </ul>
-                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
+                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.total">
                     <button (click)="change_page(1)" class="page-link">
                         <i class="fa fa-chevron-right"></i>
                     </button>
                 </li>
-                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
-                    <button (click)="last_Page(httpService.count)" class="page-link">
+                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.total">
+                    <button (click)="last_Page(httpService.total)" class="page-link">
                         <i class="fa fa-chevron-right"></i>
                         <i class="fa fa-chevron-right"></i>
                     </button>
@@ -54,7 +54,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="httpService.count <= limit_options[0]" class="record-found">
-    <span *ngIf="httpService.count>0">{{httpService.count}} Record<span *ngIf="httpService.count>1">s</span> Found</span>
-    <span *ngIf="httpService.count==0">No Records Found</span>
+<div *ngIf="httpService.total <= limit_options[0]" class="record-found">
+    <span *ngIf="httpService.total>0">{{httpService.total}} Record<span *ngIf="httpService.total>1">s</span> Found</span>
+    <span *ngIf="httpService.total==0">No Records Found</span>
 </div>

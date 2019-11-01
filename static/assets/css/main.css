@@ -337,7 +337,7 @@ button:focus {
 	font-size: 1rem;
     }
 .modal-content{
-    width: auto !important;
+    min-width: 50vw;
 }    
 .modal-input-wrap {
 	width: 100%;
@@ -469,6 +469,7 @@ a.kanban-committees-info-box-name {
 	align-items: center;
 	min-height: calc(100% - (1.75rem * 2));
     margin: 1.75rem auto;
+    min-width: 50vw;
     justify-content: center;
 	}
 
@@ -3170,8 +3171,10 @@ a.folder.droppable:not(.draggable) .paste{
     display: block;
 }
 .roster{
-    margin: 10px;
-    min-width: 68vw;
+    margin: 10px;    
+}
+.modal.roster-modal .modal-content{
+    min-width: 70vw;
 }
 .roster-height{
 	height:calc(100vh - 350px);
