@@ -247,15 +247,9 @@
     border-bottom-right-radius: 78px;
     border-top-right-radius: 78px;
 }
-
-@media screen and (max-width: 600px) {
-    #nxxt_sign {
-        width: 90px!important;
-        height: 25px;
-        font-size: 0.8em;
-    }
+.doc-container #fields-hide{
+    display: none;
 }
-
 .o_form_nosheet {
     padding: 0!important;
 }
@@ -357,8 +351,7 @@
 	font-size:20px;
 	padding-bottom:5px;
 	border-bottom:1px solid #E1E1E1;
-	margin: 0 0 10px;
-
+    margin: 0 0 10px;
 }
 .PdfVerticalButtonWrapper .docselectbtn {
     display: block;
@@ -413,4 +406,31 @@ body.public #viewer_container{
 }
 .PdfTopBtnsWrapper>div{
     display: flex;
+}
+@media screen and (max-width: 600px) {
+    #nxxt_sign {
+        width: 90px!important;
+        height: 25px;
+        font-size: 0.8em;
+    }
+    .doc-container.admin #doc-side-scroll{
+        z-index: 1;
+        position: absolute;
+        background: #fff;
+        width: auto;
+    }
+    .doc-container.admin .docWrapperContainer{
+        width: 100%;
+    }
+    .doc-container.admin #fields-hide{
+        display: block;
+        z-index: 2;
+        position: absolute;
+        left: 1rem;
+        top: 0.8rem;
+        font-size: 1rem;
+    }
+    .fields-title{
+        padding-left: 1rem;
+    }
 }

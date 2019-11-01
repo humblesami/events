@@ -104,6 +104,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
     ngOnInit() {
+        $('#fields-hide').click(function(){
+            $(this).toggleClass("text-white");
+            $('.doc-container.admin #doc-side-scroll').toggle();
+        });
         var obj_this = this;
         var
             canvas,
@@ -1298,4 +1302,5 @@ export class EsignDocDetailsComponent implements OnInit {
     ngOnDestroy(){
         $('.router-outlet').css('height', this.prev_height);
     }
+    
 }
