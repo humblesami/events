@@ -676,13 +676,12 @@ class SignatureDoc(File, Actions):
             docs = search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
         else:
             docs = cls.objects.all().order_by('-pk')
-        total_cnt = docs.count()
         offset = params.get('offset')
         limit = params.get('limit')
         docs = cls.get_actions_against_states(docs, states, request.user)
+        total_cnt = docs.count()
         if limit:
             docs = docs[offset: offset + int(limit)]
-        current_cnt = len(docs)
         sign_docs = []
         for sign_doc in docs:
             doc = sign_doc.get_pending_sign_count(request.user.id)
@@ -704,7 +703,8 @@ class SignatureDoc(File, Actions):
             doc['id'] = sign_doc.id
             doc['name'] = sign_doc.name
             sign_docs.append(doc)
-        result = {'records': sign_docs, 'total': total_cnt, 'count': current_cnt}
+        count = len(sign_docs)
+        result = {'records': sign_docs, 'total': total_cnt, 'count': count}
         return result
 
 

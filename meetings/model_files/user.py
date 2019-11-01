@@ -342,12 +342,9 @@ class Profile(user_model, CustomModel):
         profiles = list(profiles)
         if limit:
             profiles = profiles[offset: offset + int(limit)]
-        current_cnt = total_cnt
-        # profiles = ws_methods.queryset_to_list(
-        #     profiles,fields=['username','image','email','id']
-        # )
         profiles = ws_methods.get_user_info(profiles)
-        profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
+        count = len(profiles)
+        profiles_json = {'records': profiles, 'total': total_cnt, 'count': count}
         return profiles_json
 
     @classmethod

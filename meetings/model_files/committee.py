@@ -68,7 +68,6 @@ class Committee(CustomModel):
         committees_orm = list(committees_orm)
         if limit:
             committees_orm = committees_orm[offset: offset + int(limit)]
-        current_cnt = total_cnt
         committees = ws_methods.queryset_to_list(
             committees_orm,
             fields=['id', 'name', 'description'],
@@ -76,8 +75,8 @@ class Committee(CustomModel):
                 'users': {'fields': ['id', 'username', 'image']}
             }
         )
-
-        data = {'records':committees, 'total': total_cnt, 'count': current_cnt}
+        count = len(committees)
+        data = {'records':committees, 'total': total_cnt, 'count': count}
         return data
 
 

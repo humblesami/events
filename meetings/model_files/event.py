@@ -502,7 +502,8 @@ class Event(CustomModel):
         total = len(meetings)
         if limit:
             meetings = meetings[offset: offset + int(limit)]
-        meetings = {'records': meetings, 'total': total}
+        count = len(meetings)
+        meetings = {'records': meetings, 'total': total, 'count': count}
         data = {'error': '', 'data': meetings}
         return data
 

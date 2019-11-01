@@ -113,25 +113,10 @@ class Survey(Actions):
         kw = params.get('kw')
         states = params['states']
         uid = request.user.id
-        # groups = request.user.groups.values('name')
-        # results_visibility = False
-        # survey_list = []
-        # for group in groups:
-        #     if group['name'] in ['Admin', 'Staff']:
-        #         results_visibility = True
         if kw:
             survey_list = ws_methods.search_db({'kw': kw, 'search_models': {'survey': ['Survey']}})
         else:
-            # docs = cls.objects.all()    
-            # if results_visibility:
             survey_list = Survey.objects.all().order_by('-pk').distinct()
-            # else:
-            #     survey_list = Survey.objects.filter(
-            #         (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-            #             |
-            #             (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-            #             |
-            #             Q(respondents__id=uid)).order_by('-pk').distinct()
         if params.get('meeting_id'):
             meeting_id = params.get('meeting_id')
             survey_list = survey_list.filter(meeting_id=meeting_id)
@@ -161,7 +146,8 @@ class Survey(Actions):
                 'open_date': str(survey.open_date),
                 'close_date': str(survey.close_date),
             })
-        surveys_json = {'records': surveys, 'total': total, 'count': len(survey_list)}
+        count = len(survey_list)
+        surveys_json = {'records': surveys, 'total': total, 'count': count}
         return surveys_json
 
     @classmethod
