@@ -6,8 +6,7 @@
 }
 .paging-meta{
     display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
+    justify-content: space-between;    
     align-items: flex-end;
     margin-top: -6px;
 }

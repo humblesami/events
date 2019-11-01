@@ -335,7 +335,10 @@ button:focus {
 	display: block;
 	margin-bottom: 0.5rem;
 	font-size: 1rem;
-	}
+    }
+.modal-content{
+    width: auto !important;
+}    
 .modal-input-wrap {
 	width: 100%;
 	padding: 0 10px;
@@ -360,7 +363,8 @@ breadcrumb
 	min-height: 40px;
 	padding: 0 20px 0 15px;
 	}
-.centered .btn,
+
+    .centered .btn,
 .modal-content button.btn,
 .edit-buttons .btn,
 .modal-footer .btn,
@@ -464,7 +468,8 @@ a.kanban-committees-info-box-name {
 	-ms-flex-align: center;
 	align-items: center;
 	min-height: calc(100% - (1.75rem * 2));
-	margin: 1.75rem auto;
+    margin: 1.75rem auto;
+    justify-content: center;
 	}
 
 .bootbox {
@@ -509,10 +514,6 @@ a.kanban-committees-info-box-name {
 	}
 .scheduleDetailOpener span {
 	padding-right: 10px;
-	}
-.MeetingBtnWrapper .btn-group a:not([href]):not([tabindex]):focus
- {
-		color: #fff;
 	}
 .VotingsInfoBoxTitle {
 	padding: 15px;
@@ -1633,8 +1634,7 @@ div#search-modal {
     cursor: pointer;
 }
 .notification-container .chat-items.list-group li:last-child>a{
-	border-bottom: 0;
-	padding: 10px;
+    border-bottom: 0;
 }
 .notification-container .chat-items.list-group li>a:hover{
     background: #487db6;
@@ -2094,8 +2094,8 @@ body.public .router-outlet{
 		}
 	}
 .MeetingBtnWrapper .btn-group {
-	overflow: auto;
-	margin-top: 1rem;
+    overflow: auto;
+    margin-top: 1rem;
 	}
 .btn-group{
 	display: flex;
@@ -2392,9 +2392,6 @@ a.kanban-card.profiledataresume {
 	flex: 0 0 100%;
 	max-width: 100%;
 	}
-.doc_container h3 {
-	margin-bottom: 0.5rem !important;
-}
 a.kanban-card.profiledataresume .DocumentWrapper {
 	border: 1px solid #A2A2A2;
 	}
@@ -3150,10 +3147,8 @@ a.folder.droppable:not(.draggable) .paste{
     display: block;
 }
 .roster{
-    /* border: 2px solid #f3f3f3; */
     margin: 10px;
-    /* border-radius: 10px 10px 0 0;
-    padding: 2px; */
+    min-width: 68vw;
 }
 .roster-height{
 	height:calc(100vh - 350px);
@@ -3200,4 +3195,4 @@ a.folder.droppable:not(.draggable) .paste{
     background: #fff;
     cursor: pointer;
     border-radius:20px;
-} 
+}

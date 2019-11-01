@@ -5,14 +5,14 @@ declare var $: any;
 @Component({
     selector: "app-chat",
     styleUrls:['./notification.css'],
-	templateUrl: "./chat.component.html",	
+	templateUrl: "./chat.component.html",
 })
 export class ChatComponent implements OnInit {
 	socketService : SocketService;
     constructor(
 		private ss: SocketService) {
 		var obj_this = this;
-        obj_this.socketService = ss;        
+        obj_this.socketService = ss;
     }
     odoo_build = window['odoo'] ? 1 : undefined;
 
@@ -22,11 +22,11 @@ export class ChatComponent implements OnInit {
 
     toggle_notifications(e)
     {
-        var togglerelated = window['functions'].togglerelated;        
+        var togglerelated = window['functions'].togglerelated;
         togglerelated('.container.notification-list'); 
     }
 
-    mark_notifications_read(li){        
+    mark_notifications_read(li){
         let obj_this = this;
         if(li.html().trim() == 'No New Notifications')
         {
@@ -52,7 +52,7 @@ export class ChatComponent implements OnInit {
                     method: 'mark_read'
                 }                
             },
-            onSuccess:function(read_notification_ids){                                                
+            onSuccess:function(read_notification_ids){
                 for(var i in read_notification_ids)
                 {
                     let notificationList = obj_this.socketService.notificationList;
@@ -68,13 +68,13 @@ export class ChatComponent implements OnInit {
                 }
             }
         }
-        window['dn_rpc_object'](options);        
+        window['dn_rpc_object'](options);
     }
 
-	ngOnInit() {                
+	ngOnInit() {
         var obj_this = this;
         var route = window['pathname'];        
-        $('body').on('click', '.notification-list li', function(){                      
+        $('body').on('click', '.notification-list li', function(){
             obj_this.mark_notifications_read($(this));
         });
         if(route == '/chat')
