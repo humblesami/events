@@ -224,6 +224,14 @@ a,
 	width: 28px;
 	height: 28px;
 	}
+#main-div > app-calendar > .row > .col-12{
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 2rem;
+}	
+#main-div > app-calendar > .row > .col-12 > .kanban-headings{
+	padding-bottom: 1rem;
+}
 .BoderGrayTopWrap {
 	border-top: 10px solid #F3F3F3;
 	padding-bottom: 20px;
@@ -2253,6 +2261,9 @@ span.kanban-upcoming-meeting-date {
 	margin-bottom: 1.5rem;
 	border-bottom: 1px solid #E1E1E1;
 }
+.doc_container.home_actions{
+	margin-top: 1rem;
+}
 .doc_length,
 .home_actions h3{
 	margin-bottom: 1rem;
@@ -2829,7 +2840,6 @@ label.check-plus-label-wrap {
     border-radius: 6px;
     position: relative;
     margin-top: 1rem;
-    margin-bottom: 1rem;
     display: flex;
 }
 .main-full-seachbar .form-control {

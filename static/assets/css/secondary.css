@@ -325,6 +325,9 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
 .MeetingBtnWrapper .btn-group .btn.active:hover{
     color: #fff;
 }
+.MeetingBtnWrapper{
+    margin-top: 1rem;
+}
 @media screen and (max-width:768px){
     .kanban-headings{
         flex-direction: column;
@@ -333,8 +336,13 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
 
 }
 @media screen and (min-width: 576px){
-    .jumbotron{
+    .router-outlet .jumbotron{
         padding: 2rem 0;
+        margin-top: 1rem;
+        margin-bottom: 0;
+    }
+    .MeetingBtnWrapper ~ .jumbotron{
+        margin-top: 0;
     }
 }
 @media screen and (max-width:480px){
