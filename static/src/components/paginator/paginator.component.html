@@ -3,13 +3,9 @@
         <div class="page-limit">
             <!-- <span>Page Size</span> -->
             <div class="c1">
-                <div class="d-none d-md-block">
-                    <span class="c11">Showing {{httpService.offset + 1}}-{{httpService.offset + httpService.count}} </span> 
-                    <span class="c12"> out of {{httpService.total}}</span>
-                </div>
-                <div class="d-md-none">
-                    <span class="c11">{{httpService.offset + 1}}-{{httpService.offset + httpService.count}} / </span>
-                    <span class="c12"> {{httpService.total}}</span> 
+                <div>
+                    <span class="c11">{{httpService.offset + 1}}-{{httpService.offset + httpService.count}} </span>
+                    <span class="c12"> out of {{httpService.total}}</span> 
                 </div>
             </div>            
             <div class="c2 pl-3">
