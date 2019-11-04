@@ -104,16 +104,6 @@
                 on_onedrive_sdk_loaded(btn);
             }
             $('body').on('click', '.one_drive_picker', one_drive_click);
-            app_libs['bootbox'].load(function(){
-                if(!bootbox)
-                {
-                    console.log('not loaded', app_libs['bootbox']);
-                }        
-                else{
-                    window['bootbox'] = bootbox;
-                }
-            });
-            app_libs['moment'].load(function(){});
         })();
     </script>
     <link rel="stylesheet" type="text/css" href="static/assets/css/secondary.css" />

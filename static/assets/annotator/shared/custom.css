@@ -58,8 +58,10 @@
 }
 
 button.pen-color.annotation_button.prop {
-    margin: 8px 5px;
+    margin: 8px auto;
+    border: 1px solid;
 }
+
 
 .doc-manage-btn-wrap button:hover, .icon.back:hover {
     background: cornflowerblue;
@@ -750,7 +752,9 @@ a.list-group-item.contact.active {
     padding-left: 38px;
     display: block;
 }
-
+.PenSize{
+    cursor: pointer;
+}
 .PenSize select{
     padding: 0px 15px 5px 5px;
     background-position: 90% 65% !important;

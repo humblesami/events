@@ -278,12 +278,7 @@ export class DocumentComponent implements OnInit {
     
     ngOnInit() {
         var obj_this = this;
-        window['app_libs']['pdf'].load(function(){
-
-            window['app_libs'].jquery_ui.load(function(){
-                window['init_doc_comments']();            
-            });
-            
+        window['app_libs']['pdf'].load(function(){            
             $('.PdfViewerWrapper:first').scroll(function() {
                 if(!this.total_pages)
                 {

@@ -76,32 +76,7 @@
         return dist_rects;
     }
 
-    function get_merge_rects(dist_rects)
-    {
-        let merged_rects = [];
-        let index = -1;
-        for (let rect of dist_rects)
-        {
-            if (!merged_rects.length)
-            {
-                merged_rects.push(rect);
-                index++;
-                continue;
-            }
 
-            if(Math.abs(merged_rects[index].y - rect.y) <= 6)
-            {
-                merged_rects[index].width += rect.width;
-                merged_rects[index].right = rect.right;
-            }
-            else
-            {                    
-                merged_rects.push(rect);
-                index++;
-            }
-        }
-        return merged_rects;
-    }
     var programtic_cursor = false;
     function select_cursor(force) {
         // window['functions'].get_trace(1);
@@ -516,14 +491,12 @@
             
             var activePointId = undefined;            
             var commentText; // = comments_wrapper.find('#commentText');
-            var comment_list_div; // = comments_wrapper.find('.comment-list:first');
             var comment_list; // = comments_wrapper.find('.comment-list-container:first');
-
-            window['init_doc_comments'] = function() {                
+            
+            (function() {                
                 comments_wrapper = $('#comment-wrapper');
                 comments_wrapper.resizable();
                 commentText = comments_wrapper.find('#commentText');
-                comment_list_div = comments_wrapper.find('.comment-list:first');
                 comment_list = comments_wrapper.find('.comment-list-container:first');
                 commentText.focus(function() {
                     comment_item_focused = true;
@@ -533,7 +506,7 @@
                 $(window).bind("unload", on_leave_document);
                 scroll_div = $('.PdfViewerWrapper');
                 content_wrapper = $('#content-wrapper');
-            }
+            })()
 
             annotation_user_m2 = localStorage.getItem('user');
             annotation_user_m2 = JSON.parse(annotation_user_m2);
@@ -931,7 +904,6 @@
             function onCOmmentAdded() {
                 commentText.html('');
                 commentText.parent().show();
-                // comment_list_div.scrollTop(999999000);
                 commentText.focus();
             }
 
@@ -982,7 +954,6 @@
                     prev_doc_url = window.location.toString();
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
-                    comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');                    
                     documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
                     doc_id = doc_data.id;
@@ -5362,7 +5333,6 @@
                             var rects = range.getClientRects();
                             if (rects.length > 0 && rects[0].width > 0 && rects[0].height > 0) {                                
                                 rects = get_dist_rects(rects);
-                                // rects = get_merge_rects(rects);
                                 return rects;
                             }
                         } catch (e) {}
