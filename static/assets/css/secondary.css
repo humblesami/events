@@ -319,7 +319,12 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
 .router-outlet .child-pages{
     padding-top: 1.5rem;
 }
-
+.bio-textarea{
+    height: 10rem !important;
+}
+.MeetingBtnWrapper .btn-group .btn.active:hover{
+    color: #fff;
+}
 @media screen and (max-width:768px){
     .kanban-headings{
         flex-direction: column;
