@@ -130,10 +130,14 @@ CanvasSVG.Base.prototype = {
         this.addElement('rect', attr);
     },
     
-    addPath:    function (type, cur, path, trans) {
+    addPath:    function (type, cur, path, trans, i, state_length) {        
         var attr = { d: this.buildPath(path) };
         this.processCommon(type, attr, cur, trans);
-        this.addElement('path', attr);
+        if(i == state_length - 1)
+        {
+            // console.log(path);
+            this.addElement('path', attr);
+        }
     },
     
     addText:    function (type, cur, prm, trans) {
@@ -286,7 +290,7 @@ CanvasSVG.Base.prototype = {
     },
     
     // the braaaaaaaaiiiins
-    handleCommands: function (cmd, prm) {
+    handleCommands: function (cmd, prm, i, state_length) {
         switch (cmd) {
             // properties
             case 'fillStyle':
@@ -385,10 +389,10 @@ CanvasSVG.Base.prototype = {
                 this.pushArcAsA(prm[0], prm[1], prm[2], prm[3], prm[4], prm[5]);
                 break;
             case 'fill':
-                this.addPath('fill', this.cur, this.path, this.trans);
+                this.addPath('fill', this.cur, this.path, this.trans, i, state_length);
                 break;
             case 'stroke':
-                this.addPath('stroke', this.cur, this.path, this.trans);
+                this.addPath('stroke', this.cur, this.path, this.trans, i, state_length);
                 break;
             case 'clip':
                 // XXX
@@ -485,10 +489,12 @@ CanvasSVG.Deferred.prototype.getSVG = function () {
     
     // walk the state and add stuff
     // don't try to be smart, just produce what the canvas calls produce
-    for (var i = 0; i < this.state.length; i++) {
+    
+    var state_length = this.state.length
+    for (var i = 0; i < state_length; i++) {        
         var cmd = this.state[i].type;
         var prm = this.state[i].value;
-        this.handleCommands(cmd, prm);
+        this.handleCommands(cmd, prm, i, state_length);
     }
     return this.svg;
 };
@@ -532,8 +538,8 @@ CanvasSVG.Live.prototype.setParent = function (parent) {
                                         });
     parent.appendChild(this.svg);
 };
-CanvasSVG.Live.prototype.runCommand = function (cmd, prm) {
-    this.handleCommands(cmd, prm);
+CanvasSVG.Live.prototype.runCommand = function (cmd, prm, i, state_length) {
+    this.handleCommands(cmd, prm, i, state_length);
 };
 
 /// Property Mapping /////////////////////////////////////////////////////////////////////////////////

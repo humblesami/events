@@ -1230,12 +1230,8 @@
                                 window['route_changing'] = false;
                                 process_notification_url(window.location.toString()); 
                                 
-                                
-
-                                var cnt_canv = 1;
                                 $('#viewer .page').each(function(){
                                     var the_page = $(this);
-                                    // var myCanvas = the_page.find('.canvasWrapper canvas:first')[0];
                                     var height = the_page.height() - 2;
                                     var width = the_page.width() - 2;
                                     var drawing_wrapper = $('<div class="drawing_wrapper" style="top:1px;left:1px;height:'+height+'px;width:'+width+'px;position:absolute;z-index:-1" />');                            
@@ -1245,21 +1241,21 @@
                                     drawing_wrapper.append(jq_canvas);                            
 
                                     // drawing_wrapper.signature({thickness: $('#range-slider').val() || 6});
+                                    
                                     var myCanvas = drawing_wrapper.find('canvas')[0];
                                     var canvasSVGContext = new CanvasSVG.Deferred();
                                     canvasSVGContext.wrapCanvas(myCanvas);
-                                    // console.log(drawing_wrapper[0]);
-                                    $(myCanvas).sign({
-                                        lineWidth: 12
-                                    });
-                                    jq_canvas.attr('width' , width);
-                                    jq_canvas.attr('height' , height);
 
+                                    $(myCanvas).sign({ lineWidth: 12 });
+                                    jq_canvas.attr({'width' : width, 'height' : height});
+                                    
                                     jq_canvas.mouseup(function(){
                                         // var res_svg = get_minimal_svg(myCanvas);
                                         var canvasContext = myCanvas.getContext("2d");
                                         var res_svg = canvasContext.getSVG();
-                                        // console.log(res_svg);
+                                        // var last_path = $(res_svg).find('path:last');
+                                        // $(res_svg).html(last_path)
+                                        console.log(res_svg);
                                         the_page.find('svg.annotationLayer').append(res_svg);
                                     });
                                 });
