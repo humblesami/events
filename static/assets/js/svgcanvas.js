@@ -1,342 +1,586 @@
-/*!
- * HTML5 Canvas SVG Alpha 2.0
- * http://specinnovations.com/
- *
- * Copyright 2011, SPEC Innovations
- * Dual licensed under the MIT or Apache 2.0.
- * http://code.google.com/p/html5-canvas-svg/
- * Alex Rhea, Chris Ritter
- *
- * Date: Tue Aug 09 2011 -0400
- */
 
-(function( window , document , undefined ) { 
+// XXX TODO
+//---missing---
+//  - images
+//  - clip
+//  - gradients
+//  - patterns
+//  - fillStyle and strokeStyle as paint servers
+//  - arcTo
+//  - maxWidth on text
+//  - shadowColor
+//  - dynamic filter w/h
+//  - composite copy or lighter
+//  - video
+//  - other canvases
+//  - lots of tests
+//  - add a stringification method
+//  - add wrapper around toDataURL("image/svg+xml")
+//  - Google Code
+//  - lots of shortcuts in data verification taken compared to spec
+//---tests---
+//  - text
+//  - shadows
+//  - more complex paths
+//  - clips
+//---ideas---
+//  - gradients and patterns, need to wrap the objects, need to have creator
+//    methods different from the basic ones, and need to have different get/set
+//    for fillStyle and strokeStyle
+//  - for ImageData, it might be needed at some point to create an invisible canvas
+//    element, put the image data there, and getDataURL from it
+//  - take a bunch of complex canvas scripts and try them out
+//  - wire in Processing.js
 
-// current path template
-var currentPath = {
-	type : "path",
-	points : new Array(),
-	style : {}
-}
+CanvasSVG = {};
+CanvasSVG.Base = function () {};
+CanvasSVG.Base.prototype = {
+    ns:     'http://www.w3.org/2000/svg',
+    id:     0,
 
-// canvas DOM element
-var canvas = null;
+    // --- core
+    wrapCanvas: function (c) {
+        if (c.canvasSVGWrapper) return;
+        var obj = this;
+        this.el = c;
+        c._getContext = c.getContext;
+        c.getContext = function (dim) { return obj.getContext(dim); };
+        c.canvasSVGWrapper = true;
+        this.canvas = c; // shouldn't be needed, but seems to be
+    },
+    
+    getContext: function (dim) {
+        if (dim == "2d" || dim == "2D") {
+            this.context = this.el._getContext(dim);
+            return this;
+        }
+        return this.el._getContext(dim);
+    },
+    
+    // get canvas () {
+    //     return this.el;
+    // },
+    
+    // --- SVG basics
+    makeElement:    function (ln, attr, txt, parent) {
+        var el = document.createElementNS(this.ns, ln);
+        if (attr) {
+            for (var k in attr) {
+                el.setAttributeNS(null, k, attr[k]);
+            }
+        }
+        if (txt) el.textContent = txt;
+        if (parent) parent.appendChild(el);
+        return el;
+    },
+    
+    addElement:     function (ln, attr, txt) {
+        this.svg.appendChild(this.makeElement(ln, attr, txt));
+    },
+    
+    // --- specific element command handlers
+    processCommon:  function (type, attr, cur, trans) {
+        attr.opacity = cur.globalAlpha;
+        if (type == 'fill') this.setFill(attr, cur);
+        else                this.setStroke(attr, cur);
+        this.processTransforms(attr, trans);
+        this.processFilters(attr, cur);
+    },
+    
+    setFill:    function (attr, cur) {
+        // XXX note that fillStyle can be a paint server too
+        // WebKit refuses rgba() in SVG
+        if (/^rgba\(/.test(cur.fillStyle)) {
+            // XXX might not be the real grammar, check
+            var re = /^\s*rgba\s*\(([^,\s]+)\s*,\s*([^,\s]+)\s*,\s*([^,\s]+)\s*,\s*([^,\s]+)\)\s*$/i;
+            var res = re.exec(cur.fillStyle);
+            attr.fill = "rgb(" + res[1] + "," + res[2] + "," + res[3] + ")";
+            attr['fill-opacity'] = res[4];
+        }
+        else {
+            attr.fill = cur.fillStyle;
+        }
+        attr.stroke = 'none';
+    },
 
-// canvas context
-var ctx = null;
+    setStroke:    function (attr, cur) {
+        // XXX note that strokeStyle can be a paint server too
+        attr.fill = 'none';
+        // WebKit refuses rgba() in SVG
+        if (/^rgba\(/.test(cur.strokeStyle)) {
+            // XXX might not be the real grammar, check
+            var re = /^\s*rgba\s*\(([^,\s]+)\s*,\s*([^,\s]+)\s*,\s*([^,\s]+)\s*,\s*([^,\s]+)\)\s*$/i;
+            var res = re.exec(cur.strokeStyle);
+            attr.stroke = "rgb(" + res[1] + "," + res[2] + "," + res[3] + ")";
+            attr['stroke-opacity'] = res[4];
+        }
+        else {
+            attr.stroke = cur.strokeStyle;
+        }
+        attr.stroke = cur.strokeStyle;
+        attr['stroke-width'] = cur.lineWidth;
+        attr['stroke-linecap'] = cur.lineCap;
+        attr['stroke-linejoin'] = cur.lineJoin;
+        attr['stroke-miterlimit'] = cur.miterLimit;
+    },
+    
+    addRect:    function (type, cur, prm, trans) {
+        var attr = { x: prm[0], y: prm[1], width: prm[2], height: prm[3] };
+        this.processCommon(type, attr, cur, trans);
+        this.addElement('rect', attr);
+    },
+    
+    addPath:    function (type, cur, path, trans) {
+        var attr = { d: this.buildPath(path) };
+        this.processCommon(type, attr, cur, trans);
+        this.addElement('path', attr);
+    },
+    
+    addText:    function (type, cur, prm, trans) {
+        // XXX we don't support prm[3] maxWidth
+        var attr = {
+            x:                      prm[1],
+            y:                      prm[2],
+            style:                  "font: " + cur.font, // there isn't a font attribute
+            'text-align':           cur.textAlign,
+            'alignment-baseline':   cur.textBaseline,
+        };
+        this.processCommon(type, attr, cur, trans);
+        this.addElement('text', attr, prm[0]);
+    },
+    
+    buildPath:  function (path) {
+        var cmds = [];
+        for (var i = 0; i < path.length; i++) {
+            var subP = Array.prototype.slice.call(path[i]);
+            var cmd = [subP.shift()];
+            if (cmd[0] == 'A') {
+                cmd.push(
+                    subP.shift() + "," + subP.shift(),
+                    subP.shift(),
+                    subP.shift() + "," + subP.shift(),
+                    subP.shift() + "," + subP.shift()
+                );
+            }
+            else {
+                while (subP.length) {
+                    cmd.push(subP.shift() + "," + subP.shift());
+                }
+            }
+            cmds.push(cmd.join(" "));
+        }
+        return cmds.join(" ");
+    },
 
-// elements drawn to the canvas
-var elements = [];
+    processTransforms: function (attr, trans) {
+        if (trans.length) {
+            attr.transform = trans.join(" ");
+        }
+    },
+    
+    processFilters: function (attr, cur) {
+        if (cur.shadowOffsetX != 0 || cur.shadowOffsetY != 0 || cur.globalCompositeOperation != 'source-over') {
+            var id = this.newID("fe");
+            // XXX w/h may be wrong
+            var filter = this.makeElement('filter', { id: id, width: "150%", height: "150%" }, null, this.svg);
+            var feb;
+            if (cur.shadowOffsetX != 0 || cur.shadowOffsetY != 0) {
+                // XXX shadowColor not currently supported
+                this.makeElement('feOffset', {
+                                            "in":     "SourceGraphic",
+                                            result: "offsetOut",
+                                            dx:     cur.shadowOffsetX,
+                                            dy:     cur.shadowOffsetY,
+                }, null, filter);
+                // this.makeElement('feFlood', {
+                //                             result:             "floodOut",
+                //                             'floor-color':      cur.shadowColor,
+                //                             'floor-opacity':    1,
+                // }, null, filter); // need a composite here
+                this.makeElement('feGaussianBlur', {
+                                            "in":                 "offsetOut", // change this when fixed
+                                            result:             "blurOut",
+                                            stdDeviation:       cur.shadowBlur,
+                }, null, filter);
+                feb = this.makeElement('feBlend', {
+                                            "in":                 "SourceGraphic",
+                                            in2:                "blurOut",
+                                            mode:               "normal",
+                }, null, filter);
+            }
+            // XXX we don't support copy or lighter
+            if (cur.globalCompositeOperation != 'source-over') {
+                var gco = cur.globalCompositeOperation;
+                if (gco != "copy" && gco != "lighter") {
+                    var attr = {};
+                    if (gco.indexOf("source-") == 0 || gco == "xor") {
+                        attr["in"] = "SourceGraphic";
+                        attr.in2 = "BackgroundImage";
+                    }
+                    else if (gco.indexOf("destination-") == 0) {
+                        attr["in"] = "BackgroundImage";
+                        attr.in2 = "SourceGraphic";
+                    }
 
-var SVGCanvas = (function() { 
-	
-	var SVGCanvas = function( id ) {
-		canvas = document.getElementById( id );
-		ctx = canvas.getContext( "2d" );
-		
-		/* Settings */
-		this.strokeStyle = "black";
-		this.lineWidth = 1;
-		this.lineCap = "butt";
-		this.lineJoin = "miter";
-		this.miterLimit = 10;
-		this.fillStyle = "black";
-		this.shadowOffsetX = 0;
-		this.shadowOffsetY = 0;
-		this.shadowBlur = 0;
-		this.shadowColor = "transparent black";
-		this.font = "10px sans-serif";
-		this.textAlign = "start";
-		this.textBaseline = "alphabetic";
-		this.globalAlpha = 1.0;
-		this.globalCompositeOperation = "source-over";
-		
-		this.util = {
-			
-			updateCanvasSettings : function() {
-				for( key in this ) { ctx[key] = this[key]; }
-			},
-			  
-			pushToStack : function() {
-				if( currentPath.points.length > 0 ) {
-					elements.push( currentPath );
-					currentPath = {
-						type : "path",
-						points : new Array(),
-						style : {}
-					}
-				}
-			},
-			
-			generateSVG : function() {
-			
-				var xml = "<?xml version=\"1.0\" standalone=\"no\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg width=\"100%\" height=\"100%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">";
-				
-				for( var i=0; i<elements.length; i++ ) {
-					var elem = elements[i];
-					var style ="";
-					for( var attr in elem.style ) {
-						style += attr+":"+elem.style[attr]+"; ";
-					}
-					if(elem.type == "text") {
-						xml += '<text x="'+elem.x+'" y="'+elem.y+'" style="'+style+'" >'+ elem.text +'</text>';
-					} else if(elem.type == "path") {
-						var points = "";
-						for( var j=0; j<elem.points.length; j++ ) {
-							var point = elem.points[j];
-							if( point.action == "move" ) {
-								points += "M"+point.x+" "+point.y+" ";
-							} else if( point.action == "line" ) {
-								points += "L"+point.x+" "+point.y+" ";	
-							} else if( point.action == "quadratic" ) {
-								points += "Q"+point.x1+" "+point.y1+" "+point.x+" "+point.y+" ";	
-							} else if( point.action == "bezier" ) {
-								points += "C"+point.x2+" "+point.y2+" "+point.x1+" "+point.y1+" "+point.x+" "+point.y+" ";	
-							}
-						}
-						
-						xml += '<path d="'+points+'" style="'+style+'" />';
-					}
-				}
-				
-				xml += "</svg>"
-				
-				return xml;
-				
-			}
-		}
-	}
-	
-	SVGCanvas.fn = SVGCanvas.prototype = {
-		constructor : SVGCanvas,
-		getCanvas : function() { return canvas; },
-		getContext : function() { return ctx; },
-		
-		beginPath : function() {
-			this.util.pushToStack();
-			ctx.beginPath();
-		},
-		
-		closePath : function() {
-			this.util.pushToStack();
-			ctx.closePath();
-		},
-		
-		moveTo : function( x , y ) {
-			currentPath.points.push({ "action" : "move" , "x" : x , "y" : y });
-			ctx.moveTo( x , y );
-		},
-		
-		lineTo : function( x , y ) {
-			currentPath.points.push({ "action" : "line" , "x" : x , "y" : y });
-			ctx.lineTo( x , y );
-		},
-		
-		quadraticCurveTo : function( cpx, cpy, x, y ) {
-			currentPath.points.push({ "action" : "quadratic" , "x" : x , "y" : y , "x1" :  cpx, "y1" : cpy });
-			ctx.quadraticCurveTo( cpx, cpy, x, y );
-		},
-		
-		bezierCurveTo : function( cp1x, cp1y, cp2x, cp2y, x, y ) {
-			currentPath.points.push({ "action" : "bezier" , "x" : x , "y" : y , "x1" :  cp1x, "y1" : cp1y , "x2" : cp2x, "y2" : cp2y  } );
-			ctx.bezierCurveTo( cp1x, cp1y, cp2x, cp2y, x, y ) ;
-		},
-		
-		arcTo : function( x1, y1, x2, y2, radius ) {
-			currentPath.points.push({ "action" : "move" , "x" : x1 , "y" : y1 });
-			this.bezierCurveTo( x1 , (y1+radius) , x2 , (y2+radius) );
-			ctx.arcTo( x1, y1, x2, y2, radius );
-		},
-		
-		arc : function( x, y, radius, startAngle, endAngle, anticlockwise ) {
-			ctx.arc( x, y, radius, startAngle, endAngle, anticlockwise );
-		},
-		
-		rect : function( x , y , width , height ) {
-			currentPath.points.push({ "action" : "move" , "x" : x , "y" : y });
-			currentPath.points.push({ "action" : "line" , "x" : x+width , "y" : y });
-			currentPath.points.push({ "action" : "line" , "x" : x+width , "y" : y+height });
-			currentPath.points.push({ "action" : "line" , "x" : x , "y" : y+height });
-			currentPath.points.push({ "action" : "line" , "x" : x , "y" : y });
-			ctx.rect( x , y , width , height );
-		},
-		
-		clearRect : function( x , y , width , height ) {
-			currentPath.points.push({ "action" : "move" , "x" : x , "y" : y });
-			currentPath.points.push({ "action" : "line" , "x" : x+width , "y" : y });
-			currentPath.points.push({ "action" : "line" , "x" : x+width , "y" : y+height });
-			currentPath.points.push({ "action" : "line" , "x" : x , "y" : y+height });
-			currentPath.points.push({ "action" : "line" , "x" : x , "y" : y });
-			ctx.clearRect( x , y , width , height );
-		},
-		
-		fillRect : function( x , y , width , height )  {
-			this.util.pushToStack();
-			var rect = { type : "path" , style : {} };
-			rect.points = new Array();
-			rect.points.push({ "action" : "move" , "x" : x , "y" : y });
-			rect.points.push({ "action" : "line" , "x" : x+width , "y" : y });
-			rect.points.push({ "action" : "line" , "x" : x+width , "y" : y+height });
-			rect.points.push({ "action" : "line" , "x" : x , "y" : y+height });
-			rect.points.push({ "action" : "line" , "x" : x , "y" : y });
-			rect.style["fill"] = ctx.fillStyle = this.fillStyle;
-			elements.push( rect );
-			this.util.updateCanvasSettings();
-			ctx.fillRect( x , y , width , height );
-		},
-		
-		strokeRect : function( x , y , width , height )  {
-			this.util.pushToStack();
-			var rect = { type : "path" , style : {} };
-			rect.points = new Array();
-			rect.points.push({ "action" : "move" , "x" : x , "y" : y });
-			rect.points.push({ "action" : "line" , "x" : x+width , "y" : y });
-			rect.points.push({ "action" : "line" , "x" : x+width , "y" : y+height });
-			rect.points.push({ "action" : "line" , "x" : x , "y" : y+height });
-			rect.points.push({ "action" : "line" , "x" : x , "y" : y });
-			rect.style["stroke"] = ctx.strokeStyle = this.strokeStyle;
-			rect.style["stroke-width"] = ctx.lineWidth = this.lineWidth;
-			rect.style["stroke-linecap"] = ctx.lineCap = this.lineCap;
-			rect.style["stroke-miterlimit"] = ctx.miterLimit = this.miterLimit;
-			rect.style["stroke-linejoin"] = ctx.lineJoin = this.lineJoin;
-			elements.push( rect );
-			this.util.updateCanvasSettings();
-			ctx.strokeRect( x , y , width , height );
-		},
-		
-		isPointInPath : function( x, y ) {
-			return ctx.isPointInPath( x , y );
-		},
-		
-		stroke : function() {
-			var path;
-			if( currentPath.points.length > 0 ) {
-				path = currentPath;
-			} else {
-				path = elements[elements.length-1];
-			}
-			path.style["stroke"] = ctx.strokeStyle = this.strokeStyle;
-			path.style["stroke-width"] = ctx.lineWidth = this.lineWidth;
-			path.style["stroke-linecap"] = ctx.lineCap = this.lineCap;
-			path.style["stroke-miterlimit"] = ctx.miterLimit = this.miterLimit;
-			path.style["stroke-linejoin"] = ctx.lineJoin = this.lineJoin;
-			this.util.updateCanvasSettings();
-			ctx.stroke();
-		},
-		
-		fill : function() {
-			var path;
-			if( currentPath.points.length > 0 ) {
-				path = currentPath;
-			} else {
-				path = elements[elements.length-1];
-			}
-			path.style["fill"] = ctx.fillStyle = this.fillStyle;
-			console.log();
-			this.util.updateCanvasSettings();
-			ctx.fill();
-		},
-		
-		strokeText : function( text , x , y ) {
-			ctx.font = this.font;
-			elements.push( { "type" : "text" , "text" : text , "x" : x , "y" : y , style : { "font" : this.font , "text-align" : this.textAlign , "alignment-baseline" : this.textBaseline, "fill" : this.strokeStyle } } );
-			this.util.updateCanvasSettings();
-			ctx.strokeText( text , x , y );
-		},
-		
-		fillText : function( text , x , y ) {
-			ctx.font = this.font;
-			elements.push( { "type" : "text" , "text" : text , "x" : x , "y" : y , style : { "font" : this.font , "text-align" : this.textAlign , "alignment-baseline" : this.textBaseline, "fill" : this.fillStyle } } );
-			this.util.updateCanvasSettings();
-			ctx.fillText( text , x , y );
-		},
-		
-		measureText : function( text ) {
-			return ctx.measureText( text );
-		},
-		
-		clip : function() {
-			this.util.updateCanvasSettings();
-			ctx.clip();
-		},
-		
-		save : function() {
-			ctx.save();
-		},
-		
-		restore : function() {
-			ctx.restore();
-		},
-		
-		createLinearGradient : function( x0, y0, x1, y1 ) {
-			return ctx.createLinearGradient( x0, y0, x1, y1 );
-		},
-		
-		createRadialGradient : function( x0, y0, r0, x1, y1, r1 ) {
-			return ctx.createRadialGradient( x0, y0, r0, x1, y1, r1 );
-		},
-		
-		createPattern : function( image, repetition ) {
-			return ctx.createPattern( image, repetition );
-		},
-		
-		createImageData : function( sw, sh ) {
-			return (arguments.length == 1 ? ctx.createImageData( imageData ) : ctx.createImageData( sw, sh ));
-		},
-		
-		createImageData : function( imageData ) {
-			return ctx.createImageData( imageData );
-		},
-		
-		getImageData : function( sx, sy, sw, sh ) {
-			return ctx.getImageData( sx, sy, sw, sh );
-		},
-		
-		putImageData : function( imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight ) {
-			return ctx.putImageData( imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight );
-		},
-		
-		drawImage : function() {
-			return ( arguments.length > 5 ) ? 
-				ctx.drawImage( arguments[0].value , arguments[1].value , arguments[2].value , arguments[3].value, arguments[4].value ) :
-				ctx.drawImage( arguments[0].value , arguments[1].value , arguments[2].value , arguments[3].value, arguments[4].value, arguments[5].value , arguments[6].value, arguments[7].value, arguments[8].value );
-		},
-		
-		scale : function( x , y ) {
-			ctx.scale( x , y );
-		},
-		
-		rotate : function( angle ) {
-			ctx.rotate( angle );
-		},
-		
-		translate : function( amount ) {
-			ctx.translate( amount );	
-		},
-		
-		transform : function( m11, m12, m21, m22, dx, dy ) {
-			ctx.transform( m11, m12, m21, m22, dx, dy );
-		},
-		
-		setTransform : function( m11, m12, m21, m22, dx, dy ) {
-			ctx.setTransform( m11, m12, m21, m22, dx, dy );
-		},
-		
-		toDataURL : function( type , args ) {
-			if( type == "image/svg+xml" ) {
-				return this.util.generateSVG();
-			} else {
-				return ctx.toDataURL( type , args );
-			}
-			
-		}
-	
-	}
-	
-	return SVGCanvas;
-	
-})();
+                    if (/-in$/.test(gco)) attr.operator = "in";
+                    else if (/-out$/.test(gco)) attr.operator = "out";
+                    else if (/-atop$/.test(gco)) attr.operator = "atop";
+                    else if (/-over$/.test(gco)) attr.operator = "over";
+                    else if (gco == "xor") attr.operator = "xor";
 
-window.SVGCanvas = SVGCanvas;
-	
-})( window , document );
+                    this.svg.setAttributeNS(null, 'enable-background', 'accumulate');
+                    var fcomp = this.makeElement('feComposite', attr, null, filter);
+
+                    if (feb) {
+                        feb.setAttributeNS(null, "result", "blendOut");
+                        fcomp.setAttributeNS(null, "in", "blendOut");
+                    }
+                }
+            }
+            attr.filter = "url(#" + id + ")";
+        }
+    },
+    // not 100% sure of my filters...
+    //<feFlood flood-color="red" flood-opacity='0.3' result='pict2'/>
+    // <filter id = "i1" width = "150%" height = "150%">
+    //     <feOffset result = "offOut" in = "SourceGraphic" dx = "30" dy = "30"/>
+    //     <feColorMatrix result = "matrixOut" in = "offOut" type = "matrix" values = "0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"/>
+    //     <feGaussianBlur result = "blurOut" in = "matrixOut" stdDeviation = "10"/>
+    //     <feBlend in = "SourceGraphic" in2 = "blurOut" mode = "normal"/>
+    // </filter>
+    
+    doClearRect:    function (prm) {
+        // if all is cleared, optimise it away
+        if (prm[0] == 0 && prm[1] == 0 && prm[2] == this.el.width && prm[3] == this.el.height) {
+            this.svg.textContent = "";
+            return;
+        }
+
+        // we use a clipPath for this -- the z and the fill-rule may be wrong
+        var x = prm[0], y = prm[1], w = prm[2], h = prm[3];
+        var cW = this.el.width, cH = this.el.height;
+        var id = this.newID("cp");
+        var cp = this.makeElement('clipPath', { id: id });
+        var d = "M 0,0 L " + cW + ",0 L" + cW + "," + cH + " L 0," + cH + " z " +
+                "M " + x + "," + y + " L " + (x+w) + "," + y  + " L " + (x+w) + "," + (y+h) +
+                " L " + x + "," + (y+h) + " z";
+        var path = this.makeElement('path', { d: d, 'fill-rule': 'evenodd' });
+        cp.appendChild(path);
+        
+        var g = this.makeElement('g', { 'clip-path': "url(#" + id + ")"});
+        while (this.svg.childNodes.length) g.appendChild(this.svg.firstChild);
+        this.svg.appendChild(cp);
+        this.svg.appendChild(g);
+    },
+    
+    // --- utils
+    simpleClone:    function (obj) {
+        var ret = {};
+        for (var k in obj) ret[k] = obj[k];
+        return ret;
+    },
+    
+    newID:       function (pfx) {
+        this.id++;
+        return pfx + this.id;
+    },
+    
+    // the braaaaaaaaiiiins
+    handleCommands: function (cmd, prm) {
+        switch (cmd) {
+            // properties
+            case 'fillStyle':
+            case 'strokeStyle':
+            case 'globalAlpha':
+            case 'globalCompositeOperation':
+            case 'lineWidth':
+            case 'lineCap':
+            case 'lineJoin':
+            case 'miterLimit':
+            case 'shadowOffsetX':
+            case 'shadowOffsetY':
+            case 'shadowBlur':
+            case 'shadowColor':
+            case 'font':
+            case 'textAlign':
+            case 'textBaseline':
+                this.cur[cmd] = prm;
+                break;
+            // methods
+            case 'save':
+                this.stack.push(this.cur, this.trans);
+                this.cur = this.simpleClone(this.defs);
+                this.trans = [];
+                break;
+            case 'restore':
+                this.trans = this.stack.pop();
+                this.cur = this.stack.pop();
+                break;
+            case 'fillRect':
+                this.addRect('fill', this.cur, prm, this.trans);
+                break;
+            case 'strokeRect':
+                this.addRect('stroke', this.cur, prm, this.trans);
+                break;
+            case 'scale':
+                this.trans.push("scale(" + prm[0] + ", " + prm[1] + ")");
+                break;
+            case 'rotate':
+                var rot = prm[0] * 180 / Math.PI;
+                this.trans.push("rotate(" + rot + ")");
+                break;
+            case 'translate':
+                this.trans.push("translate(" + prm[0] + ", " + prm[1] + ")");
+                break;
+            case 'setTransform':
+                this.trans = [];
+            case 'transform':
+                this.trans.push("matrix(" + prm[0] + ", " + prm[1] + ", " + prm[2] + ", " + prm[3] + ", " + prm[4] + ", " + prm[5] + ")");
+                break;
+            case 'createLinearGradient':
+                // we need a way to map from a gradient object to this: IDs
+                // XXX
+                break;
+            case 'createRadialGradient':
+                // XXX
+                break;
+            case 'createPattern':
+                // XXX
+                break;
+            case 'clearRect':
+                this.doClearRect(prm);
+                break;
+            case 'beginPath':
+                this.path = [];
+                break;
+            case 'closePath':
+                this.path.push(['z']);
+                break;
+            case 'moveTo':
+                this.path.push(['M', prm[0], prm[1]]);
+                break;
+            case 'lineTo':
+                this.path.push(['L', prm[0], prm[1]]);
+                break;
+            case 'quadraticCurveTo':
+                this.path.push(['Q', prm[0], prm[1], prm[2], prm[3]]);
+                break;
+            case 'bezierCurveTo':
+                this.path.push(['S', prm[0], prm[1], prm[2], prm[3]]);
+                break;
+            case 'arcTo':
+                // XXX not implemented yet
+                break;
+            case 'rect':
+                var x = prm[0], y = prm[1], w = prm[2], h = prm[3];
+                this.path.push(
+                        ['M', x, y],
+                        ['L', x + w, y],
+                        ['L', x + w, y + h],
+                        ['L', x, y + h],
+                        ['z']
+                );
+                break;
+            case 'arc':
+                this.pushArcAsA(prm[0], prm[1], prm[2], prm[3], prm[4], prm[5]);
+                break;
+            case 'fill':
+                this.addPath('fill', this.cur, this.path, this.trans);
+                break;
+            case 'stroke':
+                this.addPath('stroke', this.cur, this.path, this.trans);
+                break;
+            case 'clip':
+                // XXX
+                break;
+            case 'fillText':
+                this.addText('fill', this.cur, this.prm, this.trans);
+                break;
+            case 'strokeText':
+                this.addText('stroke', this.cur, this.prm, this.trans);
+                break;
+            case 'drawImage':
+                // XXX
+                break;
+            case 'createImageData':
+                // XXX
+                break;
+            case 'getImageData':
+                // XXX
+                break;
+            case 'putImageData':
+                // XXX
+                break;
+            case 'isPointInPath':
+            case 'measureText':
+                // noops
+                break;
+            default:
+                alert("Unknown command: " + cmd);
+        };
+    },
+    
+    // this is very heavily "inspired" by explorercanvas, thanks!
+    pushArcAsA: function (x, y, rad, sAng, eAng, ckw) {
+        var delta = Math.abs(sAng - eAng);
+        if (sAng == eAng) return;
+        var endX = x + rad * Math.cos(eAng);
+        var endY = y + rad * Math.sin(eAng);
+        
+        if (delta >= 2 * Math.PI) {
+            this.pushArcAsA(x, y, rad, sAng, sAng + Math.PI, ckw);
+            this.pushArcAsA(x, y, rad, sAng + Math.PI, sAng + 2*Math.PI, ckw);
+            this.path.push(['M', endX, endY]);
+            return;
+        }
+
+        var startX = x + rad * Math.cos(sAng);
+        var startY = y + rad * Math.sin(sAng);
+        var rot = delta * 180 / Math.PI; // sign, abs?
+        var sweep = ckw ? 0 : 1;
+        var largeArc = rot >= 180 == Boolean(ckw) ? 0 : 1;
+    
+        if (this.path.length != 0) this.path.push(['L', startX, startY]);
+        else this.path.push(['M', startX, startY]);
+
+        this.path.push(['A', rad, rad, rot, largeArc, sweep, endX, endY]);
+    }
+};
+
+
+/// Deferred ////////////////////////////////////////////////////////////////////////////////////
+CanvasSVG.Deferred = function () {
+    this.state = [];
+};
+for (var k in CanvasSVG.Base.prototype) CanvasSVG.Deferred.prototype[k] = CanvasSVG.Base.prototype[k];
+CanvasSVG.Deferred.prototype.getSVG = function () {
+    this.defs = {
+        fillStyle:                  "#000",
+        strokeStyle:                "#000",
+        globalAlpha:                1.0,
+        globalCompositeOperation:   "source-over",
+        lineWidth:                  1,
+        lineCap:                    "butt",
+        lineJoin:                   "miter",
+        miterLimit:                 10,
+        shadowOffsetX:              0,
+        shadowOffsetY:              0,
+        shadowBlur:                 0,
+        shadowColor:                "rgba(0,0,0,0)",
+        font:                       "10px sans-serif",
+        textAlign:                  "start",
+        textBaseline:               "alphabetic",
+    };
+    this.cur = this.simpleClone(this.defs);
+    this.stack = [];
+    this.path = [];
+    this.trans = [];
+    
+    // create an <svg> elements that has the same properties as the <canvas> element
+    this.svg = this.makeElement('svg', {
+                                        width:      this.el.width + 'px',
+                                        height:     this.el.height + 'px',
+                                        viewBox:   "0 0 " + this.el.width + " " + this.el.height
+                                        });
+    
+    // walk the state and add stuff
+    // don't try to be smart, just produce what the canvas calls produce
+    for (var i = 0; i < this.state.length; i++) {
+        var cmd = this.state[i].type;
+        var prm = this.state[i].value;
+        this.handleCommands(cmd, prm);
+    }
+    return this.svg;
+};
+CanvasSVG.Deferred.prototype.pushState = function (type, val) {
+    this.state.push({ type: type, value: val });
+};
+
+
+/// Live ////////////////////////////////////////////////////////////////////////////////////////
+CanvasSVG.Live = function () {
+    this.stack = [];
+    this.cur = this.simpleClone(this.defs);
+    this.stack = [];
+    this.path = [];
+    this.trans = [];
+};
+for (var k in CanvasSVG.Base.prototype) CanvasSVG.Live.prototype[k] = CanvasSVG.Base.prototype[k];
+CanvasSVG.Live.prototype.defs = {
+    fillStyle:                  "#000",
+    strokeStyle:                "#000",
+    globalAlpha:                1.0,
+    globalCompositeOperation:   "source-over",
+    lineWidth:                  1,
+    lineCap:                    "butt",
+    lineJoin:                   "miter",
+    miterLimit:                 10,
+    shadowOffsetX:              0,
+    shadowOffsetY:              0,
+    shadowBlur:                 0,
+    shadowColor:                "rgba(0,0,0,0)",
+    font:                       "10px sans-serif",
+    textAlign:                  "start",
+    textBaseline:               "alphabetic",
+};
+CanvasSVG.Live.prototype.setParent = function (parent) {
+    // create an <svg> elements that has the same properties as the <canvas> element
+    this.svg = this.makeElement('svg', {
+                                        width:      this.el.width + 'px',
+                                        height:     this.el.height + 'px',
+                                        viewBox:   "0 0 " + this.el.width + " " + this.el.height
+                                        });
+    parent.appendChild(this.svg);
+};
+CanvasSVG.Live.prototype.runCommand = function (cmd, prm) {
+    this.handleCommands(cmd, prm);
+};
+
+/// Property Mapping /////////////////////////////////////////////////////////////////////////////////
+
+// properties
+[
+    'fillStyle',    'strokeStyle',    'globalAlpha',    'globalCompositeOperation',
+    'lineWidth',    'lineCap',        'lineJoin',       'miterLimit',
+    'shadowOffsetX','shadowOffsetY',  'shadowBlur',     'shadowColor',
+    'font',         'textAlign',      'textBaseline',
+].forEach(function (s) {
+    var sName = s;
+    CanvasSVG.Deferred.prototype.__defineGetter__(sName, function () { return this.context[sName]; });
+    CanvasSVG.Deferred.prototype.__defineSetter__(sName, function (val) {
+        this.pushState(sName, val);
+        this.context[sName] = val;
+        return val;
+    });
+    CanvasSVG.Live.prototype.__defineGetter__(sName, function () { return this.context[sName]; });
+    CanvasSVG.Live.prototype.__defineSetter__(sName, function (val) {
+        this.cur[sName] = val;
+        this.context[sName] = val;
+        return val;
+    });
+});
+
+// methods
+[
+    'fillRect',     'strokeRect',       'save',         'restore',
+    'scale',        'rotate',           'translate',    'setTransform', 'transform',
+    'createLinearGradient',             'createRadialGradient',
+    'createPattern','clearRect',        'beginPath',    'closePath',
+    'moveTo',       'lineTo',           'quadraticCurveTo',                 
+    'bezierCurveTo','arcTo',            'rect',         'arc',
+    'fill',         'stroke',           'clip',         'isPointInPath',
+    'fillText',     'strokeText',       'measureText',  'drawImage',        
+    'createImageData',                  'getImageData', 'putImageData',
+].forEach(function (s) {
+    var sName = s;
+    CanvasSVG.Deferred.prototype[sName] = function () {
+        this.pushState(sName, Array.prototype.slice.call(arguments));
+        return this.context[sName].apply(this.context, arguments);
+    };
+    CanvasSVG.Live.prototype[sName] = function () {
+        this.runCommand(sName, Array.prototype.slice.call(arguments));
+        return this.context[sName].apply(this.context, arguments);
+    };
+});
+
+

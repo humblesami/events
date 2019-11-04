@@ -46,10 +46,6 @@ function init_sign(config) {
 
     function load_signature(signature_value) {
         var clear_btn = $('#clear-signature-btn');
-        // signature_editor.find('canvas').sign({
-        //     resetButton: clear_btn,
-        //     lineWidth:8
-        // });
         clear_btn.click();
 
         if (signature_value && signature_value.length > 0) {
@@ -63,15 +59,31 @@ function init_sign(config) {
         }
     }
 
-    var patternCanvas = undefined;
+    var clear_btn = $('#clear-signature-btn');
     function setup_signature(){
         var save_btn = $('#save-signature-btn');
         var upload_clicker = $('#upload-sig-btn');
-        var upload_btn = $('#upload-sig');
-
-        var clear_btn = $('#clear-signature-btn');
+        var upload_btn = $('#upload-sig');        
         var draw_sign_btn = $('#draw-sig');
         
+        var pathname = window.location.pathname;
+        var penWidth = localStorage.getItem(pathname+'/penWidth');
+        if(!penWidth)
+        {
+            var arr = pathname.split('/');
+            if(arr.length > 1)
+            {
+                var last_param = arr[arr.length - 1];
+                pathname = pathname.replace('/'+last_param);
+                penWidth = localStorage.getItem(pathname+'/penWidth');
+            }
+        }
+        if(!penWidth)        
+        {
+            penWidth = 6;            
+        }
+        $('#range-slider').val(penWidth);        
+        $('#output_value').html(penWidth);
         load_signature(config.signature_data);
 
         upload_clicker = $(upload_clicker);
@@ -116,12 +128,10 @@ function init_sign(config) {
 
             //load_signature(config.signature);
         });
-        clear_btn.click((e)=>{
-            patternCanvas.clear();
-        });
+        
         insert_sign.click(function (e) {
             load_signature(config.signature);
-        });
+        });        
 
         save_btn.click(function (e) {            
             var type = "draw";
@@ -136,24 +146,30 @@ function init_sign(config) {
             if(!config.include_prefix)
             {
                 dataURL = dataURL.replace('data:image/png;base64,', '');
-            }
+            }            
+            
+            var canvasContext1 = myCanvas.getContext("2d");
+            console.log(canvasContext1.getSVG());
+            $('.router-outlet').append(canvasContext1.getSVG());
             config.on_signed(dataURL);
             $('#signature_modal #close-signature-btn').click();
         });
 
         draw_sign_btn.click(function () {
             clear_btn.click();
-        });        
+        });
 
         var myCanvas = signature_editor.find('canvas')[0];        
         var canvas_context = myCanvas.getContext('2d');
-        // signature_editor.find('canvas').sign({
-        //     resetButton: clear_btn,
-        //     lineWidth:4
-        // });
 
-        patternCanvas = new fabric.Canvas('signature_canvas', {isDrawingMode: true});
-        patternCanvas.freeDrawingBrush.width = parseInt($('#range-slider').val());
+        var canvasSVGContext = new CanvasSVG.Deferred();
+        canvasSVGContext.wrapCanvas(myCanvas);
+
+        signature_editor.find('canvas').sign({
+            resetButton: clear_btn,
+            lineWidth: $('#range-slider').val()
+        });
+
         
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
@@ -163,8 +179,14 @@ function init_sign(config) {
 
     $('#signature_modal').modal('show');
     $('#range-slider').change(function(){
-        // patternCanvas.freeDrawingBrush.color = '#f0f';
-        patternCanvas.freeDrawingBrush.width = parseInt(this.value);
+        var val = this.value;
+        var pathname = window.location.pathname;
+        localStorage.setItem(pathname+'/penWidth', val);        
+        clear_btn.click();
+        signature_editor.find('canvas').sign({
+            resetButton: clear_btn,
+            lineWidth: parseInt(val)
+        });
     })
     $( "#signature_modal" ).on('shown.bs.modal', setup_signature);
     // $('#signature_modal').hide();

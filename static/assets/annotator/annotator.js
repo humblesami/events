@@ -74,24 +74,7 @@
             }
         }
         return dist_rects;
-    }
-
-
-    var programtic_cursor = false;
-    function select_cursor(force) {
-        // window['functions'].get_trace(1);
-        $('.topbar:first .active:not(.cursor)').removeClass('active');
-        programtic_cursor = true;
-        if(force)
-        {
-            $('.topbar:first .cursor:first').click();
-        }
-        else{
-            if (!$('.topbar:first .cursor:first').hasClass('active')) {                
-                $('.topbar:first .cursor:first').click();                        
-            }   
-        }
-    }
+    }    
 
     $(document).on('click', '.topbar .cursor:first', function(e){
         if(programtic_cursor)
@@ -286,22 +269,56 @@
         return temp_key;
     }
 
+    function get_minimal_svg(patternCanvas){
+        var canvasContext = patternCanvas.getContext("2d");
+        var res_svg = canvasContext.getSVG();
+        var temp_div = $('<div/>');            
+        temp_div.html(res_svg);
+        $('body').append(temp_div);
+        var svg = temp_div.find('svg')[0];
+        var bbox = svg.getBBox();
+        svg.setAttribute("viewBox", (bbox.x-10)+" "+(bbox.y-10)+" "+(bbox.width+20)+" "+(bbox.height+20));
+        svg.setAttribute("width", (bbox.width+20)  + "px");
+        svg.setAttribute("height",(bbox.height+20) + "px");            
+        temp_div.remove();
+        return svg.outerHTML;
+    }
+
+    var programtic_cursor = false;
+    function select_cursor(force) {        
+        $('.topbar:first .active:not(.cursor)').removeClass('active');
+        programtic_cursor = true;        
+        if(!force && $('.topbar:first .cursor:first').hasClass('active'))
+        {
+            return;
+        }
+        $('.topbar:first .cursor:first').click();        
+    }
+
     function togglePen(bool){
-        // console.log(bool);
+        // console.log(pen_active, bool);
         pen_active = bool;
         if(pen_active)
         {
-            $('.canvas-container').css({'z-index': 12});
+            $('.drawing_wrapper').css('z-index', 2);
             $('.canvas-container canvas').css({'cursor': 'crosshair'});
         }
-        else{
-            $('.canvas-container').css({'z-index': -1});
+        else{            
+            if($('.topbar .active').removeClass('active'))
+            {
+                $('.topbar .cursor:first').addClass('active');
+            }
+            $('.drawing_wrapper').css('z-index', -1);            
             $('.canvas-container canvas').css({'cursor': 'auto'});
         }
     }
     
     function on_penLeave(){
         var drawing_pages = [];
+        if(!$('.topbar .pen').has('active'))
+        {
+            return;
+        }
         var localAnnots = _getAnnotations(documentId);
         if(localAnnots.length)
         {
@@ -324,16 +341,9 @@
                     {
                         UI.renderPage(item, RENDER_OPTIONS);
                     }
-                }
-                if($('.topbar .pen:first').hasClass('active'))
-                {                    
-                    select_cursor();
-                }
+                }                
             }
             updateAnnotations(documentId, localAnnots, 'op=pen leave');
-        }
-        for(var can of canvases){
-            can.isDrawingMode = false;
         }
         togglePen(false);
         $('.pen-tool-container > *:not(.pen)').css('display', 'none');
@@ -412,17 +422,6 @@
                 contextMenuShown = false;
                 return;
             }
-            if(!$(e.target).closest('#viewer').length){
-                if(pen_active){
-                    var localAnnots = _getAnnotations(documentId);                    
-                    if(localAnnots.length && localAnnots[localAnnots.length - 1].to_merge)
-                    {
-                        localAnnots[localAnnots.length - 1].to_merge = 0;
-                        updateAnnotations(documentId, localAnnots, 'op=drawing left');
-                    }
-                    togglePen(false);
-                }
-            }
         });
         $(document).on('mouseup', '#viewer', function(e) {
             if (e.button == 2)
@@ -451,10 +450,6 @@
                     }
                     contextMenuShown = false;
                     $('.annotation-options.ContextMenuPopup').hide();
-                    var penactive = $('.toolbar .pen').hasClass('active');
-                    if(!penactive){
-                        select_cursor();
-                    }
                 }
             }, 10);
         });
@@ -597,7 +592,6 @@
                             {
                                 return;
                             }
-                            select_cursor();
                         }
                         if (!documentId) {
                             console.log("Save must be called after document id is set")
@@ -638,10 +632,6 @@
                     window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
                     var last_save_call = {};
                     function call_save_annotations(input_data, annotations=[]){
-                        // if($('.topbar .pen.active:first').length)
-                        // {
-                        //     on_penLeave();
-                        // }
                         if(!input_data['reset'])
                         {
                             if(!isDocumentDirty(documentId))
@@ -733,14 +723,7 @@
                 // console.log(contextMenuShown, 4544);
                 if (e.button == 2)
                     return;
-                var $target = $(e.target);
-                if ($target.closest('#viewer').length == 0) {
-                    $target.closest('#viewer').css('cursor', 'auto');                    
-                    if($('.topbar .pen.active:first').length)
-                    {
-                        on_penLeave();
-                    }
-                }
+                var $target = $(e.target);                
                 if (comment_item_focused) {
                     var not_in_comments = $target.closest('#comment-wrapper').length == 0;
                     if (not_in_comments) {
@@ -859,7 +842,7 @@
                     $('#annotated-doc-conatiner').removeClass('no_annotation').addClass('annotator');
                 }
                 else{
-                    togglePen(false);
+                    on_penLeave();
                     if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
                     {
                         annotation_mode = 2;
@@ -1062,7 +1045,7 @@
                             $('.strt_sign.pdfjs').hide();
                             $('.sign_completed.pdfjs').hide();                            
                             $('.doc-reseter').hide();
-                            $('.toolbar.topbar:first').show();                            
+                            $('.toolbar.topbar:first').show();
                             select_cursor();
                             hideComments();
                             init_ScaleRotate();
@@ -1242,36 +1225,44 @@
                                     return;
                                 }
 
-                                // canvases = [];
-                                // var cnt_canv = 1;
-                                // $('#viewer .page').each(function(){
-                                //     var the_page = $(this);
-
-
-                                    // var myCanvas = the_page.find('.canvasWrapper canvas:first')[0];
-                                    // console.log(myCanvas)
-                                    // var patternCanvas = new fabric.Canvas(myCanvas.id);
-                                    // patternCanvas.freeDrawingBrush.width = 6;
-                                    // canvases.push(patternCanvas);
-
-                                    // $(the_page).css('position', 'relative');
-                                    // var canvas_id = 'dcanvas'+(cnt_canv);
-                                    // cnt_canv++;
-                                    // var drawing_canvas = '<div style="position:absolute"><div>';
-                                    // drawing_canvas += '<canvas id='+canvas_id;
-                                    // drawing_canvas += ' height='+$(the_page).height()+' width='+$(this).width()
-                                    // drawing_canvas += ' />';
-                                    // drawing_canvas += '</div></div>';
-                                    // $(the_page).prepend(drawing_canvas);
-                                    // console.log(canvas_id);
-                                    // var patternCanvas = new fabric.Canvas(canvas_id, {isDrawingMode : true});
-                                    // patternCanvas.freeDrawingBrush.width = 6;
-                                    // canvases.push(patternCanvas);
-                                    // console.log(canvas_id, drawing_canvas[0], patternCanvas);
-                                // });
+                                // canvases = [];                                
                                 // console.log(window.annotation_save_wait_time, window.patternCanvas);
                                 window['route_changing'] = false;
-                                process_notification_url(window.location.toString());                                
+                                process_notification_url(window.location.toString()); 
+                                
+                                
+
+                                var cnt_canv = 1;
+                                $('#viewer .page').each(function(){
+                                    var the_page = $(this);
+                                    // var myCanvas = the_page.find('.canvasWrapper canvas:first')[0];
+                                    var height = the_page.height() - 2;
+                                    var width = the_page.width() - 2;
+                                    var drawing_wrapper = $('<div class="drawing_wrapper" style="top:1px;left:1px;height:'+height+'px;width:'+width+'px;position:absolute;z-index:-1" />');                            
+                                    the_page.find('.canvasWrapper').css('position','relative').append(drawing_wrapper);
+                                                                
+                                    var jq_canvas = $('<canvas height="'+height+'" width="'+width+'"></canvas>');
+                                    drawing_wrapper.append(jq_canvas);                            
+
+                                    // drawing_wrapper.signature({thickness: $('#range-slider').val() || 6});
+                                    var myCanvas = drawing_wrapper.find('canvas')[0];
+                                    var canvasSVGContext = new CanvasSVG.Deferred();
+                                    canvasSVGContext.wrapCanvas(myCanvas);
+                                    // console.log(drawing_wrapper[0]);
+                                    $(myCanvas).sign({
+                                        lineWidth: 12
+                                    });
+                                    jq_canvas.attr('width' , width);
+                                    jq_canvas.attr('height' , height);
+
+                                    jq_canvas.mouseup(function(){
+                                        // var res_svg = get_minimal_svg(myCanvas);
+                                        var canvasContext = myCanvas.getContext("2d");
+                                        var res_svg = canvasContext.getSVG();
+                                        // console.log(res_svg);
+                                        the_page.find('svg.annotationLayer').append(res_svg);
+                                    });
+                                });
 
                                 var socket_manager = window['socket_manager'];
                                 socket_manager.execute_on_verified(function() {
@@ -1476,6 +1467,10 @@
 
                     switch (type) {
                         case 'cursor':
+                            if(pen_active)
+                            {
+                                on_penLeave();
+                            }
                             $('#viewer').css('cursor', 'auto');
                             UI.enableEdit();
                             break;
@@ -4921,7 +4916,7 @@
                             return;
                         }
                         path = null;
-                        lines = [];                        
+                        lines = [];
 
                         document.addEventListener('mousemove', mouse_move30);
                         document.addEventListener('mouseup', mouse_up30);
@@ -5106,9 +5101,10 @@
                             $('body').css('overflow', 'hidden');
                         _enabled = true;
                         togglePen(true);
-                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');                        
-                        document.addEventListener('mousedown', mouse_down30);
-                        document.addEventListener('touchstart', mouse_down30);
+                        $('.drawing_wrapper').css('z-index', 2);
+                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');
+                        // document.addEventListener('mousedown', mouse_down30);
+                        // document.addEventListener('touchstart', mouse_down30);
                         (0, _utils.disableUserSelect)();
                     }
                     /**

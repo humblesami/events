@@ -186,13 +186,17 @@
         },
         signature: {
             script_paths: [
-                'static/assets/js/fabric.js',
+                'static/assets/libs/signature/kwb-signature.js',
+                'static/assets/libs/signature/signature.js',
+                'static/assets/js/svgcanvas.js',
                 'static/assets/js/custom_signature.js'
             ],
             style_paths: [],
-            load: function(on_load){
+            load: function(on_load){                
                 var obj_this = this;
-                load_lib(obj_this, on_load);
+                app_libs.jquery_ui.load(function(){
+                    load_lib(obj_this, on_load);
+                });                
             }
         },
         bootbox:{
