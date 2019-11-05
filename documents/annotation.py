@@ -206,12 +206,9 @@ class AnnotationDocument(CustomModel):
                     # elif type(child) is list:
                     #     x = child[0]
                     #     y = child[1]
-                    if child.get('curve'):
-                        child_to_save.curve = child['curve']
+                    child_to_save.curve = child
                         # child_to_save.x = x
                         # child_to_save.y = y
-                    else:
-                        return 'Invalid points in line'
                     children.append(child_to_save)
         if len(children) > 0:
             Line.objects.bulk_create(children)
@@ -369,7 +366,7 @@ class DrawingAnnotation(Annotation):
             drawing_lines = []
             for obj in lines:
                 # drawing_lines.append({'x': obj.x, 'y': obj.y})
-                drawing_lines.append({'curve': obj.curve})
+                drawing_lines.append(obj.curve)
             line_drawings[counter]['lines'] = drawing_lines
             counter += 1
         return  line_drawings    
@@ -377,8 +374,8 @@ class DrawingAnnotation(Annotation):
     
 class Line(CustomModel):
     drawing = models.ForeignKey(DrawingAnnotation, on_delete=models.CASCADE)
-    x = models.IntegerField()
-    y = models.IntegerField()
+    x = models.IntegerField(null=True)
+    y = models.IntegerField(null=True)
     curve = models.CharField(max_length=128, default='')
 
 

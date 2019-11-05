@@ -942,22 +942,12 @@
                     RENDER_OPTIONS.documentId = documentId;
                     //to be updated
                     if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
-                        var annotation_data = doc_data.annotation_data;
+                        var annotation_data = doc_data.annotation_data;                        
                         var server_annotations = annotation_data.annotations;
                         var server_comments = annotation_data.comments;
                         if(!Array.isArray(server_annotations))
                         {
                             server_annotations = [];
-                        }
-                        // console.log(server_annotations, 33);
-                        for(var annot_obj of server_annotations)
-                        {
-                            if(annot_obj.type == 'drawing'){
-                                for(var i in annot_obj.lines){
-                                    var line_obj = annot_obj.lines[i];
-                                    annot_obj.lines[i] = [line_obj.x, line_obj.y];
-                                }
-                            }
                         }
                         // console.log(server_annotations, 44);
                         if(!Array.isArray(server_comments))
@@ -1030,8 +1020,16 @@
                 };
             }            
 
+            var render_in_progress = false;
             function render_details(doc_data) {
                 try {
+                    if(render_in_progress)
+                    {
+                        console.trace();
+                        console.log('Already in progress');
+                        return;
+                    }
+                    render_in_progress = true;
                     if (doc_data && doc_data.first_time) {
                         try {
                             if (doc_data.is_respondent && (doc_data.type == 'meeting' || doc_data.type == 'topic')) {
@@ -1223,6 +1221,8 @@
                                     return;
                                 }
 
+                                render_in_progress = false;
+
                                 // canvases = [];                                
                                 // console.log(window.annotation_save_wait_time, window.patternCanvas);
                                 window['route_changing'] = false;
@@ -1253,8 +1253,7 @@
                                         var res_svg = canvasContext.getSVG();
                                         // var last_path = $(res_svg).find('path:last');
                                         // $(res_svg).html(last_path)
-                                        console.log(res_svg);
-                                        
+                                        // console.log(res_svg);
                                         mouse_up30(e, last_drawn_path);
                                         // the_page.find('svg.annotationLayer').append(res_svg);
                                     });
@@ -3574,7 +3573,7 @@
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
-                        };
+                        };                        
                     }
                     /**
                      * Create SVGLineElements from an annotation definition.
@@ -3682,11 +3681,12 @@
                         }
 
                         (0, _setAttributes2.default)(path, {
-                            d: d.join(' ') + 'Z',
+                            d: d.join(' '),
                             stroke: (0, _normalizeColor2.default)(a.color || '#000'),
                             strokeWidth: a.width || 1,
                             fill: 'none'
                         });
+                        console.log(path);
                         return path;
                     }
                     module.exports = exports['default']; /***/
@@ -4922,7 +4922,15 @@
                         }
                         if(last_drawn_path)
                         {
-                            lines = last_drawn_path;
+                            lines = [];
+                            for(var obj of last_drawn_path)
+                            {
+                                lines.push(obj.join(' '))
+                            }
+                            console.log(lines)
+                        }
+                        else{
+                            return;
                         }
                         var svg = void 0;
                         if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
@@ -4935,6 +4943,7 @@
                                 color: _penColor,
                                 lines: lines
                             }).then(function(annotation) {
+                                console.log(annotation, 444);
                                 var local_annots = _getAnnotations(documentId);
                                 if(!local_annots.length)
                                 {
@@ -4949,19 +4958,8 @@
                                 if (path) {
                                     svg.removeChild(path);
                                 }
-                                (0, _appendChild2.default)(svg, annotation);                                
-                                if(local_annots.length > 1)
-                                {
-                                    var second_last = local_annots[local_annots.length - 2];
-                                    var same_svg = old_svg && svg.parentNode.id == old_svg.parentNode.id;
-                                    if(second_last.type == 'drawing' && same_svg && second_last.to_merge)
-                                    {
-                                        second_last.lines = second_last.lines.concat(annotation.lines);
-                                        local_annots[local_annots.length - 2] = second_last;
-                                        local_annots.splice(local_annots.length - 1);                                        
-                                    }
-                                }
-                                local_annots[local_annots.length - 1].to_merge = 1;
+                                var append_child = (0, _appendChild2.default)
+                                append_child(svg, annotation);                                
                                 updateAnnotations(documentId, local_annots, 'op=drawing');
                                 old_svg = svg;
                             });
