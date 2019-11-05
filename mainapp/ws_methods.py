@@ -180,9 +180,9 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
                 if str(type(dict[field])) in ["<class \'datetime.datetime\'>", "<class 'datetime.date'>"]:
                     dict[field] = str(dict[field])
                 elif str(type(dict[field])) in ["<class \'django.db.models.fields.files.FieldFile\'>",'<class \'django.db.models.fields.files.ImageFieldFile\'>']:
-                    try:                        
+                    try:
                         file_url = dict[field].url
-                        if not file_url:                        
+                        if not file_url:
                             dict[field] = str(dict[field])
                         else:
                             dict[field] = file_url
@@ -324,7 +324,7 @@ def get_user_by_token(request, kw=None, do_not_expire=None):
         if type(user) is str:
             return user
     if not user:
-        user = request.user                        
+        user = request.user
     if user and user.id:
         return user
     else:
@@ -357,7 +357,7 @@ def get_user_info(users):
         committees = []
         for com in user_committees['committees']:
             committees.append(com)
-        user_info['committees'] = committees        
+        user_info['committees'] = committees
         users_info.append(user_info)
     return users_info
 
@@ -418,7 +418,7 @@ search_apps = {
             'Topic': ['name', 'lead'],
             'Committee': ['name'],
             'Profile': ['name', 'username', 'first_name', 'last_name', 'email'],
-            
+
             'MeetingDocument': ['name'],
             'AgendaDocument': ['name'],
 
@@ -452,7 +452,7 @@ def search_db(params, search_fields=None):
     results = None
     search_text = params['kw'].lower()
     search_models = params.get('search_models')
-    
+
     for app_name in search_models:
         for model_name in search_models[app_name]:
             fields = search_apps[app_name][model_name]

@@ -442,7 +442,7 @@ body.pdf-viewer {
     height: calc(100vh - 154px);
     overflow-y: scroll;
     background: #f1f2f4;
-    z-index:3;
+    z-index:1;
 }    
 .comment-list-item {
     font-size: 13px;
@@ -556,7 +556,7 @@ body.pdf-viewer {
 .ContextMenuPopup {
     display: none;
     position: fixed;
-    z-index: 1122;
+    z-index: 3;
     justify-content: center;
     align-items: center;
     padding: 5px;
@@ -632,7 +632,7 @@ mark.current {
     color: white;
 }
 #pdf-annotate-point-input {
-    z-index: 1121;
+    z-index: 2;
 }
 .topbar select.scale {
     background: transparent;
@@ -705,7 +705,6 @@ a.list-group-item.contact.active {
 }
 .userSmpic.icon-user-single::before {
     position: absolute;
-    /* z-index: 1; */
 }
 
 .userSmpic img{
@@ -740,7 +739,7 @@ a.list-group-item.contact.active {
 }*/
 .toggle-tools{
     position: absolute;
-    z-index: 3;
+    z-index: 1;
     top: -35px;
     right: 0;
     visibility: hidden;
@@ -812,7 +811,7 @@ span.pager.disabled
 @media screen and (max-width:576px){
     #comment-wrapper{
         position: absolute;
-        z-index: 2;
+        z-index: 1;
         margin-top: 5px;
     }
     .ToolBarWrapper{

@@ -33,6 +33,7 @@
 //  - wire in Processing.js
 
 CanvasSVG = {};
+var last_drawn_path = []
 CanvasSVG.Base = function () {};
 CanvasSVG.Base.prototype = {
     ns:     'http://www.w3.org/2000/svg',
@@ -135,7 +136,8 @@ CanvasSVG.Base.prototype = {
         this.processCommon(type, attr, cur, trans);
         if(i == state_length - 1)
         {
-            // console.log(path);
+            console.log(path);
+            last_drawn_path = path;
             this.addElement('path', attr);
         }
     },

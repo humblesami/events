@@ -45,10 +45,9 @@ EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
-    
     'my_admin',
     'corsheaders',
-    'bootstrapform',    
+    'bootstrapform',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,7 +62,7 @@ INSTALLED_APPS = [
     'authsignup',
     'documents',
     'meetings.apps.MeetingConfig',
-    'chat',    
+    'chat',
     'voting',
     'resources',
     'survey',
@@ -73,7 +72,6 @@ INSTALLED_APPS = [
     'actions',
     'test',
     'pwa',
-
 ]
 
 REST_FRAMEWORK = {
@@ -228,16 +226,16 @@ PWA_APP_SCOPE = 'any',
 PWA_APP_ORIENTATION = 'any'
 PWA_APP_START_URL = '/'
 PWA_APP_ICONS = [
-{
-'src': '/static/assets/test.jpg',
-'sizes': '160x160'
-}
+    {
+        'src': '/static/assets/test.jpg',
+        'sizes': '160x160'
+    }
 ]
 PWA_APP_SPLASH_SCREEN = [
-{
-'src': '/static/images/icons/splash-640x1136.png',
-'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-}
+    {
+        'src': '/static/images/icons/splash-640x1136.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'

@@ -198,17 +198,18 @@ class AnnotationDocument(CustomModel):
                     child_to_save = Line(
                         drawing_id=obj.id,
                     )
-                    x = None
-                    y = None
-                    if type(child) is dict:
-                        x = child.get('x')
-                        y = child.get('y')
-                    elif type(child) is list:
-                        x = child[0]
-                        y = child[1]
-                    if x and y:
-                        child_to_save.x = x
-                        child_to_save.y = y
+                    # x = None
+                    # y = None
+                    # if type(child) is dict:
+                    #     x = child.get('x')
+                    #     y = child.get('y')
+                    # elif type(child) is list:
+                    #     x = child[0]
+                    #     y = child[1]
+                    if child.get('curve'):
+                        child_to_save.curve = child['curve']
+                        # child_to_save.x = x
+                        # child_to_save.y = y
                     else:
                         return 'Invalid points in line'
                     children.append(child_to_save)
@@ -366,8 +367,9 @@ class DrawingAnnotation(Annotation):
             })
             lines = drawing.line_set.all()
             drawing_lines = []
-            for line in lines:
-                drawing_lines.append({'x': line.x, 'y': line.y})
+            for obj in lines:
+                # drawing_lines.append({'x': obj.x, 'y': obj.y})
+                drawing_lines.append({'curve': obj.curve})
             line_drawings[counter]['lines'] = drawing_lines
             counter += 1
         return  line_drawings    
@@ -377,6 +379,7 @@ class Line(CustomModel):
     drawing = models.ForeignKey(DrawingAnnotation, on_delete=models.CASCADE)
     x = models.IntegerField()
     y = models.IntegerField()
+    curve = models.CharField(max_length=128, default='')
 
 
 class PointAnnotation(Annotation):
