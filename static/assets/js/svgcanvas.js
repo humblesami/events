@@ -136,7 +136,7 @@ CanvasSVG.Base.prototype = {
         this.processCommon(type, attr, cur, trans);
         if(i == state_length - 1)
         {
-            console.log(path);
+            // console.log(path);
             last_drawn_path = path;
             this.addElement('path', attr);
         }

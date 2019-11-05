@@ -9,20 +9,22 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Board Sheet">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  
+    <script type="text/javascript" src="/static/assets/libs/jquery/jquery-2.2.4.js"></script>
     <script type="text/javascript">
-        (function(){
+        (function(){            
+            var service_worker = localStorage.getItem('service_worker');
+            // if (!service_worker && 'serviceWorker' in navigator) {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/serviceworker.js', {
-                    scope: '.'
+                navigator.serviceWorker.register('/sw.js', {
+                    
                 }).then(function (registration) {
+                    localStorage.setItem('service_worker', 1);
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, function (err) {
                     console.log('ServiceWorker registration failed: ', err);
                 });
             }
         })()
-        
     </script> 
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,20 +34,15 @@
     <meta name="description" content="Boardsheet">
     <meta name="theme-color" content="#2F3BA2" />    
 	<link rel="shortcut icon" href="">
-    <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
-
-    {% block headcontent %}
+    <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />    
+    {% block headcontent %}    
     {% endblock %}
 
 </head>
 <body>
-
     {% block content %}
-
     {% endblock content %}
-
-    {% block footer %}
-        <script type="text/javascript" src="/static/assets/libs/js/jquery-2.2.4.js"></script>
+    {% block footer %}        
     {% block footer_javascript %}
     {% endblock %}
     <script type="text/javascript" src="/static/assets/config.js" id="config_script"></script>
@@ -57,9 +54,6 @@
     <script type="text/javascript" src="/static/assets/libs/bootstrap/bootstrap-4.1.1.js"></script>
     <script type="text/javascript" src="/static/assets/libs/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/static/assets/libs/bootstrap/popper-1.14.3.js"></script>
-	<script type="text/javascript" src="/static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
-	<script type="text/javascript" src="/static/assets/libs/js/jquery.mark.min.js"></script>
-    <script type="text/javascript" src="/static/assets/libs/js/mark.min.js"></script>
     {% endblock %}
 </body>
 </html>

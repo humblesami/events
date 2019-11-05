@@ -55,6 +55,7 @@ export class RecordEditComponent implements OnInit {
                 window['functions'].hideLoader(temp);
             }            
         }
+        
         function receiveMessage(e){
             var url = window.location.href,
                 url_parts = url.split("/"),

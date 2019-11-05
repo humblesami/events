@@ -1,48 +1,38 @@
-{% extends 'header.html' %}
-
-{% block content %}
- <link rel="stylesheet" type="text/css" href="/static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Boardsheet</title>
+    <!-- Path to manifest.json -->
+    <link rel="manifest" href="/static/assets/manifest.json">
+    <link rel="apple-touch-icon" href="/static/assets/test.jpg" sizes="160x160">
+    <meta name="theme-color" content="#0A0302">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Board Sheet">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">    
+    <link rel="stylesheet" type="text/css" href="/static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
+</head>
+<body>
     <div class="router-outlet Login-form-wrapper">
         <link rel="stylesheet" href="/static/assets/css/login.css" />
-   <!--     <span class="loginshape01"><img async class="img-fluid" src="/static/assets/images/loginshape-01.png" /> </span>
-        <span class="loginshape02"><img async class="img-fluid" src="/static/assets/images/loginshape-02.png" /> </span>
-        <span class="loginshape03"><img async class="img-fluid" src="/static/assets/images/loginshape-03.png" /> </span>
-     -->   <div class="container">
+        <div class="container">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-12">
                     <div class="login-form-div">
-                       <h2 class="text-center">
-                        You are currently offline please check your internet connection.
-                       </h2>
+                        <h2 class="text-center">
+                            You are currently offline please check your internet connection.
+                        </h2>
                     </div>
                 </div>
-<!--
-                    <div class="col-md-7 text-center d-none d-md-block d-lg-block">
-                    <img async class="img-key" src="/static/assets/images/login-vector.png" />
-                </div>
--->
             </div>
         </div>
     </div>
-    {% endblock %}
-	    
-    {% block footer_javascript %}
-
     <script>
         console.log(Date());
     </script>
-
-    <script async type="text/javascript" src="/static/assets/js/json.js"></script>
-   
 	<link rel="stylesheet" type="text/css" href="/static/assets/css/boardsheet.css" />
 	<link rel="stylesheet" type="text/css" href="/static/assets/css/roboto-condensed-fontface.css" />
-	<link rel="stylesheet" type="text/css" href="/static/assets/libs/css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="/static/assets/css/font-awsome-5.5.0.css" />
-	<link rel="stylesheet" type="text/css" href="/static/assets/css/font-roboto-3.4.5.7.9.css" />
-	
-  <link rel="stylesheet" type="text/css" href="/static/assets/css/secondary.css" />
-
-    <script>
-        console.log(Date());
-    </script>
-    {% endblock %}
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/font-roboto-3.4.5.7.9.css" />
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/secondary.css" />
+</body>
+</html>

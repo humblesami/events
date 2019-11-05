@@ -16,7 +16,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = "/media/"
-PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'authsignup/static/js', 'serviceworker.js')
 
 
 MAX_UPLOAD_SIZE = "5242880"
@@ -71,7 +70,6 @@ INSTALLED_APPS = [
     'restoken',
     'actions',
     'test',
-    'pwa',
 ]
 
 REST_FRAMEWORK = {
@@ -91,8 +89,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',    
 ]
 
 PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
@@ -204,9 +201,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-
-# STATIC_ROOT = '~/django/authsignup/static'
-
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, '..', 'static'),
 )
@@ -215,27 +209,3 @@ STATIC_URL = '/static/'
 # X_FRAME_OPTIONS = 'ALLOW'
 # X_FRAME_OPTIONS = 'allow-from http://localhost:4200/'
 #X_FRAME_OPTIONS = 'allow-from https://example.com/
-
-
-PWA_APP_NAME = 'Board Sheet'
-PWA_APP_DESCRIPTION = "boardsheet"
-PWA_APP_THEME_COLOR = '#0A0302'
-PWA_APP_BACKGROUND_COLOR = '#ffffff'
-PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = 'any',
-PWA_APP_ORIENTATION = 'any'
-PWA_APP_START_URL = '/'
-PWA_APP_ICONS = [
-    {
-        'src': '/static/assets/test.jpg',
-        'sizes': '160x160'
-    }
-]
-PWA_APP_SPLASH_SCREEN = [
-    {
-        'src': '/static/images/icons/splash-640x1136.png',
-        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-    }
-]
-PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'en-US'

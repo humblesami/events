@@ -24,9 +24,14 @@ export class RecorddetailsComponent implements OnInit {
             
         this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.url)
         // $('html').css('overflow', 'hidden');
-        $('#record_details_iframe').load(function(){
-            window['functions'].hideLoader('jangoiframe')
-        });
+        try{
+            $('#record_details_iframe').load(function(){
+                window['functions'].hideLoader('jangoiframe')
+            });
+        }
+        catch(er){
+            console.log(er);
+        }        
     }
 
     go_back(){

@@ -16,23 +16,18 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', function(event) {
     // console.log(434343);
-  var requestUrl = new URL(event.request.url);
+var requestUrl = new URL(event.request.url);
     
-    if(event.request.mode === 'navigate' || (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {
-        if (requestUrl.search != "?_popup" && requestUrl.href.indexOf("survey/") == -1 ) {
-            event.respondWith(
-                fetch(event.request.url).catch(error => {
-                    return caches.match('/user/offline'); 
-                    })  
-                );
-        }
-    } else{
-        if(requestUrl.href.indexOf("survey/") > -1 ){
-            event.respondWith(caches.match(event.request).then(function (response) {
-                return response || fetch(event.request);  
-            }));
-        }
-
+    if(event.request.mode === 'navigate' || (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {        
+        event.respondWith(
+            fetch(event.request.url).catch(error => {
+                return caches.match('/user/offline'); 
+            })
+        );        
+    } else{        
+        event.respondWith(caches.match(event.request).then(function (response) {
+            return response || fetch(event.request);  
+        }));        
     }
 });
 
