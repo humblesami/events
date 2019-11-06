@@ -982,7 +982,7 @@
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);
                         var newScale = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale');
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/rotate', RENDER_OPTIONS.rotate % 360);
-                        pdf_render();
+                        render_details();
                     }
                 }
 
@@ -1023,14 +1023,8 @@
             var render_in_progress = false;
             function render_details(doc_data) {
                 try {
-                    if(render_in_progress)
-                    {
-                        console.trace();
-                        console.log('Already in progress');
-                        return;
-                    }
-                    render_in_progress = true;
                     if (doc_data && doc_data.first_time) {
+                        render_in_progress = false;
                         try {
                             if (doc_data.is_respondent && (doc_data.type == 'meeting' || doc_data.type == 'topic')) {
                                 window['show_annotation'] = true;
@@ -1133,6 +1127,12 @@
                             return;
                         }                        
                     } else {
+                        if(render_in_progress)
+                        {
+                            // console.trace();
+                            console.log('Already in progress');
+                            return;
+                        }
                         setViewerWrapperBottom('Re Render');
                         if (RENDER_OPTIONS.document_data) {
                             pdfData = RENDER_OPTIONS.document_data.doc;
@@ -1146,6 +1146,7 @@
                     }
 
                     function renderPdfData(pdfContent) {
+                        render_in_progress = true;
                         try {
                             // console.log('Render pdf data');
                             if (!pdfContent) {
@@ -1213,6 +1214,7 @@
 
                         function on_document_rendered() {
                             try {
+                                render_in_progress = false;
                                 showHideAnnotations();
                                 if (!(doc_data && doc_data.first_time)) {
                                     return;
@@ -1220,8 +1222,6 @@
                                 if (!annotation_mode) {
                                     return;
                                 }
-
-                                render_in_progress = false;
 
                                 // canvases = [];                                
                                 // console.log(window.annotation_save_wait_time, window.patternCanvas);
@@ -3686,7 +3686,7 @@
                             strokeWidth: a.width || 1,
                             fill: 'none'
                         });
-                        console.log(path);
+                        // console.log(path);
                         return path;
                     }
                     module.exports = exports['default']; /***/
