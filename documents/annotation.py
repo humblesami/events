@@ -373,7 +373,7 @@ class Path(CustomModel):
 
 
 class Line(CustomModel):
-    path = models.ForeignKey(Path, on_delete=models.CASCADE)
+    path = models.ForeignKey(Path, null=True, on_delete=models.CASCADE)
     curve = models.CharField(max_length=128, default='')
 
 

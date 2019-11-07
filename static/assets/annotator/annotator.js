@@ -62,7 +62,7 @@
                 dist_rects.push(rect);
                 continue;
             }
-            // console.log(dist_rects.length, 3444);
+            // console.log(dist_rects.length, 34774);
             var found = false;
             for(let dist_rect of dist_rects)
             {
@@ -163,7 +163,7 @@
         }
         else{            
             alert('Invalid addrition');
-            console.log("Invalid annot adding",  annotation, 444);
+            console.log("Invalid annot adding",  annotation, 4007454);
             console.trace();
         }
     }
@@ -460,18 +460,6 @@
 
     $(function() {
         var last_active_was_comment = false;
-        $(document).mouseup(function(e){
-            if($('.ContextMenuPopup:visible:first').length && $(e.target).closest('.ContextMenuPopup').length){                                                
-                $('.ContextMenuPopup').hide();
-                contextMenuShown = false;                
-            }
-            // console.log(pen_active, 566);
-            setTimeout(function(){
-                if(!pen_active){
-                    select_cursor
-                }
-            }, 10);
-        });
         $(document).on('mouseup', '#viewer', function(e) {
             if (e.button == 2)
                 return;
@@ -767,8 +755,13 @@
                 $(this).closest('.ColorPalettePopup').hide();
             });            
 
-            $(document).mousedown(function(e) {
-                // console.log(contextMenuShown, 4544);
+            $('body').on('mousedown', '#annotated-doc-conatiner', function(e) {
+                contextMenuShown = $('.ContextMenuPopup:visible').length;
+                if(contextMenuShown && !$(e.target).closest('.ContextMenuPopup').length){                                                
+                    $('.ContextMenuPopup').hide();
+                    contextMenuShown = false;
+                }
+
                 if (e.button == 2)
                     return;
                 var $target = $(e.target);                
@@ -779,20 +772,16 @@
                         loadALlCommentsOnDocument();
                     }
                 }
-                
-                if(!contextMenuShown)
-                {
-                    // if ($('.topbar:first .pen:first').hasClass('active')) {
-                    //     if($target.closest('#viewer').length == 0){
-                    //         old_page_id = undefined;
-                    //     }
-                    // } else {
-                    if (activePointId && $target.closest('#comment-wrapper').length == 0) {
-                        activePointId = undefined;
-                        $('.comment-list-form').hide();
-                    }
-                    // }
+
+                if(!pen_active){
+                    select_cursor();
                 }
+
+                if (activePointId && $target.closest('#comment-wrapper').length == 0) {
+                    activePointId = undefined;
+                    $('.comment-list-form').hide();
+                }
+                
             });
 
             $('body').on('click', '.ColorPalettePopup .cell.colored', function() {
@@ -1309,6 +1298,9 @@
                                             mouse_up30(e, last_drawn_path, the_page.attr('id'));
                                             // the_page.find('svg.annotationLayer').append(res_svg);
                                         });
+                                        jq_canvas.mousedown(function(){
+                                            $('.ContextMenuPopup').hide();
+                                        });
                                     });
                                 }
 
@@ -1433,7 +1425,7 @@
                     var topbar_width = $('.topbar:first').width();
                     var color_popup = $('.ColorPalettePopup:first');
                     var btn_rect = this.getBoundingClientRect();
-
+                    $('.ColorPalettePopup ').show();
                     var popup_postion = {
                         top: btn_rect.y + 20
                     };
@@ -1509,7 +1501,6 @@
                         case 'highlight':
                         case 'strikeout':
                         case 'underline':
-                            // console.log(tooltype, 444);
                             UI.enableRect(type);
                             break;
                     }
@@ -1834,7 +1825,7 @@
                         onCOmmentAdded();
                 }
                 activate_annotation = function(target) {
-                    // console.log(target, 444);
+                    // console.log(target, 86543);
                     pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item) {
                         activeAnnotationItem = item;
                         if (supportsComments(target)) {
@@ -4937,7 +4928,7 @@
                             e = e.changedTouches[0];
                         }
                         if(last_drawn_path)
-                        {                            
+                        {
                             for(var obj of last_drawn_path)
                             {
                                 lines.push(obj.join(' '))
@@ -4948,7 +4939,7 @@
                         }
                         var svg = $('#'+page_id).find('.annotationLayer:first')[0];
                         if(!svg || !lines.length){
-                            console.log('No svg for lines='+lines.length)
+                            // console.log('No svg for lines='+lines.length)
                             return
                         }
                         
@@ -5663,7 +5654,6 @@
                         var rotate = renderOptions.rotate;
                         var pageToRender = pdfDocument.getPage(pageNumber);
                         var pageAnnotations = _PDFJSAnnotate2.default.getAnnotations(documentId, pageNumber);
-                        // console.log(pageAnnotations, pageNumber, 444);
                         var promise_params = [pageToRender, pageAnnotations];
                         return Promise.all(promise_params).then(function(_ref) {
                             var _ref2 = _slicedToArray(_ref, 2);
