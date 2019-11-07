@@ -20,14 +20,16 @@
     var annot_save_timeout = undefined;
     var annotation_save_wait_time = 8000;
     var pen_active = false;
+    var old_page_id = undefined;
     var mouse_up30 = undefined;
+    var penSize = void 0;
+    var penColor = void 0;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
     var saveAnnotationsAtServer = function() {
         console.log("Save annotation not defined");
     };
-    var is_localhost = window.location.toString().indexOf('localhost:') > -1;
 
     function report_error(){
         bootbox.alert('Thanks, error is reported successfully');
@@ -202,6 +204,39 @@
         }
     }
 
+    function setPen(size, color) {        
+        if (size && typeof(size) != 'number') {
+            size = parseInt(size);
+        }
+        if (color && color.length == 6) {
+            color = '#' + color;
+        }
+        if (size && penSize !== size) {
+            penSize = size;
+            setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size', penSize);
+            document.querySelector('.toolbar .pen-size').value = penSize;
+        }
+
+        if (color && penColor !== color) {
+            penColor = color;
+            setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color', penColor);
+            $('.toolbar .pen-color:first').css('background-color', penColor);
+            $('.toolbar .pen-color:first').attr('color', color);
+
+            $('select.pen-size').css('color', color);
+            $('select.pen-size option').css('color', color);
+        }
+        old_page_id = undefined;
+        // reset_canvas();
+        $('.drawing_wrapper canvas').each(function(i, el){
+            context = this.getContext('2d');
+            context.closePath();
+            context.beginPath();
+            context.lineWidth = penSize;
+            context.strokeStyle = penColor;            
+        });
+    }
+
     function checkDuplication(annotations){
         var i = 0;
         var l1 = annotations.length;
@@ -312,13 +347,22 @@
             $('.canvas-container canvas').css({'cursor': 'auto'});
         }
     }
+
+    function reset_canvas(){
+        $('.drawing_wrapper canvas').each(function(i, el){
+            var context = el.getContext('2d');
+            
+        });
+    }
     
     function on_penLeave(){
+        old_page_id = undefined;        
         var drawing_pages = [];
         if(!$('.topbar .pen').has('active'))
         {
             return;
-        }
+        }        
+        
         var localAnnots = _getAnnotations(documentId);
         if(localAnnots.length)
         {
@@ -380,7 +424,7 @@
             }
             item_url = url_origin + item_url;
         }
-        console.log(item_url);
+        // console.log(item_url);
         var arr = item_url.split('/');
         var third_last = undefined;        
         try{
@@ -419,9 +463,14 @@
         $(document).mouseup(function(e){
             if($('.ContextMenuPopup:visible:first').length && $(e.target).closest('.ContextMenuPopup').length){                                                
                 $('.ContextMenuPopup').hide();
-                contextMenuShown = false;
-                return;
+                contextMenuShown = false;                
             }
+            // console.log(pen_active, 566);
+            setTimeout(function(){
+                if(!pen_active){
+                    select_cursor
+                }
+            }, 10);
         });
         $(document).on('mouseup', '#viewer', function(e) {
             if (e.button == 2)
@@ -489,7 +538,7 @@
             var comment_list; // = comments_wrapper.find('.comment-list-container:first');
             
             (function() {                
-                comments_wrapper = $('#comment-wrapper');
+                comments_wrapper = $('#comment-wrapper');                
                 comments_wrapper.resizable();
                 commentText = comments_wrapper.find('#commentText');
                 comment_list = comments_wrapper.find('.comment-list-container:first');
@@ -713,9 +762,9 @@
 
             })();
 
-            $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
+            $('body').on('click', '.ColorPalettePopup:first .copy:first', function() {
                 document.execCommand("copy");
-                $(this).closest('.ContextMenuPopup').hide();
+                $(this).closest('.ColorPalettePopup').hide();
             });            
 
             $(document).mousedown(function(e) {
@@ -729,24 +778,27 @@
                         comment_item_focused = false;
                         loadALlCommentsOnDocument();
                     }
-                }                
+                }
                 
                 if(!contextMenuShown)
                 {
-                    if ($('.topbar:first .pen:first').hasClass('active')) {
-                        
-                    } else {
-                        if (activePointId && $target.closest('#comment-wrapper').length == 0) {
-                            activePointId = undefined;
-                            $('.comment-list-form').hide();
-                        }
+                    // if ($('.topbar:first .pen:first').hasClass('active')) {
+                    //     if($target.closest('#viewer').length == 0){
+                    //         old_page_id = undefined;
+                    //     }
+                    // } else {
+                    if (activePointId && $target.closest('#comment-wrapper').length == 0) {
+                        activePointId = undefined;
+                        $('.comment-list-form').hide();
                     }
+                    // }
                 }
             });
 
-            $('body').on('click', '.cell.colored', function() {
+            $('body').on('click', '.ColorPalettePopup .cell.colored', function() {
                 var obj = $(this);
                 var color_value = obj.attr('hex').substring(1);
+                // console.log(activeAnnotationItem, 444);
                 if (!activeAnnotationItem) {
                     $('.topbar .pen-color:first').css('background', color_value);
                     $('.topbar .pen-color:first').attr('color', color_value);
@@ -754,13 +806,20 @@
                     obj.append($('#applied_color').show());
                 } else if (activeAnnotationItem.color != color_value) {
                     activeAnnotationItem.color = color_value;
+                    var g_item = $('svg.annotationLayer g[data-pdf-annotate-id="'+activeAnnotationItem.uuid+'"]:first');
+                    if(g_item.length)
+                    {
+                        g_item.attr('stroke', color_value);
+                        g_item.find('path').each(function(i, el){                            
+                            $(el).attr('stroke', color_value);
+                        });
+                    }                    
                     pdfStoreAdapter.editAnnotation(documentId, activeAnnotationId, activeAnnotationItem).then(function(res) {
-                        obj.append($('#applied_color').show());
+                        obj.append($('#applied_color').show());                        
                     });
                 }
+                $('.ColorPalettePopup').hide();
             });
-
-            var setPen = function(a, b) {}
 
             var vertical = 'top';
             var horizontal = 'left';
@@ -855,9 +914,10 @@
                 if (annotation_mode == 1) {
                     annotation_mode = 1;
                     RENDER_OPTIONS.showAnnotations = true;
-                    var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
-                    var pen_color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
-                    setPen(pen_size, pen_color);
+                    var penSize = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
+                    var penColor = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
+                    // console.log(penColor, penSize);
+                    setPen(penSize, penColor);
                     $('.topbar:first .annotation-buttons-container').show();
                     $('.annot-toggler').show();
                 } else if(annotation_mode == 2){
@@ -979,8 +1039,7 @@
                     if (RENDER_OPTIONS.scale !== scale || RENDER_OPTIONS.rotate !== rotate) {
                         RENDER_OPTIONS.scale = scale;
                         RENDER_OPTIONS.rotate = rotate;
-                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);
-                        var newScale = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale');
+                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);                        
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/rotate', RENDER_OPTIONS.rotate % 360);
                         render_details();
                     }
@@ -1023,6 +1082,7 @@
             var render_in_progress = false;
             function render_details(doc_data) {
                 try {
+                    $('.doc-manage-btn-wrap.hidden').removeClass('hidden');
                     if (doc_data && doc_data.first_time) {
                         render_in_progress = false;
                         try {
@@ -1215,49 +1275,48 @@
                         function on_document_rendered() {
                             try {
                                 render_in_progress = false;
-                                showHideAnnotations();
-                                if (!(doc_data && doc_data.first_time)) {
-                                    return;
-                                }
-                                if (!annotation_mode) {
-                                    return;
-                                }
-
-                                // canvases = [];                                
-                                // console.log(window.annotation_save_wait_time, window.patternCanvas);
                                 window['route_changing'] = false;
-                                process_notification_url(window.location.toString()); 
-                                
-                                $('#viewer .page').each(function(){
-                                    var the_page = $(this);
-                                    var height = the_page.height() - 2;
-                                    var width = the_page.width() - 2;
-                                    var drawing_wrapper = $('<div class="drawing_wrapper" style="top:1px;left:1px;height:'+height+'px;width:'+width+'px;position:absolute;z-index:-1" />');                            
-                                    the_page.find('.canvasWrapper').css('position','relative').append(drawing_wrapper);
-                                                                
-                                    var jq_canvas = $('<canvas height="'+height+'" width="'+width+'"></canvas>');
-                                    drawing_wrapper.append(jq_canvas);                            
+                                showHideAnnotations();
 
-                                    // drawing_wrapper.signature({thickness: $('#range-slider').val() || 6});
-                                    
-                                    var myCanvas = drawing_wrapper.find('canvas')[0];
-                                    var canvasSVGContext = new CanvasSVG.Deferred();
-                                    canvasSVGContext.wrapCanvas(myCanvas);
+                                if(annotation_mode == 1 && $('#viewer .page').length && !$('#viewer .page:first .drawing_wrapper').length)
+                                {                                                                    
+                                    $('#viewer .page').each(function(){
+                                        var the_page = $(this);
+                                        var height = the_page.height() - 2;
+                                        var width = the_page.width() - 2;
+                                        var drawing_wrapper = $('<div class="drawing_wrapper" style="top:1px;left:1px;height:'+height+'px;width:'+width+'px;position:absolute;z-index:-1" />');                            
+                                        the_page.find('.canvasWrapper').css('position','relative').append(drawing_wrapper);
+                                                                    
+                                        var jq_canvas = $('<canvas height="'+height+'" width="'+width+'"></canvas>');
+                                        drawing_wrapper.append(jq_canvas);                            
 
-                                    $(myCanvas).sign({ lineWidth: 12 });
-                                    jq_canvas.attr({'width' : width, 'height' : height});
-                                    
-                                    jq_canvas.mouseup(function(e){
-                                        // var res_svg = get_minimal_svg(myCanvas);
-                                        var canvasContext = myCanvas.getContext("2d");
-                                        var res_svg = canvasContext.getSVG();
-                                        // var last_path = $(res_svg).find('path:last');
-                                        // $(res_svg).html(last_path)
-                                        // console.log(res_svg);
-                                        mouse_up30(e, last_drawn_path);
-                                        // the_page.find('svg.annotationLayer').append(res_svg);
+                                        // drawing_wrapper.signature({thickness: $('#range-slider').val() || 6});
+                                        
+                                        var myCanvas = drawing_wrapper.find('canvas')[0];
+                                        var canvasSVGContext = new CanvasSVG.Deferred();
+                                        canvasSVGContext.wrapCanvas(myCanvas);
+
+                                        $(myCanvas).sign({ lineWidth: penSize, color:penColor });
+                                        jq_canvas.attr({'width' : width, 'height' : height});                                        
+                                        
+                                        jq_canvas.mouseup(function(e){                                            
+                                            // var res_svg = get_minimal_svg(myCanvas);
+                                            var canvasContext = myCanvas.getContext("2d");
+                                            canvasContext.getSVG();
+                                            // var last_path = $(res_svg).find('path:last');
+                                            // $(res_svg).html(last_path)
+                                            // console.log(res_svg);
+                                            mouse_up30(e, last_drawn_path, the_page.attr('id'));
+                                            // the_page.find('svg.annotationLayer').append(res_svg);
+                                        });
                                     });
-                                });
+                                }
+
+                                if (!(doc_data && doc_data.first_time)) {                                    
+                                    return;
+                                }
+
+                                process_notification_url(window.location.toString());                                                                 
 
                                 var socket_manager = window['socket_manager'];
                                 socket_manager.execute_on_verified(function() {
@@ -1364,40 +1423,7 @@
             })();
 
             // Pen stuff
-            (function() {
-                var penSize = undefined;
-                var penColor = undefined;
-
-                setPen = function(size, color) {
-                    var modified = false;
-                    if (size && typeof(size) != 'number') {
-                        size = parseInt(size);
-                    }
-                    if (color && color.length == 6) {
-                        color = '#' + color;
-                    }
-                    //console.log(size, penSize, color, penColor);
-                    if (size && penSize !== size) {
-                        modified = true;
-                        penSize = size;
-                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size', penSize);
-                        document.querySelector('.toolbar .pen-size').value = penSize;
-                    }
-
-                    if (color && penColor !== color) {
-                        modified = true;
-                        penColor = color;
-                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color', penColor);
-                        $('.toolbar .pen-color:first').css('background-color', penColor);
-                        $('.toolbar .pen-color:first').attr('color', color);
-
-                        $('select.pen-size').css('color', color);
-                        $('select.pen-size option').css('color', color);
-                    }
-                    if (modified) {
-                        UI.setPen(penSize, penColor);
-                    }
-                }
+            (function() {                
 
                 function handlePenSizeChange(e) {
                     setPen(e.target.value, penColor);
@@ -1459,7 +1485,7 @@
                     }
 
                     tooltype = type;
-
+                    // console.log(tooltype, 'enabling');
                     switch (type) {
                         case 'cursor':
                             if(pen_active)
@@ -1808,6 +1834,7 @@
                         onCOmmentAdded();
                 }
                 activate_annotation = function(target) {
+                    // console.log(target, 444);
                     pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item) {
                         activeAnnotationItem = item;
                         if (supportsComments(target)) {
@@ -2801,7 +2828,7 @@
                             right: x + w,
                             bottom: y + h
                         }; // For the case of nested SVG (point annotations) and grouped
-                        // lines or rects no adjustment needs to be made for scale.
+                        // Rects no adjustment needs to be made for scale.
                         // I assume that the scale is already being handled
                         // natively by virtue of the "transform" attribute.
                         if (!['svg', 'g'].includes(el.nodeName.toLowerCase())) {
@@ -3103,7 +3130,7 @@
                                         var is_comment = 'op=edit point'
                                         if (annotation.type == 'point' && !annotation.sub_type) {
                                             is_comment = 'op=point moved';
-                                        }                                        
+                                        }
                                         updateAnnotations(documentId, annotations, is_comment);
                                         updateAnnotationColor(annotationId, annotation.type, annotation.color);
                                         resolve(annotation);
@@ -3512,15 +3539,22 @@
                                 child = (0, _renderText2.default)(annotation);
                                 break;
                             case 'drawing':
-                                child = (0, _renderPath2.default)(annotation);
+                                var children = (0, _renderPath2.default)(annotation);
+                                child = document.createElementNS('http://www.w3.org/2000/svg', 'g')                        
+                                for(var obj of children){
+                                    child.appendChild(obj);
+                                }
+                                // console.log(annotation, children, $(child)[0]);
                                 break;
                         } // If no type was provided for an annotation it will result in node being null.
                         // Skip appending/transforming if node doesn't exist.
                         if (child) { // Set attributes
                             child.setAttribute('data-pdf-annotate-id', annotation.uuid);
                             child.setAttribute('data-pdf-annotate-type', annotation.type);
-                            child.setAttribute('aria-hidden', true);
-                            svg.appendChild(transform(child, viewport));
+                            child.setAttribute('aria-hidden', true);                            
+                            child = transform(child, viewport);
+                            // console.log(child, child.outerHTML);
+                            svg.appendChild(child);
                         }
                         return child;
                     }
@@ -3580,7 +3614,6 @@
                      * This is used for anntations of type "strikeout".
                      *
                      * @param {Object} a The annotation definition
-                     * @return {SVGGElement} A group of all lines to be rendered
                      */
                     function renderLine(a) {
                         var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -3674,20 +3707,30 @@
                      * @return {SVGPathElement} The path to be rendered
                      */
                     function renderPath(a) {
-                        var d = [];
-                        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                        for (var i = 0, l = a.lines.length; i < l; i++) {
-                            d.push(a.lines[i])
+                        var paths = [];
+                        try{
+                            // console.log(a);
+                            for(var obj of a.paths)
+                            {
+                                var d = [];
+                                var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');                        
+                                for (var i = 0, l = obj.lines.length; i < l; i++) {
+                                    d.push(obj.lines[i])
+                                }
+        
+                                (0, _setAttributes2.default)(path, {
+                                    d: d.join(' '),
+                                    stroke: (0, _normalizeColor2.default)(a.color || '#000'),
+                                    strokeWidth: a.width || 1,
+                                    fill: 'none'
+                                });
+                                paths.push(path);
+                            }
                         }
-
-                        (0, _setAttributes2.default)(path, {
-                            d: d.join(' '),
-                            stroke: (0, _normalizeColor2.default)(a.color || '#000'),
-                            strokeWidth: a.width || 1,
-                            fill: 'none'
-                        });
-                        // console.log(path);
-                        return path;
+                        catch(er){
+                            console.log('Invalid line path structure' ,er);
+                        }
+                        return paths;
                     }
                     module.exports = exports['default']; /***/
                 }, /* 17 */ function(module, exports, __webpack_require__) {
@@ -3914,15 +3957,7 @@
                         return sortByPoint(a.rectangles[0], b.rectangles[0]);
                     } // Sort annotation by it's first line
                     function sortByLinePoint(a, b) {
-                        var lineA = a.lines[0];
-                        var lineB = b.lines[0];
-                        return sortByPoint({
-                            x: lineA[0],
-                            y: lineA[1]
-                        }, {
-                            x: lineB[0],
-                            y: lineB[1]
-                        });
+                        console.log('Removed sort by line point')
                     } // Arrange supported types and associated sort methods
                     var SORT_TYPES = {
                         'highlight': sortByRectPoint,
@@ -3980,13 +4015,6 @@
                                 var text = annotation.type === 'textbox' ? ' (content: ' + annotation.content + ')' : '';
                                 resFun = (0, _createScreenReaderOnly2.default)(annotation.type + ' annotation ' + num + text, annotation.uuid);
                                 (0, _insertElementWithinChildren2.default)(resFun, annotation.x, annotation.y, annotation.page);
-                                break;
-                            case 'drawing':
-                            case 'area':
-                                var x = typeof annotation.x !== 'undefined' ? annotation.x : annotation.lines[0][0];
-                                var y = typeof annotation.y !== 'undefined' ? annotation.y : annotation.lines[0][1];
-                                resFun = (0, _createScreenReaderOnly2.default)('Unlabeled drawing', annotation.uuid);
-                                (0, _insertElementWithinChildren2.default)(resFun, x, y, annotation.page);
                                 break;
                         } // Include comments in screen reader hint
                         // if (COMMENT_TYPES.includes(annotation.type)) {
@@ -4784,27 +4812,45 @@
                                     });
                                 })();
                             } else if (type === 'drawing') {
-                                (function() {
-                                    var rect = (0, _utils.scaleDown)(svg, (0, _utils.getAnnotationRect)(target[0]));
-                                    var _annotation$lines$ = _slicedToArray(annotation.lines[0], 2);
-                                    var originX = _annotation$lines$[0];
-                                    var originY = _annotation$lines$[1];
+                                var rect = (0, _utils.scaleDown)(svg, (0, _utils.getAnnotationRect)(target[0]));                                
+                                annotation.paths.forEach(function(ano, cnt_path){
+                                    var path = annotation.paths[cnt_path];
+                                    var first_line = path.lines[0].split(' ');
+                                    var originX = first_line[1];
+                                    var originY = first_line[2];
+
                                     var _calcDelta = calcDelta(originX, originY);
                                     var deltaX = _calcDelta.deltaX;
                                     var deltaY = _calcDelta.deltaY; // origin isn't necessarily at 0/0 in relation to overlay x/y
                                     // adjust the difference between overlay and drawing coords
                                     deltaY += originY - rect.top;
                                     deltaX += originX - rect.left;
-                                    annotation.lines.forEach(function(line, i) {
-                                        var _annotation$lines$i = _slicedToArray(annotation.lines[i], 2);
-                                        var x = _annotation$lines$i[0];
-                                        var y = _annotation$lines$i[1];
-                                        annotation.lines[i][0] = x + deltaX;
-                                        annotation.lines[i][1] = y + deltaY;
+                                    
+                                    
+                                    path.lines.forEach(function(line, i) {
+                                        // console.log(path.lines[i]);
+                                        var ith_line = path.lines[i].split(' ');
+                                        var x1 = ith_line[1];
+                                        var y1 = ith_line[2];
+                                        var newx = parseFloat(x1) + deltaX;
+                                        var newy = parseFloat(y1) + deltaY;
+                                        var str = ith_line[0] +' '+ newx + ' '+newy;
+                                        if(ith_line[0] == 'Q')
+                                        {                                            
+                                            var x2 = ith_line[3];
+                                            var y2 = ith_line[4];
+                                            newx = parseFloat(x2) + deltaX;
+                                            newy = parseFloat(y2) + deltaY;
+                                            str += ' '+ newx + ' '+newy;
+                                        }
+                                        // console.log(i, str);
+                                        path.lines[i] = str;
                                     });
-                                    target[0].parentNode.removeChild(target[0]);
-                                    (0, _appendChild2.default)(svg, annotation);
-                                })();
+                                    annotation.paths[cnt_path] = path;
+                                });
+                                
+                                target[0].parentNode.removeChild(target[0]);
+                                (0, _appendChild2.default)(svg, annotation);
                             }
                             _PDFJSAnnotate2.default.getStoreAdapter().editAnnotation(documentId, annotationId, annotation);
                         });
@@ -4834,7 +4880,6 @@
                      * Enable edit mode behavior.
                      */
                     function enableEdit(target) {
-                        // console.log(_enabled, 679);
                         if (_enabled) {
                             return;
                         }
@@ -4876,176 +4921,70 @@
                             default: obj
                         };
                     }
-                    var _enabled = false;
-                    var _penSize = void 0;
-                    var _penColor = void 0;
-                    var path = void 0;
-                    var lines = void 0;
+                    var _enabled = false;                    
                     /**
                      * Handle document.mousedown event
-                     */
-                    var old_svg = undefined;
-                    var drawing_gone_out = false;
-                    function mouse_down30(e) {
-                        //console.log(e, 777);
-                        if (is_mobile_device)
-                        {
-                            $('body').css('overflow', 'hidden');
-                        }
-                        if(!$('.topbar .pen').hasClass('active'))
-                        {
-                            return;
-                        }
-                        
-                        path = null;
-                        lines = [];
-
-                        // document.addEventListener('mousemove', mouse_move30);
-                        // document.addEventListener('mouseup', mouse_up30);
-
-                        // document.addEventListener('touchmove', mouse_move30, {
-                        //     passive: false
-                        // });
-                        // document.addEventListener('touchend', mouse_up30);
-                    }
+                     */                    
                     /**
                      * Handle document.mouseup event
                      *
                      * @param {Event} e The DOM event to be handled
-                     */
-
-                    mouse_up30 = function(e, last_drawn_path=undefined) {
-                        //console.log(777);
+                     */                    
+                    mouse_up30 = function(e, last_drawn_path, page_id) {                        
+                        var lines = [];
                         if (e.changedTouches)
                         {
                             e = e.changedTouches[0];
                         }
                         if(last_drawn_path)
-                        {
-                            lines = [];
+                        {                            
                             for(var obj of last_drawn_path)
                             {
                                 lines.push(obj.join(' '))
                             }
-                            console.log(lines)
                         }
                         else{
                             return;
                         }
-                        var svg = void 0;
-                        if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
-                            var _getMetadata = (0, _utils.getMetadata)(svg);
-                            documentId = _getMetadata.documentId;
-                            var pageNumber = _getMetadata.pageNumber;                            
-                            _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
-                                type: 'drawing',
-                                width: _penSize,
-                                color: _penColor,
-                                lines: lines
-                            }).then(function(annotation) {
-                                console.log(annotation, 444);
-                                var local_annots = _getAnnotations(documentId);
-                                if(!local_annots.length)
-                                {
-                                    console.log('Invalid annotation length')
-                                    return;
-                                }
-                                if(local_annots[local_annots.length - 1].type != 'drawing')
-                                {
-                                    console.log('Invalid last annotation')
-                                    return;
-                                }
-                                if (path) {
-                                    svg.removeChild(path);
-                                }
-                                var append_child = (0, _appendChild2.default)
-                                append_child(svg, annotation);                                
-                                updateAnnotations(documentId, local_annots, 'op=drawing');
-                                old_svg = svg;
-                            });
+                        var svg = $('#'+page_id).find('.annotationLayer:first')[0];
+                        if(!svg || !lines.length){
+                            console.log('No svg for lines='+lines.length)
+                            return
                         }
-                        // document.removeEventListener('mousemove', mouse_move30);
-                        // document.removeEventListener('mouseup', mouse_up30);
-
-                        // document.removeEventListener('touchmove', mouse_move30);
-                        // document.removeEventListener('touchend', mouse_up30);
+                        
+                        var _getMetadata = (0, _utils.getMetadata)(svg);
+                        documentId = _getMetadata.documentId;
+                        var local_annots = _getAnnotations(documentId);
+                        last_drawn_path = {lines:  lines};
+                        // console.log(old_page_id, page_id);
+                        if(page_id == old_page_id){
+                            if(local_annots.length && local_annots[local_annots.length - 1].paths)
+                            {
+                                local_annots[local_annots.length - 1].paths.push(last_drawn_path);                                
+                                updateAnnotations(documentId, local_annots, 'op=drawing update')
+                                // clear_canvas();
+                                return;
+                            }
+                            else{
+                                console.log('Invalid drawing merging in page:', page_id, local_annots);
+                            }
+                        }
+                        old_page_id = page_id;
+                        // clear_canvas();
+                        var pageNumber = _getMetadata.pageNumber;
+                        _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
+                            type: 'drawing',
+                            width: penSize,
+                            color: penColor,
+                            paths: [last_drawn_path]
+                        }).then(function(a){
+                            console.log(a.uuid);
+                        });
                         if (is_mobile_device)
                             $('body').css('overflow', 'auto');
                     }
-                    /**
-                     * Handle document.mousemove event
-                     *
-                     * @param {Event} e The DOM event to be handled
-                     */
-
-                    function mouse_move30(e) {
-                        if(drawing_gone_out)
-                        {
-                            // console.log('No use');
-                            return;
-                        }
-                        e.preventDefault();
-                        //console.log(e); 
-                        if (e.touches) {
-                            e = e.touches[0];
-                        }                        
-                        savePoint(e.clientX, e.clientY);
-                    }
-                    /**
-                     * Handle document.keyup event
-                     *
-                     * @param {Event} e The DOM event to be handled
-                     */
-                    function key_up30(e) { // Cancel rect if Esc is pressed
-                        if (e.keyCode === 27) {
-                            lines = null;
-                            path.parentNode.removeChild(path);
-                            // document.removeEventListener('mousemove', mouse_move30);
-                            // document.removeEventListener('mouseup', mouse_up30);
-                        }
-                    }
-                    /**
-                     * Save a point to the line being drawn.
-                     *
-                     * @param {Number} x The x coordinate of the point
-                     * @param {Number} y The y coordinate of the point
-                     */
-                    function savePoint(x, y) {
-                        var svg = (0, _utils.findSVGAtPoint)(x, y);
-                        if (!svg) {
-                            return;
-                        }
-                        var rect = svg.getBoundingClientRect();
-                        var point = (0, _utils.scaleDown)(svg, {
-                            x: x - rect.left,
-                            y: y - rect.top
-                        });
-                        lines.push([point.x, point.y]);
-                        if (lines.length <= 1) {
-                            return;
-                        }
-                        if (path) {
-                            svg.removeChild(path);
-                        }
-                        path = (0, _appendChild2.default)(svg, {
-                            type: 'drawing',
-                            color: _penColor,
-                            width: _penSize,
-                            lines: lines
-                        });
-                    }
-                    /**
-                     * Set the attributes of the pen.
-                     *
-                     * @param {Number} penSize The size of the lines drawn by the pen
-                     * @param {String} penColor The color of the lines drawn by the pen
-                     */
-                    function setPen() {
-                        var penSize = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-                        var penColor = arguments.length <= 1 || arguments[1] === undefined ? '000000' : arguments[1];
-                        _penSize = parseInt(penSize, 10);
-                        _penColor = penColor;
-                    }
+                                        
+                    
                     /**
                      * Enable the pen behavior
                      */
@@ -5060,9 +4999,7 @@
                         _enabled = true;
                         togglePen(true);
                         $('.drawing_wrapper').css('z-index', 2);
-                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');
-                        // document.addEventListener('mousedown', mouse_down30);
-                        // document.addEventListener('touchstart', mouse_down30);
+                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');                        
                         (0, _utils.disableUserSelect)();
                     }
                     /**
@@ -5073,8 +5010,6 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener('mousedown', mouse_down30);
-                        document.removeEventListener('touchstart', mouse_down30);
                         (0, _utils.enableUserSelect)();
                     } /***/
                 }, /* 31 */ function(module, exports, __webpack_require__) {
@@ -6160,5 +6095,6 @@
         module3,
         module4
     ]);
+    // console.log(pdf_js_module);
     window['pdf_js_module'] = pdf_js_module;
 })();

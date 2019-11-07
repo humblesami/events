@@ -89,9 +89,14 @@ class AnnotationDocument(CustomModel):
         if doc:
             doc = doc[0]
             reset = params.get('reset')
+            point_ids_dict = PointAnnotation.objects.filter(document_id=doc_id, sub_type__isnull=True).values('id')
+            point_ids = []
+            for obj in point_ids_dict:
+                point_ids.append(obj['id'])
+            personal_annotations = doc.annotation_set.filter(~Q(id__in=point_ids))
+            personal_annotations.delete()
             if reset:
                 doc.version = 0
-                doc.annotation_set.all().delete()
                 return 'done'
         else:
             doc = AnnotationDocument(
@@ -183,7 +188,7 @@ class AnnotationDocument(CustomModel):
 
     @classmethod
     def save_lines(cls, saved_annotations, user_annotations):
-        children = []
+        lines = []
         drawing = 0
         if not saved_annotations:
             return
@@ -192,26 +197,16 @@ class AnnotationDocument(CustomModel):
                 continue
             drawing += 1
             for obj in saved_annotations.filter(uuid=item["uuid"]):
-                if len(item['lines']) == 0:
+                if len(item['paths']) == 0:
                     return 'Invalid drawing object'
-                for child in item['lines']:
-                    child_to_save = Line(
-                        drawing_id=obj.id,
-                    )
-                    # x = None
-                    # y = None
-                    # if type(child) is dict:
-                    #     x = child.get('x')
-                    #     y = child.get('y')
-                    # elif type(child) is list:
-                    #     x = child[0]
-                    #     y = child[1]
-                    child_to_save.curve = child
-                        # child_to_save.x = x
-                        # child_to_save.y = y
-                    children.append(child_to_save)
-        if len(children) > 0:
-            Line.objects.bulk_create(children)
+                for path in item['paths']:
+                    saved_path = Path.objects.create(drawing_id=obj.id)
+                    for line in path['lines']:
+                        child_to_save = Line(path_id=saved_path.id)
+                        child_to_save.curve = line
+                        lines.append(child_to_save)
+        if len(lines) > 0:
+            Line.objects.bulk_create(lines)
         else:
             if drawing > 0:
                 return 'Invalid drawing object'
@@ -347,10 +342,11 @@ class DrawingAnnotation(Annotation):
     @classmethod
     def get_drawings(cls, doc_id, user_id):
         drawings = DrawingAnnotation.objects.filter(document_id=doc_id, user_id=user_id)
-        line_drawings = []
-        counter = 0
+        drawing_objects = []
+        drawing_counter = -1
         for drawing in drawings:
-            line_drawings.append({
+            drawing_counter += 1
+            drawing_objects.append({
                 'uid': drawing.user.id,
                 'document_name': drawing.document.doc_name,
                 'type': drawing.annotation_ptr.type,
@@ -362,20 +358,22 @@ class DrawingAnnotation(Annotation):
                 'doc_id': drawing.document.doc_name,
 
             })
-            lines = drawing.line_set.all()
-            drawing_lines = []
-            for obj in lines:
-                # drawing_lines.append({'x': obj.x, 'y': obj.y})
-                drawing_lines.append(obj.curve)
-            line_drawings[counter]['lines'] = drawing_lines
-            counter += 1
-        return  line_drawings    
+            drawing_objects[drawing_counter]['paths'] = []
+            for obj in drawing.path_set.all():
+                lines = obj.line_set.all().values('curve')
+                drawing_lines = []
+                for child_obj in lines:
+                    drawing_lines.append(child_obj['curve'])
+                drawing_objects[drawing_counter]['paths'].append({'lines' : drawing_lines})
+        return drawing_objects
 
-    
-class Line(CustomModel):
+
+class Path(CustomModel):
     drawing = models.ForeignKey(DrawingAnnotation, on_delete=models.CASCADE)
-    x = models.IntegerField(null=True)
-    y = models.IntegerField(null=True)
+
+
+class Line(CustomModel):
+    path = models.ForeignKey(Path, on_delete=models.CASCADE)
     curve = models.CharField(max_length=128, default='')
 
 

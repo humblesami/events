@@ -4,13 +4,15 @@ jQuery(document).ready(function(e) {
             reset: options.resetButton ? options.resetButton : null,
             width: options.width ? options.width : 466,
             height: options.height ? options.height :  260,
+            color: options.color ? options.color : '#000000',
             lineWidth: options.lineWidth ? options.lineWidth : 10,
-        }, options);
+        }, options);        
 
-        var canvas = jQuery(this);        
-        var lineWidth = params.lineWidth;
-        
+        var canvas = jQuery(this);
         var context = canvas.get(0).getContext('2d');
+        context.lineWidth = params.lineWidth;
+        context.strokeStyle = params.color;
+
         context.lineCap = 'round';
 
         canvas.attr("width",params.width);
@@ -55,15 +57,13 @@ jQuery(document).ready(function(e) {
             for (var i = 1; i < points.length; i++) {
                 var midPoint = calculateMiddlePoint(p1, p2);
                 if (p1.break) {
-                    ctx.moveTo(p2.x, p2.y); 
+                    ctx.moveTo(p2.x, p2.y);
                 } else {
                     ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
                 }
                 p1 = points[i];
                 p2 = points[i+1];
-            }
-            
-            ctx.lineWidth = lineWidth;
+            }            
             ctx.lineTo(p1.x, p1.y);
             ctx.stroke();
         }
