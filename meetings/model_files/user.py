@@ -88,13 +88,13 @@ def create_group(obj, group_name):
     error_list = []
     user_group = None
     try:
-        user_group = MeetingGroup.objects.filter(name=group_name)
+        user_group = group_model.objects.filter(name=group_name)
         if user_group:
             user_group = user_group[0]
             obj.groups.add(user_group)
             obj.save()
             return 'done'
-        user_group = MeetingGroup.objects.create(name=group_name)
+        user_group = group_model.objects.create(name=group_name)
         group_permissions = get_permission_set(group_name)
         for app_name in group_permissions:
             for model_name in group_permissions[app_name]:
@@ -821,6 +821,6 @@ class Staff(Profile):
 # ////////////////////GROUPS//////////////////////////////////
 
 
-class MeetingGroup(group_model):
-    pass
+# class MeetingGroup(group_model):
+#     pass
     # app_label = models.CharField(max_length=100)

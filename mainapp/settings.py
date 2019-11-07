@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'restoken',
     'actions',
     'test',
+    'django_seed',
 ]
 
 REST_FRAMEWORK = {

@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from documents.admin import FileAdmin, FileInlineAdmin
 from mainapp.admin import BaseAdmin, BaseInlineAdmin
 from meetings.model_files.committee import Committee
-from meetings.model_files.user import Profile, MeetingGroup
+from meetings.model_files.user import Profile
 from django.views.decorators.debug import sensitive_post_parameters
 from meetings.model_files.document import MeetingDocument, AgendaDocument
 from .models import Event, Topic, News, NewsVideo, NewsDocument, Invitation_Response, LoginEntry
@@ -138,16 +138,16 @@ class UserAdmin(BaseAdmin):
         return form
 
 
-class MeetingGroupAdmin(GroupAdmin):
+# class MeetingGroupAdmin(GroupAdmin):
 
-    def get_queryset(self, request):
-        # qs = super(GroupAdmin, self).get_queryset(request)
-        # qs = qs.filter(meetinggroup__app_label = "meetings")
-        qs = MeetingGroup.objects.filter()
-        return qs
+#     def get_queryset(self, request):
+#         # qs = super(GroupAdmin, self).get_queryset(request)
+#         # qs = qs.filter(meetinggroup__app_label = "meetings")
+#         qs = MeetingGroup.objects.filter()
+#         return qs
 
-    def save_model(self, request, obj, form, change):
-        super(MeetingGroupAdmin, self).save_model(request, obj, form, change)
+#     def save_model(self, request, obj, form, change):
+#         super(MeetingGroupAdmin, self).save_model(request, obj, form, change)
 
 
 class CommitteeAdmin(BaseAdmin):
@@ -190,7 +190,7 @@ admin.site.register(Topic, TopicAdmin)
 admin.site.register(MeetingDocument, MeetingDocumentAdmin)
 admin.site.register(AgendaDocument, AgendaDocumentAdmin)
 admin.site.register(Profile, UserAdmin)
-admin.site.register(MeetingGroup, MeetingGroupAdmin)
+# admin.site.register(MeetingGroup, MeetingGroupAdmin)
 admin.site.register(Committee, CommitteeAdmin)
 admin.site.register(LoginEntry)
 admin.site.register(Invitation_Response, AttendeeAdmin)
