@@ -2,22 +2,17 @@ var last_drawn_path = [];
 jQuery(document).ready(function(e) {
     jQuery.fn.sign = function(options) {
         var params = jQuery.fn.extend({
-            reset: options.resetButton ? options.resetButton : null,
-            width: options.width ? options.width : 466,
-            height: options.height ? options.height :  260,
+            reset: options.resetButton ? options.resetButton : null,            
             color: options.color ? options.color : '#000000',
             lineWidth: options.lineWidth ? options.lineWidth : 10,
         }, options);        
 
         var canvas = jQuery(this);
+        // console.log(this[0]);
         var context = canvas.get(0).getContext('2d');
         context.lineWidth = params.lineWidth;
         context.strokeStyle = params.color;
-
         context.lineCap = 'round';
-
-        canvas.attr("width", params.width);
-        canvas.attr("height", params.height);
 
         var points = [];
         var holdClick = false;
@@ -77,6 +72,7 @@ jQuery(document).ready(function(e) {
             holdClick = true;
             context = this.getContext('2d');
             last_drawn_path = [];
+            context.beginPath();
             var mousePosition = getMousePosition(canvas, e);
             last_drawn_path.push('M ' + mousePosition.x + ' ' + mousePosition.y);
             points.push({x: mousePosition.x , y: mousePosition.y, break: false});
@@ -91,14 +87,15 @@ jQuery(document).ready(function(e) {
         }).on('touchend mouseup', function(e) {
             e.preventDefault();
             holdClick = false;
-            // console.log(32320088);
             var mousePosition = getMousePosition(canvas, e);
             if(last_drawn_path.length && !last_drawn_path[last_drawn_path.length - 1].startsWith('L '))
             {
                 last_drawn_path.push('L ' + mousePosition.x + ' ' + mousePosition.y);
             }
             points[points.length - 1].break = true;
-            console.log($(this).closest('.page').attr('id'));
+            // context.closePath();
+            reset();
+            // console.log($(this).closest('.page').attr('id'));
             return false;
         });
 

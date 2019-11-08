@@ -143,10 +143,17 @@
         return val;
     }
 
-    function _getAnnotations(documentId) {
+    function _getAnnotations(documentId, page_number = undefined) {
         var res = getCookieStrict(documentId, documentId + '/annotations');
         try{
             res = JSON.parse(res);
+            if(page_number)
+            {
+                // console.log(page_number, 54434);
+                res = res.filter(function(a){                    
+                    return a.page == page_number;
+                })
+            }
         }
         catch(er)
         {
@@ -242,7 +249,6 @@
             // console.log(i, 43423);
             ctx.lineWidth = penSize;
             ctx.strokeStyle = penColor;
-            // ctx.beginPath();
         });
     }
 
@@ -359,19 +365,14 @@
 
     function reloadSvg(page_id, viewport){
         last_drawn_path = [];
-        sign_contexts.forEach(function(context, i){
-            var el = context.canvas;
-            context.clearRect(0, 0, el.width, el.height);
-        });
-
-        var local_annots = _getAnnotations(documentId);
+        var page_number = page_id.replace('pageContainer', '');
+        var local_annots = _getAnnotations(documentId, page_number);        
         var render_data = {
             documentId: documentId,
             pageNumber: ($('#'+page_id).index() + 1),
             annotations: local_annots
         }
-        var svg = $('#'+page_id).find('svg.annotationLayer')[0]
-        // console.log(svg_,viewport1, local_annots);
+        var svg = $('#'+page_id).find('svg.annotationLayer')[0]        
         render_svg(svg, viewport, render_data);        
     }
     
@@ -1280,29 +1281,26 @@
                                 if(annotation_mode == 1 && $('#viewer .page').length && !$('#viewer .page:first .drawing_wrapper').length)
                                 {
                                     sign_contexts = [];
+                                    var cnt_canvas = 0;
                                     $('#viewer .page').each(function(){
                                         var the_page = $(this);
+                                        cnt_canvas += 1;
                                         var height = the_page.height() - 2;
                                         var width = the_page.width() - 2;
                                         var drawing_wrapper = $('<div class="drawing_wrapper" style="top:1px;left:1px;height:'+height+'px;width:'+width+'px;position:absolute;z-index:-1" />');                            
                                         the_page.find('.canvasWrapper').css('position','relative').append(drawing_wrapper);
                                                                     
-                                        var jq_canvas = $('<canvas height="'+height+'" width="'+width+'"></canvas>');
-                                        drawing_wrapper.append(jq_canvas);                            
+                                        var jq_canvas = $('<canvas order="'+cnt_canvas+'" height="'+height+'" width="'+width+'"></canvas>');
+                                        drawing_wrapper.append(jq_canvas);
+                                        // console.log({'width' : width, 'height' : height});
+                                        jq_canvas.attr({'width' : width, 'height' : height});
 
-                                        // drawing_wrapper.signature({thickness: $('#range-slider').val() || 6});
-                                        
-                                        var myCanvas = drawing_wrapper.find('canvas')[0];
-                                        // var canvasSVGContext = new CanvasSVG.Deferred();
-                                        // canvasSVGContext.wrapCanvas(myCanvas);
-                                        var sign_context = $(myCanvas).sign({ lineWidth: penSize, color:penColor });
-                                        jq_canvas.attr({'width' : width, 'height' : height});                                        
+                                        // console.log(jq_canvas[0]);
+
+                                        var sign_context = jq_canvas.sign({ lineWidth: penSize, color:penColor });                                        
                                         sign_contexts.push(sign_context);
                                         jq_canvas.mouseup(function(e){
-
-                                            setTimeout(function(){
-                                                // sign_context.closePath();
-                                                // sign_context.beginPath();
+                                            setTimeout(function(){                                                
                                                 // console.log(3232);
                                                 mouse_up30(e, the_page.attr('id'));
                                             },10);
@@ -4976,8 +4974,8 @@
                             }
                         }
                         else{
-                            // console.log('New Svg');
                             var pageNumber = _getMetadata.pageNumber;
+                            // console.log('New Svg', pageNumber);
                             _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
                                 type: 'drawing',
                                 width: penSize,
