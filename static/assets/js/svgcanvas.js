@@ -1,6 +1,5 @@
 
 CanvasSVG = {};
-var last_drawn_path = []
 CanvasSVG.Base = function () {};
 CanvasSVG.Base.prototype = {
     ns:     'http://www.w3.org/2000/svg',
@@ -102,10 +101,19 @@ CanvasSVG.Base.prototype = {
         var attr = { d: this.buildPath(path) };
         this.processCommon(type, attr, cur, trans);
         if(i == state_length - 1)
-        {
-            // console.log(path);
+        {    
+            // console.log(path,last_drawn_path.length, path.length);
+            // if(last_drawn_path.length)
+            // {
+            //     last_drawn_path = path.slice(last_drawn_path.length, path.length);
+            // }
+            // else{
+            //     last_drawn_path = path;
+            // }            
             last_drawn_path = path;
-            this.addElement('path', attr);
+            // console.log(last_drawn_path);
+            this.path = last_drawn_path;            
+            // this.addElement('path', attr);
         }
     },
     
@@ -464,7 +472,11 @@ CanvasSVG.Deferred.prototype.getSVG = function () {
         var cmd = this.state[i].type;
         var prm = this.state[i].value;
         this.handleCommands(cmd, prm, i, state_length);
-    }
+        if(i == state_length - 1)
+        {
+            // this.doClearRect(prm);
+        }        
+    }    
     return this.svg;
 };
 CanvasSVG.Deferred.prototype.pushState = function (type, val) {

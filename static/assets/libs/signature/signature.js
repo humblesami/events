@@ -1,3 +1,4 @@
+var last_drawn_path = [];
 jQuery(document).ready(function(e) {
     jQuery.fn.sign = function(options) {
         var params = jQuery.fn.extend({
@@ -15,7 +16,7 @@ jQuery(document).ready(function(e) {
 
         context.lineCap = 'round';
 
-        canvas.attr("width",params.width);
+        canvas.attr("width", params.width);
         canvas.attr("height", params.height);
 
         var points = [];
@@ -24,12 +25,11 @@ jQuery(document).ready(function(e) {
         var touch = function(e)
         {
             var touch = null;
-            if (e.type !== 'click' && e.type !== 'mousedown' && e.type !== 'mousemove') {
+            if (e.type == 'touchstart' || e.type == 'touchend' || e.type == 'touchmove') {
                 touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
             } else {
                 touch = e;
             }
-
             return ({x: touch.pageX, y: touch.clientY});
         }
 
@@ -47,13 +47,9 @@ jQuery(document).ready(function(e) {
         var draw = function(ctx, x, y)
         {
             points.push({x: x, y: y, break: false});
-            //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             var p1 = points[0];
             var p2 = points[1];
-
-            // ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);  
-
+            ctx.moveTo(p1.x, p1.y);            
             for (var i = 1; i < points.length; i++) {
                 var midPoint = calculateMiddlePoint(p1, p2);
                 if (p1.break) {
@@ -65,6 +61,7 @@ jQuery(document).ready(function(e) {
                 p2 = points[i+1];
             }            
             ctx.lineTo(p1.x, p1.y);
+            last_drawn_path.push('L ' + p1.x + ' ' + p1.y);
             ctx.stroke();
         }
 
@@ -78,7 +75,10 @@ jQuery(document).ready(function(e) {
         // Mouse & touch events
         canvas.on('touchstart mousedown', function(e) {
             holdClick = true;
+            context = this.getContext('2d');
+            last_drawn_path = [];
             var mousePosition = getMousePosition(canvas, e);
+            last_drawn_path.push('M ' + mousePosition.x + ' ' + mousePosition.y);
             points.push({x: mousePosition.x , y: mousePosition.y, break: false});
             return false;
         }).on('touchmove mousemove', function(e)
@@ -91,7 +91,14 @@ jQuery(document).ready(function(e) {
         }).on('touchend mouseup', function(e) {
             e.preventDefault();
             holdClick = false;
+            // console.log(32320088);
+            var mousePosition = getMousePosition(canvas, e);
+            if(last_drawn_path.length && !last_drawn_path[last_drawn_path.length - 1].startsWith('L '))
+            {
+                last_drawn_path.push('L ' + mousePosition.x + ' ' + mousePosition.y);
+            }
             points[points.length - 1].break = true;
+            console.log($(this).closest('.page').attr('id'));
             return false;
         });
 

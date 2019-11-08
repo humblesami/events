@@ -186,9 +186,7 @@
         },
         signature: {
             script_paths: [
-                'static/assets/libs/signature/kwb-signature.js',
-                'static/assets/libs/signature/signature.js',
-                'static/assets/js/svgcanvas.js',
+                'static/assets/libs/signature/signature.js',                
                 'static/assets/js/custom_signature.js'
             ],
             style_paths: [],

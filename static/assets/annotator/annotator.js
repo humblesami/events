@@ -229,11 +229,20 @@
             $('select.pen-size option').css('color', color);
         }
         old_page_id = undefined;        
+        // $('.drawing_wrapper canvas').each(function(){
+        //     sign_contexts = [];
+        //     // var ctx = $(this).sign({
+        //     //     lineWidth : penSize,
+        //     //     color : penColor
+        //     // })
+        //     console.log(ctx);
+        //     sign_contexts.push(ctx);
+        // });
         sign_contexts.forEach(function(ctx, i){
             // console.log(i, 43423);
-            // ctx.closePath();
             ctx.lineWidth = penSize;
-            ctx.strokeStyle = penColor;            
+            ctx.strokeStyle = penColor;
+            // ctx.beginPath();
         });
     }
 
@@ -314,7 +323,7 @@
         var bbox = svg.getBBox();
         svg.setAttribute("viewBox", (bbox.x-10)+" "+(bbox.y-10)+" "+(bbox.width+20)+" "+(bbox.height+20));
         svg.setAttribute("width", (bbox.width+20)  + "px");
-        svg.setAttribute("height",(bbox.height+20) + "px");            
+        svg.setAttribute("height",(bbox.height+20) + "px");
         temp_div.remove();
         return svg.outerHTML;
     }
@@ -348,15 +357,22 @@
         }
     }
 
-    function reset_canvas(){
-        $('.drawing_wrapper canvas').each(function(i, el){
-            var context = el.getContext('2d');
+    function reloadSvg(page_id, viewport){
+        last_drawn_path = [];
+        sign_contexts.forEach(function(context, i){
+            var el = context.canvas;
             context.clearRect(0, 0, el.width, el.height);
         });
-    }
 
-    function loadCanvas(){
-
+        var local_annots = _getAnnotations(documentId);
+        var render_data = {
+            documentId: documentId,
+            pageNumber: ($('#'+page_id).index() + 1),
+            annotations: local_annots
+        }
+        var svg = $('#'+page_id).find('svg.annotationLayer')[0]
+        // console.log(svg_,viewport1, local_annots);
+        render_svg(svg, viewport, render_data);        
     }
     
     function on_penLeave(){
@@ -756,7 +772,7 @@
             $('body').on('click', '.ColorPalettePopup:first .copy:first', function() {
                 document.execCommand("copy");
                 $(this).closest('.ColorPalettePopup').hide();
-            });            
+            });
 
             $('body').on('mousedown', '#annotated-doc-conatiner', function(e) {
                 contextMenuShown = $('.ContextMenuPopup:visible').length;
@@ -1277,19 +1293,19 @@
                                         // drawing_wrapper.signature({thickness: $('#range-slider').val() || 6});
                                         
                                         var myCanvas = drawing_wrapper.find('canvas')[0];
-                                        var canvasSVGContext = new CanvasSVG.Deferred();
-                                        canvasSVGContext.wrapCanvas(myCanvas);
-
+                                        // var canvasSVGContext = new CanvasSVG.Deferred();
+                                        // canvasSVGContext.wrapCanvas(myCanvas);
                                         var sign_context = $(myCanvas).sign({ lineWidth: penSize, color:penColor });
                                         jq_canvas.attr({'width' : width, 'height' : height});                                        
                                         sign_contexts.push(sign_context);
                                         jq_canvas.mouseup(function(e){
-                                            // var res_svg = get_minimal_svg(myCanvas);
-                                            // sign_context.closePath();
-                                            // sign_context.beginPath();
-                                            sign_context.getSVG();                                            
-                                            mouse_up30(e, last_drawn_path, the_page.attr('id'));
-                                            // the_page.find('svg.annotationLayer').append(res_svg);
+
+                                            setTimeout(function(){
+                                                // sign_context.closePath();
+                                                // sign_context.beginPath();
+                                                // console.log(3232);
+                                                mouse_up30(e, the_page.attr('id'));
+                                            },10);
                                         });
                                         jq_canvas.mousedown(function(){
                                             $('.ContextMenuPopup').hide();
@@ -1299,7 +1315,6 @@
                                     var penColor = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';                                        
                                     setPen(penSize, penColor);
                                 }
-
                                 if (!(doc_data && doc_data.first_time)) {                                    
                                     return;
                                 }
@@ -4917,27 +4932,20 @@
                      *
                      * @param {Event} e The DOM event to be handled
                      */                    
-                    mouse_up30 = function(e, last_drawn_path, page_id) {                        
+                    mouse_up30 = function(e, page_id) {                        
                         var lines = [];
                         if (e.changedTouches)
                         {
                             e = e.changedTouches[0];
                         }
-                        if(last_drawn_path)
-                        {
-                            for(var obj of last_drawn_path)
-                            {
-                                lines.push(obj.join(' '))
-                            }
-                        }
-                        else{
-                            return;
-                        }
+                        // console.log(last_drawn_path);
+                        lines = last_drawn_path;                     
+
                         var svg = $('#'+page_id).find('.annotationLayer:first')[0];
                         if(!svg || !lines.length){
                             // console.log('No svg for lines='+lines.length)
                             return
-                        }
+                        }                        
                         
                         var _getMetadata = (0, _utils.getMetadata)(svg);
                         documentId = _getMetadata.documentId;
@@ -4958,49 +4966,28 @@
                         if(page_id == old_page_id){
                             if(last_drawing)
                             {
-                                // console.log(lines);
                                 last_drawing.paths.push({lines: lines});
+                                local_annots[local_annots.length - 1] = last_drawing;
                                 updateAnnotations(documentId, local_annots, 'op=drawing update')
-                                // console.log(last_drawing.paths);
-                                reset_canvas();
-                                var viewport1 = _getMetadata.viewport;
-                                var svg_ = $('#'+page_id).find('svg.annotationLayer')[0];
-                                local_annots = _getAnnotations(documentId);
-                                var render_data = {
-                                    documentId: documentId,
-                                    pageNumber: ($('#'+page_id).index() + 1),
-                                    annotations: local_annots
-                                }
-                                // console.log(svg_,viewport1, local_annots);
-                                render_svg(svg_, viewport1, render_data);
-                                return;
+                                reloadSvg(page_id, _getMetadata.viewport);
                             }
                             else{
                                 console.log('Invalid drawing merging in page:', page_id, local_annots);
                             }
-                            
                         }
-                        old_page_id = page_id;
-                        // clear_canvas();
-                        var pageNumber = _getMetadata.pageNumber;
-                        _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
-                            type: 'drawing',
-                            width: penSize,
-                            color: penColor,
-                            paths: [{lines: lines}]
-                        }).then(function(a){                            
-                            reset_canvas();
-                            var viewport1 = _getMetadata.viewport;
-                            var svg_ = $('#'+page_id).find('svg.annotationLayer')[0];
-                            local_annots = _getAnnotations(documentId);
-                            var render_data = {
-                                documentId: documentId,
-                                pageNumber: ($('#'+page_id).index() + 1),
-                                annotations: local_annots
-                            }
-                            // console.log(svg_,viewport1, local_annots);
-                            render_svg(svg_, viewport1, render_data);
-                        });
+                        else{
+                            // console.log('New Svg');
+                            var pageNumber = _getMetadata.pageNumber;
+                            _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
+                                type: 'drawing',
+                                width: penSize,
+                                color: penColor,
+                                paths: [{lines: lines}]
+                            }).then(function(a){
+                                reloadSvg(page_id, _getMetadata.viewport);
+                            });
+                            old_page_id = page_id;
+                        }
                         if (is_mobile_device)
                             $('body').css('overflow', 'auto');
                     }
@@ -5017,8 +5004,8 @@
                         }
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
-                        _enabled = true;
-                        togglePen(true);
+                        _enabled = true;                        
+                        togglePen(true);                        
                         $('.drawing_wrapper').css('z-index', 2);
                         $('.pen-tool-container > *:not(.pen)').css('display', 'block');                        
                         (0, _utils.disableUserSelect)();
