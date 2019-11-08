@@ -1,37 +1,4 @@
 
-// XXX TODO
-//---missing---
-//  - images
-//  - clip
-//  - gradients
-//  - patterns
-//  - fillStyle and strokeStyle as paint servers
-//  - arcTo
-//  - maxWidth on text
-//  - shadowColor
-//  - dynamic filter w/h
-//  - composite copy or lighter
-//  - video
-//  - other canvases
-//  - lots of tests
-//  - add a stringification method
-//  - add wrapper around toDataURL("image/svg+xml")
-//  - Google Code
-//  - lots of shortcuts in data verification taken compared to spec
-//---tests---
-//  - text
-//  - shadows
-//  - more complex paths
-//  - clips
-//---ideas---
-//  - gradients and patterns, need to wrap the objects, need to have creator
-//    methods different from the basic ones, and need to have different get/set
-//    for fillStyle and strokeStyle
-//  - for ImageData, it might be needed at some point to create an invisible canvas
-//    element, put the image data there, and getDataURL from it
-//  - take a bunch of complex canvas scripts and try them out
-//  - wire in Processing.js
-
 CanvasSVG = {};
 var last_drawn_path = []
 CanvasSVG.Base = function () {};

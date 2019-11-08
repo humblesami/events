@@ -51,7 +51,7 @@ jQuery(document).ready(function(e) {
             var p1 = points[0];
             var p2 = points[1];
 
-            ctx.beginPath();
+            // ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);  
 
             for (var i = 1; i < points.length; i++) {
@@ -78,7 +78,7 @@ jQuery(document).ready(function(e) {
         // Mouse & touch events
         canvas.on('touchstart mousedown', function(e) {
             holdClick = true;
-            var mousePosition = getMousePosition(canvas, e);                   
+            var mousePosition = getMousePosition(canvas, e);
             points.push({x: mousePosition.x , y: mousePosition.y, break: false});
             return false;
         }).on('touchmove mousemove', function(e)
@@ -108,5 +108,6 @@ jQuery(document).ready(function(e) {
                 reset();
             });
         }
+        return context;
     };
 });

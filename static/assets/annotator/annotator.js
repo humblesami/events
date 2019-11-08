@@ -24,6 +24,8 @@
     var mouse_up30 = undefined;
     var penSize = void 0;
     var penColor = void 0;
+    var sign_contexts = [];
+    var render_svg = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -226,14 +228,12 @@
             $('select.pen-size').css('color', color);
             $('select.pen-size option').css('color', color);
         }
-        old_page_id = undefined;
-        // reset_canvas();
-        $('.drawing_wrapper canvas').each(function(i, el){
-            context = this.getContext('2d');
-            context.closePath();
-            context.beginPath();
-            context.lineWidth = penSize;
-            context.strokeStyle = penColor;            
+        old_page_id = undefined;        
+        sign_contexts.forEach(function(ctx, i){
+            // console.log(i, 43423);
+            // ctx.closePath();
+            ctx.lineWidth = penSize;
+            ctx.strokeStyle = penColor;            
         });
     }
 
@@ -351,8 +351,12 @@
     function reset_canvas(){
         $('.drawing_wrapper canvas').each(function(i, el){
             var context = el.getContext('2d');
-            
+            context.clearRect(0, 0, el.width, el.height);
         });
+    }
+
+    function loadCanvas(){
+
     }
     
     function on_penLeave(){
@@ -361,8 +365,7 @@
         if(!$('.topbar .pen').has('active'))
         {
             return;
-        }        
-        
+        }
         var localAnnots = _getAnnotations(documentId);
         if(localAnnots.length)
         {
@@ -773,15 +776,10 @@
                     }
                 }
 
-                if(!pen_active){
-                    select_cursor();
-                }
-
                 if (activePointId && $target.closest('#comment-wrapper').length == 0) {
                     activePointId = undefined;
                     $('.comment-list-form').hide();
                 }
-                
             });
 
             $('body').on('click', '.ColorPalettePopup .cell.colored', function() {
@@ -902,11 +900,7 @@
                 var doc_data = RENDER_OPTIONS.document_data;                
                 if (annotation_mode == 1) {
                     annotation_mode = 1;
-                    RENDER_OPTIONS.showAnnotations = true;
-                    var penSize = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
-                    var penColor = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
-                    // console.log(penColor, penSize);
-                    setPen(penSize, penColor);
+                    RENDER_OPTIONS.showAnnotations = true;                    
                     $('.topbar:first .annotation-buttons-container').show();
                     $('.annot-toggler').show();
                 } else if(annotation_mode == 2){
@@ -1268,7 +1262,8 @@
                                 showHideAnnotations();
 
                                 if(annotation_mode == 1 && $('#viewer .page').length && !$('#viewer .page:first .drawing_wrapper').length)
-                                {                                                                    
+                                {
+                                    sign_contexts = [];
                                     $('#viewer .page').each(function(){
                                         var the_page = $(this);
                                         var height = the_page.height() - 2;
@@ -1285,16 +1280,14 @@
                                         var canvasSVGContext = new CanvasSVG.Deferred();
                                         canvasSVGContext.wrapCanvas(myCanvas);
 
-                                        $(myCanvas).sign({ lineWidth: penSize, color:penColor });
+                                        var sign_context = $(myCanvas).sign({ lineWidth: penSize, color:penColor });
                                         jq_canvas.attr({'width' : width, 'height' : height});                                        
-                                        
-                                        jq_canvas.mouseup(function(e){                                            
+                                        sign_contexts.push(sign_context);
+                                        jq_canvas.mouseup(function(e){
                                             // var res_svg = get_minimal_svg(myCanvas);
-                                            var canvasContext = myCanvas.getContext("2d");
-                                            canvasContext.getSVG();
-                                            // var last_path = $(res_svg).find('path:last');
-                                            // $(res_svg).html(last_path)
-                                            // console.log(res_svg);
+                                            // sign_context.closePath();
+                                            // sign_context.beginPath();
+                                            sign_context.getSVG();                                            
                                             mouse_up30(e, last_drawn_path, the_page.attr('id'));
                                             // the_page.find('svg.annotationLayer').append(res_svg);
                                         });
@@ -1302,6 +1295,9 @@
                                             $('.ContextMenuPopup').hide();
                                         });
                                     });
+                                    var penSize = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 4;
+                                    var penColor = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';                                        
+                                    setPen(penSize, penColor);
                                 }
 
                                 if (!(doc_data && doc_data.first_time)) {                                    
@@ -3351,7 +3347,7 @@
                      *    - rejected: Error
                      */
                     function render(svg, viewport, data) {
-
+                        // console.log(svg, viewport, data);
                         return new Promise(function(resolve, reject) { // Reset the content of the SVG
                             svg.innerHTML = '';
                             svg.setAttribute('data-pdf-annotate-container', true);
@@ -3372,6 +3368,7 @@
                             resolve(svg);
                         });
                     }
+                    render_svg = render;
                     module.exports = exports['default']; /***/
                 }, /* 11 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -3697,10 +3694,9 @@
                      * @param {Object} a The annotation definition
                      * @return {SVGPathElement} The path to be rendered
                      */
-                    function renderPath(a) {
+                    function renderPath(a) {                        
                         var paths = [];
                         try{
-                            // console.log(a);
                             for(var obj of a.paths)
                             {
                                 var d = [];
@@ -3948,7 +3944,7 @@
                         return sortByPoint(a.rectangles[0], b.rectangles[0]);
                     } // Sort annotation by it's first line
                     function sortByLinePoint(a, b) {
-                        console.log('Removed sort by line point')
+                        // console.log('Removed sort by line point')
                     } // Arrange supported types and associated sort methods
                     var SORT_TYPES = {
                         'highlight': sortByRectPoint,
@@ -4946,19 +4942,43 @@
                         var _getMetadata = (0, _utils.getMetadata)(svg);
                         documentId = _getMetadata.documentId;
                         var local_annots = _getAnnotations(documentId);
-                        last_drawn_path = {lines:  lines};
+                        
                         // console.log(old_page_id, page_id);
-                        if(page_id == old_page_id){
-                            if(local_annots.length && local_annots[local_annots.length - 1].paths)
+                        var last_drawing = undefined;                          
+                        try{
+                            last_drawing = local_annots[local_annots.length - 1];
+                            if(!last_drawing.paths)
                             {
-                                local_annots[local_annots.length - 1].paths.push(last_drawn_path);                                
+                                last_drawing = undefined;
+                            }
+                        }
+                        catch(er){
+
+                        }
+                        if(page_id == old_page_id){
+                            if(last_drawing)
+                            {
+                                // console.log(lines);
+                                last_drawing.paths.push({lines: lines});
                                 updateAnnotations(documentId, local_annots, 'op=drawing update')
-                                // clear_canvas();
+                                // console.log(last_drawing.paths);
+                                reset_canvas();
+                                var viewport1 = _getMetadata.viewport;
+                                var svg_ = $('#'+page_id).find('svg.annotationLayer')[0];
+                                local_annots = _getAnnotations(documentId);
+                                var render_data = {
+                                    documentId: documentId,
+                                    pageNumber: ($('#'+page_id).index() + 1),
+                                    annotations: local_annots
+                                }
+                                // console.log(svg_,viewport1, local_annots);
+                                render_svg(svg_, viewport1, render_data);
                                 return;
                             }
                             else{
                                 console.log('Invalid drawing merging in page:', page_id, local_annots);
                             }
+                            
                         }
                         old_page_id = page_id;
                         // clear_canvas();
@@ -4967,9 +4987,19 @@
                             type: 'drawing',
                             width: penSize,
                             color: penColor,
-                            paths: [last_drawn_path]
-                        }).then(function(a){
-                            console.log(a.uuid);
+                            paths: [{lines: lines}]
+                        }).then(function(a){                            
+                            reset_canvas();
+                            var viewport1 = _getMetadata.viewport;
+                            var svg_ = $('#'+page_id).find('svg.annotationLayer')[0];
+                            local_annots = _getAnnotations(documentId);
+                            var render_data = {
+                                documentId: documentId,
+                                pageNumber: ($('#'+page_id).index() + 1),
+                                annotations: local_annots
+                            }
+                            // console.log(svg_,viewport1, local_annots);
+                            render_svg(svg_, viewport1, render_data);
                         });
                         if (is_mobile_device)
                             $('body').css('overflow', 'auto');
