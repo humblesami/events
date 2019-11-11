@@ -452,6 +452,7 @@
                     }).show();
                     contextMenuShown = true;
                 } else {
+                    $('.annotation-options:first').hide();
                     contextMenuShown = false;
                     var comment_active = $('.toolbar .comment').hasClass('active');
                     if (comment_active) {
@@ -998,8 +999,8 @@
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate - 90);
                 }
 
-                document.querySelector('.toolbar .rotate-cw').addEventListener("click", handleRotateCCWClick);
-                document.querySelector('.toolbar .rotate-acw').addEventListener("click", handleRotateCWClick);
+                document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCCWClick);
+                document.querySelector('.toolbar .rotate-acw').addEventListener('click', handleRotateCWClick);
 
                 $('.toolbar:first .zoomin')[0].onclick = function() {
                     if (RENDER_OPTIONS.scale >= 5)
@@ -1221,10 +1222,14 @@
 
                                         var jq_canvas = $('<canvas order="' + cnt_canvas + '" height="' + height + '" width="' + width + '"></canvas>');
                                         drawing_wrapper.append(jq_canvas);
+                                        // console.log({'width' : width, 'height' : height});
                                         jq_canvas.attr({
                                             'width': width,
                                             'height': height
                                         });
+
+                                        // console.log(jq_canvas[0]);
+
                                         var sign_context = jq_canvas.sign({
                                             lineWidth: penSize,
                                             color: penColor
@@ -1232,6 +1237,7 @@
                                         sign_contexts.push(sign_context);
                                         jq_canvas.mouseup(function(e) {
                                             setTimeout(function() {
+                                                // console.log(3232);
                                                 mouse_up30(e, the_page.attr('id'));
                                             }, 10);
                                         });
@@ -1259,6 +1265,7 @@
                                             res_id: parseInt($(el).attr('db_id')),
                                         }
                                         for (var j in n_list) {
+
                                             if (n_list[j].address.res_app == address.res_app &&
                                                 n_list[j].address.res_model == address.res_model &&
                                                 n_list[j].address.res_id == address.res_id) {
@@ -2197,7 +2204,7 @@
                     }
                     var emitter = new _events2.default();
                     var clickNode = void 0;
-                    document.addEventListener("click", function(e) {
+                    document.addEventListener('click', function(e) {
                         // console.log(7887);
                         if (!$('.toolbar .cursor').hasClass('active')) {
                             return;
@@ -4110,26 +4117,26 @@
                             anchor.style.height = '25px';
                             overlay.appendChild(anchor);
                             parentNode.appendChild(overlay);
-                            document.addEventListener("click", click29);
-                            document.addEventListener("keyup", key_up29);
-                            document.addEventListener("mousedown", mouse_down29);
-                            anchor.addEventListener("click", deleteAnnotation);
-                            anchor.addEventListener("mouseover", function() {
+                            document.addEventListener('click', click29);
+                            document.addEventListener('keyup', key_up29);
+                            document.addEventListener('mousedown', mouse_down29);
+                            anchor.addEventListener('click', deleteAnnotation);
+                            anchor.addEventListener('mouseover', function() {
                                 anchor.style.color = '#35A4DC';
                                 anchor.style.borderColor = '#999';
                                 anchor.style.boxShadow = '0 1px 1px #ccc';
                             });
-                            anchor.addEventListener("mouseout", function() {
+                            anchor.addEventListener('mouseout', function() {
                                 anchor.style.color = '#bbb';
                                 anchor.style.borderColor = '#bbb';
                                 anchor.style.boxShadow = '';
                             });
-                            overlay.addEventListener("mouseover", function() {
+                            overlay.addEventListener('mouseover', function() {
                                 if (!isDragging) {
                                     anchor.style.display = '';
                                 }
                             });
-                            overlay.addEventListener("mouseout", function() {
+                            overlay.addEventListener('mouseout', function() {
                                 anchor.style.display = 'none';
                             });
                         } catch (er) {
@@ -4147,11 +4154,11 @@
                             overlay.parentNode.removeChild(overlay);
                             overlay = null;
                         }
-                        document.removeEventListener("click", click29);
-                        document.removeEventListener("keyup", key_up29);
-                        document.removeEventListener("mousedown", mouse_down29);
-                        document.removeEventListener("mousemove", mouse_move29);
-                        document.removeEventListener("mouseup", mouse_up29);
+                        document.removeEventListener('click', click29);
+                        document.removeEventListener('keyup', key_up29);
+                        document.removeEventListener('mousedown', mouse_down29);
+                        document.removeEventListener('mousemove', mouse_move29);
+                        document.removeEventListener('mouseup', mouse_up29);
                         (0, _utils.enableUserSelect)();
                     }
 
@@ -4226,8 +4233,8 @@
                         if (delbtn && delbtn.style)
                             delbtn.style.display = 'none';
 
-                        document.addEventListener("mousemove", mouse_move29);
-                        document.addEventListener("mouseup", mouse_up29);
+                        document.addEventListener('mousemove', mouse_move29);
+                        document.addEventListener('mouseup', mouse_up29);
                         (0, _utils.disableUserSelect)();
                         object_to_move = $('.new_comments_count[point_id="' + annotationId + '"]');
                         if (object_to_move.length == 0)
@@ -4373,8 +4380,8 @@
                         }, 0);
                         overlay.style.background = '';
                         overlay.style.cursor = '';
-                        document.removeEventListener("mousemove", mouse_move29);
-                        document.removeEventListener("mouseup", mouse_up29);
+                        document.removeEventListener('mousemove', mouse_move29);
+                        document.removeEventListener('mouseup', mouse_up29);
                         (0, _utils.enableUserSelect)();
                     }
                     handleAnnotationClick = function(target) {
@@ -4549,8 +4556,8 @@
                         input.style.position = 'fixed';
                         input.style.top = e.clientY + 'px';
                         input.style.left = e.clientX + 'px';
-                        input.addEventListener("blur", handleInputBlur);
-                        input.addEventListener("keyup", handleInputKeyup);
+                        input.addEventListener('blur', handleInputBlur);
+                        input.addEventListener('keyup', handleInputKeyup);
                         document.body.appendChild(input);
                         input.focus();
                     }
@@ -4630,8 +4637,8 @@
                     }
 
                     function closeInput() {
-                        input.removeEventListener("blur", handleInputBlur);
-                        input.removeEventListener("keyup", handleInputKeyup);
+                        input.removeEventListener('blur', handleInputBlur);
+                        input.removeEventListener('keyup', handleInputKeyup);
                         document.body.removeChild(input);
                         disablePoint();
                         input = null;
@@ -4643,7 +4650,7 @@
                             return;
                         }
                         _enabled = true;
-                        document.addEventListener("mouseup", mouse_up31);
+                        document.addEventListener('mouseup', mouse_up31);
                     }
 
                     function disablePoint() {
@@ -4651,7 +4658,7 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener("mouseup", mouse_up31);
+                        document.removeEventListener('mouseup', mouse_up31);
                     }
                 }, /* 32 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -4716,7 +4723,7 @@
                         overlay.style.border = '3px solid ' + _utils.BORDER_COLOR;
                         overlay.style.borderRadius = '3px';
                         svg.parentNode.appendChild(overlay);
-                        document.addEventListener("mousemove", mouse_move32);
+                        document.addEventListener('mousemove', mouse_move32);
                         (0, _utils.disableUserSelect)();
                     }
 
@@ -4738,7 +4745,7 @@
                             if (overlay && overlay.parentNode) {
                                 overlay.parentNode.removeChild(overlay);
                                 overlay = null;
-                                document.removeEventListener("mousemove", mouse_move32);
+                                document.removeEventListener('mousemove', mouse_move32);
                             }
                         }
                     }
@@ -4840,7 +4847,7 @@
                             }]);
                             overlay.parentNode.removeChild(overlay);
                             overlay = null;
-                            document.removeEventListener("mousemove", mouse_move32);
+                            document.removeEventListener('mousemove', mouse_move32);
                             (0, _utils.enableUserSelect)();
                         }
                     }
@@ -4851,9 +4858,9 @@
                             return;
                         }
                         _enabled = true;
-                        document.addEventListener("mouseup", mouseup32);
-                        document.addEventListener("mousedown", mouse_down32);
-                        document.addEventListener("keyup", keyup_32);
+                        document.addEventListener('mouseup', mouseup32);
+                        document.addEventListener('mousedown', mouse_down32);
+                        document.addEventListener('keyup', keyup_32);
                         mouseup32(type);
                     }
 
@@ -4862,9 +4869,9 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener("mouseup", mouseup32);
-                        document.removeEventListener("mousedown", mouse_down32);
-                        document.removeEventListener("keyup", keyup_32);
+                        document.removeEventListener('mouseup', mouseup32);
+                        document.removeEventListener('mousedown', mouse_down32);
+                        document.removeEventListener('keyup', keyup_32);
                     }
                 }, /* 33 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -4908,8 +4915,8 @@
                         input.style.top = e.clientY + 'px';
                         input.style.left = e.clientX + 'px';
                         input.style.fontSize = _textSize + 'px';
-                        input.addEventListener("blur", handleInputBlur);
-                        input.addEventListener("keyup", handleInputKeyup);
+                        input.addEventListener('blur', handleInputBlur);
+                        input.addEventListener('keyup', handleInputKeyup);
                         document.body.appendChild(input);
                         input.focus();
                     }
@@ -4963,8 +4970,8 @@
 
                     function closeInput() {
                         if (input) {
-                            input.removeEventListener("blur", handleInputBlur);
-                            input.removeEventListener("keyup", handleInputKeyup);
+                            input.removeEventListener('blur', handleInputBlur);
+                            input.removeEventListener('keyup', handleInputKeyup);
                             document.body.removeChild(input);
                             input = null;
                         }
@@ -4982,7 +4989,7 @@
                             return;
                         }
                         _enabled = true;
-                        document.addEventListener("mouseup", mouse_up_enable_text);
+                        document.addEventListener('mouseup', mouse_up_enable_text);
                     }
 
                     function disableText() {
@@ -4990,7 +4997,7 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener("mouseup", mouse_up_enable_text);
+                        document.removeEventListener('mouseup', mouse_up_enable_text);
                     }
                 }, /* 34 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -5377,7 +5384,7 @@
             }
 
             function closePicker() {
-                document.removeEventListener("keyup", key_up4);
+                document.removeEventListener('keyup', key_up4);
                 if (picker && picker.parentNode) {
                     picker.parentNode.removeChild(picker);
                 }
@@ -5404,7 +5411,7 @@
                     });
                 }
 
-                document.addEventListener("keyup", key_up4);
+                document.addEventListener('keyup', key_up4);
                 el.appendChild(picker);
                 isPickerOpen = true;
             }
