@@ -66,7 +66,7 @@
                 dist_rects.push(rect);
                 continue;
             }
-            rect.y -= 1.5 * scale_zoom;
+            rect.y -= 1.2 * scale_zoom;
             // console.log(dist_rects.length, 34774);
             var found = false;
             var scale_zoom = RENDER_OPTIONS.scale;
