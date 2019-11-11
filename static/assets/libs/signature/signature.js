@@ -86,6 +86,10 @@ jQuery(document).ready(function(e) {
             return false;
         }).on('touchend mouseup', function(e) {
             e.preventDefault();
+            if(!points.length)
+            {
+                return;
+            }
             holdClick = false;
             var mousePosition = getMousePosition(canvas, e);
             if(last_drawn_path.length && !last_drawn_path[last_drawn_path.length - 1].startsWith('L '))

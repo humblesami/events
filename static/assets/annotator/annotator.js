@@ -2279,8 +2279,15 @@
 
                     function on_annotation_up(e) {
                         if (!$('.toolbar .cursor').hasClass('active')) {
-                            return;
+                            if(!pen_active)
+                            {
+                                select_cursor();
+                            }
+                            else{
+                                return;
+                            }
                         }
+                        
                         if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
