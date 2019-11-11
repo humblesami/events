@@ -1,37 +1,34 @@
 
 /* width */
-.ToolBarWrapper{
-    overflow: auto;
-}
-.ToolBarWrapper::-webkit-scrollbar {
+.toolbar.topbar::-webkit-scrollbar {
     width: 5px;
 }
 
 /* Track */
-.ToolBarWrapper::-webkit-scrollbar-track {
+.toolbar.topbar::-webkit-scrollbar-track {
     background: #fff; 
+}
+.ToolBarWrapper{
+    overflow: auto;
 }
 
 /* Handle */
-.ToolBarWrapper::-webkit-scrollbar-thumb {
+.toolbar.topbar::-webkit-scrollbar-thumb {
     background: #ddd !important; 
     border-radius: 0px !important;
 }
 .toolbar {
-    border-bottom: 1px solid #e6e6e6;
     padding: 0;
     flex-wrap: wrap;
-    }
+}
 .toolbar.topbar {
-    position: relative;
     border: 0;
     color: #ffffff;
-    background-color: #fafafa;
 }
 .toolbar.topbar .doc-manage-btn-wrap{
     text-align: center;
 }
-doc-manage-btn-wrap .reset{
+.doc-manage-btn-wrap button.reset{
     display: none;
 }
 .back-btn{
@@ -50,9 +47,7 @@ doc-manage-btn-wrap .reset{
 .toolbar.topbar .doc-manage-btn-wrap > button{    
     margin-bottom: 0.8vh;
 }
-.zoom.group, .zoom .zoomin{
-    margin-top:1vh;
-}
+
 
 .comment.annotation_button .Icon{
     margin-left: -4px;
@@ -86,9 +81,7 @@ button.pen-color.annotation_button.prop {
     width: 4.2vw;
     min-width: 42px;
     position: relative;
-    right: 0;
-    background: linear-gradient(to bottom, #4b74b5, #4b74b5);
-    height: calc(100vh - 72px);
+    background: linear-gradient(to bottom, #4b74b5, #4b74b5);    
     z-index: 1;
     overflow: auto;
     overflow-x: hidden;
@@ -813,6 +806,18 @@ span.pager.disabled
 #annotated-doc-conatiner.annotator #comment-wrapper
 {
     display: block;
+}
+
+.toolbar.topbar .doc-manage-btn-wrap.zoom,
+.toolbar.topbar .doc-manage-btn-wrap.rotate
+{
+    margin: 0;
+}
+.toolbar.topbar .doc-manage-btn-wrap.zoom > button,
+.toolbar.topbar .doc-manage-btn-wrap.rotate > button
+{
+    padding: 1vh 0;
+    margin: 0;
 }
 @media screen and (max-width:576px){
     #comment-wrapper{
