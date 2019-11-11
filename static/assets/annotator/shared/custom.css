@@ -717,7 +717,7 @@ a.list-group-item.contact.active {
 /* .comment-list-item .user-time-info .user, */
 .comment-list-item .user-time-info .time{
     position: absolute;
-    right: -30px;
+    right: -20px;
 }
 
 .comments .comment-list-item:first-child .user-time-info .time::after {
