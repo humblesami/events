@@ -68,8 +68,9 @@
             }
             // console.log(dist_rects.length, 34774);
             var found = false;
+            var scale_zoom = RENDER_OPTIONS.scale;
             for (let dist_rect of dist_rects) {
-                if (Math.abs(dist_rect.x - rect.x) < 2.5 && Math.abs(dist_rect.y - rect.y) < 2.5) {
+                if (Math.abs(dist_rect.x - rect.x) < 2.5 * scale_zoom && Math.abs(dist_rect.y - rect.y) < 2.5 * scale_zoom) {
                     found = true;
                 }
             }
@@ -725,7 +726,10 @@
             })();
 
             $('body').on('click', '.annotation-options:first .copy:first', function() {
-                document.execCommand("copy");
+                document.execCommand("copy");                
+            });
+
+            $('body').on('click', '.annotation-options:first', function() {                
                 $('.annotation-options').hide();
             });
 

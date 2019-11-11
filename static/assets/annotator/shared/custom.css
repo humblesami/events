@@ -1,5 +1,8 @@
 
 /* width */
+.ToolBarWrapper{
+    overflow: auto;
+}
 .ToolBarWrapper::-webkit-scrollbar {
     width: 5px;
 }
@@ -27,6 +30,9 @@
 }
 .toolbar.topbar .doc-manage-btn-wrap{
     text-align: center;
+}
+doc-manage-btn-wrap .reset{
+    display: none;
 }
 .back-btn{
     margin-top: 1vh;
