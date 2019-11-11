@@ -311,6 +311,7 @@
     var programmatic_cursor = false;
 
     function select_cursor(force) {
+        // console.trace();
         $('.topbar:first .active:not(.cursor)').removeClass('active');
         programmatic_cursor = true;
         if (!force && $('.topbar:first .cursor:first').hasClass('active')) {
@@ -2272,13 +2273,22 @@
                     document.removeEventListener('click', on_annotation_up);
                     document.addEventListener('click', on_annotation_up);
 
-                    function on_annotation_down(e){
+                    function on_annotation_down(e){                        
                         mouse_down_time = new Date();
                         mouse_down_point = e;
                         // console.log(7887111);
                     }
 
                     function on_annotation_up(e) {
+                        if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
+                            return;
+                        }
+                        if(!$(e.target).closest('#viewer').length)
+                        {
+                            // console.log(e.target)
+                            return;
+                        }
+                        
                         if (!$('.toolbar .cursor').hasClass('active')) {
                             if(!pen_active)
                             {
@@ -2289,14 +2299,6 @@
                             }
                         }
                         
-                        if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
-                            return;
-                        }
-                        if(!$(e.target).closest('#viewer').length)
-                        {
-                            // console.log(e.target)
-                            return;
-                        }
                         // // console.log(new Date(), mouse_down_time);
                         var time_diff = new Date() - mouse_down_time;
                         // console.log(e, mouse_down_point, time_diff);

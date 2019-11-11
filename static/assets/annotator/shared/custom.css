@@ -716,7 +716,8 @@ a.list-group-item.contact.active {
 /* Documents Comments */
 /* .comment-list-item .user-time-info .user, */
 .comment-list-item .user-time-info .time{
-    margin-left: 5px;
+    position: absolute;
+    right: -30px;
 }
 
 .comments .comment-list-item:first-child .user-time-info .time::after {
@@ -762,9 +763,14 @@ span.pager.disabled
 {
     background-color: silver;
 }
+#btn_show_all_point_comments{
+    position: absolute;
+    right: 36px;
+    top: 4px;
+}
 #comment-wrapper.all_point_comments #btn_show_all_point_comments
 {
-    display: none;
+    display: none;    
 }
 
 .toolbar.topbar .doc-manage-btn-wrap:not(.group) > button.add-point-button {
