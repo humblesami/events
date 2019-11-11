@@ -8,4 +8,5 @@ urlpatterns = [
     path('verify-auth-code', views.load_verify_code_page, name='verify_code'),
     path('reset-password/<str:token>', views.reset_password, name='password_reset'),
     path(r'offline',views.offline_layout, name='offline page'),
+    path(r'ping',views.ping, name='Ping'),
 ]

@@ -14,8 +14,11 @@ def logout_user(request):
     logout(request)
     return redirect('/user/login')
 
+def ping(request):
+    return HttpResponse('available')
+
 def offline_layout(request):
-	return render(request, 'offline.html')
+    return render(request, 'offline.html')
 
 def forgot_password(request):
     context = {}
