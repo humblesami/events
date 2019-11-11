@@ -119,6 +119,8 @@ class AnnotationDocument(CustomModel):
 
         for user_annot in user_annotations:
             annotation_to_save = None
+            if user_annot['type'] == 'copy':
+                continue
             new_annotation = {
                 'user_id' : user_id,
                 'page' : user_annot['page'],
