@@ -39,164 +39,163 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
             </div>
         </div>
         <div class="toolbar topbar">
-                <div class="toggle-tools" id="toggle-tools">
-                    <i class="fa fa-bars"></i>
-                </div>
-                <div class="ToolBarWrapper" id="ToolBarWrapper">
-                    <button (click)="go_back()" title="Back" 
-                    class="icon back back-btn">
-                        <i class="fas fa-arrow-left"></i>                    
-                    </button>
-                    <div class="doc-manage-btn-wrap paginator group">
-                        
-                        <button (click)="next_prev_page(-1)" class="pager prev page-prev-btn">
-                            <img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
-                        </button>
-                        
-                        <button (click)="next_prev_page(1)" class="pager next page-next-btn">
-                            <img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
-                        </button>
-                        
-                        <div class="">
-                            <input type="hidden" (change)="change_page()" (keyup.enter)="change_page()" class="form-control" 
-                            [(ngModel)]="page_num" class="page-number" value="1">
-                            <span>{{page_num}} / <span class="page-count">1</span></span>
-                        </div>
-                    </div>
-
-                    <div class="annotation-buttons-container">                    
-                        <div class="doc-manage-btn-wrap">
-                            <button class="cursor selection annotation_button" type="button" title="Cursor" data-tooltype="cursor">
-                                <div class="Icon">
-                                    <img src="static/assets/images/docs/docs-pointer.svg" alt="">
-                                </div>
-                            </button>
-                        </div>
-                        <div class="doc-manage-btn-wrap pen-tool-container">
-                            <button class="pen selection annotation_button" type="button" title="Pen Tool" data-tooltype="draw">
-                                <div class="Icon">
-                                    <img src="static/assets/images/docs/docs-write-pen.svg" alt="">
-                                </div>
-                            </button>
-                            <div class="PenSize pen-child annotation_button prop">
-                                <input type="range" class="slider pen-size" id="range-slider" value="4" min="1" max="20" title="Pen Size">
-                                <span id="output_value"></span>
-                                <!-- <select class="pen-size">
-                                    <option value="2">▁▁▁▁▁▁▁▁</option>
-                                    <option value="4"> ▂▂▂▂▂▂▂▂</option>
-                                    <option value="6"> ▃▃▃▃▃▃▃▃ </option>
-                                    <option value="7"> ▄▄▄▄▄▄▄▄▄ </option>
-                                    <option value="8"> ▅▅▅▅▅▅▅▅ </option>
-                                    <option value="9"> ▆▆▆▆▆▆▆▆ </option>
-                                    <option value="10"> ▇▇▇▇▇▇▇▇ </option>
-                                </select> -->
-                            </div>
-                            <button class="pen-color not-100 annotation_button prop"></button>
-                        </div>
-                        <div class="doc-manage-btn-wrap">
-                            <button class="comment annotation_button" type="button" title="Show all comments">
-                                <div class="Icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="23.571" height="22" viewBox="0 0 23.571 22">
-                                        <g id="Chat-filled" transform="translate(-1188.214 -273)">
-                                            <path id="Path_8943" data-name="Path 8943" d="M0,4.357V17.321a2.389,2.389,0,0,0,2.357,2.357H5.5v3.929a.393.393,0,0,0,.251.367.394.394,0,0,0,.433-.1L10,19.679H21.214a2.389,2.389,0,0,0,2.357-2.357V4.357A2.389,2.389,0,0,0,21.214,2H2.357A2.389,2.389,0,0,0,0,4.357Z" transform="translate(1188.214 271)" fill="#fff"/>
-                                            <path id="Path_8944" data-name="Path 8944" d="M15.714,10.643a1.571,1.571,0,1,1,1.571,1.571A1.573,1.573,0,0,1,15.714,10.643Zm-5.5,0a1.571,1.571,0,1,1,1.571,1.571A1.573,1.573,0,0,1,10.214,10.643Zm-5.5,0a1.571,1.571,0,1,1,1.571,1.571A1.573,1.573,0,0,1,4.714,10.643Z" transform="translate(1188.214 271)" fill="#4b74b5"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                            </button>
-                            <button data-tooltype="point" class="add-point-button annotation_button comment not-100" title="Add new comment point">
-                                <svg viewBox="0 0 24 24" id="add-point" width="100%" height="100%">
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" fill-rule="nonzero"></path>
-                                        <path d="M0 0h24v24H0z"></path>
-                                    </g>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="doc-manage-btn-wrap">
-                            <button class="personal comment annotation_button " type="button" title="Show all Personal Note" >
-                                <div class="Icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22">
-                                        <g id="Notes_white" transform="translate(-1022 -231)">
-                                            <rect id="Rectangle_1554" data-name="Rectangle 1554" width="18" height="22" rx="3" transform="translate(1022 231)" fill="#fff"/>
-                                            <g id="Group_1204" data-name="Group 1204" transform="translate(-35 -24)">
-                                                <path id="Path_8932" data-name="Path 8932" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 254.712)" fill="#4b74b5"/>
-                                                <g id="Group_1203" data-name="Group 1203" transform="translate(-0.001 0)">
-                                                    <path id="Path_8928" data-name="Path 8928" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 251.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8931" data-name="Path 8931" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 254.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8933" data-name="Path 8933" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 257.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8935" data-name="Path 8935" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 260.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8930" data-name="Path 8930" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 251.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8934" data-name="Path 8934" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 257.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8936" data-name="Path 8936" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 260.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8937" data-name="Path 8937" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 263.712)" fill="#4b74b5"/>
-                                                    <path id="Path_8938" data-name="Path 8938" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 263.712)" fill="#4b74b5"/>
-                                                </g>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                </div>
-                            </button>
-                            <button data-tooltype="point" class="add-point-button not-100 annotation_button comment personal" title="Add anew note">
-                                <svg viewBox="0 0 24 24" width="100%" height="100%">
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" fill-rule="nonzero"></path>
-                                        <path d="M0 0h24v24H0z"></path>
-                                    </g>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="doc-manage-btn-wrap zoom group">
-                        <button class="zoomout">
-                            <i class="icon-zoom-out"></i>
-                        </button>
-                        <div class="selectBox">
-                            <select class="scale" disabled>
-                                <option value="0.25">25%</option>
-                                <option value="0.5">50%</option>
-                                <option value="0.75">75%</option>
-                                <option value="1">100%</option>
-                                <option value="1.25">125%</option>
-                                <option value="1.5">150%</option>
-                                <option value="1.75">175%</option>
-                                <option value="2">200%</option>
-                                <option value="2.5">250%</option>
-                                <option value="3">300%</option>
-                                <option value="4">400%</option>
-                                <option value="5">500%</option>
-                            </select>
-                        </div>
+            <div class="toggle-tools" id="toggle-tools">
+                <i class="fa fa-bars"></i>
+            </div>
+            <div class="ToolBarWrapper" id="ToolBarWrapper">
+                <button (click)="go_back()" title="Back" 
+                class="icon back back-btn">
+                    <i class="fas fa-arrow-left"></i>                    
+                </button>
+                <div class="doc-manage-btn-wrap paginator group">
                     
-                        <button class="zoomin">
-                            <i class="icon-zoom-in"></i>
-                        </button>
+                    <button (click)="next_prev_page(-1)" class="pager prev page-prev-btn">
+                        <img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
+                    </button>
+                    
+                    <button (click)="next_prev_page(1)" class="pager next page-next-btn">
+                        <img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
+                    </button>
+                    
+                    <div class="">
+                        <input type="hidden" (change)="change_page()" (keyup.enter)="change_page()" class="form-control" 
+                        [(ngModel)]="page_num" class="page-number" value="1">
+                        <span>{{page_num}} / <span class="page-count">1</span></span>
                     </div>
+                </div>
 
-                    <div class="doc-manage-btn-wrap rotate group">
-                        <button class="Icon rotate-cw pb-2">
-                            <img alt="" src="static/assets/images/docs/docs-rotate-right.svg">
-                        </button>
-                        <button class="Icon rotate-acw">
-                            <img alt="" src="static/assets/images/docs/docs-rotate-left.svg">                            
+                <div class="annotation-buttons-container">                    
+                    <div class="doc-manage-btn-wrap">
+                        <button class="cursor selection annotation_button" type="button" title="Cursor" data-tooltype="cursor">
+                            <div class="Icon">
+                                <img src="static/assets/images/docs/docs-pointer.svg" alt="">
+                            </div>
                         </button>
                     </div>
-                    <div class="doc-manage-btn-wrap" [ngClass]="{hidden: !annotation_doc}">
-                        <button class="Icon annot-toggler" (click)="toggleAnnotations()"
-                        title="Hide/Show all annotations">
-                            <i *ngIf="!annot_hidden" class="fa fa-eye-slash" aria-hidden="true"></i>
-                            <i *ngIf="annot_hidden" class="fa fa-eye" aria-hidden="true"></i>
+                    <div class="doc-manage-btn-wrap pen-tool-container">
+                        <button class="pen selection annotation_button" type="button" title="Pen Tool" data-tooltype="draw">
+                            <div class="Icon">
+                                <img src="static/assets/images/docs/docs-write-pen.svg" alt="">
+                            </div>
                         </button>
+                        <div class="PenSize pen-child annotation_button prop">
+                            <input type="range" class="slider pen-size" id="range-slider" value="4" min="1" max="20" title="Pen Size">
+                            <span id="output_value"></span>
+                            <!-- <select class="pen-size">
+                                <option value="2">▁▁▁▁▁▁▁▁</option>
+                                <option value="4"> ▂▂▂▂▂▂▂▂</option>
+                                <option value="6"> ▃▃▃▃▃▃▃▃ </option>
+                                <option value="7"> ▄▄▄▄▄▄▄▄▄ </option>
+                                <option value="8"> ▅▅▅▅▅▅▅▅ </option>
+                                <option value="9"> ▆▆▆▆▆▆▆▆ </option>
+                                <option value="10"> ▇▇▇▇▇▇▇▇ </option>
+                            </select> -->
+                        </div>
+                        <button class="pen-color not-100 annotation_button prop"></button>
                     </div>
                     <div class="doc-manage-btn-wrap">
-                        <button class="btn btn-sm btn-primary reset">
-                            <i class="fas fa-sync-alt"></i>
+                        <button class="comment annotation_button" type="button" title="Show all comments">
+                            <div class="Icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="23.571" height="22" viewBox="0 0 23.571 22">
+                                    <g id="Chat-filled" transform="translate(-1188.214 -273)">
+                                        <path id="Path_8943" data-name="Path 8943" d="M0,4.357V17.321a2.389,2.389,0,0,0,2.357,2.357H5.5v3.929a.393.393,0,0,0,.251.367.394.394,0,0,0,.433-.1L10,19.679H21.214a2.389,2.389,0,0,0,2.357-2.357V4.357A2.389,2.389,0,0,0,21.214,2H2.357A2.389,2.389,0,0,0,0,4.357Z" transform="translate(1188.214 271)" fill="#fff"/>
+                                        <path id="Path_8944" data-name="Path 8944" d="M15.714,10.643a1.571,1.571,0,1,1,1.571,1.571A1.573,1.573,0,0,1,15.714,10.643Zm-5.5,0a1.571,1.571,0,1,1,1.571,1.571A1.573,1.573,0,0,1,10.214,10.643Zm-5.5,0a1.571,1.571,0,1,1,1.571,1.571A1.573,1.573,0,0,1,4.714,10.643Z" transform="translate(1188.214 271)" fill="#4b74b5"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        </button>
+                        <button data-tooltype="point" class="add-point-button annotation_button comment not-100" title="Add new comment point">
+                            <svg viewBox="0 0 24 24" id="add-point" width="100%" height="100%">
+                                <g fill="none" fill-rule="evenodd">
+                                    <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" fill-rule="nonzero"></path>
+                                    <path d="M0 0h24v24H0z"></path>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="doc-manage-btn-wrap">
+                        <button class="personal comment annotation_button " type="button" title="Show all Personal Note" >
+                            <div class="Icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22">
+                                    <g id="Notes_white" transform="translate(-1022 -231)">
+                                        <rect id="Rectangle_1554" data-name="Rectangle 1554" width="18" height="22" rx="3" transform="translate(1022 231)" fill="#fff"/>
+                                        <g id="Group_1204" data-name="Group 1204" transform="translate(-35 -24)">
+                                            <path id="Path_8932" data-name="Path 8932" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 254.712)" fill="#4b74b5"/>
+                                            <g id="Group_1203" data-name="Group 1203" transform="translate(-0.001 0)">
+                                                <path id="Path_8928" data-name="Path 8928" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 251.712)" fill="#4b74b5"/>
+                                                <path id="Path_8931" data-name="Path 8931" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 254.712)" fill="#4b74b5"/>
+                                                <path id="Path_8933" data-name="Path 8933" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 257.712)" fill="#4b74b5"/>
+                                                <path id="Path_8935" data-name="Path 8935" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 260.712)" fill="#4b74b5"/>
+                                                <path id="Path_8930" data-name="Path 8930" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 251.712)" fill="#4b74b5"/>
+                                                <path id="Path_8934" data-name="Path 8934" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 257.712)" fill="#4b74b5"/>
+                                                <path id="Path_8936" data-name="Path 8936" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 260.712)" fill="#4b74b5"/>
+                                                <path id="Path_8937" data-name="Path 8937" d="M9.953,7.288h4.113a.689.689,0,1,1,0,1.378H9.953a.689.689,0,1,1,0-1.378Z" transform="translate(1050.736 263.712)" fill="#4b74b5"/>
+                                                <path id="Path_8938" data-name="Path 8938" d="M10.313,7.288H14.5a.689.689,0,1,1,0,1.378H10.313a.689.689,0,1,1,0-1.378Z" transform="translate(1056.736 263.712)" fill="#4b74b5"/>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </button>
+                        <button data-tooltype="point" class="add-point-button not-100 annotation_button comment personal" title="Add anew note">
+                            <svg viewBox="0 0 24 24" width="100%" height="100%">
+                                <g fill="none" fill-rule="evenodd">
+                                    <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" fill-rule="nonzero"></path>
+                                    <path d="M0 0h24v24H0z"></path>
+                                </g>
+                            </svg>
                         </button>
                     </div>
                 </div>
-            </div>
+                <div class="doc-manage-btn-wrap zoom group">
+                    <button class="zoomout">
+                        <i class="icon-zoom-out"></i>
+                    </button>
+                    <div class="selectBox">
+                        <select class="scale" disabled>
+                            <option value="0.25">25%</option>
+                            <option value="0.5">50%</option>
+                            <option value="0.75">75%</option>
+                            <option value="1">100%</option>
+                            <option value="1.25">125%</option>
+                            <option value="1.5">150%</option>
+                            <option value="1.75">175%</option>
+                            <option value="2">200%</option>
+                            <option value="2.5">250%</option>
+                            <option value="3">300%</option>
+                            <option value="4">400%</option>
+                            <option value="5">500%</option>
+                        </select>
+                    </div>
+                
+                    <button class="zoomin">
+                        <i class="icon-zoom-in"></i>
+                    </button>
+                </div>
 
+                <div class="doc-manage-btn-wrap rotate group">
+                    <button class="Icon rotate-cw pb-2">
+                        <img alt="" src="static/assets/images/docs/docs-rotate-right.svg">
+                    </button>
+                    <button class="Icon rotate-acw">
+                        <img alt="" src="static/assets/images/docs/docs-rotate-left.svg">                            
+                    </button>
+                </div>
+                <div class="doc-manage-btn-wrap" [ngClass]="{hidden: !annotation_doc}">
+                    <button class="Icon annot-toggler" (click)="toggleAnnotations()"
+                    title="Hide/Show all annotations">
+                        <i *ngIf="!annot_hidden" class="fa fa-eye-slash" aria-hidden="true"></i>
+                        <i *ngIf="annot_hidden" class="fa fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="doc-manage-btn-wrap reset">
+                    <button class="btn btn-sm btn-primary">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="toolbar annotation-options ContextMenuPopup">
         <div class="Button icon">

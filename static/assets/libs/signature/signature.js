@@ -68,14 +68,19 @@ jQuery(document).ready(function(e) {
             }
         }
         // Mouse & touch events
+        var mousePosition_down = {};
+        var mouse_doen_time;
         canvas.on('touchstart mousedown', function(e) {
             holdClick = true;
+            points = [];
             context = this.getContext('2d');
             last_drawn_path = [];
             context.beginPath();
             var mousePosition = getMousePosition(canvas, e);
+            mousePosition_down = mousePosition;
             last_drawn_path.push('M ' + mousePosition.x + ' ' + mousePosition.y);
             points.push({x: mousePosition.x , y: mousePosition.y, break: false});
+            mouse_doen_time = new Date();
             return false;
         }).on('touchmove mousemove', function(e)
         {
@@ -85,13 +90,21 @@ jQuery(document).ready(function(e) {
             }
             return false;
         }).on('touchend mouseup', function(e) {
-            e.preventDefault();
+            e.preventDefault();            
+            holdClick = false;
             if(!points.length)
             {
                 return;
-            }
-            holdClick = false;
+            }                        
             var mousePosition = getMousePosition(canvas, e);
+            // console.log(mousePosition_down, mousePosition, new Date() - mouse_doen_time);
+            if(mousePosition_down.x == mousePosition.x && mousePosition_down.y == mousePosition.y){
+                if(new Date() - mouse_doen_time < 350)
+                {
+                    // console.log('No drawinfg');
+                    return;
+                }
+            }
             if(last_drawn_path.length && !last_drawn_path[last_drawn_path.length - 1].startsWith('L '))
             {
                 last_drawn_path.push('L ' + mousePosition.x + ' ' + mousePosition.y);
