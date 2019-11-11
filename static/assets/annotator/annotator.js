@@ -1402,12 +1402,12 @@
                 function handlePenSizeChange(e) {
                     setPen(e.target.value, penColor);
                 }
-
+                
+                var pen_color_selection_shown = false;
                 function handlePenColorChange(e) {
                     var topbar_width = $('.topbar:first').width();
                     var color_popup = $('.ColorPalettePopup:first');
-                    var btn_rect = this.getBoundingClientRect();
-                    $('.ColorPalettePopup ').show();
+                    var btn_rect = this.getBoundingClientRect();                    
                     var popup_postion = {
                         top: btn_rect.y + 20
                     };
@@ -1416,9 +1416,19 @@
                     } else {
                         popup_postion.left = btn_rect.x - color_popup.width();
                     }
-                    color_popup.css(popup_postion).show();
-                    var c_color = $(this).attr('color');
+                    color_popup.css(popup_postion);
+                    var c_color = $(this).attr('color');                    
                     color_popup.find('div[hex="' + c_color + '"]:first').click();
+                    // console.log(43343);
+                    if(!pen_color_selection_shown)
+                    {
+                        color_popup.show();
+                    }
+                    else
+                    {
+                        $('.ColorPalettePopup').hide();
+                    }
+                    pen_color_selection_shown = $('.ColorPalettePopup:visible').length;
                 }
                 $('body').on('click', '.toolbar .pen-color:first', handlePenColorChange);
                 $('body').on('change', '.toolbar .pen-size:first', handlePenSizeChange);
