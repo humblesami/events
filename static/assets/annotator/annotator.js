@@ -1446,6 +1446,7 @@
 
                 function setActiveToolbarItem(type, button) {
                     var clicked_annotation_button = $(button);
+                    activeAnnotationItem = undefined;
                     clicked_annotation_button = clicked_annotation_button.closest('.annotation_button');
                     button = clicked_annotation_button[0];
                     UI.disablePoint();
