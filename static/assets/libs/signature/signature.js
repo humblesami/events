@@ -112,8 +112,11 @@ jQuery(document).ready(function(e) {
             // console.log(canvas[0].width, canvas[0].height);
             points[points.length - 1].break = true;
             // context.closePath();
-            context.on_mouse_up();
-            reset();
+            if(context.on_mouse_up)
+            {
+                context.on_mouse_up();
+                reset();
+            }
             // console.log($(this).closest('.page').attr('id'));
             return false;
         });

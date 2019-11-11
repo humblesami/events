@@ -148,9 +148,7 @@ function init_sign(config) {
                 dataURL = dataURL.replace('data:image/png;base64,', '');
             }            
             
-            var canvasContext1 = myCanvas.getContext("2d");
-            console.log(canvasContext1.getSVG());
-            $('.router-outlet').append(canvasContext1.getSVG());
+            
             config.on_signed(dataURL);
             $('#signature_modal #close-signature-btn').click();
         });
@@ -159,17 +157,13 @@ function init_sign(config) {
             clear_btn.click();
         });
 
-        var myCanvas = signature_editor.find('canvas')[0];        
-        var canvas_context = myCanvas.getContext('2d');
-
-        var canvasSVGContext = new CanvasSVG.Deferred();
-        canvasSVGContext.wrapCanvas(myCanvas);
-
-        signature_editor.find('canvas').sign({
+        var myCanvas = signature_editor.find('canvas')[0];
+        $(myCanvas).sign({
             resetButton: clear_btn,
             lineWidth: $('#range-slider').val()
         });
 
+        var canvas_context = myCanvas.getContext('2d');
         
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
