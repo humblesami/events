@@ -14,17 +14,15 @@
     var mouse_up30 = undefined;
     var old_page_id = undefined;
     var mention_list = undefined;
+    var save_timeout = undefined;
     var doc_loading_step = undefined;
     var annotation_user_m2 = undefined;
     var activeAnnotationId = undefined;
-    var annot_save_timeout = undefined;
     var activate_annotation = undefined;
     var select_comment_item = undefined;
-    var activeAnnotationItem = undefined;    
+    var activeAnnotationItem = undefined;
     var handleAnnotationClick = undefined;
     var handlePointAnnotationClick = undefined;
-
-
 
     var penSize = void 0;
     var penColor = void 0;
@@ -57,7 +55,7 @@
         var report_button = $('<button class="btn btn-primary">Report issue</button>');
         report_button.click(report_error);
         feedback.append(report_button);
-        $('#annotated-doc-conatiner').show().html(feedback);
+        $('#annotated-doc-container').show().html(feedback);
     }
 
     function get_dist_rects(original_rects) {
@@ -87,7 +85,6 @@
             programmatic_cursor = false;
             return;
         }
-        // console.log(isDocumentDirty(documentId), 555667);
         if (isDocumentDirty(documentId)) {
             saveAnnotationsAtServer();
         }
@@ -194,10 +191,10 @@
             if (operation != 'op=init') {
                 setDocDirty(documentId);
             }
-            if (annot_save_timeout) {
-                clearTimeout(annot_save_timeout);
+            if (save_timeout) {
+                clearTimeout(save_timeout);
             }
-            annot_save_timeout = setTimeout(function() {
+            save_timeout = setTimeout(function() {
                 saveAnnotationsAtServer();
             }, annotation_save_wait_time);
         } catch (er) {
@@ -228,8 +225,9 @@
             $('select.pen-size option').css('color', color);
         }
         old_page_id = undefined;
+        // console.log(penSize, penSize * RENDER_OPTIONS.scale);
         sign_contexts.forEach(function(ctx, i) {
-            ctx.lineWidth = penSize;
+            ctx.lineWidth = penSize * RENDER_OPTIONS.scale;
             ctx.strokeStyle = penColor;
         });
     }
@@ -321,9 +319,9 @@
     }
 
     function togglePen(bool) {
-        // console.log(pen_active, bool);
         pen_active = bool;
         if (pen_active) {
+            $('.pen-tool-container > *:not(.pen)').css('display', 'block');
             $('.drawing_wrapper').css('z-index', 2);
             $('.canvas-container canvas').css({
                 'cursor': 'crosshair'
@@ -333,6 +331,7 @@
                 $('.topbar .cursor:first').addClass('active');
             }
             $('.drawing_wrapper').css('z-index', -1);
+            $('.pen-tool-container > *:not(.pen)').css('display', 'none');
             $('.canvas-container canvas').css({
                 'cursor': 'auto'
             });
@@ -452,7 +451,7 @@
                 return;
             if (annotation_mode != 1)
                 return;
-            
+
             var selection = window.getSelection();
             if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
                 var ctxMenu = $('.annotation-options.ContextMenuPopup');
@@ -685,7 +684,7 @@
                             }
                         }
                         last_save_call.dt = dt_now;
-                        clearTimeout(annot_save_timeout);
+                        clearTimeout(save_timeout);
                         var args = {
                             app: 'documents',
                             model: 'AnnotationDocument',
@@ -725,16 +724,17 @@
 
             })();
 
-            $('body').on('click', '.ColorPalettePopup:first .copy:first', function() {
+            $('body').on('click', '.annotation-options:first .copy:first', function() {
                 document.execCommand("copy");
-                $(this).closest('.ColorPalettePopup').hide();
+                $('.annotation-options').hide();
             });
 
-            $('body').on('mousedown', '#annotated-doc-conatiner', function(e) {
+            $('body').on('mousedown', '#annotated-doc-container', function(e) {
                 contextMenuShown = $('.ContextMenuPopup:visible').length;
                 if (contextMenuShown && !$(e.target).closest('.ContextMenuPopup').length) {
-                    $('.ContextMenuPopup').hide();                    
+                    $('.ContextMenuPopup').hide();
                     contextMenuShown = false;
+                    color_selection_shown = false;
                 }
 
                 if (e.button == 2)
@@ -776,7 +776,8 @@
                         obj.append($('#applied_color').show());
                     });
                 }
-                $('.ColorPalettePopup').hide();
+                // $('.ColorPalettePopup').hide();
+                // color_selection_shown = false;
             });
 
             var vertical = 'top';
@@ -787,7 +788,7 @@
                 var point_annotations = annotations_of_page.filter(function(a) {
                     return a.type == 'point' && !a.sub_type;
                 });
-                // console.log(point_annotations, 444);                
+                // console.log(point_annotations, 444);
                 for (var p_index in point_annotations) {
                     var c_point = point_annotations[p_index];
                     // console.log(c_point);
@@ -852,7 +853,7 @@
                 var rotate_degree = rotateBy % 360;
                 if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {
                     annotation_mode = 1;
-                    $('#annotated-doc-conatiner').removeClass('no_annotation').addClass('annotator');
+                    $('#annotated-doc-container').removeClass('no_annotation').addClass('annotator');
                 } else {
                     on_penLeave();
                     if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent) {
@@ -860,7 +861,7 @@
                     } else {
                         annotation_mode = 0;
                     }
-                    $('#annotated-doc-conatiner').removeClass('annotator').addClass('no_annotation');
+                    $('#annotated-doc-container').removeClass('annotator').addClass('no_annotation');
                 }
             }
 
@@ -976,23 +977,11 @@
             }
 
             // Scale/rotate
-            var prev_scale = 1;
             function init_ScaleRotate() {
                 function setScaleRotate(scale, rotate) {
                     scale = parseFloat(scale, 10);
                     rotate = parseInt(rotate, 10);
                     var vcw = $('#viewer').width();
-
-                    // if(RENDER_OPTIONS.scale)
-                    // {
-                    //     prev_scale = RENDER_OPTIONS.scale;
-                    // }
-                    // sign_contexts.forEach(function(context_item, i){
-                    //     var change_factor = scale / prev_scale;
-                    //     console.log(change_factor, scale, prev_scale);
-                    //     context_item.canvas.width *= change_factor;
-                    //     context_item.canvas.height *= change_factor;
-                    // })
 
                     vuw = scale / RENDER_OPTIONS.scale * vcw;
                     if (RENDER_OPTIONS.scale !== scale || RENDER_OPTIONS.rotate !== rotate) {
@@ -1002,6 +991,14 @@
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/rotate', RENDER_OPTIONS.rotate % 360);
                         render_details();
                     }
+
+                    //Change pen size
+                    // if(scale != 1 && annotation_mode == 1)
+                    // {
+                    //     console.log(penSize, 444);
+                    //     setPen(scale * penSize, penColor);
+                    //     console.log(penSize, 4433);
+                    // }
                 }
 
                 var scale_select = document.querySelector('.toolbar select.scale');
@@ -1205,7 +1202,7 @@
                                     $('#content-wrapper').show();
                                     if (doc_data && doc_data.first_time) {
                                         $('body').addClass('pdf-viewer');
-                                        $('#annotated-doc-conatiner').show();
+                                        $('#annotated-doc-container').show();
                                     }
                                     scroll_div.show();
                                     console.log(window['dt_functions'].now_full(), 'page1 done');
@@ -1224,7 +1221,7 @@
                         }
 
                         function on_document_rendered() {
-                            try {                                
+                            try {
                                 window['route_changing'] = false;
                                 showHideAnnotations();
 
@@ -1238,7 +1235,7 @@
                                         cnt_canvas += 1;
                                         var height = the_page.height() - 2;
                                         var width = the_page.width() - 2;
-                                        var drawing_wrapper = $('<div class="drawing_wrapper" style="top:1px;left:1px;height:' + height + 'px;width:' + width + 'px;position:absolute;z-index:-1" />');
+                                        var drawing_wrapper = $('<div class="drawing_wrapper" style="top:0px;left:0px;height:' + height + 'px;width:' + width + 'px;position:absolute;z-index:-1" />');
                                         the_page.find('.canvasWrapper').css('position', 'relative').append(drawing_wrapper);
 
                                         var jq_canvas = $('<canvas order="' + cnt_canvas + '" height="' + height + '" width="' + width + '"></canvas>');
@@ -1255,13 +1252,12 @@
                                             lineWidth: penSize,
                                             color: penColor
                                         });
+                                        sign_context.on_mouse_up = function() {
+                                            // console.log(43430005);
+                                            mouse_up30(the_page.attr('id'));
+                                        }
                                         sign_contexts.push(sign_context);
-                                        jq_canvas.mouseup(function(e) {
-                                            setTimeout(function() {
-                                                // console.log(3232);
-                                                mouse_up30(e, the_page.attr('id'));
-                                            }, 10);
-                                        });
+
                                         jq_canvas.mousedown(function() {
                                             $('.ContextMenuPopup').hide();
                                         });
@@ -1270,11 +1266,15 @@
                                     var penColor = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
                                     setPen(penSize, penColor);
                                 }
-                                if($('.topbar:first .pen.annotation_button:first.active').length)
+                                if (annotation_mode == 1)
                                 {
-                                    $('.drawing_wrapper').css('z-index', 2);
+                                    select_cursor();
                                 }
-                                
+                                // if($('.topbar:first .pen.annotation_button:first.active').length)
+                                // {
+                                //     $('.drawing_wrapper').css('z-index', 2);
+                                // }
+
                                 already_rendering = false;
                                 if (!(doc_data && doc_data.first_time)) {
                                     return;
@@ -1301,7 +1301,7 @@
                                             }
                                         }
                                     });
-                                });                                
+                                });
                             } catch (er) {
                                 console.log(er);
                             }
@@ -1315,7 +1315,7 @@
                                         onPageDone(cb_data, page_num);
                                     }).catch(function(er){
                                         site_functions.hideLoader(doc_loading_step);
-                                        console.log(4511, er);                                        
+                                        console.log(4511, er);
                                         break;
                                     });;
                                 }
@@ -1323,7 +1323,7 @@
                                 site_functions.hideLoader(doc_loading_step);
                                 already_rendering = false;
                                 //sami commented, its to be fixed
-                                // console.log(45522, er);
+                                // console.log('Same canvas rendring');
                             });
                         } catch (er) {
                             site_functions.hideLoader(doc_loading_step);
@@ -1402,12 +1402,12 @@
                 function handlePenSizeChange(e) {
                     setPen(e.target.value, penColor);
                 }
-                
-                var pen_color_selection_shown = false;
+
+                var color_selection_shown = false;
                 function handlePenColorChange(e) {
                     var topbar_width = $('.topbar:first').width();
                     var color_popup = $('.ColorPalettePopup:first');
-                    var btn_rect = this.getBoundingClientRect();                    
+                    var btn_rect = this.getBoundingClientRect();
                     var popup_postion = {
                         top: btn_rect.y + 20
                     };
@@ -1417,10 +1417,10 @@
                         popup_postion.left = btn_rect.x - color_popup.width();
                     }
                     color_popup.css(popup_postion);
-                    var c_color = $(this).attr('color');                    
+                    var c_color = $(this).attr('color');
                     color_popup.find('div[hex="' + c_color + '"]:first').click();
-                    // console.log(43343);
-                    if(!pen_color_selection_shown)
+                    // console.log(43343, color_selection_shown);
+                    if(!color_selection_shown)
                     {
                         color_popup.show();
                     }
@@ -1428,7 +1428,7 @@
                     {
                         $('.ColorPalettePopup').hide();
                     }
-                    pen_color_selection_shown = $('.ColorPalettePopup:visible').length;
+                    color_selection_shown = $('.ColorPalettePopup:visible').length;
                 }
                 $('body').on('click', '.toolbar .pen-color:first', handlePenColorChange);
                 $('body').on('change', '.toolbar .pen-size:first', handlePenSizeChange);
@@ -1480,6 +1480,7 @@
                             break;
                         case 'draw':
                             UI.enablePen();
+                            togglePen(true);
                             break;
                         case 'text':
                             UI.enableText();
@@ -1526,7 +1527,7 @@
             // Comment stuff
             (function(window, document) {
                 var on_annotation_comment_received = function(data) {
-                    var annot_doc = $('#annotated-doc-conatiner');
+                    var annot_doc = $('#annotated-doc-container');
                     if (annot_doc.length < 1) {
                         return;
                     }
@@ -1843,6 +1844,7 @@
                                 'left': left_pos,
                                 'top': pos.top + 30
                             }).show();
+                            color_selection_shown = true;
                         }
                     });
                 }
@@ -2274,6 +2276,11 @@
                             return;
                         }
                         if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
+                            return;
+                        }
+                        if(!$(e.target).closest('#viewer').length)
+                        {
+                            // console.log(e.target)
                             return;
                         }
                         // // console.log(new Date(), mouse_down_time);
@@ -3484,7 +3491,8 @@
                                     d: d.join(' '),
                                     stroke: (0, _normalizeColor2.default)(a.color || '#000'),
                                     strokeWidth: a.width || 1,
-                                    fill: 'none'
+                                    fill: 'none',
+                                    strokeLinecap: 'round'
                                 });
                                 paths.push(path);
                             }
@@ -4468,7 +4476,7 @@
                         // console.log(561);
                         activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
                         createEditOverlay(target);
-                        activate_annotation(target);                        
+                        activate_annotation(target);
                     }
 
                     function enableEdit(target) {
@@ -4512,13 +4520,24 @@
                         };
                     }
                     var _enabled = false;
-                    mouse_up30 = function(e, page_id) {
+                    mouse_up30 = function(page_id) {
                         var lines = [];
-                        if (e.changedTouches) {
-                            e = e.changedTouches[0];
-                        }
-                        // console.log(last_drawn_path);
                         lines = last_drawn_path;
+                        var zoom_now = RENDER_OPTIONS.scale;
+                        // console.log(zoom_now, 333);
+                        if(zoom_now != 1)
+                        {
+                            lines.forEach(function(item, i){
+                                var arr = item.split(' ');
+                                arr.forEach(function(pt, j){
+                                    if(!isNaN(pt)){
+                                        arr[j] /= zoom_now;
+                                    }
+                                });
+                                lines[i] = arr.join(' ');
+                            });
+                        }
+
 
                         var svg = $('#' + page_id).find('.annotationLayer:first')[0];
                         if (!svg || !lines.length) {
@@ -4552,11 +4571,12 @@
                                 console.log('Invalid drawing merging in page:', page_id, local_annots);
                             }
                         } else {
+                            var scaled_pen_size = penSize * 1.1;
                             var pageNumber = _getMetadata.pageNumber;
                             // console.log('New Svg', pageNumber);
                             _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
                                 type: 'drawing',
-                                width: penSize,
+                                width: scaled_pen_size,
                                 color: penColor,
                                 paths: [{
                                     lines: lines
@@ -4571,16 +4591,13 @@
                     }
 
                     function enablePen() {
-                        //console.log(777);                    
+                        //console.log(777);
                         if (_enabled) {
                             return;
                         }
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
                         _enabled = true;
-                        togglePen(true);
-                        $('.drawing_wrapper').css('z-index', 2);
-                        $('.pen-tool-container > *:not(.pen)').css('display', 'block');
                         (0, _utils.disableUserSelect)();
                     }
 
@@ -5522,7 +5539,7 @@
         }
     }
 
-    function loadAnnotationnModules(modules) { // webpackBootstrap
+    function loadAnnotationModules(modules) { // webpackBootstrap
         // The module cache
         var installedModules = {};
         // The require function
@@ -5561,7 +5578,7 @@
         // Load entry module and return exports
         return __webpack_require__(0);
     }
-    var pdf_js_module = loadAnnotationnModules([
+    var pdf_js_module = loadAnnotationModules([
         module0,
         module1,
         module2,

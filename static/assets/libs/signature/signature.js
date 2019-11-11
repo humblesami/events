@@ -92,8 +92,10 @@ jQuery(document).ready(function(e) {
             {
                 last_drawn_path.push('L ' + mousePosition.x + ' ' + mousePosition.y);
             }
+            // console.log(canvas[0].width, canvas[0].height);
             points[points.length - 1].break = true;
             // context.closePath();
+            context.on_mouse_up();
             reset();
             // console.log($(this).closest('.page').attr('id'));
             return false;

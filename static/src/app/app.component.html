@@ -79,7 +79,7 @@
                         <i class="fa fa-window-close"></i>
                     </span>
                 </div>
-                <div *ngIf="socketService.video_call.im_caller">
+                <div class="user-viewer" *ngIf="socketService.video_call.im_caller">
                     <span (click)="socketService.video_call.show_users()"><i class="fa fa-plus"></i></span>
                 </div>
             </div>
