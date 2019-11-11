@@ -371,7 +371,10 @@
                 }
                 if (drawing_pages.length) {
                     for (var item of drawing_pages) {
-                        UI.renderPage(item, RENDER_OPTIONS);
+                        UI.renderPage(item, RENDER_OPTIONS).catch(function(er){
+                            site_functions.hideLoader(doc_loading_step);
+                            console.log(45555, er);
+                        });
                     }
                 }
             }
@@ -1205,7 +1208,7 @@
                                         $('#annotated-doc-conatiner').show();
                                     }
                                     scroll_div.show();
-                                    console.log(window['dt_functions'].now_full(), 'first page rendered');
+                                    console.log(window['dt_functions'].now_full(), 'page1 done');
                                 }
                                 if (annotation_mode == 1) {
                                     addCommentCount(annotations_of_page, page_number);
@@ -1224,7 +1227,6 @@
                             try {                                
                                 window['route_changing'] = false;
                                 showHideAnnotations();
-
 
                                 last_drawn_path = [];
                                 old_page_id = undefined;
@@ -1311,15 +1313,25 @@
                                 for (var i = 2; i <= NUM_PAGES; i++) {
                                     UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num) {
                                         onPageDone(cb_data, page_num);
-                                    });
+                                    }).catch(function(er){
+                                        site_functions.hideLoader(doc_loading_step);
+                                        console.log(4511, er);                                        
+                                        break;
+                                    });;
                                 }
+                            }).catch(function(er){
+                                site_functions.hideLoader(doc_loading_step);
+                                already_rendering = false;
+                                //sami commented, its to be fixed
+                                // console.log(45522, er);
                             });
                         } catch (er) {
+                            site_functions.hideLoader(doc_loading_step);
                             console.log(er);
                         }
                     }
                 } catch (er) {
-                    console.log(er);
+                    console.log(45333, er);
                 }
             }
 
@@ -1530,6 +1542,9 @@
                             });
                             addCommentCount(cb_data, page_num);
                             embed_comment_count(data.point, 1, 1);
+                        }).catch(function(er){
+                            site_functions.hideLoader(doc_loading_step);
+                            console.log(45444, er);
                         });
                     } else {
                         if (data.point.uuid == annot_id) {
