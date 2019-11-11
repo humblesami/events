@@ -66,15 +66,16 @@
                 dist_rects.push(rect);
                 continue;
             }
+            rect.y -= 1.5 * scale_zoom;
             // console.log(dist_rects.length, 34774);
             var found = false;
             var scale_zoom = RENDER_OPTIONS.scale;
             for (let dist_rect of dist_rects) {
-                if (Math.abs(dist_rect.x - rect.x) < 2.5 * scale_zoom && Math.abs(dist_rect.y - rect.y) < 2.5 * scale_zoom) {
+                if (Math.abs(dist_rect.x - rect.x) < 3 * scale_zoom && Math.abs(dist_rect.y - rect.y) < 3 * scale_zoom) {
                     found = true;
                 }
             }
-            if (!found) {
+            if (!found) {                
                 dist_rects.push(rect);
             }
         }
