@@ -75,7 +75,7 @@
                     found = true;
                 }
             }
-            if (!found) {                
+            if (!found) {
                 dist_rects.push(rect);
             }
         }
@@ -1825,6 +1825,23 @@
                     if (textBox)
                         onCOmmentAdded();
                 }
+
+                function getPathColor(el)
+                {
+                    if (!el[0])
+                    {
+                        return '#000000';
+                    }
+                    let path = el.find('path');
+                    if (!path.length)
+                    {
+                        return '#000000';
+                    }
+                    color = $(path).attr('stroke');
+                    if (color == 'none' || !color)
+                        color = '#000000';
+                    return color;
+                }
                 activate_annotation = function(target) {
                     // console.log(32323);
                     pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item) {
@@ -1837,13 +1854,15 @@
                             var tw = $('#pdf-annotate-edit-overlay:visible').width();
                             var cmw = ctxMenu.width();
                             var left_pos = pos.left + tw / 2 - cmw / 2;
-                            var color = $(target).attr('fill');
-                            if (!color) {
-                                color = $(target).attr('stroke');
-                            }
-                            if (color == 'none' || !color)
-                                color = '#000000';
-
+                            var el = $(target);
+                            var color = getPathColor(el);
+                            // var color = $(target).attr('fill');
+                            // if (!color) {
+                            //     color = $(target).attr('stroke');
+                            // }
+                            // if (color == 'none' || !color)
+                            //     color = '#000000';
+                            // console.log(color, 234234);
                             var selected = ctxMenu.find('.row>.cell[hex="' + color + '"]');
                             if (selected.length == 0) {
                                 $('#applied_color').hide();
