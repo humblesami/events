@@ -343,7 +343,7 @@ select.pen-size{
 body.pdf-viewer {
     overflow: hidden;
 }
-#annotated-doc-conatiner {    
+#annotated-doc-container {    
     background: #fff;
     position: relative;
     width: 100%;
@@ -807,18 +807,18 @@ span.pager.disabled
     display: none;
 }
 
-#annotated-doc-conatiner.no_annotation .annotationLayer,
-#annotated-doc-conatiner.no_annotation .annotation-buttons-container,
-#annotated-doc-conatiner.no_annotation #comment-wrapper
-#annotated-doc-conatiner.no_annotation .annotation-button-container
+#annotated-doc-container.no_annotation .annotationLayer,
+#annotated-doc-container.no_annotation .annotation-buttons-container,
+#annotated-doc-container.no_annotation #comment-wrapper,
+#annotated-doc-container.no_annotation .annotation-button-container
 {
     display: none !important;
 }
 
 
-#annotated-doc-conatiner.annotator .annotationLayer, 
-#annotated-doc-conatiner.annotator .annotation-buttons-container,
-#annotated-doc-conatiner.annotator #comment-wrapper
+#annotated-doc-container.annotator .annotationLayer, 
+#annotated-doc-container.annotator .annotation-buttons-container,
+#annotated-doc-container.annotator #comment-wrapper
 {
     display: block;
 }
