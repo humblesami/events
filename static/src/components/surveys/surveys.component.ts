@@ -13,6 +13,7 @@ export class SurveysComponent implements OnInit {
     @Input() meeting_id: number;
     @Input() loaded_as_child: any;
     
+    loading = true;
     socketService: SocketService;
     no_meet = false;
     records = [];
@@ -46,12 +47,26 @@ export class SurveysComponent implements OnInit {
         {
             states = [state]
         }
+        this.httpServ.states = states;
         obj_this.get_list(states);
     }
+    prev_state = undefined;
 
     get_list(states=[]){
         let obj_this = this;
-        let input_data = { states: states, meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+        let offset = undefined;
+        let limit = undefined;
+        if(obj_this.httpServ.states && states.length < 1){
+            states = obj_this.httpServ.states
+        }
+        if(obj_this.prev_state != states)
+        {
+            obj_this.loading = true;
+            offset = 0;
+            limit = 0;
+        }
+        obj_this.prev_state = states;
+        let input_data = { states: states, meeting_type: obj_this.meeting_type, offset: offset, limit: limit};
         if(obj_this.meeting_id){
             input_data['meeting_id']=obj_this.meeting_id;
         }
@@ -65,6 +80,7 @@ export class SurveysComponent implements OnInit {
             }
             obj_this.records = result.records;
             obj_this.records.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
+            obj_this.loading = false;
             // make_bread_crumb(flag);
         };
         let args = {
@@ -86,6 +102,9 @@ export class SurveysComponent implements OnInit {
         this.meeting_type = flag;
         // console.log(flag)
         this.heading = flag;
+        if(this.httpServ.states){
+            console.log(this.httpServ.states,121221);
+        }
         this.get_list();
     }
 }

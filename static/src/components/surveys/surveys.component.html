@@ -31,7 +31,7 @@ title="Surveys"></app-breadcrumb>
             </div>
         </div>
 
-        <app-paginator *ngIf="records.length && !loaded_as_child" (reload_data)="get_list()">
+        <app-paginator *ngIf="!loading && records.length && !loaded_as_child" (reload_data)="get_list()">
         </app-paginator>
 
         <div class="row">
