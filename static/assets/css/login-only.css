@@ -420,6 +420,7 @@ button{cursor:pointer;}
 body{padding-top:0px;}
 .Login-form-wrapper{display:flex;justify-content:center;height:100vh;overflow:auto;align-items:center;background-image:url('/static/assets/images/login-cbg.png');background-repeat:no-repeat;background-position:center left;background-size:auto;position:relative;padding:20px;}
 .login-logo{text-align:center;}
+.login-logo img{width: 250px;}
 .login-form-div .form-control{height:50px;line-height:50px;background-color:transparent;border:solid 1px #D8D8D8;padding:0 20px 0 60px;background:#ffffff;font-size:14px;border-radius:35px;}
 .login-form-div .form-group{margin-bottom:30px;}
 input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active{-webkit-box-shadow:0 0 0px 1000px white inset!important;}
