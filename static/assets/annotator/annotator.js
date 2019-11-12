@@ -1797,7 +1797,7 @@
                                     {
                                         console.log('Length for '+dom_item_to_focus[0] + ' '+ dom_item_to_focus.length);
                                     }
-                                    if($(scroll_div).length != 1)
+                                    if(scroll_div.length != 1)
                                     {
                                         console.log('Length for '+scroll_div[0] + ' '+ scroll_div.length);
                                     }
