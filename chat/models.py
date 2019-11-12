@@ -59,8 +59,20 @@ class Notification(models.Model):
             'info': post_meta
         }
         from string import Template
+
         notif = Template('$sender $template $name_place')
-        meta['text'] = notif.safe_substitute(sender=', '.join([sender['name'] for sender in senders_list]), template=notification_template, name_place=name_place.strip())
+        senderText = ''
+        senders = [sender['name'] for sender in senders_list]
+        if len(senders) > 3:
+            senderText = ', '.join(senders[:3]) + ' and ' + str(len(senders) -3) + ' other user'
+        elif len(senders) > 2:
+            senderText = ', '.join(senders[:len(senders)-1]) + ' and ' + str(senders[len(senders)-1: len(senders)][0])
+        elif len(senders) == 2:
+            senderText = senders[0] + ' and ' + senders[1]
+        elif len(senders):
+            senderText = senders[0]
+            
+        meta['text'] = notif.safe_substitute(sender=senderText , template=notification_template, name_place=name_place.strip())
         return meta
 
     @classmethod
