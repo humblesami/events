@@ -15,6 +15,7 @@ export class EsignDocsComponent implements OnInit {
     records = [];
     httpService: HttpService;
     socketService: SocketService;
+    loading = true;
     constructor(private httpServ: HttpService,public router: Router, private sock: SocketService) {
         // console.log(Date(), 99222);
         this.httpService = httpServ;
@@ -105,25 +106,40 @@ export class EsignDocsComponent implements OnInit {
         {
             states = [state]
         }
+        this.httpServ.states = states;
         obj_this.get_list(states);
     }
 
+    prev_state = undefined;
+    
     get_list(states=[])
-    {
-        const obj_this = this;        
+    {        
+        const obj_this = this;
         let args = {
             app: 'esign',
             model: 'SignatureDoc',
             method: 'get_records'
-        }			
+        }
+        if(obj_this.httpServ.states && states.length < 1){
+            states = obj_this.httpServ.states
+        }
+        let offset = undefined;
+        if(obj_this.prev_state != states)
+        {
+            obj_this.loading = true;
+            offset = 0;
+        }
+
+        obj_this.prev_state = states;
         let final_input_data = {
-            params: {states: states},
+            params: {states: states, offset: offset },
             args: args
         };
         obj_this.httpService.get(final_input_data,
-        (result: any) => {            
+        (result: any) => {                  
             obj_this.records = result.records;
-            // console.log(new Date(), 444);
+            obj_this.loading = false;
+             // console.log(new Date(), 444);
         },
         (error: any) => {
             //console.log(error);

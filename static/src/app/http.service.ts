@@ -5,6 +5,7 @@ declare var $: any
 @Injectable()
 export class HttpService {
     server_url;
+    states = undefined;
     offset: number;
     limit: number;
     count: number;
@@ -100,7 +101,7 @@ export class HttpService {
             {
                 input_data.params.limit = obj_this.limit;
             }
-            if(!input_data.params.offset)
+            if(!input_data.params.offset && input_data.params.offset != 0 )
             {
                 input_data.params.offset = obj_this.offset;
             }
