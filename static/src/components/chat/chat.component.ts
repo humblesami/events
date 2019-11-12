@@ -74,9 +74,24 @@ export class ChatComponent implements OnInit {
 	ngOnInit() {
         var obj_this = this;
         var route = window['pathname'];        
-        $('body').on('click', '.notification-list li', function(){            
-            obj_this.mark_notifications_read($(this));
+        $('body').on('click', '.notification-list li', function(){                        
             var url = $(this).find('a').attr('link');
+            if(!url)
+            {
+                url = $(this).find('a').attr('href');
+                if(!url){
+                    console.log('Invalid url')
+                    return;
+                }
+            }
+            if(!url.startsWith('http'))
+            {
+                if(!url.startsWith('/'))
+                {
+                    url = '/'+url;
+                }
+            }
+            obj_this.mark_notifications_read($(this));
             // console.log(url);
             window.location = url;
         });
