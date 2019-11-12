@@ -7,7 +7,7 @@ function init_sign(config) {
     $('#signature_modal').remove();
     $('body').append(`<div class="modal fade" id="signature_modal" role="dialog" style="z-index:1053" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content signature">
                 <div class="modal-header">
                 <div class="mb-1">
                     <button class="btn btn-primary DocsBtn" id="draw-sig">Draw</button>
