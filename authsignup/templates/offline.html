@@ -50,7 +50,7 @@
                         url: '/user/ping',
                         success: function(result){
                             console.log('Yes now');
-                            window.location = '';
+                            location.reload();
                             clearInterval(checker);
                         },
                         error: function(result){
