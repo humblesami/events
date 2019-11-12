@@ -5,6 +5,12 @@
 {
     border-bottom: 1px solid gainsboro;
 }
+.main-nav-header .logo-link{
+    padding-left: 10px;
+}
+.main-nav-header .logo-image{
+    width: 120px;
+}
 
 @media (max-width: 575px) {
     button.showmouseawaybutton.notification-icon{
