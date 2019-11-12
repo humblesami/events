@@ -1265,6 +1265,12 @@ th.fc-day-header.fc-widget-header {
         padding-top: 3rem;
     }
 }
+@media screen and (max-width:768px){
+	.fc-toolbar .fc-center{
+        display: block;
+        padding-top: 0;
+    }
+}
 @media screen and (max-width:508px){
     .fc-toolbar .fc-right{
         padding-top: 0.5rem;

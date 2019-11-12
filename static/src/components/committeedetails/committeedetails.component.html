@@ -33,7 +33,8 @@ title="{{committee.name}}"></app-breadcrumb>
                         <i class="fa fa-users text-primary"></i> Members
                     </h3> 
                 </div>
-
+                <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
+                </app-paginator>
                 </div>
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let profile of committee.users">
@@ -66,8 +67,6 @@ title="{{committee.name}}"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-                <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
-                </app-paginator>
             </div>
         </div>
     </div>
