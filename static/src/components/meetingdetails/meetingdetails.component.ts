@@ -336,7 +336,7 @@ export class MeetingDetailsComponent implements OnInit {
                     {
                         $('.toggle_cb').prop('checked', false);
                     }
-                    if (obj_this.socketService.admin_mode)
+                    if (obj_this.socketService.admin_mode && $('#agenda_tbody').length)
                     {
                         $('#agenda_tbody').sortable({
                             stop: function (event, ui) {
@@ -567,17 +567,23 @@ export class MeetingDetailsComponent implements OnInit {
         if (this.socketService.admin_mode)
         {
             obj_this.is_sortable_applied = true;
-            $('#agenda_tbody').sortable({
-                stop: function (event, ui) {
-                    obj_this.save_positions();
-                },
-            });
+            if($('#agenda_tbody').length)
+            {
+                    $('#agenda_tbody').sortable({
+                    stop: function (event, ui) {
+                        obj_this.save_positions();
+                    },
+                });
+            }
         }
         else
         {
             if(obj_this.is_sortable_applied)
             {
-                $('#agenda_tbody').sortable('destroy');
+                if($('#agenda_tbody').length)
+                {
+                    $('#agenda_tbody').sortable('destroy');
+                }
             }
         }
     }
