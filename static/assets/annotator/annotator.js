@@ -32,6 +32,7 @@
 
     var prev_doc_url = '';
     var sign_contexts = [];
+    var current_mouse_position;
     var on_commments_loaded = [];
     var annotation_save_wait_time = 8000;
 
@@ -1423,7 +1424,7 @@
                 }
 
                 var color_selection_shown = false;
-                function handlePenColorChange(e) {
+                function onColorPickerClicked(e) {
                     var topbar_width = $('.topbar:first').width();
                     var color_popup = $('.ColorPalettePopup:first');
                     var btn_rect = this.getBoundingClientRect();
@@ -1449,7 +1450,7 @@
                     }
                     color_selection_shown = $('.ColorPalettePopup:visible').length;
                 }
-                $('body').on('click', '.toolbar .pen-color:first', handlePenColorChange);
+                $('body').on('click', '.toolbar .pen-color:first', onColorPickerClicked);
                 $('body').on('change', '.toolbar .pen-size:first', handlePenSizeChange);
             })();
 
@@ -1875,13 +1876,19 @@
                             var left_pos = pos.left + tw / 2 - cmw / 2;
                             var el = $(target);
                             var color = getPathColor(el);
-                            // var color = $(target).attr('fill');
-                            // if (!color) {
-                            //     color = $(target).attr('stroke');
-                            // }
-                            // if (color == 'none' || !color)
-                            //     color = '#000000';
-                            // console.log(color, 234234);
+                            // console.log(current_mouse_position.top, 8998);
+                            if(!current_mouse_position)
+                            {
+                                current_mouse_position = pos;
+                            }
+                            if(current_mouse_position.top > $('.PdfViewerWrapper:first').height() / 2)
+                            {
+                                current_mouse_position.top -= 130;                                                               
+                            }
+                            else{
+                                current_mouse_position.top += 30; 
+                            }
+                            // console.log(current_mouse_position.top, 888);
                             var selected = ctxMenu.find('.row>.cell[hex="' + color + '"]');
                             if (selected.length == 0) {
                                 $('#applied_color').hide();
@@ -1890,7 +1897,7 @@
                                 applyCheckMarkColor(color);
                             ctxMenu.css({
                                 'left': left_pos,
-                                'top': pos.top + 30
+                                'top': current_mouse_position.top
                             }).show();
                             color_selection_shown = true;
                         }
@@ -2354,6 +2361,7 @@
                         if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
+                        current_mouse_position = { left: e.pageX, top: e.pageY }
                         var target = (0, _utils.findAnnotationAtPoint)(e.clientX, e.clientY); // Emit annotation:blur if clickNode is no longer clicked
                         if (clickNode && clickNode !== target) {
                             emitter.emit('annotation:blur', clickNode);
