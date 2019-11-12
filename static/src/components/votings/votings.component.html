@@ -32,7 +32,7 @@ title="Resolutions"></app-breadcrumb>
 		</div>
 
 		<app-paginator
-		*ngIf="records.length && !loaded_as_child" 
+		*ngIf="!loading && records.length && !loaded_as_child" 
 			(reload_data)="get_list()">
 		</app-paginator>
 

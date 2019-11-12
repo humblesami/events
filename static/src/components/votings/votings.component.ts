@@ -13,6 +13,7 @@ declare var $: any;
 export class VotingsComponent implements OnInit {
     @Input() loaded_as_child: any;
 
+    loading = true;
     socketService: SocketService;
     no_meet = false;
     records = [];
@@ -46,14 +47,30 @@ get_records(el, state)
     {
         states = [state]
     }
+    this.httpServ.states = states;
     obj_this.get_list(states);
 }
+
+prev_state = undefined;
 
 get_list(states=[])
 {
     let obj_this = this;
+    let offset = undefined;
+    let limit = undefined;
     // let req_url = '/meeting/list-json';
-    let input_data = { states: states, meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+    if(obj_this.httpServ.states && states.length < 1){
+        states = obj_this.httpServ.states
+    }
+    if(obj_this.prev_state != states)
+    {
+        obj_this.loading = true;
+        offset = 0;
+        limit = 0;
+    }
+    obj_this.prev_state = states;
+
+    let input_data = { states: states, meeting_type: obj_this.meeting_type, offset: offset, limit: limit};
     var success_cb = function (result) {
         //console.log(result);
         for(var i in result.records)
@@ -64,6 +81,7 @@ get_list(states=[])
         }
         obj_this.records = result.records;
         obj_this.records.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;            
+        obj_this.loading = false;
     };
     let args = {
         app: 'voting',
