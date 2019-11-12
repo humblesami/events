@@ -391,15 +391,7 @@
         return ['point'].indexOf(type) > -1;
     }
 
-    var comments_wrapper; // = $('#comment-wrapper');
-    function on_leave_document() {
-        if (comments_wrapper && comments_wrapper.length > 0) {
-            shown_comment_type = false;
-            comments_wrapper.hide();
-            $('.router-outlet').show();
-            saveAnnotationsAtServer('Leaving');
-        }
-    }
+    var comments_wrapper; // = $('#comment-wrapper');    
 
     function move_to_point(point_id) {
         let annot_id = $('div[db_id="' + point_id + '"]:first').attr('point_id');
@@ -494,7 +486,7 @@
             }
             process_notification_url(item_url);
         });
-    });
+    });    
 
     var UI = undefined;
     var RENDER_OPTIONS = undefined;
@@ -519,10 +511,7 @@
                 comment_list = comments_wrapper.find('.comment-list-container:first');
                 commentText.focus(function() {
                     comment_item_focused = true;
-                });
-
-                $(window).unbind("unload", on_leave_document);
-                $(window).bind("unload", on_leave_document);
+                });                
                 scroll_div = $('.PdfViewerWrapper');
             })()
 
@@ -618,6 +607,7 @@
                             console.log("Save must be called after document id is set")
                             return;
                         }
+                        clearTimeout(save_timeout);
 
                         var document_version = getDocumentVersion(documentId);
                         var input_data = {
@@ -719,10 +709,6 @@
                     setCookieStrict(documentId, documentId + '/annotations', '');
                     saveAnnotationsAtServer('reset');
                     // console.log(4343);
-                });
-
-                $('body').on('click', '.toolbar .back', function() {
-                    on_leave_document();
                 });
 
             })();
@@ -953,6 +939,19 @@
                     setTimeout(function() {
                         setViewerWrapperBottom('Loaded');
                     }, 10);
+
+                    window['on_annotator_unload'] = function() {
+                        // console.log(4443);
+                        if (comments_wrapper && comments_wrapper.length > 0) {
+                            shown_comment_type = false;
+                            comments_wrapper.hide();
+                            $('.router-outlet').show();
+                        }        
+                        saveAnnotationsAtServer('Leaving');
+                        window['on_annotator_unload'] = undefined;
+                        // console.log(44463);
+                    }
+
                     prev_doc_url = window.location.toString();
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
@@ -1485,6 +1484,7 @@
                                 on_penLeave();
                             }
                             $('#viewer').css('cursor', 'auto');
+                            saveAnnotationsAtServer('cursor');
                             UI.enableEdit();
                             break;
                         case 'draw':

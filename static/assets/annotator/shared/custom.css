@@ -28,9 +28,9 @@
 .toolbar.topbar .doc-manage-btn-wrap{
     text-align: center;
 }
-.doc-manage-btn-wrap.reset{
+/* .doc-manage-btn-wrap.reset{
     display: none;
-}
+} */
 .back-btn{
     margin-top: 1vh;
     padding: 5px 0;

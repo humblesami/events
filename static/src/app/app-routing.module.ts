@@ -173,6 +173,10 @@ export class AppRoutingModule {
                 site_functions.showLoader('Route');
                 $('body').removeClass('pdf-viewer');                
                 window['pathname'] = event.url;
+                if(window['on_annotator_unload'])
+                {
+                    window['on_annotator_unload']();
+                }
 			}
 			else if (event instanceof NavigationEnd) {                
                 var next_url = event.url;
