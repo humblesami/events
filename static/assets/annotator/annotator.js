@@ -38,6 +38,13 @@
     var saveAnnotationsAtServer = function() {
         console.log("Save annotation not defined");
     };
+    
+    function applyCheckMarkColor(color)
+    {
+        $('#applied_color').removeClass('dark light');
+        let new_class = window['color_functions'].isDarkOrLight(color);
+        $('#applied_color').addClass(new_class);
+    }
 
     function report_error() {
         bootbox.alert('Thanks, error is reported successfully');
@@ -755,6 +762,7 @@
                     $('.topbar .pen-color:first').attr('color', color_value);
                     setPen(null, color_value);
                     obj.append($('#applied_color').show());
+                    applyCheckMarkColor(color_value);
                 } else if (activeAnnotationItem.color != color_value) {
                     activeAnnotationItem.color = color_value;
                     var g_item = $('svg.annotationLayer g[data-pdf-annotate-id="' + activeAnnotationItem.uuid + '"]:first');
@@ -766,6 +774,7 @@
                     }
                     pdfStoreAdapter.editAnnotation(documentId, activeAnnotationId, activeAnnotationItem).then(function(res) {
                         obj.append($('#applied_color').show());
+                        applyCheckMarkColor(color_value);
                     });
                 }
                 // $('.ColorPalettePopup').hide();
@@ -1868,6 +1877,7 @@
                                 $('#applied_color').hide();
                             } else
                                 selected.append($('#applied_color').show());
+                                applyCheckMarkColor(color);
                             ctxMenu.css({
                                 'left': left_pos,
                                 'top': pos.top + 30

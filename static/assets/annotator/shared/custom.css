@@ -598,6 +598,12 @@ Color Popup
 .ColorPalettePopup .row .cell.colored .check-mark {
     margin-left: 7px;
 }
+.light {
+    color: black;
+}
+.dark {
+    color: white;
+}
 .StylePopup {
     width: 160px;
 }
