@@ -75,9 +75,9 @@ export class ChatComponent implements OnInit {
         var obj_this = this;
         var route = window['pathname'];        
         $('body').on('click', '.notification-list li', function(){            
-            // obj_this.mark_notifications_read($(this));
+            obj_this.mark_notifications_read($(this));
             var url = $(this).find('a').attr('link');
-            console.log(url);
+            // console.log(url);
             window.location = url;
         });
         if(route == '/chat')

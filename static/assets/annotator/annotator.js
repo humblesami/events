@@ -407,8 +407,10 @@
         let annot_id = $('.canvasWrapper div[db_id="' + point_id + '"]:first').attr('point_id');
         if(annot_id)
         {
-            $('.toolbar:first .comment:not(.personal):first').click();
-            $('#comment-wrapper .comment-list .groupcomment[annotationid="' + annot_id + '"]').click();
+            comments_wrapper.find('.groupcomment[annotationid="' + annot_id + '"]:first').click();
+            setTimeout(function(){
+                $('#commentText').focus();
+            }, 102);
         }
         else{
             console.log('Point with id='+point_id+ ' not found');
@@ -445,7 +447,7 @@
         if (url_without_point == url_now) {
             if(!comments_loaded)
             {
-                on_commments_loaded.push(function(){
+                on_commments_loaded.push(function(){                    
                     move_to_point(point_id);
                 })
                 loadALlCommentsOnDocument(); 
@@ -492,23 +494,6 @@
                 $('.annotation-options.ContextMenuPopup').hide();
             }
         });
-
-        var notification_list = $('.notification-list:first');
-        var find_point = function() {
-            // console.log(this);
-            var el = $(this);
-            var link = el.find('a');
-            if (!link.length) {
-                return;
-            }
-            var item_url = link.attr('link');
-            if (!item_url) {
-                return;
-            }
-            process_notification_url(item_url);
-        }
-        notification_list.off('click', find_point);
-        notification_list.on('click', '.chat-items>li', find_point);
     });
 
     var UI = undefined;
@@ -1668,7 +1653,7 @@
 
                 loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
-                    console.log(323232, point_uuid);
+                    // console.log(323232, point_uuid);
                     comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     comment_list.removeAttr('annotation-id');
                     $('.comment-list-container').addClass('full-discussion');
@@ -1770,7 +1755,7 @@
                 });
 
                 select_comment_item = function(point_identifier, is_new) {
-                    console.log(point_identifier, is_new, 156);
+                    // console.log(point_identifier, is_new, 156);
                     comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');                    
                     if (!comments_loaded) {
                         loadALlCommentsOnDocument(point_identifier);
