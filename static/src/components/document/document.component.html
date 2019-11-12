@@ -93,7 +93,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                         </div>
                         <button class="pen-color not-100 annotation_button prop"></button>
                     </div>
-                    <div class="doc-manage-btn-wrap">
+                    <div class="doc-manage-btn-wrap shared-comments">
                         <button class="comment annotation_button" type="button" title="Show all comments">
                             <div class="Icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="23.571" height="22" viewBox="0 0 23.571 22">
@@ -114,7 +114,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                         </button>
                     </div>
 
-                    <div class="doc-manage-btn-wrap">
+                    <div class="doc-manage-btn-wrap personal-comments">
                         <button class="personal comment annotation_button " type="button" title="Show all Personal Note" >
                             <div class="Icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22">
@@ -182,14 +182,14 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                         <img alt="" src="static/assets/images/docs/docs-rotate-left.svg">                            
                     </button>
                 </div>
-                <div class="doc-manage-btn-wrap" [ngClass]="{hidden: !annotation_doc}">
+                <div class="doc-manage-btn-wrap annotation-button-container">
                     <button class="Icon annot-toggler" (click)="toggleAnnotations()"
                     title="Hide/Show all annotations">
                         <i *ngIf="!annot_hidden" class="fa fa-eye-slash" aria-hidden="true"></i>
                         <i *ngIf="annot_hidden" class="fa fa-eye" aria-hidden="true"></i>
                     </button>
                 </div>
-                <div class="doc-manage-btn-wrap reset">
+                <div class="doc-manage-btn-wrap reset annotation-button-container">
                     <button class="btn btn-sm btn-primary">
                         <i class="fas fa-sync-alt"></i>
                     </button>
@@ -323,4 +323,3 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
     </div>    
     <div class="excel_doc"></div>
 </div>
-

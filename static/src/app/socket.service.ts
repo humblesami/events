@@ -190,6 +190,7 @@ export class SocketService {
         });
         obj_this.socket.on('connect',function(){
             obj_this.socket.off('server_event');
+            // console.log(343232);
             authorized_user.socket_id = obj_this.socket.id;
             var socket_error = "Socket connection not established at "+ obj_this.site_config.chat_server + ' because ';
             var options = {
@@ -225,6 +226,7 @@ export class SocketService {
             $.ajax(options);
 
             function onAuthenticated(data) {
+                // console.log(1116, data.notifications.list, 83433);
                 if(!data.user)
                 {
                     console.log('Invalid user data', data);
@@ -430,7 +432,10 @@ export class SocketService {
         };
 
         obj_this.server_events['point_comment_received'] = function (data) {
-            window['on_annotation_comment_received'](data);
+            if(window['on_annotation_comment_received'])
+            {
+                window['on_annotation_comment_received'](data);
+            }
         };
     };
     

@@ -203,7 +203,7 @@ function dn_rpc_object(options) {
             response.error = response.error.replace(/<br\/>/g, "\n");
             console.log(response.error);
         }
-        response.error = response.error.replace(/[^0-9a-z _]/gi, '')
+        response.error = response.error.replace(/[^0-9a-z _/\\]/gi, '')
         var report_str_index = response.error.indexOf('report_error_dev');        
         if(report_str_index > -1)
         {

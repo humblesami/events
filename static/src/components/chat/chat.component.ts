@@ -26,7 +26,7 @@ export class ChatComponent implements OnInit {
         togglerelated('.container.notification-list'); 
     }
 
-    mark_notifications_read(li){
+    mark_notifications_read(li){        
         let obj_this = this;
         if(li.html().trim() == 'No New Notifications')
         {
@@ -74,8 +74,11 @@ export class ChatComponent implements OnInit {
 	ngOnInit() {
         var obj_this = this;
         var route = window['pathname'];        
-        $('body').on('click', '.notification-list li', function(){
-            obj_this.mark_notifications_read($(this));
+        $('body').on('click', '.notification-list li', function(){            
+            // obj_this.mark_notifications_read($(this));
+            var url = $(this).find('a').attr('link');
+            console.log(url);
+            window.location = url;
         });
         if(route == '/chat')
         {            

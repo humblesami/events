@@ -51,11 +51,11 @@ class AnnotationDocument(CustomModel):
         doc_id = params.get('id')
         doc_name = params.get('doc_id')
         user_id = request.user.id
-        comments_points = PointAnnotation.get_point_annotations(pdf_id=doc_id)
+        comment_points = PointAnnotation.get_point_annotations(pdf_id=doc_id)
 
         doc = AnnotationDocument.objects.filter(doc_name=doc_name)
         if not doc:
-            res = {'version': -1, 'annotations': [], 'comments': comments_points}
+            res = {'version': -1, 'annotations': [], 'comments': comment_points}
             return res
 
         doc = doc[0]
@@ -64,7 +64,7 @@ class AnnotationDocument(CustomModel):
             document_version = 0
 
         if doc.version < document_version and not force:
-            res = {'version': doc.version, 'comments': comments_points}
+            res = {'version': doc.version, 'comments': comment_points}
             return  res
 
         with transaction.atomic():
@@ -73,7 +73,7 @@ class AnnotationDocument(CustomModel):
             note_points = PointAnnotation.get_point_annotations(document_id=doc.id)
         res = {
             'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles,
-            'comments': comments_points
+            'comments': comment_points
         }
         return res
     
@@ -89,7 +89,7 @@ class AnnotationDocument(CustomModel):
         if doc:
             doc = doc[0]
             reset = params.get('reset')
-            point_ids_dict = PointAnnotation.objects.filter(document_id=doc_id, sub_type__isnull=True).values('id')
+            point_ids_dict = PointAnnotation.objects.filter(document_id=doc_id).exclude(sub_type='personal').values('id')
             point_ids = []
             for obj in point_ids_dict:
                 point_ids.append(obj['id'])
@@ -160,8 +160,6 @@ class AnnotationDocument(CustomModel):
                 
         res = False
         with transaction.atomic():
-            doc.annotation_set.filter(~Q(type='point')).delete()
-            PointAnnotation.objects.filter(sub_type='personal').delete()
             for obj in point_annotations:
                 if not obj.sub_type:
                     raise ValidationError('Invalid point annotation')
@@ -460,44 +458,45 @@ class PointAnnotation(Annotation):
     @classmethod
     def get_point_annotations(cls, pdf_id=None, document_id=None):
         point_objects = []
-        sub_type = None
+        sub_type = ''
         if pdf_id:
-            point_objects = PointAnnotation.objects.filter(pdf_id=pdf_id)
-            sub_type = ''
+            point_objects = PointAnnotation.objects.filter(pdf_id=pdf_id).exclude(sub_type = 'personal')
             return_sub_type = False
         elif document_id:
-            point_objects = PointAnnotation.objects.filter(document_id=document_id)
+            point_objects = PointAnnotation.objects.filter(document_id=document_id, sub_type='personal')
             sub_type = 'personal'
             return_sub_type = 'personal'
         else:
             return []
 
-        notes_data = []
+        point_data = []
         for point in point_objects:
-            if point.sub_type == sub_type:
-                note_point = {
-                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
-                    'date_time': str(point.created_at), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
-                    'class': 'Annotation', 'counter': 0, 'page': point.page, 'doc_name': point.document.doc_name, 'comments': []
-                }
+            if point.sub_type != sub_type:
+                print ('Invalid sub type')
+                continue
+            point_object = {
+                'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
+                'date_time': str(point.created_at), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
+                'class': 'Annotation', 'counter': 0, 'page': point.page, 'doc_name': point.document.doc_name, 'comments': []
+            }
 
-                note_objects = point.commentannotation_set.all()
-                note_point_comments = []
-                for note in note_objects:
-                    user = note.user
-                    note_point_comments.append({
-                        'class': "Comment",
-                        'uuid': note.uuid,
-                        'point_id': point.uuid,
-                        'uid': user.id,
-                        'content': note.body,
-                        'user_name': user.name,
-                        'user': {'name': user.fullname(), 'id':user.id, 'image': user.image.url},
-                        'date_time': str(note.created_at)
-                    })
-                note_point['comments'] = note_point_comments
-                notes_data.append(note_point)
-        return notes_data
+            comment_objects = point.commentannotation_set.all()
+            comments = []
+            for comment in comment_objects:
+                user = comment.user
+                comments.append({
+                    'class': "Comment",
+                    'uuid': comment.uuid,
+                    'point_id': point.uuid,
+                    'uid': user.id,
+                    'content': comment.body,
+                    'user_name': user.name,
+                    'user': {'name': user.fullname(), 'id':user.id, 'image': user.image.url},
+                    'date_time': str(comment.created_at)
+                })
+            point_object['comments'] = comments
+            point_data.append(point_object)
+        return point_data
 
 
 class CommentAnnotation(CustomModel):

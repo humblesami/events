@@ -803,11 +803,14 @@ span.pager.disabled
     margin-top:10px;
 }
 
-
+.doc-manage-btn-wrap.shared-comments{
+    display: none;
+}
 
 #annotated-doc-conatiner.no_annotation .annotationLayer,
 #annotated-doc-conatiner.no_annotation .annotation-buttons-container,
 #annotated-doc-conatiner.no_annotation #comment-wrapper
+#annotated-doc-conatiner.no_annotation .annotation-button-container
 {
     display: none !important;
 }

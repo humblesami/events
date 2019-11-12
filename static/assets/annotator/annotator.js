@@ -1,7 +1,9 @@
 (function() {
 
     var pen_active = false;
-    var comment_sub_type = false;
+    var comments_loaded = false;
+    var socket_connected = false;
+    var comment_sub_type = false;    
     var contextMenuShown = false;
     var already_rendering = false;
     var shown_comment_type = false;
@@ -30,6 +32,7 @@
 
     var prev_doc_url = '';
     var sign_contexts = [];
+    var on_commments_loaded = [];
     var annotation_save_wait_time = 8000;
 
     var loadALlCommentsOnDocument = function() {
@@ -38,7 +41,7 @@
     var saveAnnotationsAtServer = function() {
         console.log("Save annotation not defined");
     };
-    
+
     function applyCheckMarkColor(color)
     {
         $('#applied_color').removeClass('dark light');
@@ -401,9 +404,15 @@
     var comments_wrapper; // = $('#comment-wrapper');    
 
     function move_to_point(point_id) {
-        let annot_id = $('div[db_id="' + point_id + '"]:first').attr('point_id');
-        $('.toolbar:first .comment:not(.personal):first').click();
-        $('#comment-wrapper .comment-list .groupcomment[annotationid="' + annot_id + '"]').click();
+        let annot_id = $('.canvasWrapper div[db_id="' + point_id + '"]:first').attr('point_id');
+        if(annot_id)
+        {
+            $('.toolbar:first .comment:not(.personal):first').click();
+            $('#comment-wrapper .comment-list .groupcomment[annotationid="' + annot_id + '"]').click();
+        }
+        else{
+            console.log('Point with id='+point_id+ ' not found');
+        }
     }
 
     function process_notification_url(item_url) {
@@ -434,7 +443,13 @@
         arr = arr.splice(0, arr.length - 1);
         url_now = arr.join('/');
         if (url_without_point == url_now) {
-            move_to_point(point_id);
+            if(!comments_loaded)
+            {
+                on_commments_loaded.push(function(){
+                    move_to_point(point_id);
+                })
+                loadALlCommentsOnDocument(); 
+            }           
         } else {
             item_url = item_url.replace(window.location.origin + '', '');
             // console.log(item_url, 999);
@@ -479,8 +494,7 @@
         });
 
         var notification_list = $('.notification-list:first');
-        // console.log(337773);
-        notification_list.on('click', '.chat-items>li', function() {
+        var find_point = function() {
             // console.log(this);
             var el = $(this);
             var link = el.find('a');
@@ -492,8 +506,10 @@
                 return;
             }
             process_notification_url(item_url);
-        });
-    });    
+        }
+        notification_list.off('click', find_point);
+        notification_list.on('click', '.chat-items>li', find_point);
+    });
 
     var UI = undefined;
     var RENDER_OPTIONS = undefined;
@@ -524,8 +540,6 @@
 
             annotation_user_m2 = localStorage.getItem('user');
             annotation_user_m2 = JSON.parse(annotation_user_m2);
-
-            var comments_loaded = false;
 
             var _slicedToArray = function() {
                 function sliceIterator(arr, i) {
@@ -774,7 +788,6 @@
                     }
                     pdfStoreAdapter.editAnnotation(documentId, activeAnnotationId, activeAnnotationItem).then(function(res) {
                         obj.append($('#applied_color').show());
-                        applyCheckMarkColor(color_value);
                     });
                 }
                 // $('.ColorPalettePopup').hide();
@@ -944,6 +957,8 @@
                 doc_loading_step = "Document Render Data";
                 site_functions.showLoader(doc_loading_step);
                 if (doc_data && doc_data.first_time) {
+                    socket_connected = false;
+                    comments_loaded = false;
                     content_wrapper = $('#content-wrapper');
                     setTimeout(function() {
                         setViewerWrapperBottom('Loaded');
@@ -958,6 +973,7 @@
                         }        
                         saveAnnotationsAtServer('Leaving');
                         window['on_annotator_unload'] = undefined;
+                        window['on_annotation_comment_received'] = undefined;
                         // console.log(44463);
                     }
 
@@ -1071,7 +1087,7 @@
                             scroll_div.hide();
                             $('.strt_sign.pdfjs').hide();
                             $('.sign_completed.pdfjs').hide();
-                            $('.doc-reseter').hide();
+                            $('.doc-reseter').hide();                            
                             $('.toolbar.topbar:first').show();
                             select_cursor();
                             hideComments();
@@ -1300,6 +1316,8 @@
 
                                 var socket_manager = window['socket_manager'];
                                 socket_manager.execute_on_verified(function() {
+                                    socket_connected = true;
+                                    $('.doc-manage-btn-wrap.shared-comments').show();
                                     var n_list = socket_manager.notificationList;
                                     $('.canvasWrapper .new_comments_count').each(function(i, el) {
                                         var address = {
@@ -1650,6 +1668,7 @@
 
                 loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
+                    console.log(323232, point_uuid);
                     comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
                     comment_list.removeAttr('annotation-id');
                     $('.comment-list-container').addClass('full-discussion');
@@ -1668,7 +1687,7 @@
                             // console.log(comments, 5333);
                             renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);
                         }
-                        onAllCommentsRendered(point_uuid)
+                        onAllCommentsRendered(point_uuid);                        
                     });
                     if (comments_wrapper.hasClass('comments')) {
                         comments_wrapper.addClass('all_point_comments');
@@ -1676,6 +1695,7 @@
                 }
 
                 function onAllCommentsRendered(point_uuid) {
+                    // console.log(point_uuid, 155);
                     comments_loaded = 1;
                     setTimeout(function() {
                         if (point_uuid) {
@@ -1684,6 +1704,11 @@
                             showCommentsContainer(selected_comment_type);
                             commentText.closest('form').hide();
                         }
+                        comments_loaded = true;
+                        for(var fun of on_commments_loaded){
+                            fun();
+                        }
+                        on_commments_loaded = [];
                     }, 11);
                 }
 
@@ -1745,8 +1770,8 @@
                 });
 
                 select_comment_item = function(point_identifier, is_new) {
-                    // console.log(666,6);
-                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');
+                    console.log(point_identifier, is_new, 156);
+                    comments_wrapper.removeClass('all_point_comments').removeClass('single_point_comments');                    
                     if (!comments_loaded) {
                         loadALlCommentsOnDocument(point_identifier);
                         return;
@@ -1930,7 +1955,7 @@
                         selected_comment_type = 'notes';
                     else {
                         selected_comment_type = 'comments';
-                    }
+                    }                    
                     loadALlCommentsOnDocument();
                 });
 
