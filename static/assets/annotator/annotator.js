@@ -1557,7 +1557,14 @@
                     if (!annot_doc) {
                         return;
                     }
-                    if (annotation_mode != 1 || !annot_doc || data.point.doc_name != documentId) {
+                    var arr1 =  data.point.doc_name.split('-');
+                    arr1.splice(arr1.length -1, 1)
+                    arr1 = arr1.join('-');
+
+                    var arr2 =  documentId.split('-');
+                    arr2.splice(arr2.length -1, 1)
+                    arr2 = arr2.join('-');
+                    if (annotation_mode != 1 || arr1 != arr2) {
                         return;
                     }
                     var annot_id = comment_list.attr('annotation-id');
