@@ -117,8 +117,18 @@ var js_utils = window['js_utils'] = {
         var childPos = obj.offset();
         var parentPos = scroll_el.offset();
         var childOffset = {
-            top: scroll_el.scrollTop() + childPos.top - parentPos.top,
-            left: scroll_el.scrollLeft() + childPos.left - parentPos.left
+            top:0,
+            left:0
+        }
+        try
+        {
+            childOffset = {
+                top: scroll_el.scrollTop() + childPos.top - parentPos.top,
+                left: scroll_el.scrollLeft() + childPos.left - parentPos.left
+            }
+        }
+        catch(er){
+            console.log(er);
         }
         return childOffset;
     },
