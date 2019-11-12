@@ -58,6 +58,9 @@ class Notification(models.Model):
             'name_place': ' => ' + name_place,
             'info': post_meta
         }
+        from string import Template
+        notif = Template('$sender $template $name_place')
+        meta['text'] = notif.safe_substitute(sender=', '.join([sender['name'] for sender in senders_list]), template=notification_template, name_place=name_place.strip())
         return meta
 
     @classmethod
@@ -118,11 +121,11 @@ class Notification(models.Model):
             senders_for_all[uid], count = UserNotification.get_senders(cls, uid, notification.id)
 
         meta = notification.get_meta(obj_res)
-        text = ' ' + meta['template'] + ' ' + meta['name_place']
+        # text = ' ' + meta['template'] + ' ' + meta['name_place']
         if len(audience) > 0:
             client_object = {
                 'id': notification.id,
-                'body': text,
+                'body': meta['text'],
                 'senders': senders_for_all,
                 'notification_type': notification_type.name,
                 'address': {
@@ -142,7 +145,7 @@ class Notification(models.Model):
                 clone['audience'] = mentioned_list
                 clone['senders'] = senders_for_mention
                 clone['notification_type'] = mention_notification_type.name
-                clone['body'] = ' ' + mention_meta['template'] + ' ' + mention_meta['name_place']
+                clone['body'] = mention_meta['text']
                 events.append({'name': 'notification_received', 'data': clone, 'audience': mentioned_list})
                 emit_data = {
                     'name': event_data['name'],
@@ -164,7 +167,7 @@ class Notification(models.Model):
         if name == 'comment':
             template = 'commented on'
         elif name == 'mention':
-            template = 'mentioned you'
+            template = 'mentioned you in'
         else:
             template = name
         if not notification_type:
@@ -260,11 +263,11 @@ class UserNotification(models.Model):
                 meta = notification.get_meta(obj_res)
                 senders_for_all = {}
                 senders_for_all[request.user.id], count = UserNotification.get_senders(cls, uid, notification.id)
-                text = ' ' + meta['template'] + ' ' + meta['name_place']
+                # text = ' ' + meta['template'] + ' ' + meta['name_place']
                 client_object = {
                     'id': notification.id,
                     'count': count,
-                    'body': text,
+                    'body': meta['text'],
                     'senders': senders_for_all,
                     'notification_type': notification_type,
                     'address': {

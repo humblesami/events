@@ -33,7 +33,7 @@ class MeetingDocument(File):
             return data
 
     def notification_text(self):
-        return ' document ' + self.name + ' in ' + self.meeting.notification_text()
+        return ' Document "' + self.name + '" in ' + self.meeting.notification_text()
 
     def get_audience(self):
         res = []
@@ -97,7 +97,7 @@ class AgendaDocument(File):
         super(AgendaDocument, self).save(*args, **kwargs)
 
     def notification_text(self):
-        return ' document ' + self.name + ' in agenda topic '+self.agenda.name+ ' in ' + self.meeting.notification_text()
+        return ' Document "' + self.name + '" in Agenda topic "'+self.agenda.name+ '" in ' + self.meeting.notification_text()
 
     @property
     def breadcrumb(self):

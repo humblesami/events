@@ -10,6 +10,8 @@ from chat.models import Notification
 from mainapp.ws_methods import set_obj_attrs
 from meetings.model_files.user import Profile
 from mainapp.models import CustomModel
+from operator import itemgetter
+import bisect
 
 
 class AnnotationDocument(CustomModel):
@@ -387,6 +389,26 @@ class PointAnnotation(Annotation):
     '''
     pdf = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
 
+
+    def getDiscussionNo(self):
+        points = AnnotationDocument.objects.get(pk=self.document_id).annotation_set.filter(pointannotation__isnull=False)
+        points_list = []
+        
+        for point in points:
+            points_list.append({
+                'page' : point.pointannotation.page,
+                'y': point.pointannotation.y,
+                'body': point.pointannotation.commentannotation_set.first().body
+                })
+        points_list = sorted(points_list, key=itemgetter('page','y'))
+        toFind = {
+            'page': self.page,
+            'y': self.y,
+            'body': self.pointannotation.commentannotation_set.first().body
+            }
+        return str([item==toFind for count, item in enumerate(points_list)].index(True)+1)
+
+
     def get_meta(self):
         data = {
             'post_parent_id': self.pdf.id,
@@ -401,9 +423,12 @@ class PointAnnotation(Annotation):
         elif self.pdf.file_type == 'topic':
             parent_obj = self.pdf.agendadocument
         else:
-            return 'comment on unknown document'
+            return 'comment on unknown Document'
         txt1 = parent_obj.notification_text()
-        txt2 = ' on point '+str(self.id)
+        discussion = self.commentannotation_set.first().body
+        if len(discussion) > 20:
+            discussion = discussion[:20] + '...'
+        txt2 = ' on Discussion "' + discussion +'"'
         return txt1 + txt2
 
     def get_audience(self):
@@ -475,10 +500,10 @@ class PointAnnotation(Annotation):
                 print ('Invalid sub type')
                 continue
             point_object = {
-                'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
-                'date_time': str(point.created_at), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
-                'class': 'Annotation', 'counter': 0, 'page': point.page, 'doc_name': point.document.doc_name, 'comments': []
-            }
+                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
+                    'date_time': str(point.created_at), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
+                    'class': 'Annotation', 'counter': 0, 'page': point.page, 'doc_name': point.document.doc_name, 'comments': []
+                }
 
             comment_objects = point.commentannotation_set.all()
             comments = []

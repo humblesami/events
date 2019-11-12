@@ -81,7 +81,7 @@ class Event(CustomModel):
         super(Event, self).save(*args, **kwargs)
 
     def notification_text(self):
-        return ' meeting ' + self.name[0: 60] + '...'
+        return ' Meeting "' + self.name[0: 60] + '..."'
 
     def get_audience(self):
         res = []

@@ -644,7 +644,7 @@ export class SocketService {
             item.client_route = route + item.address.res_id;
         }
         // item.counter = 1;
-        obj_this.set_notification_text(item);
+        // obj_this.set_notification_text(item);
         if(!item.count)
         {
             item.count = 1;
