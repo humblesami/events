@@ -1259,10 +1259,12 @@ th.fc-day-header.fc-widget-header {
 .fc th {
     border-color: #f5f6fa;
 }
+.fc-month-view .fc-today, .fc-year-view .fc-today {
+	background: cornflowerblue;	
+}
 @media screen and (max-width:850px){
     .fc-toolbar .fc-center{
         display: block;
-        padding-top: 3rem;
     }
 }
 @media screen and (max-width:768px){
