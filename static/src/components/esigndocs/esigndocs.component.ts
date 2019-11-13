@@ -96,6 +96,8 @@ export class EsignDocsComponent implements OnInit {
     get_records(el, state)
     {
         let obj_this = this;
+        if(!obj_this.to_do_only)
+            localStorage.setItem(obj_this.state_name, state);
         $(el).parent().find('.active').removeClass('active');
         $(el).addClass('active');
         let states = [];
@@ -148,10 +150,56 @@ export class EsignDocsComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
-        this.get_list();
+    ngOnInit() {        
         window['app_libs'].pdf.load();
         window['app_libs'].jquery_ui.load();
-        window['json_functions'].find_activate_link('.MeetingBtnWrapper');
+        this.setStateGetRecords();
+    }
+    state_name = 'esign_state';
+    url_end = 'signdocs';
+
+    setStateGetRecords(){
+        let obj_this = this;
+        var state = 'to do';        
+        var state_name = obj_this.state_name +'/'+ this.socketService.user_data.id;
+        obj_this.state_name = state_name;
+        this.socketService.call_backs_on_mode_changed[state_name] = function(){
+            if(!window.location.toString().endsWith(obj_this.url_end))
+            {
+                return;
+            }
+            state = localStorage.getItem(state_name);            
+            if(!obj_this.socketService.admin_mode && state.startsWith('draft'))
+            {
+                state = 'to do';
+                var el1 = $('.StateFilterContainer:first').find('a[state="'+state+'"]');
+                el1 = el1[0];            
+                obj_this.get_records(el1, state);
+            }
+        }
+        setTimeout(function(){
+            if(!obj_this.to_do_only)
+            {                
+                if(localStorage.getItem(state_name))
+                {
+                    state = localStorage.getItem(state_name);                    
+                    if(!$('.StateFilterContainer:first').find('a[state="'+state+'"]').length)
+                    {
+                        state = 'to do';
+                    }
+                }
+            }
+            var el = $('.StateFilterContainer:first').find('a[state="'+state+'"]');
+            if(el.length)
+            {
+                el = el[0];
+            }
+            else{
+                state = 'to do';
+                el = $('.StateFilterContainer:first').find('a[state="'+state+'"]');
+                el = el[0];
+            }
+            obj_this.get_records(el, state);
+        }, 2)
     }
 }

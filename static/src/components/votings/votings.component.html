@@ -24,10 +24,10 @@ title="Resolutions"></app-breadcrumb>
 
 		<div *ngIf="!to_do_only" class="MeetingBtnWrapper StateFilterContainer">
 			<div class="btn-group">
-				<a (click)="get_records($event.target, 'to do')" class="btn active">To Do</a>
-				<a (click)="get_records($event.target, 'in progress')" class="btn">In Progress</a>
-				<a (click)="get_records($event.target, 'completed')" class="btn">Completed</a>
-				<a *ngIf="socketService.admin_mode" (click)="get_records($event.target, 'draft')" class="btn">Draft</a>
+                <a [attr.state]="'to do'" (click)="get_records($event.target, 'to do')" class="btn">To Do</a>
+                <a [attr.state]="'in progress'" (click)="get_records($event.target, 'in progress')" class="btn">In Progress</a>
+                <a [attr.state]="'completed'" (click)="get_records($event.target, 'completed')" class="btn">Completed</a>
+                <a [attr.state]="'draft'" *ngIf="socketService.admin_mode" (click)="get_records($event.target, 'draft')" class="btn">Draft</a>
 			</div>
 		</div>
 
