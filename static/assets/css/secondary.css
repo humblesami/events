@@ -330,6 +330,7 @@ app-breadcrumb + .router-outlet > .container > .kanban-headings {
 }
 .jumbotron{
     margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 .router-outlet.actions .jumbotron{
     margin-top: 0;
