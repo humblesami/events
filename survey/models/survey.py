@@ -147,6 +147,7 @@ class Survey(Actions):
                 'is_respondent': request.user.id in survey.get_audience(),
                 'open_date': str(survey.open_date),
                 'close_date': str(survey.close_date),
+                'question_count': survey.questions.count()
             })
         count = len(survey_list)
         surveys_json = {'records': surveys, 'total': total, 'count': count}

@@ -59,6 +59,9 @@ title="Surveys"></app-breadcrumb>
                                 <span class=" text-truncate" *ngIf="survey.description">
                                     Description: {{survey.description}}
                                 </span>
+                                <span class=" text-truncate">
+                                    {{survey.question_count}} Question<span *ngIf="survey.question_count>1">s</span>
+                                </span>
                                 <span class="text-truncate" *ngIf="survey.meeting && survey.meeting.name">
                                     Meeting: {{survey.meeting.name}}
                                 </span>
