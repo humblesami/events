@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django import forms
+from django.core.exceptions import ValidationError
+
 from survey.models import Answer, Category, Question, Response, Survey
 from meetings.model_files.event import Event
 from .actions import make_published
@@ -10,7 +12,21 @@ import nested_admin
 from mainapp.admin import BaseInlineAdmin, BaseAdmin
 
 
+class QuestionInlineFormset(forms.models.BaseInlineFormSet):
+    def clean(self):
+        count = 0
+        for form in self.forms:
+            try:
+                if form.cleaned_data:
+                    count += 1
+            except AttributeError:
+                pass
+        if count < 1:
+            raise forms.ValidationError('You must have at least one question')
+
+
 class QuestionInline(BaseInlineAdmin):
+    formset = QuestionInlineFormset
     model = Question
     exclude = ('order', 'category', 'required', 'created_at', 'created_by', 'updated_at', 'updated_by')
     ordering = ["category", ]
@@ -27,13 +43,22 @@ class CategoryInline(BaseInlineAdmin):
     exclude = ['order', ]
     extra = 1
 
+
 class SurveyForm(forms.ModelForm):
-        class Meta:
-            model = Survey
-            fields = ()
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields['meeting'].queryset = Event.objects.filter(archived=False)
+    class Meta:
+        model = Survey
+        fields = ()
+
+    def clean(self):
+        respondents = self.cleaned_data.get('respondents')
+        if not respondents:
+            raise ValidationError("There must be at least one respondent, to save survey")
+
+        return self.cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['meeting'].queryset = Event.objects.filter(archived=False)
 
 class SurveyAdmin(BaseAdmin):
     form = SurveyForm
