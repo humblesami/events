@@ -48,7 +48,7 @@ title="{{breadcrumb_title|firstToUpper}}"></app-breadcrumb>
         </div>
         <div class="row d-none d-sm-block mb-2">
             <div class="col-12">
-                <div class="mb-1" *ngFor="let profile of records">
+                <div class="profile-row" *ngFor="let profile of records">
                     <div class="kanban-profile-card">
                         <a routerLink="/profile/{{profile.id}}">
                             <div class="row">

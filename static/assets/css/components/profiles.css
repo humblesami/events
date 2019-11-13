@@ -1,7 +1,7 @@
 .kanban-profile-card{
     background: #f3f3f3;
     border: 1px solid #f1eeee;
-    padding: 4px 0 4px 6px;
+    padding: 12px 0 13px 12px;
     border-radius: 5px;
 }
 .kanban-profile-card a{
@@ -14,6 +14,9 @@
     background: #fff;
     border-radius: 50%;
     margin-right: 10px;
+}
+.profile-row{
+    margin-bottom: 0.4rem;
 }
 .profile-items{
     display: flex;
