@@ -371,6 +371,8 @@ class SignatureDoc(File, Actions):
                 )
                 obj.updated_by_id = user.id
                 obj.save()
+        self.is_published = True
+        self.save()
         return self.on_signature_assigned(user, user_ids, params)
 
     def on_signature_assigned(self, user, user_ids, params):

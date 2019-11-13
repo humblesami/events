@@ -45,7 +45,9 @@ class Voting(Actions):
     @property
     def state(self):
         user_id = get_current_user().id
-        user_pendings = 1 - self.votinganswer_set.filter(user_id=user_id).count()
+        user_pendings = 0
+        if self.is_respondent(user_id):
+            user_pendings = 1 - self.votinganswer_set.filter(user_id=user_id).count()
         total_pendings = len(self.get_audience()) - self.votinganswer_set.all().count()
         return self._calculate_action_state(total_pendings, user_pendings)
 

@@ -36,7 +36,9 @@ class Survey(Actions):
         if user_response:
             user_answers = user_response[0].answers.count()
         total_questions = self.questions.count()
-        user_pendings = total_questions - user_answers
+        user_pendings = 0
+        if self.is_respondent(user_id):
+            user_pendings = total_questions - user_answers
 
         total_pendings = len(self.get_audience()) - self.responses.all().count()
         return self._calculate_action_state(total_pendings, user_pendings)
@@ -91,8 +93,8 @@ class Survey(Actions):
             removed_respondents = list(set(survey_obj.meeting.get_audience()) - set(self.get_audience()))
         return new_added_respondets, removed_respondents
 
-    def is_respondent(self, user):
-        return user.id in self.get_audience()
+    # def is_respondent(self, user):
+    #     return user.id in self.get_audience()
 
     def latest_answer_date(self):
         """ Return the latest answer date.
