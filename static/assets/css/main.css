@@ -721,16 +721,11 @@ button.navbar-toggler {
 	list-style: none;
 	}
 
-#search-btn,
-.cursor_chooser,
-.notification-icon,
-.automanage {
+.main-user-navbar >div:not(.navbar-profile-menu) {
 	background: transparent;
 	padding: 0;
 	color: #737373;
-	outline: none;
-	font-size: 20px;
-	border: none;
+	font-size: 20px;	
 	width: 36px;
 	height: 36px;
 	display: flex;
@@ -738,8 +733,17 @@ button.navbar-toggler {
 	align-items: center;
 	cursor: pointer;
 	position: relative;
-	margin: 0 5px;
-	}
+	margin: 0 3px;
+}
+.main-user-navbar >div:not(.navbar-profile-menu):hover
+{
+    background: silver;
+}
+.main-user-navbar >div button{
+    outline: none;
+    border: none;
+    background: transparent;
+}
 .automanage a {
 	color: #737373;
 	display: block;
@@ -944,7 +948,7 @@ div#search-modal {
 .close-fixed{
 	position: fixed;
 	top: 130px;
-	right: 20px;
+	right: 8px;
 }	
 .no-search {
 	text-align: center;
@@ -1049,10 +1053,14 @@ div#search-modal {
 	display: block;
 	}
 .navbar-profile-menu {
-	padding-right: 20px;
+	/* padding-right: 20px;
 	margin-left: 15px;
 	border-left: 1px solid #ccc;
-	padding-left: 15px;
+    padding-left: 15px; */
+    
+        margin-left: 10px;
+        border-left: 1px solid #ccc;        
+        padding: 0 10px;
 	}
 .mobile-logout {
 	display: none;
@@ -1081,7 +1089,13 @@ div#search-modal {
 	width: 36px;
 	border-radius: 50%;
     overflow: hidden;
-	}
+    }
+@media screen and (max-width:576px){    
+    .navbar-profile-menu button {
+        height: 24px;
+        width: 24px;
+    }
+}
 .profile-menu.dropdown-menu .drop-down-user {
 	display: flex;
 	flex-direction: column;
@@ -1262,23 +1276,23 @@ div#search-modal {
 	height: 70px;
 	box-sizing: border-box;
 	width: 100%;
-	}
-@media (max-width: 575.98px) {
-	.nav-icon-split{ width:15px; }
+    }
+@media (max-width: 344px) {    
+    .nav-icon-split{ width:50px; }
+}
+@media (max-width: 576px) {
+	
 	.navbar-profile-menu {
     padding-right: 10px;
     margin-left: 5px;
     padding-left: 5px;
-	}
-	.nav-icon button,
-	.cursor_chooser,
-	.main-user-navbar button,
-	.automanage,
-	#search-btn {
+    }
+    
+    .main-user-navbar>div:not(.navbar-profile-menu)
+	{
 		font-size: 14px;
 		width: 22px;
-		height: 22px;
-		margin: 0 3px;
+		height: 22px;		
 		}
 	}
 /** header **/

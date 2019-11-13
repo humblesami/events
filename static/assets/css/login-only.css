@@ -450,6 +450,12 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 @media print{
 body{background:transparent none;}
 }
+.Login-form-wrapper .loginshape01,.Login-form-wrapper .loginshape02{
+    width: 17vw;
+}
+.Login-form-wrapper .container{
+    max-width: 720px;
+}
 /*! CSS Used from: /static/assets/css/secondary.css */
 body.public .router-outlet{height:100vh!important;}
 button,a{cursor:pointer;}
