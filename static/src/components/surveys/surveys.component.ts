@@ -105,7 +105,7 @@ export class SurveysComponent implements OnInit {
         // console.log(flag)
         this.heading = flag;
         if(this.httpServ.states){
-            console.log(this.httpServ.states,121221);
+            // console.log(this.httpServ.states,121221);
         }
         this.get_list();
     }
