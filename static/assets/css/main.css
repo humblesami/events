@@ -2046,10 +2046,6 @@ i.icon-folder.app-menu__icon {
 	.app-content {
 		min-width: 100%;
 		}
-	.MeetingBtnWrapper .btn-group{
-		margin-top: 1rem;
-	}
-	
 }
 .bs-btnwrap {
 	display: flex;
@@ -2109,7 +2105,7 @@ body.public .router-outlet{
 	}
 .MeetingBtnWrapper .btn-group {
     overflow: auto;
-	}
+}
 .btn-group{
 	display: flex;
 }
