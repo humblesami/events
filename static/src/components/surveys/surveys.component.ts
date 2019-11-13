@@ -12,6 +12,7 @@ declare var $:any;
 export class SurveysComponent implements OnInit {
     @Input() meeting_id: number;
     @Input() loaded_as_child: any;
+    @Input() to_do_only: any;
     
     loading = true;
     socketService: SocketService;
@@ -52,7 +53,8 @@ export class SurveysComponent implements OnInit {
     }
     prev_state = undefined;
 
-    get_list(states=[]){
+    get_list(states=['to do'])
+    {
         let obj_this = this;
         let offset = undefined;
         let limit = undefined;

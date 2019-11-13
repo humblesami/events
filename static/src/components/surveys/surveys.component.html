@@ -22,7 +22,7 @@ title="Surveys"></app-breadcrumb>
 	<div class="container">
         <app-search *ngIf="!loaded_as_child" (onsearch)="get_list()"></app-search>
 
-        <div class="MeetingBtnWrapper">
+        <div *ngIf="!to_do_only" class="MeetingBtnWrapper StateFilterContainer">
             <div class="btn-group">
                 <a (click)="get_records($event.target, 'to do')" class="btn active">To Do</a>
                 <a (click)="get_records($event.target, 'in progress')" class="btn">In Progress</a>

@@ -11,6 +11,7 @@ declare var $:any;
 })
 export class EsignDocsComponent implements OnInit {
     @Input() loaded_as_child: any;
+    @Input() to_do_only: any;
 
     records = [];
     httpService: HttpService;
@@ -112,7 +113,7 @@ export class EsignDocsComponent implements OnInit {
 
     prev_state = undefined;
     
-    get_list(states=[])
+    get_list(states=['to do'])
     {        
         const obj_this = this;
         let args = {

@@ -12,6 +12,7 @@ declare var $: any;
 })
 export class VotingsComponent implements OnInit {
     @Input() loaded_as_child: any;
+    @Input() to_do_only: any;
 
     loading = true;
     socketService: SocketService;
@@ -53,7 +54,7 @@ get_records(el, state)
 
 prev_state = undefined;
 
-get_list(states=[])
+get_list(states=['to do'])
 {
     let obj_this = this;
     let offset = undefined;
