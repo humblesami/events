@@ -40,37 +40,27 @@ export class SurveysComponent implements OnInit {
         if(!obj_this.to_do_only)
             localStorage.setItem(obj_this.state_name, state);
         $(el).parent().find('.active').removeClass('active');
-        $(el).addClass('active');
-        let states = [];
-        if (state == 'completed')
-        {
-            states = [state, 'incomplete']
-        }
-        else
-        {
-            states = [state]
-        }
-        this.httpServ.states = states;
-        obj_this.get_list(states);
+        $(el).addClass('active');        
+        obj_this.get_list(state);
     }
     prev_state = undefined;
 
-    get_list(states=['to do'])
+    get_list(state)
     {
         let obj_this = this;
         let offset = undefined;
         let limit = undefined;
-        if(obj_this.httpServ.states && states.length < 1){
-            states = obj_this.httpServ.states
+        if(!state)
+        {
+            state = localStorage.getItem(obj_this.state_name);
         }
-        if(obj_this.prev_state != states)
+        if(obj_this.prev_state != state)
         {
             obj_this.loading = true;
             offset = 0;
-            limit = 0;
         }
-        obj_this.prev_state = states;
-        let input_data = { states: states, meeting_type: obj_this.meeting_type, offset: offset, limit: limit};
+        obj_this.prev_state = state;
+        let input_data = { states: state, meeting_type: obj_this.meeting_type, offset: offset, limit: limit};
         if(obj_this.meeting_id){
             input_data['meeting_id']=obj_this.meeting_id;
         }

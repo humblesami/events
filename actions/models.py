@@ -27,7 +27,7 @@ class Actions(CustomModel):
         elif total_pendings == 0:
             return 'completed'
         elif today > close_date:
-            return 'incomplete'            
+            return 'incomplete'
         elif user_pendings > 0:
             return 'to do'
         else:
@@ -105,11 +105,14 @@ class Actions(CustomModel):
         params['status'] = not status
         return params
     
-    def get_actions_against_states(actions, states, user):
+    def get_actions_against_states(actions, state, user):
         to_be_return_actions = []
         actions = Actions.get_my_open_actions(actions, user)
-        if not states:
-            states = ['to do']
+        states = ['to do']
+        if state:
+            states = [state]
+            if state == 'completed' or state == 'incomplete':
+                states = ['completed', 'incomplete']
         for action in actions:
             if action.state in states:
                 to_be_return_actions.append(action)
