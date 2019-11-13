@@ -752,7 +752,6 @@ export class MessengerComponent implements OnInit {
                 app: 'chat',
                 model: 'message',
                 method: 'send',
-                no_loader:1,
             }
             if(input_data.attachments.length > 0)
             {
@@ -773,7 +772,8 @@ export class MessengerComponent implements OnInit {
             
             input_data = {
                 params: input_data,
-                args: args
+                args: args,
+                no_loader:1
             };           
 			obj_this.httpService.post(input_data, function (data){
                 // console.log(data);

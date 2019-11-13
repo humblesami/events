@@ -26,9 +26,9 @@
     </div>
         <!-- Attendance -->
     <div class="roster-height" [ngClass]="{'no-data': shown_users.length===0}">
-        <div class="hider" [ngClass]="{show: !available_tab && add_only}">
+        <!-- <div class="hider" [ngClass]="{show: !available_tab && add_only}">
             
-        </div>
+        </div> -->
         <div class="d-flex py-2 mb-1 bg-roster" 
             *ngFor="let obj of shown_users"            
             [ngClass]="{disabled_row: obj.current_user}">
