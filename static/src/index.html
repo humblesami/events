@@ -108,5 +108,25 @@
         })();
     </script>
     <link rel="stylesheet" type="text/css" href="static/assets/css/secondary.css" />
+    <script src="assets/rxjs-6.5.3.js"></script>
+    <script>
+    (function(){
+        function test_observables()
+        {
+            const { ReplaySubject, Observable } = rxjs;
+            const subject = new ReplaySubject(5); // buffer size is 5
+
+            function trigger(something) {
+                subject.next(something);
+            }
+
+            trigger('TEST');
+
+            subject.subscribe((x) => console.log('a: ' + x));
+            subject.subscribe((x) => console.log('b: ' + x));
+        }
+        test_observables();
+    })()
+    </script>
 </body>
 </html>
