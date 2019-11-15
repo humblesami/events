@@ -215,13 +215,15 @@ def make_login_entry(request, user):
     meta = request.META
     ip = get_client_ip(request)
     operating_system = meta.get('SESSION')
+    
+    
     time_zone = meta.get('TZ')
     agent = meta.get('HTTP_USER_AGENT')
     print('\n\n\n\n')
-    print(agent)
+    print(meta)
+    print(operating_system)
     print('\n\n\n\n')
-    browser = get_browser(agent)
-    print('\n\n\n'+browser+'\n\n\n')
+    browser = get_browser(agent)    
     path_info = meta.get('PATH_INFO')
     res = get_location_from_ip(ip)
     location = LoginLocation.objects.filter(

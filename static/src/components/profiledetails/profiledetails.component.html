@@ -441,15 +441,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
 													<b>Location</b>
 												</label>
 												<div class="label-content-info">
-                                                    <h6 *ngIf="profile_data.login_info.location.ip">
-                                                        IP Address: {{profile_data.login_info.location.ip}}
-                                                    </h6>
-                                                    <h6>
-                                                        Logitude: {{profile_data.login_info.location.longitude}}, Latitude: {{profile_data.login_info.location.latitude}}, {{profile_data.login_info.location.country}}
-                                                    </h6>
-                                                    <h6>
-                                                        Zip: {{profile_data.login_info.location.zip}}, City: {{profile_data.login_info.location.city}}, Country: {{profile_data.login_info.location.country}}
-                                                    </h6>
+                                                    <p *ngIf="profile_data.login_info.location.ip">
+                                                        IP Address : {{profile_data.login_info.location.ip}}
+                                                    </p>
+                                                    <p>
+                                                        Logitude : {{profile_data.login_info.location.longitude}}, 
+                                                        Latitude : {{profile_data.login_info.location.latitude}}
+                                                    </p>
+                                                    <p>
+                                                        Zip : {{profile_data.login_info.location.zip}}, 
+                                                        City : {{profile_data.login_info.location.city}}, 
+                                                        Country: {{profile_data.login_info.location.country}}
+                                                    </p>
 												</div>
 											</div>
 										</div>
