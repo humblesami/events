@@ -415,7 +415,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												</div>
 											</div>
 										</div>
-										<div class="col-lg-6 mb-2">
+										<div class="col-lg-6 mb-2" *ngIf="profile_data.login_info.operating_system">
 											<div class="single-input-label">
 												<label for="company">
 													<b>OS</b>
@@ -432,7 +432,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												</label>
 												<div class="label-content-info">
 													{{profile_data.login_info.browser}}
-												</div>
+                                                </div>                                                
 											</div>
 										</div>
 										<div class="col-lg-6 mb-2" *ngIf="profile_data.login_info.has_location">
@@ -441,17 +441,15 @@ title="{{profile_data.name}}"></app-breadcrumb>
 													<b>Location</b>
 												</label>
 												<div class="label-content-info">
-                                                    <div>
+                                                    <h6 *ngIf="profile_data.login_info.location.ip">
                                                         IP Address: {{profile_data.login_info.location.ip}}
-                                                    </div>
-                                                    <div class="hidden">Operating System {{profile_data.login_info.operating_system</div>
-                                                    <h4>Geo Location</h4>
-                                                    <div>
+                                                    </h6>
+                                                    <h6>
                                                         Logitude: {{profile_data.login_info.location.longitude}}, Latitude: {{profile_data.login_info.location.latitude}}, {{profile_data.login_info.location.country}}
-                                                    </div>                                                    
-                                                    <div>
+                                                    </h6>
+                                                    <h6>
                                                         Zip: {{profile_data.login_info.location.zip}}, City: {{profile_data.login_info.location.city}}, Country: {{profile_data.login_info.location.country}}
-                                                    </div>
+                                                    </h6>
 												</div>
 											</div>
 										</div>

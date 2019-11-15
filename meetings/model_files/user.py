@@ -198,42 +198,59 @@ def get_location_from_ip(ip):
 
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
-    ws_methods.threadedOperation(make_login_entry, args=(request, user))
-    # make_login_entry(request, user)
+    ws_methods.threadedOperation(make_login_entry, args=(request, user))    
+
+import httpagentparser
+
+def get_browser(agent):
+    browser = httpagentparser.detect(agent)
+    if not browser:
+        browser = agent.split('/')[0]
+    else:
+        browser = browser['browser']['name']  
+
+    return browser
 
 def make_login_entry(request, user):
     meta = request.META
     ip = get_client_ip(request)
     operating_system = meta.get('SESSION')
     time_zone = meta.get('TZ')
-    browser = meta.get('HTTP_USER_AGENT')
+    agent = meta.get('HTTP_USER_AGENT')
+    print('\n\n\n\n')
+    print(agent)
+    print('\n\n\n\n')
+    browser = get_browser(agent)
+    print('\n\n\n'+browser+'\n\n\n')
     path_info = meta.get('PATH_INFO')
     res = get_location_from_ip(ip)
     location = LoginLocation.objects.filter(
         time_zone=time_zone,
+        ip = ip,
         country=res.get('country_name'),
         city=res.get('city'),
-        zip=res.get('zip'),
+        zip=res.get('zip'),        
         region=res.get('region_name'),
         longitude=res.get('longitude'),
-        latitude=res.get('latitude'),
-        browser = res.get('browser')
+        latitude=res.get('latitude')        
     ).first()
     if not location:
         location = LoginLocation.objects.create(
             time_zone=time_zone,
+            ip = ip,
             country=res.get('country_name'),
             city=res.get('city'),
             zip=res.get('zip'),
             region=res.get('region_name'),
             longitude=res.get('longitude'),
-            latitude=res.get('latitude'),
-            browser = res.get('browser')
+            latitude=res.get('latitude')
         )
 
+    
     login_entry = LoginEntry(
         location_id=location.id,
         user_id=user.id,
+        browser = browser,
         name=str(user.id) + '-' + ip,
         operating_system=operating_system,
     )
