@@ -346,7 +346,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.surveys, 'survey')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let sur of meeting_object.surveys.slice(start_indices['survey'], ending_indices['survey'])">
                     <div class="kanban-card position-relative">
                         <div class="kanban-meeting-info">
@@ -398,7 +398,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 </div>
             </div>
 	
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let vote of meeting_object.votings.slice(start_indices['voting'], ending_indices['voting'])">
                     <div class="kanban-card position-relative">
                         <div class="kanban-meeting-info">
