@@ -16,6 +16,10 @@ from django.utils.translation import gettext_lazy as _
 from mainapp.settings import server_base_url, ip2location
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
+
+from django.dispatch import receiver
+from django.contrib.auth.signals import user_logged_in
+
 from mainapp.models import CustomModel
 
 TWO_FACTOR_CHOICES = (
@@ -132,10 +136,6 @@ def create_group(obj, group_name):
         return errorMessage
 
 
-from django.dispatch import receiver
-from django.contrib.auth.signals import user_logged_in
-
-
 class LoginEntry(CustomModel):
     action = models.CharField(max_length=64, null=True)
     ip = models.GenericIPAddressField(null=True)
@@ -178,7 +178,9 @@ class LoginEntry(CustomModel):
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
     meta = request.META
-    ip = meta.get('REMOTE_ADDR')
+    ip = get_client_ip(request)
+    print('--------------------------------he-------------------------')
+    print('\n\n\n\n'+ ip+ '\n\n\n\n')
     session = meta.get('SESSION')
     path_info = meta.get('PATH_INFO')
     login_entry = LoginEntry(ip=ip, user_id=user.id, session=session)
@@ -186,6 +188,14 @@ def user_logged_in_callback(sender, request, user, **kwargs):
         login_entry.path_info = path_info
     login_entry.save()
 
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 # @receiver(user_logged_out)
 # def user_logged_out_callback(sender, request, user, **kwargs):

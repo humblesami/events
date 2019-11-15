@@ -9,9 +9,14 @@ django-nested-admin==3.2.3
 django-currentuser==0.4.2
 fpdf==1.7.2
 pypdf2==1.26.0
-pillow==3.4.1
 django-pwa==1.0.5
-#sudo apt-get update
-#sudo apt-get install build-essential libpoppler-cpp-dev pkg-config python-dev
-pdftotext
 django-seed==0.1.9
+
+#sudo apt update -y
+#sudo apt install -y unoconv
+#sudo apt install build-essential libpoppler-cpp-dev pkg-config python-dev
+pdftotext==2.1.2
+
+#sudo apt install libjpeg8-dev zlib1g-dev
+pillow==3.4.1
+
