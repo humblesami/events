@@ -1,24 +1,23 @@
-import io
-import json
 import os
-import base64
 import re
-import subprocess
+import base64
 import urllib
-from urllib.request import urlopen
-
+import subprocess
 from PIL import Image
-from django.apps import apps
-from django.core.files.temp import NamedTemporaryFile
 from fpdf import FPDF
 from PyPDF2 import PdfFileReader
-from mainapp import settings, ws_methods
+from urllib.request import urlopen
 
 from django.db import models
-from mainapp.models import CustomModel
+from django.db.models import Q
+
+from django.apps import apps
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
-from django.db.models import Q
+from django.core.files.temp import NamedTemporaryFile
+
+from mainapp.models import CustomModel
+from mainapp import settings, ws_methods
 
 
 def validate_file_extension(value):

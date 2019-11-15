@@ -1,5 +1,5 @@
 (function(){
-    const { Observable } = rxjs;
+    // const { Observable } = rxjs;
     window['dynamic_files'] = {};
     
     function load_lib(obj_this, on_load){        
