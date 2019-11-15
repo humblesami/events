@@ -165,8 +165,7 @@ class LoginEntry(models.Model):
         entry = LoginEntry.objects.filter(user_id=user_id).order_by('-id')
         if entry:
             entry = entry[0]
-            user = Profile.objects.get(pk=user_id)
-            location ={
+            location = {
                 'city': entry.location.city,
                 'country': entry.location.country,
                 'region': entry.location.region,
@@ -175,11 +174,14 @@ class LoginEntry(models.Model):
                 'latitude': entry.location.latitude,
                 'ip': entry.location.ip,
             }
+
             entry = {
                 'operating_system': entry.operating_system,
                 'location': location,
                 'login_time': str(entry.login_time)
             }
+            if location['country'] or location ['longitude']:
+                entry['has_location'] = 1
             return entry
         else:
             return 'No login info'

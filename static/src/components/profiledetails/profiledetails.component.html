@@ -443,12 +443,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												<div class="label-content-info" *ngIf="profile_data.login_info.location.ip">
 													{{profile_data.login_info.location.ip}}
 												</div>
-												<div class="label-content-info" *ngIf="!profile_data.login_info.ip">
+												<div class="label-content-info" *ngIf="!profile_data.login_info.location.ip">
 													Not Login Yet!
 												</div>
 											</div>
 										</div>
-										<div class="col-lg-6 mb-2">
+										<div class="col-lg-6 mb-2" *ngIf="profile_data.login_info.has_location">
 											<div class="single-input-label">
 												<label for="company">
 													<b>Location</b>
@@ -462,8 +462,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                                     <div>
                                                         Zip: {{profile_data.login_info.location.zip}}, City: {{profile_data.login_info.location.city}}, Country: {{profile_data.login_info.location.country}}
                                                     </div>
-                                                    
-                                                    
 												</div>
 											</div>
 										</div>
