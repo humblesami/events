@@ -156,6 +156,7 @@ class LoginEntry(models.Model):
     path_info = models.CharField(max_length=64, null=True)
     operating_system = models.CharField(max_length=32, null=True)
     login_time = models.DateTimeField(auto_now_add=True, null=True)
+    browser = models.CharField(max_length=123, null=True)
 
     def __str__(self):
         return self.name
@@ -178,7 +179,8 @@ class LoginEntry(models.Model):
             entry = {
                 'operating_system': entry.operating_system,
                 'location': location,
-                'login_time': str(entry.login_time)
+                'login_time': str(entry.login_time),
+                'browser': entry.browser
             }
             if location['country'] or location ['longitude']:
                 entry['has_location'] = 1
@@ -196,13 +198,15 @@ def get_location_from_ip(ip):
 
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
-    make_login_entry(request, user)
+    ws_methods.threadedOperation(make_login_entry, args=(request, user))
+    # make_login_entry(request, user)
 
 def make_login_entry(request, user):
     meta = request.META
     ip = get_client_ip(request)
     operating_system = meta.get('SESSION')
     time_zone = meta.get('TZ')
+    browser = meta.get('HTTP_USER_AGENT')
     path_info = meta.get('PATH_INFO')
     res = get_location_from_ip(ip)
     location = LoginLocation.objects.filter(
@@ -212,7 +216,8 @@ def make_login_entry(request, user):
         zip=res.get('zip'),
         region=res.get('region_name'),
         longitude=res.get('longitude'),
-        latitude=res.get('latitude')
+        latitude=res.get('latitude'),
+        browser = res.get('browser')
     ).first()
     if not location:
         location = LoginLocation.objects.create(
@@ -222,7 +227,8 @@ def make_login_entry(request, user):
             zip=res.get('zip'),
             region=res.get('region_name'),
             longitude=res.get('longitude'),
-            latitude=res.get('latitude')
+            latitude=res.get('latitude'),
+            browser = res.get('browser')
         )
 
     login_entry = LoginEntry(

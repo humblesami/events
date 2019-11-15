@@ -269,6 +269,12 @@ def check_auth_token(request,values):
 
     return user.id
 
+import threading
+
+def threadedOperation(operation, args):
+    obj = threading.Thread(target=operation, args=args)
+    obj.start()
+
 
 def document_thread(doc):
     DocumentThread(doc).start()
