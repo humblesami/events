@@ -440,8 +440,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												<label for="company">
 													<b>IP Address</b>
 												</label>
-												<div class="label-content-info" *ngIf="profile_data.login_info.ip">
-													{{profile_data.login_info.ip}}
+												<div class="label-content-info" *ngIf="profile_data.login_info.location.ip">
+													{{profile_data.login_info.location.ip}}
 												</div>
 												<div class="label-content-info" *ngIf="!profile_data.login_info.ip">
 													Not Login Yet!
@@ -454,7 +454,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
 													<b>Location</b>
 												</label>
 												<div class="label-content-info">
-													Punjab Lahore
+                                                    <div class="hidden">Operating System {{profile_data.login_info.operating_system</div>
+                                                    <div>
+                                                        Geo Location :
+                                                        Logitude: {{profile_data.login_info.location.longitude}}, Latitude: {{profile_data.login_info.location.latitude}}, {{profile_data.login_info.location.country}}
+                                                    </div>                                                    
+                                                    <div>
+                                                        Zip: {{profile_data.login_info.location.zip}}, City: {{profile_data.login_info.location.city}}, Country: {{profile_data.login_info.location.country}}
+                                                    </div>
+                                                    
+                                                    
 												</div>
 											</div>
 										</div>
