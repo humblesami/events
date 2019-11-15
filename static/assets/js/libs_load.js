@@ -1,4 +1,5 @@
 (function(){
+    const { Observable } = rxjs;
     window['dynamic_files'] = {};
     
     function load_lib(obj_this, on_load){        
@@ -53,6 +54,64 @@
     }
     
     var app_libs = window['app_libs'] = {
+        test:{
+            lib_type: 'test',
+            script_paths:[
+                "/static/assets/test.js",                
+            ],
+            style_paths:[            
+            ],
+            call_backs: [],
+            subscriber : function(observer){
+                let obj_this = app_libs.pdf;
+                if(!obj_this.status)
+                {
+                    obj_this.call_backs.push(function(data){
+                        observer.next(data);
+                    });
+                    obj_this.status = 'loading';
+                    for(var link_path of obj_this.style_paths)
+                    {
+                        var link  = document.createElement('link');
+                        link.rel  = 'stylesheet';
+                        link.type = 'text/css';
+                        link.href = link_path;
+                        link.media = 'all';
+                        document.head.appendChild(link);
+                    }
+                    var len = obj_this.script_paths.length;
+                    for(var script_path of obj_this.script_paths)
+                    {
+                        var script = document.createElement('script');                
+                        script.onload = function(){
+                            obj_this.loaded += 1;
+                            if(obj_this.loaded == len)
+                            {
+                                obj_this.status = 'loaded';
+                                for(let fun of obj_this.call_backs)
+                                {
+                                    fun('Loaded on first load');
+                                }
+                                obj_this.call_backs = [];
+                            }
+                        };
+                        script.src = script_path;
+                        document.body.appendChild(script);
+                    }
+                }
+                else{
+                    if(obj_this.status == 'loaded')
+                    {
+                        observer.next('Already loaded');
+                    }
+                    else{
+                        obj_this.call_backs.push(function(data){
+                            observer.next('Loaded for later subscribler');
+                        });
+                    }
+                }
+            },
+        },
         moment:{
             script_paths:[
                 "static/assets/libs/js/moment.js"
@@ -194,7 +253,7 @@
                 var obj_this = this;
                 app_libs.jquery_ui.load(function(){
                     load_lib(obj_this, on_load);
-                });                
+                });
             }
         },
         bootbox:{
@@ -225,7 +284,7 @@
             script_paths : ['static/assets/js/mask.js'],
             style_paths : [],
             load: function(on_load){            
-                var obj_this = this;    
+                var obj_this = this;
                 load_lib(obj_this, on_load);
             }
         },
@@ -242,9 +301,14 @@
     
     for(var key in app_libs)
     {
-        app_libs[key].status = undefined;
-        app_libs[key].loaded = 0;
-        app_libs[key].call_backs = [];
+        let obj_this = app_libs[key];
+        obj_this.status = undefined;
+        obj_this.loaded = 0;
+        obj_this.call_backs = [];
+        // if(obj_this.subscriber)
+        // {
+        //     obj_this.load_observable = new Observable(obj_this.subscriber);
+        // }
     }
     app_libs.jquery_ui.load();
     app_libs.signature.load();
@@ -258,5 +322,5 @@
             window['bootbox'] = bootbox;
         }
     });
-    app_libs.moment.load();    
+    app_libs.moment.load();
 })()
