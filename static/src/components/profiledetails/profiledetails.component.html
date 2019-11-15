@@ -421,30 +421,17 @@ title="{{profile_data.name}}"></app-breadcrumb>
 													<b>OS</b>
 												</label>
 												<div class="label-content-info">
-													Windows
+                                                    {{profile_data.login_info.operating_system}}
 												</div>
 											</div>
 										</div>
-										<div class="col-lg-6 mb-2">
+										<div class="col-lg-6 mb-2" *ngIf="profile_data.login_info.browser">
 											<div class="single-input-label">
 												<label for="company">
 													<b>Browser</b>
 												</label>
 												<div class="label-content-info">
-													Chrome
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 mb-2">
-											<div class="single-input-label">
-												<label for="company">
-													<b>IP Address</b>
-												</label>
-												<div class="label-content-info" *ngIf="profile_data.login_info.location.ip">
-													{{profile_data.login_info.location.ip}}
-												</div>
-												<div class="label-content-info" *ngIf="!profile_data.login_info.location.ip">
-													Not Login Yet!
+													{{profile_data.login_info.browser}}
 												</div>
 											</div>
 										</div>
@@ -454,9 +441,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
 													<b>Location</b>
 												</label>
 												<div class="label-content-info">
-                                                    <div class="hidden">Operating System {{profile_data.login_info.operating_system</div>
                                                     <div>
-                                                        Geo Location :
+                                                        IP Address: {{profile_data.login_info.location.ip}}
+                                                    </div>
+                                                    <div class="hidden">Operating System {{profile_data.login_info.operating_system</div>
+                                                    <h4>Geo Location</h4>
+                                                    <div>
                                                         Logitude: {{profile_data.login_info.location.longitude}}, Latitude: {{profile_data.login_info.location.latitude}}, {{profile_data.login_info.location.country}}
                                                     </div>                                                    
                                                     <div>
