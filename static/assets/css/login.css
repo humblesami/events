@@ -17,16 +17,15 @@ body {
 .Login-form-wrapper .loginshape01,.Login-form-wrapper .loginshape02{
     width: 17vw;
 }
-.Login-form-wrapper .container{
+
+/* .Login-form-wrapper .container{
     max-width: 720px;
-}
+} */
 /* .login-form-div form{
     display: table-cell;
     vertical-align: middle;
 } */
-.login-form {
-	width: 500px;
-}
+
 .meet-logo {
 	text-align: center;
 	margin-bottom: 1.5rem;/* display: none; */
@@ -71,9 +70,7 @@ body {
  color: #FFFFFF !important;
  opacity: 1;
 }
-.login-form-div .form-group {
-	margin-bottom: 30px;
-}
+
  input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
 -webkit-box-shadow: 0 0 0px 1000px white inset !important;
 }
@@ -141,48 +138,50 @@ body {
 	font-weight: bold;
 	padding-top: 10px;
 }
-.login-logo-image{
-    width: 27vw;
-}
-@media (min-width: 800px) and (max-width: 1200px) {
-.Login-form-wrapper:before {
-	display: block;
-}
-}
- @media (min-width: 768px) and (max-width: 991px) {
-.meet-logo, .login-form-div .form-group {
-	margin-bottom: 1rem;
-}
-}
- @media (max-width: 767px) {
-.meet-logo, .login-form-div .form-group {
-    margin-bottom: 1rem;    
-}
-.login-logo-image{
-    width: 60%;
-}
-.login-form {
-	width: 250x;
-}
-}
-@media (max-width: 420) {    
-    .login-logo-image{
-        width: 90%;
-    }
-}
+
 .img-key {
 	padding: 0px 40px;
 	max-width: 100%;
 }
-.max-content{
-    width: 50vw;
-    max-width: max-content;
+.hide-small{
+    padding-left: 5vw;
+}
+.login-image{
+    width: 37vw;
 }
 
 .login-logo-image{
-    max-width: 100%;
+    width: 80%;
 }
-.login-image{
-    width: 50vw;
-    max-width: max-content;
+/* .form-container{
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding-top:5px;
+} */
+
+@media (min-width: 800px) and (max-width: 1200px) {
+    .Login-form-wrapper:before {
+        display: block;
+    }
+}
+@media (min-width: 768px) {
+    .container-wrapper{
+        padding-left:14vw;
+    }
+}
+@media (max-width: 767px) {
+    .Login-form-wrapper .hide-small{
+        display: none;    
+    }    
+    .login-logo-image{
+        width: 70%;
+    }
+    .login-form {
+        width: 250x;
+    }    
+}
+@media (max-width: 420px) {    
+    .login-logo-image{
+        width: 90%;
+    }
 }
