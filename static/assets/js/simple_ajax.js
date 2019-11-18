@@ -9,6 +9,7 @@ function dn_rpc_object(options) {
         console.log('No data and arguments for request ',options);
         return;
     }
+    console.log(site_config.server_base_url, req_url);
     var input_data = options.data;    
     if (input_data.no_loader)
         options.no_loader = 1;
