@@ -9,6 +9,10 @@ var site_config_live = {
     app_name : 'BoardSheet',
 	show_logs : []
 };
+if(window.location.origin.indexOf('localhost') == -1)
+{
+    site_config_live.site_url = site_config_live.server_base_url = window.location.origin + '';
+}
 
 var site_config_local = {
 	server_base_url:'http://localhost:8000',
