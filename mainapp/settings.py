@@ -28,7 +28,12 @@ SECRET_KEY = 'd9phtmv5b^cqr$daog097))s@$776gvk$-ca&shxt&re*r31bn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['34.66.182.85','172.16.21.170', '172.16.21.171', 'localhost', 'boardsheet.com', 'www.boardsheet.com']
+ALLOWED_HOSTS = [
+    '34.66.182.85','172.16.21.170', 
+    'localhost', 
+    'boardsheet.com', 'www.boardsheet.com',
+    'meetvue.com', 'www.meetvue.com'
+]
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
