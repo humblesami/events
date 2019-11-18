@@ -158,21 +158,20 @@ body {
     border-radius: 10px;
     padding-top:5px;
 } */
-
 @media (min-width: 800px) and (max-width: 1200px) {
     .Login-form-wrapper:before {
         display: block;
-    }
+    }    
 }
 @media (min-width: 768px) {
     .container-wrapper{
         padding-left:14vw;
     }
+    .Login-form-wrapper .hide-small{
+        display: block;    
+    }
 }
 @media (max-width: 767px) {
-    .Login-form-wrapper .hide-small{
-        display: none;    
-    }    
     .login-logo-image{
         width: 70%;
     }

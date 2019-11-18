@@ -8,8 +8,10 @@
     });
     var form  = $('.login-form:first');
     form.submit(function(e){
+        var logged_in = false;
         e.preventDefault();
         form.find('button[type="submit"]:first').attr('disabled', 'disabled');
+        $('#server-wait').show();
         var input_data = {
             args:{
                 app: 'authsignup',
@@ -26,7 +28,10 @@
             url: '/rest/public',
             data: input_data
         }
+        $('#server-wait').show();
         options.onSuccess = function(data){
+            logged_in = true;
+            $('#server-wait').show();
             form.find('button[type="submit"]:first').removeAttr('disabled');
             // console.log(data);
             if(data.uuid && data.auth_type && data.status)
@@ -50,7 +55,14 @@
         };
         options.onComplete = function(data){
             form.find('button[type="submit"]:first').removeAttr('disabled');
+            if(logged_in)
+            {
+                $('#server-wait').show();
+            }
         };
         window['dn_rpc_object'](options);
-    });    
+        $('#server-wait').show();
+    });
+    $('.Login-form-wrapper').css('over-flow', 'auto');
+    $('.login-logo-image').show();
 })()

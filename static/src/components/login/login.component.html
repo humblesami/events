@@ -1,5 +1,16 @@
 ﻿<div class="router-outlet Login-form-wrapper" *ngIf="page_loaded">
-        <link rel="stylesheet" href="/static/assets/css/login.css" />
+    <style>
+    .Login-form-wrapper{
+        overflow: hidden;
+    }
+    .Login-form-wrapper .hide-small{
+        display: none;    
+    }
+    .login-logo-image{
+        display: none;
+    }
+    </style>
+    <link rel="stylesheet" href="/static/assets/css/login.css" />
     <span class="loginshape01"><img async class="img-fluid" src="static/assets/images/loginshape-01.png" /> </span>
     <span class="loginshape02"><img async class="img-fluid" src="static/assets/images/loginshape-02.png" /> </span>
     <span class="loginshape03"><img async class="img-fluid" src="static/assets/images/loginshape-03.png" /> </span>
