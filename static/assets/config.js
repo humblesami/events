@@ -5,7 +5,7 @@ var site_config_live = {
 	server_db : 'demo1',
 	site_url: 'https://boardsheet.com',
 	live : true,
-    chat_server : 'https://www.chat.brainpbx.com',
+    chat_server : 'https://chat.brainpbx.com',
     app_name : 'BoardSheet',
 	show_logs : []
 };
