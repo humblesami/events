@@ -1,9 +1,9 @@
 
 var chat_ser_port = 3000;
 var site_config_live = {
-	server_base_url:'https://meetvue.com',
+	server_base_url:'http://boardsheet.com',
 	server_db : 'demo1',
-	site_url: 'https://meetvue.com',
+	site_url: 'http://boardsheet.com',
 	live : true,
     chat_server : 'https://chat.brainpbx.com',
     app_name : 'MeetingPoint',
