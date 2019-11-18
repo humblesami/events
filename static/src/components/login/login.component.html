@@ -8,9 +8,7 @@
         <div class="col-sm-10 col-md-5 col-xl-5">
             <div class="login-form-div">
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="text-center">
-                    <a href="/#/" class="login-logo">
-                        <img async class="img-fluid" src="/static/assets/images/logo.svg"  style="width: 250px;"/>
-                    </a>
+                    <img class="login-logo-image" src="/static/assets/images/logo.svg" src_url="/static/assets/images/logo.svg" />
                     <div class="member-login-box">
                         <img async src="static/assets/images/member-icon.png" />
                         <span>Member Login</span>
@@ -31,12 +29,10 @@
                         <a class="forgot" routerLink="/forgot-password">Forgot Password?</a>
                     </div>                    
                 </form>
-        
-                
             </div>
         </div>
-        <div class="col-md-7 text-center d-none d-md-block d-lg-block">
-            <img async class="img-key" src="static/assets/images/login-vector.png" />  
+        <div class="col-md-7 hide-small">
+            <img class="login-image" async src="/static/assets/images/login-vector.png" />  
         </div>
     </div>
 </div>

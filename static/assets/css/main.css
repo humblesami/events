@@ -418,6 +418,9 @@ a.kanban-committees-info-box-name {
 	border-radius: 3px;
 	}
 @media (max-width: 767px) {
+    .hide-small{
+        display: none;    
+    }
 	h1,
 	.h1 {
 		font-size: 1rem;
