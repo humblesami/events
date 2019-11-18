@@ -61,12 +61,6 @@ else
     }
 }
 
-
-if(current_site_base_url.indexOf('www.') > -1)
-{
-	site_config.server_base_url = site_config.server_base_url.replace('https://','https://www.')
-}
-
 site_config.site_url = current_site_base_url;
 window['server_url'] = site_config.server_base_url;
 site_config.public_urls = ['login']
