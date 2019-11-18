@@ -1,9 +1,9 @@
 
 var chat_ser_port = 3000;
 var site_config_live = {
-	server_base_url:'https://www.boardsheet.com',
+	server_base_url:'https://boardsheet.com',
 	server_db : 'demo1',
-	site_url: 'https://www.boardsheet.com',
+	site_url: 'https://boardsheet.com',
 	live : true,
     chat_server : 'https://www.chat.brainpbx.com',
     app_name : 'BoardSheet',
