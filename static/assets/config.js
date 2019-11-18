@@ -11,7 +11,7 @@ var site_config_live = {
 };
 
 var site_config_local = {
-	server_base_url:'http://localhost:8000',	
+	server_base_url:'http://localhost:8000',
 	live : false,
 	site_url: '',
     chat_server : 'http://localhost:'+chat_ser_port,    

@@ -14,7 +14,7 @@
     }
     function verifyUserToken() {
         if(is_public_route())
-        {            
+        {
             return;
         }
         var user_cookie = localStorage.getItem('user');
@@ -127,7 +127,7 @@
         {
             if(wl_str.indexOf('4200') == -1)
             {
-                window.location = window['site_config'].server_base_url+'/user/login';
+                window.location = '/user/login';
             }
             else{
                 window.location = '/#/login';
