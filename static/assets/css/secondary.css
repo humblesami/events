@@ -41,14 +41,6 @@ a.DocumentWrapper:hover{
     border: 2px solid #ffffff;
 }
 
-.kanban-profiles-user-img{
-    border-radius: 50%;
-    width: 55px;
-    height: 55px;
-    overflow: hidden;
-    background: #fff;
-    border: 1px solid #ddd;
-}
 .kanban-profiles-user-info-box{
     background: #f3f3f3;
 }

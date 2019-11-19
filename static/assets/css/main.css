@@ -561,9 +561,16 @@ a.kanban-committees-info-box-name {
 	}
 
 
-.kanban-profiles-user-img {
-	margin-right: 15px;
-	}
+.kanban-profiles-user-img {    
+    margin-right: 15px;
+    border: 1px solid #ddd;
+}
+.kanban-profiles-user-img img{    
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    overflow: hidden;    
+}
 .kanban-profiles-user-info-box {
 	display: flex;
 	background: #fdfdfd;

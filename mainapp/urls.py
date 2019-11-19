@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
+from django.http import HttpResponse
 
 from mainapp import views
 from .import rest_api
@@ -46,10 +47,16 @@ urlpatterns = [
     url(r'^survey/', include('survey.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url('auth-code/', include('authcode.urls')),
-    url(r'^mail/', include('emailthread.urls')),
+    url(r'^mail/', include('emailthread.urls')),    
     url(r'^chat/', include('chat.urls')),
+    url(r'.*\.gz$', java_script),
 
 ] # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+def java_script(request):
+    filename = request.path.strip("/")
+    data = open(filename, "rb").read()
+    return HttpResponse(data, mimetype="application/javascript")
 
 admin.site.site_header = 'BoardSheet'
 admin.site.site_title = "BoardSheet"
