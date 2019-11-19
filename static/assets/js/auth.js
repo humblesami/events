@@ -1,4 +1,4 @@
-(function(){
+(function(){    
     var wl = window.location;
     var wl_str = wl.toString();
     window['auth_js'] ={
