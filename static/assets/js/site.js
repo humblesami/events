@@ -307,7 +307,6 @@ var site_functions = {
 };
 
 (function(){
-
     $('body').click(function(event){
         if($(event.target).closest('.main-nav-header [data-toggle="sidebar"]').length)
         {

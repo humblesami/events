@@ -192,7 +192,7 @@ export class SocketService {
             obj_this.socket.off('server_event');
             // console.log(343232);
             authorized_user.socket_id = obj_this.socket.id;
-            authorized_user.web_server_url = obj_this.site_config.server_base_url;
+            authorized_user.web_server_url = window.location.origin.toString();
             var socket_error = "Socket connection not established at "+ obj_this.site_config.chat_server + ' because ';
             var options = {
                 url: obj_this.site_config.chat_server+'/verify_socket',
