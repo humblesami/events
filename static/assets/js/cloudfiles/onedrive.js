@@ -11,8 +11,25 @@ $(function(){
             extentions = ".png,.jpg,.jpeg";
         }
         console.log(file_type);
+        var one_keys = {
+            'meetvue.com' : "df45ae45-68bd-4568-a473-4159a1b16fc1",
+            'boardsheet.com' : "edcfe98f-e101-4041-9510-0a846e0d3a0d",
+            'localhost:8000' : "df45ae45-68bd-4568-a473-4159a1b16fc1",
+        }
+        var api_key = '';
+        for(var key in one_keys)
+        {
+           if(window.location.origin.toString().indexOf(key) > - 1) 
+           {
+               api_key =  one_keys[key];
+               break;
+           }
+        }
+        if(!api_key){return}
+        
         var odOptions = {
-            clientId: "df45ae45-68bd-4568-a473-4159a1b16fc1",
+            // df45ae45-68bd-4568-a473-4159a1b16fc1
+            clientId: api_key,
             action: "download",
             multiSelect: true,
             openInNewWindow: true,
