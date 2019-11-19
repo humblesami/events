@@ -15,10 +15,12 @@ body,
 .router-outlet {
 	height: calc(100vh - 110px);
 	overflow-x: hidden;
-	overflow-y: overlay;
-	}
+    overflow-y: overlay;
+    padding-bottom: 30px;
+    }    
 .router-outlet .router-outlet {
-	height: auto;
+    height: auto;
+    padding-bottom: 0;
 	}
 body {
 	font-family: "Roboto-Condensed";
