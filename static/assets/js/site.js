@@ -306,6 +306,29 @@ var site_functions = {
     }
 };
 
+(function(){
+
+    $('body').click(function(event){
+        if($(event.target).closest('.main-nav-header [data-toggle="sidebar"]').length)
+        {
+            $('body.user').toggleClass('sidenav-toggled');            
+        }
+        else{
+            $('body.user').addClass('sidenav-toggled');
+        }
+    });
+
+    $("body").on("click", ".top-search-btn", function() {
+        if($(this).hasClass('user'))
+        {
+            $(".serach-input")
+            .toggleClass("active")
+            .focus();
+            $(".btn-search").toggleClass("animate");
+            $(".serach-input").val("");
+        }
+    });
+})()
 
 function addMainEventListeners() {
     window.addEventListener("dragover",function(e){

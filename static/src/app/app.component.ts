@@ -49,29 +49,7 @@ export class AppComponent {
     odoo_build = window['odoo'] ? 1 : undefined;
     ngOnInit() {
         var obj_this = this;
-        window.onscroll = function() {obj_this.scrollFunction()};
-        var treeviewMenu = $('.app-menu');
-        $('body').on('click', '.main-nav-header [data-toggle="sidebar"]', function(event){            
-            if (!$('body.user').hasClass('sidenav-toggled'))            
-            {
-                $('body.user').addClass('sidenav-toggled');
-            }
-        });
-
-        $('body').click(function(event){            
-            if ($('body.user').hasClass('sidenav-toggled'))
-            {
-                $('body.user').removeClass('sidenav-toggled');
-            }
-        });
-
-        $("body").on("click", ".top-search-btn", function() {
-            $(".serach-input")
-                .toggleClass("active")
-                .focus();
-            $(".btn-search").toggleClass("animate");
-            $(".serach-input").val("");
-        });
+        window.onscroll = function() {obj_this.scrollFunction()};        
         // console.log(5534);
         $(function(){
             window['functions'].hideLoader('Site Resources');
