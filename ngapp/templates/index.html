@@ -4,7 +4,65 @@
 <head>    
     <base href="/#/" />
     <meta charset="utf-8">
-
+    <script>
+        (function(){
+            function is_public_route(url){
+                if(!url)
+                {
+                    url = get_cpath_name();
+                }
+                let public_routes = [
+                    '/user/login',
+                    '/user/forgot-password',
+                    '/user/reset-password',
+                    '/login','/forgot-password',
+                    '/logout','/reset-password',
+                    '/token-sign-doc',
+                    '/thanks',
+                    '/feedback',
+                    '/public-voting/',
+                    '/public-meeting/',
+                ];
+                for (var i in public_routes)
+                {
+                    if (url.startsWith(public_routes[i]))
+                    {
+                        localStorage.removeItem('user');
+                        add_public_class();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            function get_cpath_name() {
+                var wl = window.location;
+                if(wl.toString().indexOf('localhost') > -1)
+                {
+                    is_local_host = true;
+                }
+                if (wl.hash) {
+                    window['pathname'] = wl.hash.substr(1, wl.hash.length);
+                } else {
+                    window['pathname'] = wl.toString().replace(wl.origin, '');
+                }
+                return window['pathname'];
+            }
+            if(is_public_route())
+            {
+                return;
+            }
+            var user_cookie = localStorage.getItem('user');
+            if (user_cookie) {
+                var last_activity = localStorage.getItem('last_activity');
+                if(!last_activity)
+                {
+                    go_to_login();
+                    return;
+                }
+            }
+            console.log(Date()+'-' + new Date().getMilliseconds());
+        })()    
+    </script>
     <link rel="manifest" href="/static/assets/manifest.json">
     <link rel="apple-touch-icon" href="/static/assets/test.jpg" sizes="160x160">
     <meta name="theme-color" content="#0A0302">
@@ -12,39 +70,18 @@
     <meta name="apple-mobile-web-app-title" content="Board Sheet">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <script type="text/javascript">
-        (function(){            
-            var service_worker = localStorage.getItem('service_worker');
-            // if (!service_worker && 'serviceWorker' in navigator) {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js', {
-                    
-                }).then(function (registration) {
-                    localStorage.setItem('service_worker', 1);
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function (err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            }
-        })()        
-    </script>
-    <title>Boardsheet</title>
-    <meta name="description" content="Boardsheet">
-    <meta name="theme-color" content="#2F3BA2" />
+    <meta name="description" content="Boardsheet">    
+
 	<title>Boardsheet</title>
 	<link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
-    <script>
-    console.log(Date()+'-' + new Date().getMilliseconds());
-    </script>
     <script type="text/javascript" src="static/assets/libs/jquery/jquery-2.2.4.js"></script>
-    <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
+    <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>    
 </head>
 <body class="app sidebar-mini rtl sidenav-toggled public">
     <script type="text/javascript" src="static/assets/js/auth.js"></script>
     <link rel="stylesheet" type="text/css" href="static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
-
+    
     <div id="server-wait"
         style="position: absolute;
             z-index: 27;
@@ -77,13 +114,14 @@
 
     <script type="text/javascript" src="static/assets/js/utils.js"></script>
     <script type="text/javascript" src="static/assets/js/color.js"></script>
+    <script type="text/javascript" src="assets/rxjs-6.5.3.js"></script>
     <script type="text/javascript" src="static/assets/js/libs_load.js"></script>
     <script type="text/javascript" src="/static/assets/libs/bootstrap/popper.min.js"></script>
     <script type="text/javascript" src="/static/assets/libs/bootstrap/bootstrap-4.1.1.js"></script>
-
+    
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet1.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet.css" />
-	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />
+	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />	
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-awsome-5.5.0.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-roboto-3.4.5.7.9.css" />
 
@@ -96,12 +134,12 @@
 	<script>
 		window["io"] = io;
     </script>
-    <app-root></app-root>
+    <app-root></app-root>    
 
 	<script type="text/javascript" src="static/assets/js/custom_chart.js"></script>
 	<script type="text/javascript" src="static/assets/js/popup.js"></script>
     <script src="static/assets/js/mask.js"></script>
-
+        
 
     <div class="onedrive_iframe" style="display:none">
         <iframe src="">
