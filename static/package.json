@@ -4,7 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve --host 0.0.0.0",
-        "build": "ng build --prod=true && gzipper --verbose ./build",
+        "build": "ng build --prod=true && gzip build/main.js",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
