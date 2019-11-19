@@ -11,6 +11,7 @@ declare var $:any;
 
 export class AppComponent {        
     userService: UserService;
+
     constructor(private ss: SocketService, userServ: UserService, private router: Router)
     {
         this.userService = userServ;
@@ -50,18 +51,18 @@ export class AppComponent {
         var obj_this = this;
         window.onscroll = function() {obj_this.scrollFunction()};
         var treeviewMenu = $('.app-menu');
-        $('body').on('click', '.main-nav-header [data-toggle="sidebar"]', function(event){
-            event.preventDefault();
-            $('body.user').toggleClass('sidenav-toggled');
-        });
-        
-        $('body').on('click', '.main-nav-header [data-toggle="treeview"]', function(event){
-            console.log('toggleing 2');
-            event.preventDefault();
-            if(!$(this).parent().hasClass('is-expanded')) {
-                treeviewMenu.find("[data-toggle='treeview']").parent().removeClass('is-expanded');
+        $('body').on('click', '.main-nav-header [data-toggle="sidebar"]', function(event){            
+            if (!$('body.user').hasClass('sidenav-toggled'))            
+            {
+                $('body.user').addClass('sidenav-toggled');
             }
-            $(this).parent().toggleClass('is-expanded');
+        });
+
+        $('body').click(function(event){            
+            if ($('body.user').hasClass('sidenav-toggled'))
+            {
+                $('body.user').removeClass('sidenav-toggled');
+            }
         });
 
         $("body").on("click", ".top-search-btn", function() {
