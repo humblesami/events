@@ -1,8 +1,10 @@
-django-model-utils==3.1.2
+django-bootstrap-form==3.4
 django-cors-headers==2.5.2
 django_countries==5.3.3
-django-nested-admin==3.2.3
 django-currentuser==0.4.2
+django-model-utils==3.1.2
+django-nested-admin==3.2.3
+djangorestframework==3.9.0
 django-seed==0.1.9
 fpdf==1.7.2
 httpagentparser==1.9.0

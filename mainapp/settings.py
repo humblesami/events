@@ -51,7 +51,6 @@ EMAIL_USE_TLS = True
 INSTALLED_APPS = [
     'my_admin',
     'corsheaders',
-    'bootstrapform',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
