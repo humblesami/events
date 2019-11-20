@@ -1,9 +1,10 @@
 import sys
+import json
 import base64
-import simplejson as json
 from django.db.models import Count
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
 from restoken.models import PostUserToken
 from .models import Voting, VotingChoice, VotingAnswer
 
