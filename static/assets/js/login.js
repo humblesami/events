@@ -26,7 +26,8 @@
         form.find('.login-feedback').html('');
         var options = {
             url: '/rest/public',
-            data: input_data
+            data: input_data,
+            show_loader: 1
         }
         $('#server-wait').show();
         options.onSuccess = function(data){

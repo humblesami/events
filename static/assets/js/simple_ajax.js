@@ -127,7 +127,7 @@ function dn_rpc_object(options) {
     options.complete = function() {
         if (options.onComplete)
             options.onComplete();
-        if (!options.no_loader)
+        if (!options.show_loader && !options.no_loader)
             site_functions.hideLoader(loading_text);
     };
     options.error = function(err) {   
