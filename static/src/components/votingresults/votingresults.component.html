@@ -3,13 +3,7 @@ rid="{{surveyDetails.id}}" edit="1" delete="1"
 routes='[{"title":"Votings", "link":"/votings"}, {"title":"surveyDetails.name", "link":"/voting/surveyDetails.id"}]'
 title="Voting Results"></app-breadcrumb>
 
-<div class="router-outlet">
-    <div class="dociframecontaine"style="width: calc(100vw + 17px);
-    top: 94px;
-    margin-left: -15px;
-    position: fixed;
-    height: calc(100vh - 94px);">
-        <iframe id='survey-iframe' style="width: 100%;height: 100%;">
-        </iframe>
-    </div>
+<div class="router-outlet jango-frame">    
+    <iframe id='survey-iframe'>
+    </iframe>    
 </div>

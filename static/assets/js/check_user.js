@@ -20,8 +20,7 @@
         {
             if (url.startsWith(public_routes[i]))
             {
-                localStorage.removeItem('user');
-                add_public_class();
+                localStorage.removeItem('user');                
                 return true;
             }
         }

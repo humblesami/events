@@ -1,7 +1,7 @@
 (function(){    
     var wl = window.location;
     var wl_str = wl.toString();
-    window['auth_js'] ={
+    window['auth_js'] = {
         add_public_class: add_public_class,
         add_user_class: add_user_class,
         is_public_route: is_public_route

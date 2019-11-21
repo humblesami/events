@@ -5,7 +5,8 @@ declare var $: any;
 
 @Component({
     selector: 'app-signdoc',
-    templateUrl: './signdoc.component.html'
+    templateUrl: './signdoc.component.html',
+    styleUrls: ['./signdoc.component.css']
 })
 export class SigndocComponent implements OnInit {
 
