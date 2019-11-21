@@ -1,0 +1,39 @@
+[
+    {
+        "model": "auth.Group",
+        "pk": 1,
+        "fields": {
+            "name": "Admin"
+        }
+    },
+    {
+        "model": "auth.Group",
+        "pk": 2,
+        "fields": {
+            "name": "Director"
+        }
+    },
+    {
+        "model": "auth.Group",
+        "pk": 3,
+        "fields": {
+            "name": "Staff"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "auth.user",
+        "fields": {
+            "username": "muhammad.faizan@digitalnet.com",
+            "first_name": "Faize",
+            "last_name": "Ansari",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "groups": [1],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$150000$IcCUgVA4XXlg$zcfM9BdEPRQ3AR9J6A6jfRLnfT+2jUUvmp2XqLHj0ok=",
+            "email": "muhammad.faizan@digitalnet.com"
+        }
+    }
+]
