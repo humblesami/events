@@ -61,15 +61,20 @@ sudo ln -s /etc/nginx/sites-available /etc/nginx/sites-enabled
 sudo nano /etc/nginx/sites-available/your_nginx_setting_file
 
 server {
-    server_name boardsheet.com www.boardsheet.com;    
+    server_name meetvue.com www.meetvue.com;
+    listen 80;
+}
+server {
+    server_name dn.meetvue.com;
     location / {
         proxy_pass  http://127.0.0.1:8000/;
         proxy_set_header Host $host;
     }
+    listen 80;
 }
-
+-----------------------------------
 server {
-    server_name meetvue.com www.meetvue.com;    
+    server_name boardsheet.com www.boardsheet.com;    
     location / {
         proxy_pass  http://127.0.0.1:8000/;
         proxy_set_header Host $host;
