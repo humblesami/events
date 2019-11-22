@@ -419,7 +419,7 @@
     }
 
     function process_notification_url(item_url) {
-        var url_origin = window.location.origin.toString();
+        var url_origin = window['site_url'];
         if (item_url.indexOf(url_origin) == -1) {
             if (!item_url.startsWith('/')) {
                 item_url = '/' + item_url;
@@ -454,7 +454,7 @@
                 loadALlCommentsOnDocument(); 
             }           
         } else {
-            item_url = item_url.replace(window.location.origin + '', '');
+            item_url = item_url.replace(window['site_config'].site_url + '', '');
             // console.log(item_url, 999);
             window.open(item_url, '_self');
         }

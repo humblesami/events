@@ -4,7 +4,7 @@ function dn_rpc_object(options) {
     {
         api_url = '/rest/secure';
     }
-    var server_base_url = window.location.origin.toString();
+    var server_base_url = window['server_url'];
     var req_url = server_base_url + api_url;
     if (!options.data) {
         console.log('No data and arguments for request ',options);

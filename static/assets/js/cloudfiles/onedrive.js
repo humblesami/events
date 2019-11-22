@@ -19,11 +19,11 @@ $(function(){
         var api_key = '';
         for(var key in one_keys)
         {
-           if(window.location.origin.toString().indexOf(key) > - 1) 
-           {
-               api_key =  one_keys[key];
-               break;
-           }
+            if(window['site_url'].indexOf(key) > - 1) 
+            {
+                api_key =  one_keys[key];
+                break;
+            }
         }
         if(!api_key){return}
         

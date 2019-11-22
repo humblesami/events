@@ -9,9 +9,11 @@ var site_config_live = {
     app_name : 'BoardSheet',
 	show_logs : []
 };
-if(window.location.origin.indexOf('localhost') == -1)
+var current_site_base_url = window.location.hostname + '';
+site_config_live.site_url = site_config_live.server_base_url = current_site_base_url;
+if(current_site_base_url == -1)
 {
-    site_config_live.site_url = site_config_live.server_base_url = window.location.origin + '';
+    alert(site_config_live.site_url, window.location.origin, current_site_base_url)
 }
 
 var site_config_local = {
@@ -42,7 +44,7 @@ network_config_https.db = network_config.db = site_config_local.db = site_config
 
 var site_config = site_config_live;
 
-var current_site_base_url = window.location.origin.toString();
+
 var is_localhost = false;
 if(current_site_base_url.indexOf('localhost') > -1)
 {   
@@ -62,7 +64,7 @@ else
 }
 
 site_config.site_url = current_site_base_url;
-window['server_url'] = site_config.server_base_url;
+window['site_url'] = window['server_url'] = current_site_base_url;
 site_config.public_urls = ['login']
 //console.log(site_config);
 site_config['app_name'] = 'meetings';

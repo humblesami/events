@@ -42,7 +42,7 @@ window['json_functions'] = {
         return full_str.substring(full_str.lastIndexOf(separator) + 1)
     },
     get_url_path:function(){
-        var curl = window.location.origin;
+        var curl = window['site_url'];
         curl = window.location.toString().replace(curl, '');
         var i = curl.indexOf('#');
         if(i == 1)

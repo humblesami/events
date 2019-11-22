@@ -1,5 +1,5 @@
 function ajax_request(options) {
-    var server_base_url = window.location.origin.toString();
+    var server_base_url = window['server_url'];
     var req_url = options.url;
     options.dataType = 'json';
     // options.contentType = "application/json; charset=utf-8";

@@ -203,7 +203,7 @@ export class HttpService {
 
     make_bread_crumb() {
         let comeplete_url = window.location + '';
-        let base_url = window.location.origin + '';
+        let base_url = window['site_url'] + '';
         let page_url = comeplete_url.replace(base_url + '/', '');
 
         let ar = page_url.split('/');
