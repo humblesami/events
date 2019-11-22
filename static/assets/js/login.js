@@ -53,6 +53,7 @@
         options.onError = function(data){
             form.find('button[type="submit"]:first').removeAttr('disabled');
             form.find('.login-feedback').html(data);
+            $('#server-wait').hide();
         };
         options.onComplete = function(data){
             form.find('button[type="submit"]:first').removeAttr('disabled');

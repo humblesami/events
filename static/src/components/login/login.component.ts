@@ -69,6 +69,9 @@ export class LoginComponent implements OnInit {
             }            
             obj_this.error = error;
             obj_this.loading = false;
+            $('body').find('button[type="submit"]:first').removeAttr('disabled');
+            $('body').find('.login-feedback').html(error);
+            $('#server-wait').hide();
         };
         var complete_cb = function(){
             obj_this.loading = false;
