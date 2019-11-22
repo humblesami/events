@@ -320,7 +320,7 @@ class Event(CustomModel):
             if meeting_object_orm:
                 meeting_id = meeting_object_orm.id
         else:
-            meeting_object_orm = Event.objects.get(pk=meeting_id)
+            meeting_object_orm = Event.objects.prefetch_related('survey_set', 'voting_set', 'topic_set', 'documents', 'signaturedoc_set').get(pk=meeting_id)
         
         topic_model = ws_methods.get_model('meetings', 'Topic')
         meeting_object = {}
