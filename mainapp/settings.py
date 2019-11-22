@@ -26,11 +26,11 @@ MAX_UPLOAD_SIZE = "5242880"
 SECRET_KEY = 'd9phtmv5b^cqr$daog097))s@$776gvk$-ca&shxt&re*r31bn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    '34.66.182.85','172.16.21.170', 
-    'localhost', 
+    '34.66.182.85',
+    'localhost', '127.0.0.1',
     'boardsheet.com', '*.boardsheet.com',
     'www.boardsheet.com', 'www.*.boardsheet.com',
     'meetvue.com', 'dn.meetvue.com', '*.meetvue.com' 
