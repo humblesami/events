@@ -53,7 +53,7 @@ class MeetingDocument(File):
             for attachment in attachments:
                 file_name = attachment['name']
                 doc_file = attachment['binary']
-                doc_file = ws_methods.base64StringToFile(doc_file, file_name)
+                doc_file = ws_methods.base64_str_to_file(doc_file, file_name)
                 try:
                     file_name = attachment['file_name']
                 except:
@@ -138,7 +138,7 @@ class AgendaDocument(File):
             for attachment in attachments:
                 file_name = attachment['name']
                 doc_file = attachment['binary']
-                doc_file = ws_methods.base64StringToFile(doc_file, file_name)
+                doc_file = ws_methods.base64_str_to_file(doc_file, file_name)
                 try:
                     file_name = attachment['file_name']
                 except:

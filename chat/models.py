@@ -1,16 +1,15 @@
-import sys
-import traceback
+import os
+from datetime import datetime
+
 from django.db import models
 from django.db.models import Q
 from django.apps import apps
-from datetime import datetime
+from django.contrib import admin
+
 from mainapp import ws_methods
 from documents.file import File
-from django.contrib import admin
-from django.contrib.auth.models import User
-from meetings.model_files.user import Profile, create_group
-from resources.models import Folder, ResourceDocument
-import os
+from authsignup.models import AuthUser
+
 
 class PostAddress(models.Model):
     res_app = models.CharField(max_length=128)
@@ -213,8 +212,8 @@ class Notification(models.Model):
 
 class UserNotification(models.Model):
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='User')
+    sender = models.ForeignKey(AuthUser, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE, related_name='User')
     read = models.BooleanField(default=False)
 
     def get_senders(self, user_id, notification_id):
@@ -306,7 +305,7 @@ class Comment(models.Model):
     subtype_id = models.IntegerField()
     body = models.TextField()
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     create_date = models.DateTimeField(null=True, auto_now_add=True)
 
     @classmethod
@@ -353,7 +352,7 @@ class Comment(models.Model):
             user = obj.user
             comment = obj.__dict__
             del comment['_state']
-            ws_methods.stringfy_sytem_fields(comment)
+            ws_methods.stringify_fields(comment)
             comment['user'] = {
                 'id': user.id,
                 'photo': user.image.url,
@@ -375,9 +374,8 @@ class Comment(models.Model):
 
     @classmethod
     def add(cls, request, params):
-        profile = Profile()
         mentioned_list = params.get('mentioned_list')
-        user = Profile.objects.get(pk=request.user.id)
+        user = AuthUser.objects.get(pk=request.user.id)
         comment = Comment(
             res_app=params['res_app'],
             res_model=params['res_model'],
@@ -397,7 +395,7 @@ class Comment(models.Model):
             'name': user.name
         }
         del comment['_state']
-        ws_methods.stringfy_sytem_fields(comment)
+        ws_methods.stringify_fields(comment)
         comment['create_date'] = str(datetime.now())
         comment['children'] = []
         param = params
@@ -409,11 +407,11 @@ class Comment(models.Model):
 
 class ChatGroup(models.Model):
     name = models.CharField(max_length=100)
-    members = models.ManyToManyField(Profile, related_name='chat_groups')
+    members = models.ManyToManyField(AuthUser, related_name='chat_groups')
     active = models.BooleanField(default=True)
-    owner = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL, related_name='group_owner', related_query_name='group_owner')
+    owner = models.ForeignKey(AuthUser, null=True, on_delete=models.SET_NULL, related_name='group_owner', related_query_name='group_owner')
     create_time = models.DateTimeField(null=True, auto_now_add=True)
-    created_by = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE, null=True)
 
     @classmethod
     def create(cls, request, params):
@@ -559,7 +557,7 @@ class ChatGroup(models.Model):
         chat_group = ChatGroup.objects.get(pk=group_id)
         all_member = chat_group.members.all()
         all_member_set = set(all_member)
-        removed_member_set = set(Profile.objects.filter(id=member_id))
+        removed_member_set = set(AuthUser.objects.filter(id=member_id))
         remaining_members = all_member_set - removed_member_set
         chat_group.members.set(remaining_members)
         if not chat_group.members.all():
@@ -614,7 +612,7 @@ class ChatGroup(models.Model):
 
 
 class Message(models.Model):
-    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    sender = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     to = models.IntegerField(null=True)
     body = models.TextField()
     read_status = models.BooleanField(default=False)
@@ -628,7 +626,6 @@ class Message(models.Model):
         group_id = params.get('group_id')
         target_id = params.get('to')
         body = params['body']
-        uuid = params['uuid']
         message_type = params.get('message_type')
         message = Message(sender_id=uid, body=body, create_date=datetime.now(), message_type=message_type)
         if group_id:
@@ -649,7 +646,7 @@ class Message(models.Model):
                 )
 
                 image_data = attachment['binary']
-                image_data = ws_methods.base64StringToFile(image_data, file_name)
+                image_data = ws_methods.base64_str_to_file(image_data, file_name)
 
                 doc.attachment.save(file_name, image_data, save=True)
                 attachment_urls.append({
@@ -674,7 +671,7 @@ class Message(models.Model):
         message_dict['create_date'] = str(datetime.now())
 
         del message_dict['_state']
-        ws_methods.stringfy_sytem_fields(message_dict)
+        ws_methods.stringify_fields(message_dict)
         message_dict['uuid'] = params['uuid']
         events = [
             {'name': 'chat_message_received', 'data': message_dict, 'audience': [target_id]}
@@ -759,10 +756,14 @@ class Message(models.Model):
         target_id = params['target_id']
         data = cls.get_message_list(uid, target_id, 0)
         return data
+
     @classmethod
     def move_to_folder(cls, request, params):
         file_id_is = params['file_id']
-        
+
+        Folder = ws_methods.get_model('resources', 'Folder')
+        ResourceDocument = ws_methods.get_model('resources', 'ResourceDocument')
+
         file = File.objects.get(pk=file_id_is)
         my_folder = Folder.objects.get(created_by_id=request.user.id, personal=True, parent_id__isnull=True)
         if not file.file_name:
@@ -821,129 +822,13 @@ class Message(models.Model):
 
 class MessageStatus(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
 
 
 class MessageDocument(File):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     moved = models.BooleanField(default=False)
-
-
-class AuthUserChat(models.Model):
-    @classmethod
-    def verify_chat_user(cls, request, params):
-        data = {
-            'friends': [],
-            'friendIds': [],
-            'notifications': [],
-            'unseen': 0,
-            'committees': [],
-            'meetings': [],
-            'user': {
-                'id': request.user.id,
-                'name': 'Anonymous',
-                'photo': 'https://theareligroup.com/wp-content/uploads/2016/03/user-experiance-icon.png',
-            }
-        }
-        try:
-            uid = params['id']
-            uid = int(uid)
-            chat_users = Profile.objects.exclude(pk=uid).values('id', 'name', 'image', 'groups')
-            chat_users = list(chat_users)
-            unseen_messages = 0
-            friend_ids = []
-            committees = []
-            meetings = []
-            for friend in chat_users:
-                unseen = len(Message.objects.filter(sender_id=friend['id'], read_status=False, to=uid))
-                friend['unseen'] = unseen
-                unseen_messages += unseen
-                friend_ids.append(friend['id'])
-                friend['unseen'] = unseen
-                friend['photo'] = '/media/' + friend['image']
-
-            user_object = User.objects.get(pk=uid)
-            profile_object = Profile.objects.filter(pk=uid)
-            res = False
-            if not profile_object:
-                profile_object = Profile(user_ptr=user_object, name=user_object.username)
-                profile_object.save()
-                if user_object.is_superuser:
-                    res = create_group(user_object, 'Admin')
-                else:
-                    res = create_group(user_object, 'Staff')
-            else:
-                profile_object = profile_object[0]
-                res = None
-                if not profile_object.groups.all():
-                    if profile_object.is_superuser:
-                        res = create_group(user_object, 'Admin')
-                    else:
-                        res = create_group(user_object, 'Director')
-            if res != 'done':
-                if res:
-                    data['message'] = {'error': res}
-                else:
-                    data['message'] = {'error': 'Error in group creation'}
-            req_user = {
-                'id': uid,
-                'name': profile_object.name,
-                'photo': profile_object.image.url,
-                'groups': list(profile_object.groups.all().values('id', 'name'))
-            }
-            committee_objects = profile_object.committees.all()
-            for obj in committee_objects:
-                committees.append({'id': obj.id, 'name': obj.name})
-            meeting_objects = profile_object.meetings.all()
-            for obj in meeting_objects:
-                meetings.append({'id': obj.id, 'name': obj.name})
-            for com in committee_objects:
-                committees.append({'id': com.id, 'name': com.name})
-            notifications = UserNotification.get_my_notifications(request, False)
-            chat_groups = profile_object.chat_groups.filter(active=True)
-            chat_groups_list = []
-            for obj in chat_groups:
-                unseen = len(MessageStatus.objects.filter(message__chat_group_id=obj.id, read=False))
-                is_owner = False
-                if obj.owner_id == request.user.id:
-                    is_owner = True
-                chat_group = {
-                    'id': obj.id, 'name': obj.name, 'unseen': unseen,
-                    'photo': '/static/assets/images/group.jpeg',
-                    'members': [],
-                    'is_owner': is_owner,
-                    'created_by': {
-                        'id': obj.created_by.id,
-                        'name': obj.created_by.name,
-                        'photo': obj.created_by.image.url,
-                    },
-                    'is_group': True
-                }
-                chat_groups_list.append(chat_group)
-            data = {
-                'friends': chat_users,
-                'friendIds': friend_ids,
-                'notifications': notifications,
-                'unseen': unseen_messages,
-                'user': req_user,
-                'committees': committees,
-                'meetings': meetings,
-                'chat_groups': chat_groups_list
-            }
-            # if len(chat_users) > 0:
-            #     first_friend = chat_users[0]
-            #     print(first_friend)
-        except:
-            eg = traceback.format_exception(*sys.exc_info())
-            errorMessage = ''
-            cnt = 0
-            for er in eg:
-                cnt += 1
-                if not 'lib/python' in er:
-                    errorMessage += " " + er
-            data['message'] = {'error': errorMessage}
-        return data
 
 
 admin.site.register(Comment)

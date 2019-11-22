@@ -1,19 +1,19 @@
 import datetime
 from django.db import models
-from mainapp import ws_methods
 from django.db.models import Q
 from django.utils import timezone
-from mainapp.settings import server_base_url
-# from mainapp.ws_methods import SearchApp
-from meetings.model_files.user import Profile
 from django_countries.fields import CountryField
 from django.db.models.signals import m2m_changed
 from django.utils.translation import gettext_lazy as _
+
+from mainapp import ws_methods
 from mainapp.models import CustomModel
+from mainapp.settings import server_base_url
 from restoken.models import PostUserToken
+from meetings.model_files.user import Profile
+
 
 # Create your models here.
-
 class Event(CustomModel):
     class Meta:
         verbose_name = "Meeting"
@@ -69,12 +69,12 @@ class Event(CustomModel):
         gone_attendees = set(old_attendee_ids) - set(attendee_ids)
         gone_attendees = list(gone_attendees)
         if len(gone_attendees) > 0:
-            to_del = Invitation_Response.objects.filter(event_id=self.id, attendee_id__in=gone_attendees)
+            to_del = InvitationResponse.objects.filter(event_id=self.id, attendee_id__in=gone_attendees)
             to_del.delete()
         for id in attendee_ids:
-            create_obj = Invitation_Response.objects.filter(attendee_id=id, event_id=self.id)
+            create_obj = InvitationResponse.objects.filter(attendee_id=id, event_id=self.id)
             if not create_obj:
-                create_obj = Invitation_Response(attendee_id=id, event_id=self.id)
+                create_obj = InvitationResponse(attendee_id=id, event_id=self.id)
                 create_obj.save()
 
     def save1(self, *args, **kwargs):
@@ -114,7 +114,7 @@ class Event(CustomModel):
 
     @property
     def attendance_marked(self):
-        unmarked = Invitation_Response.objects.filter(event_id=self.id, attendance__isnull=True).distinct()
+        unmarked = InvitationResponse.objects.filter(event_id=self.id, attendance__isnull=True).distinct()
         if unmarked:
             return False
         else:
@@ -176,6 +176,7 @@ class Event(CustomModel):
                 val = val[:-1]
         val = val.strip()
         return val
+
     location = property(_compute_address)
 
     @classmethod
@@ -216,7 +217,7 @@ class Event(CustomModel):
             event = event.__dict__
             if event['_state']:
                 del event['_state']
-            ws_methods.stringfy_sytem_fields(event)
+            ws_methods.stringify_fields(event)
             calendar_events.append(event)
         return calendar_events
 
@@ -233,7 +234,7 @@ class Event(CustomModel):
         meeting_id = params['meeting_id']
         attendances = params['attendance_data']
         for atten in attendances:
-            check_meeting = Invitation_Response.objects.get(event_id=meeting_id, attendee_id=atten['id'])
+            check_meeting = InvitationResponse.objects.get(event_id=meeting_id, attendee_id=atten['id'])
             check_meeting.attendance = atten['attendance']
             check_meeting.save()
         attendance_marked = Event.objects.get(pk=meeting_id).attendance_marked
@@ -268,33 +269,32 @@ class Event(CustomModel):
         if not is_respondant:
             return 'Unauthorized'
         if user_response:
-            invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=user_id)
-            if invitation_response:
-                invitation_response = invitation_response[0]
-                invitation_response.state = user_response
-                invitation_response.save()
+            InvitationResponse = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id=user_id)
+            if InvitationResponse:
+                InvitationResponse = InvitationResponse[0]
+                InvitationResponse.state = user_response
+                InvitationResponse.save()
             else:
-                invitation_response = Invitation_Response(state=user_response, event_id=meeting_id, attendee_id=user_id)
-                invitation_response.save()
+                InvitationResponse = InvitationResponse(state=user_response, event_id=meeting_id, attendee_id=user_id)
+                InvitationResponse.save()
             return 'done'
         elif user_attendance:
             data = {
                 'attendance_marked': False
             }
             user_id = params['user_id']
-            invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=user_id)
-            if invitation_response:
-                invitation_response = invitation_response[0]
-                invitation_response.attendance = user_attendance
-                invitation_response.save()
-                data['attendance_marked'] = invitation_response.event.attendance_marked
+            InvitationResponse = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id=user_id)
+            if InvitationResponse:
+                InvitationResponse = InvitationResponse[0]
+                InvitationResponse.attendance = user_attendance
+                InvitationResponse.save()
+                data['attendance_marked'] = InvitationResponse.event.attendance_marked
             else:
-                invitation_response = Invitation_Response(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
-                invitation_response.save()
-                data['attendance_marked'] = invitation_response.event.attendance_marked
+                InvitationResponse = InvitationResponse(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
+                InvitationResponse.save()
+                data['attendance_marked'] = InvitationResponse.event.attendance_marked
             return data
         return 'Something Wrong in Response Invitation'
-
 
     @classmethod
     def get_details(cls, request, params):
@@ -321,7 +321,7 @@ class Event(CustomModel):
                 meeting_id = meeting_object_orm.id
         else:
             meeting_object_orm = Event.objects.prefetch_related('survey_set', 'voting_set', 'topic_set', 'documents', 'signaturedoc_set').get(pk=meeting_id)
-        
+
         topic_model = ws_methods.get_model('meetings', 'Topic')
         meeting_object = {}
         location = meeting_object_orm.location
@@ -358,7 +358,6 @@ class Event(CustomModel):
         meeting_object['attendee_status'] = attendance_status['state']
         meeting_object['my_event'] = attendance_status['my_event']
 
-
         topics = cls.get_topics(meeting_object_orm)
         errors = []
         meeting_docs = list(meeting_object_orm.documents.values())
@@ -374,11 +373,11 @@ class Event(CustomModel):
             attendee_obj['my_event'] = attendance_status['my_event']
             attendees.append(attendee_obj)
         meeting_object['topics'] = topics
-        
+
         if token:
             data = {"meeting": meeting_object, "next": 0, "prev": 0}
             return {'data': data, 'errors': errors}
-            
+
         meeting_object['meeting_docs'] = []
         for doc in meeting_docs:
             doc['created_at'] = str(doc['created_at'])
@@ -424,9 +423,9 @@ class Event(CustomModel):
                 del topic['description']
                 topic_duration = 0
                 try:
-                    topic_duration =topic['duration']
+                    topic_duration = topic['duration']
                 except:
-                    print('Invalid duration of topic '+t.name+'-'+str(t.id))
+                    print('Invalid duration of topic ' + t.name + '-' + str(t.id))
                 topic['votings'] = t.voting_set.count()
                 topic['surveys'] = t.survey_set.count()
                 topic['docs'] = t.documents.count()
@@ -438,17 +437,17 @@ class Event(CustomModel):
 
     @classmethod
     def get_attendance_status(cls, meeting, uid):
-        invitation_response = Invitation_Response.objects.filter(event_id=meeting.id, attendee_id=uid)
+        InvitationResponse = InvitationResponse.objects.filter(event_id=meeting.id, attendee_id=uid)
         attendance_status = {
             'state': 'needsAction',
             'response_by': '',
             'attendance': ''
         }
-        if invitation_response:
-            invitation_response = list(invitation_response)[0]
-            attendance_status['state'] = invitation_response.state
-            attendance_status['response_by'] = invitation_response.state_by
-            attendance_status['attendance'] = invitation_response.attendance
+        if InvitationResponse:
+            InvitationResponse = list(InvitationResponse)[0]
+            attendance_status['state'] = InvitationResponse.state
+            attendance_status['response_by'] = InvitationResponse.state_by
+            attendance_status['attendance'] = InvitationResponse.attendance
         my_event = meeting.attendees.filter(pk=uid)
         if my_event:
             attendance_status['my_event'] = 1
@@ -572,18 +571,18 @@ class Event(CustomModel):
         kw = params.get('kw')
         if kw:
             profiles = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
-            records = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id__in=profiles.values('id'))
+            records = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id__in=profiles.values('id'))
         else:
-            records = Invitation_Response.objects.filter(event_id=meeting_id)
+            records = InvitationResponse.objects.filter(event_id=meeting_id)
         total = len(records)
         # if limit:
         #     records = records[offset: offset + int(limit)]
         for obj in records:
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,
-                fields=['id', 'name', 'email','mobile_phone', 'company', 'image']
+                fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image']
             )
-            attendee_data['status'] = obj.get_state_display() or  'No Response'
+            attendee_data['status'] = obj.get_state_display() or 'No Response'
             attendee_data['attendance'] = obj.attendance
             attendee_data['photo'] = attendee_data['image']
             attendees_list.append(attendee_data)
@@ -610,7 +609,7 @@ class Event(CustomModel):
             Q(email__contains=key_word) |
             Q(mobile_phone__contains=key_word) |
             Q(company__contains=key_word) |
-            Q(invitation_response__attendance__contains=key_word)
+            Q(InvitationResponse__attendance__contains=key_word)
         ).distinct()
         if attendees:
             total = len(attendees)
@@ -621,11 +620,11 @@ class Event(CustomModel):
                     attendee,
                     fields=['id', 'name', 'mobile_phone', 'email', 'company', 'image'],
                     related={
-                        'invitation_response_set': {'fields': 'attendance'}
+                        'InvitationResponse_set': {'fields': 'attendance'}
                     }
                 )
-                attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
-                del attendee_data['invitation_response_set']
+                attendee_data['attendance'] = attendee_data['InvitationResponse_set'][0]['attendance']
+                del attendee_data['InvitationResponse_set']
                 attendee_data['photo'] = attendee_data['image']
                 attendees_list.append(attendee_data)
             data['attendees'] = attendees_list
@@ -692,7 +691,7 @@ def attendees_saved(sender, instance, action, pk_set, **kwargs):
         if instance.exectime in ['ongoing', 'upcoming'] and instance.publish and not instance.archived:
             removed_respondents = list(pk_set)
             instance.response_invitation_email(removed_respondents, 'removed')
-            Invitation_Response.objects.filter(attendee_id__in=removed_respondents).delete()
+            InvitationResponse.objects.filter(attendee_id__in=removed_respondents).delete()
     if action == "post_add":
         if instance.exectime in ['ongoing', 'upcoming'] and instance.publish and not instance.archived:
             new_added_respondets = list(pk_set)
@@ -700,10 +699,10 @@ def attendees_saved(sender, instance, action, pk_set, **kwargs):
                 instance.response_invitation_email(new_added_respondets)
                 respond_objs = []
                 for user_id in new_added_respondets:
-                    respond_obj = Invitation_Response(event_id=instance.id, attendee_id=user_id)
+                    respond_obj = InvitationResponse(event_id=instance.id, attendee_id=user_id)
                     respond_objs.append(respond_obj)
                 if respond_objs:
-                    Invitation_Response.objects.bulk_create(respond_objs)
+                    InvitationResponse.objects.bulk_create(respond_objs)
 
 
 m2m_changed.connect(attendees_saved, sender=Event.attendees.through)
@@ -721,7 +720,7 @@ ATTENDANCE_SELECTION = (
 )
 
 
-class Invitation_Response(CustomModel):
+class InvitationResponse(CustomModel):
     state = models.CharField(max_length=20, choices=STATE_SELECTION, blank=True, null=True)
     state_by = models.CharField(max_length=20, blank=True, null=True)
     attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)

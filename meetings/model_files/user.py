@@ -1,33 +1,19 @@
 import io
-import os
-import json
-import sys
-import uuid
 import base64
-import traceback
 
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.core.files.base import ContentFile
+from django.core.files import File as DjangoFile
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import Group as group_model, UserManager
+
 
 from mainapp import ws_methods
 from documents.file import File
-from django.core.files.base import ContentFile
-from django.core.files import File as DjangoFile
+from authsignup.models import AuthUser, LoginEntry
 from meetings.model_files.committee import Committee
-from django.utils.translation import gettext_lazy as _
-from mainapp.settings import server_base_url, ip2location
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
-
-from django.dispatch import receiver
-from django.contrib.auth.signals import user_logged_in
-
-from mainapp.models import CustomModel
-
-TWO_FACTOR_CHOICES = (
-    (1, _("Email")),
-    (2, _("Phone"))
-)
+from chat.models import Message, UserNotification, MessageStatus
 
 GENDER_CHOICES = (
     (1, _("Male")),
@@ -57,234 +43,9 @@ ETHINICITY_CHOICES = (
     (8, _("I decline to answer"))
 )
 
-from django.apps import apps
-
-def get_permission_set(group_name):
-    permission_set = {}
-    all_models = apps.get_models()
-    perm_set = {}
-    if group_name == 'Admin':
-        perm_set = {
-            'view': 1,
-            'add': 1,
-            'change': 1
-        }
-    elif group_name == 'Director' or group_name == 'Staff':
-        perm_set = {
-            'view': 1
-        }
-
-    group_permissions = {}
-    for model_obj in all_models:
-        meta = model_obj._meta
-        parents = meta.parents
-        app_name = meta.app_label
-        model_name = meta.model_name
-        if not group_permissions.get(app_name):
-            group_permissions[app_name] = {}
-        group_permissions[app_name][model_name] = perm_set
-
-    if group_name == 'Director' or group_name == 'Staff':
-        group_permissions['meetings']['profile'] = {'view': 1, 'change': 1}
-        group_permissions['authtoken']['token'] = {'view': 1, 'add': 1}
-
-    return group_permissions
-
-def create_group(obj, group_name):
-    error_list = []
-    user_group = None
-    try:
-        user_group = group_model.objects.filter(name=group_name)
-        if user_group:
-            user_group = user_group[0]
-            obj.groups.add(user_group)
-            obj.save()
-            return 'done'
-        user_group = group_model.objects.create(name=group_name)
-        group_permissions = get_permission_set(group_name)
-        for app_name in group_permissions:
-            for model_name in group_permissions[app_name]:
-                model_permissions = group_permissions[app_name][model_name]
-
-                content_id = ContentType.objects.filter(app_label=app_name, model=model_name)
-                if not content_id:
-                    error_list.append('No content id for ' + app_name + '.' + model_name)
-                    continue
-                else:
-                    content_id = content_id[0].id
-                for permission_type in model_permissions:
-                    code_name = permission_type + '_' + model_name
-                    permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)
-                    if not permission:
-                        error_list.append('No permission entry for content_type_id='+str(content_id)+' for '+app_name+'.'+model_name)
-                        continue
-                    else:
-                        permission = permission[0]
-                    user_group.permissions.add(permission)
-            obj.groups.add(user_group)
-            obj.save()
-        if error_list:
-            return error_list
-        else:
-            return 'done'
-    except:
-        eg = traceback.format_exception(*sys.exc_info())
-        errorMessage = ''
-        cnt = 0
-        for er in eg:
-            cnt += 1
-            if not 'lib/python' in er:
-                errorMessage += " " + er
-        return errorMessage
-
-
-class LoginLocation(models.Model):
-    country = models.CharField(max_length=128, null=True)
-    city = models.CharField(max_length=128, null=True)
-    zip = models.CharField(max_length=16, null=True)
-    region = models.CharField(max_length=128, null=True)
-    longitude = models.CharField(max_length=16, null=True)
-    latitude = models.CharField(max_length=16, null=True)
-    time_zone = models.CharField(max_length=64, null=True)
-    ip = models.GenericIPAddressField(null=True)
-
-
-class LoginEntry(models.Model):
-    name = models.CharField(max_length=64, null=True)
-    user_id = models.IntegerField(null=True)
-    location = models.ForeignKey(LoginLocation, null=True, on_delete=models.SET_NULL)
-    path_info = models.CharField(max_length=64, null=True)
-    operating_system = models.CharField(max_length=32, null=True)
-    login_time = models.DateTimeField(auto_now_add=True, null=True)
-    browser = models.CharField(max_length=123, null=True)
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def get_last_login_info(cls, user_id):
-        entry = LoginEntry.objects.filter(user_id=user_id).order_by('-id')
-        if entry:
-            entry = entry[0]
-            location = {
-                'city': entry.location.city,
-                'country': entry.location.country,
-                'region': entry.location.region,
-                'zip': entry.location.zip,
-                'longitude': entry.location.longitude,
-                'latitude': entry.location.latitude,
-                'ip': entry.location.ip,
-            }
-
-            entry = {
-                'operating_system': entry.operating_system,
-                'location': location,
-                'login_time': str(entry.login_time),
-                'browser': entry.browser
-            }
-            if location['country'] or location ['longitude']:
-                entry['has_location'] = 1
-            return entry
-        else:
-            return 'No login info'
-
-
-def get_location_from_ip(ip):
-    req_url = ip2location['prefix'] + ip + ip2location['postfix']
-    print(req_url)
-    res = ws_methods.http_request(req_url)
-    res = json.loads(res)
-    return res
-
-@receiver(user_logged_in)
-def user_logged_in_callback(sender, request, user, **kwargs):
-    ws_methods.threadedOperation(make_login_entry, args=(request, user))    
-
-import httpagentparser
-
-def get_browser(agent):
-    browser = httpagentparser.detect(agent)
-    if not browser:
-        browser = agent.split('/')[0]
-    else:
-        browser = browser['browser']['name']  
-
-    return browser
-
-def make_login_entry(request, user):
-    meta = request.META
-    ip = get_client_ip(request)
-    operating_system = meta.get('SESSION')
-    
-    
-    time_zone = meta.get('TZ')
-    agent = meta.get('HTTP_USER_AGENT')
-    print('\n\n\n\n')
-    print(meta)
-    print(operating_system)
-    print('\n\n\n\n')
-    browser = get_browser(agent)    
-    path_info = meta.get('PATH_INFO')
-    res = get_location_from_ip(ip)
-    location = LoginLocation.objects.filter(
-        time_zone=time_zone,
-        ip = ip,
-        country=res.get('country_name'),
-        city=res.get('city'),
-        zip=res.get('zip'),        
-        region=res.get('region_name'),
-        longitude=res.get('longitude'),
-        latitude=res.get('latitude')        
-    ).first()
-    if not location:
-        location = LoginLocation.objects.create(
-            time_zone=time_zone,
-            ip = ip,
-            country=res.get('country_name'),
-            city=res.get('city'),
-            zip=res.get('zip'),
-            region=res.get('region_name'),
-            longitude=res.get('longitude'),
-            latitude=res.get('latitude')
-        )
-
-    
-    login_entry = LoginEntry(
-        location_id=location.id,
-        user_id=user.id,
-        browser = browser,
-        name=str(user.id) + '-' + ip,
-        operating_system=operating_system,
-    )
-    if path_info != '/rest/public':
-        login_entry.path_info = path_info
-    login_entry.save()
-
-
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-# @receiver(user_logged_out)
-# def user_logged_out_callback(sender, request, user, **kwargs):
-#     ip = request.META.get('REMOTE_ADDR')
-#     LoginEntry.objects.create(action='user_logged_out', ip=ip, username=user.username)
-#
-#
-# @receiver(user_login_failed)
-# def user_login_failed_callback(sender, credentials, **kwargs):
-#     LoginEntry.objects.create(action='user_login_failed', username=credentials.get('username', None))
-
-
-class Profile(user_model, CustomModel):
+class Profile(AuthUser):
     class Meta:
-        verbose_name_plural = "Boardsheet  Users"
-    name = models.CharField(max_length=200, default='', blank=True)
-    image = models.ImageField(upload_to='profile/', default='profile/default.png', null=True)
+        verbose_name_plural = "BoardSheet  Users"
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
@@ -292,7 +53,7 @@ class Profile(user_model, CustomModel):
     job_title = models.CharField(max_length=30, blank=True)
     department = models.CharField(max_length=30, blank=True)
     work_phone = models.CharField(max_length=30, blank=True)
-    mobile_phone = models.CharField(max_length=30, blank=True)
+
     website = models.CharField(max_length=30, blank=True)
     fax = models.CharField(max_length=30, blank=True)
     ethnicity = models.IntegerField(choices=ETHINICITY_CHOICES, blank=True, null=True)
@@ -314,10 +75,6 @@ class Profile(user_model, CustomModel):
     term_end_date = models.DateField(blank=True, null=True)
     signature_data = models.BinaryField(default=b'', null=True, blank=True)
     resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL)
-    two_factor_auth = models.IntegerField(choices=TWO_FACTOR_CHOICES, blank=True, null=True)
-    email_verified = models.BooleanField(null=True, default=False)
-    mobile_verified = models.BooleanField(null=True, default=False)
-    image_updated = models.BooleanField(default=False)
     # user_type = models.CharField(max_length=50)
 
     UniqueConstraint(fields=['email'], name='unique_email')
@@ -327,41 +84,10 @@ class Profile(user_model, CustomModel):
 
     def save(self, *args, **kwargs):
         creating = False
-        if self.two_factor_auth and self.two_factor_auth == 2 and not self.mobile_verified:
-            return
-            # raise ValidationError('Phone needs to be verified')
-        profile_obj = Profile.objects.filter(pk=self.pk)
-        password = self.password
-
-        if not profile_obj:
+        if not self.pk:
             creating = True
-            self.is_staff = True
-            if self.email and not self.username:
-                self.username = self.email
-            self.image = ws_methods.generate_default_image(self.fullname())
-        self.name = self.fullname()
-        if profile_obj:
-            profile_obj = profile_obj[0]
-            if self.image != profile_obj.image:
-                self.image_updated = True
-            if not self.image_updated:
-                if self.name != profile_obj.name:
-                    curr_dir = os.path.dirname(__file__).replace('/meetings/model_files', '')
-                    try:
-                        os.remove(curr_dir + profile_obj.image.url)
-                    except:
-                        pass
-                    self.image = ws_methods.generate_default_image(self.name)
-
         super(Profile, self).save(*args, **kwargs)
         if creating:
-            if not self.is_superuser:
-                random_password = uuid.uuid4().hex[:8]
-                self.password_reset_on_creation_email(random_password)
-                self.user_ptr.set_password(random_password)
-            else:
-                self.user_ptr.set_password(password)
-            self.user_ptr.save()
             user_data = {
                 'id': self.pk,
                 'photo': self.image.url,
@@ -372,38 +98,11 @@ class Profile(user_model, CustomModel):
             ]
             ws_methods.emit_event(events)
 
-    def fullname(self):
-        user = self
-        name = False
-        if user.first_name:
-            name = user.first_name
-        if user.last_name:
-            name += ' ' + user.last_name
-        if not name:
-            if not self.name:
-                name = user.username
-            else:
-                name = self.name
-        return name
-    
-
     def is_admin(self):
         admin = False
         if self.groups.filter(name__in=['Admin']):
             admin = True
         return admin
-
-
-    @property
-    def admin_full_name(self):
-        admin_full_name = ''
-        if self.admin_first_name:
-            admin_full_name = self.admin_first_name
-        if self.admin_last_name and self.admin_first_name:
-            admin_full_name += ' ' + self.admin_last_name
-        elif self.admin_last_name:
-            admin_full_name = self.admin_last_name
-        return admin_full_name
 
     @classmethod
     def get_records(cls, request, params):
@@ -481,6 +180,16 @@ class Profile(user_model, CustomModel):
                 })
         return profile
 
+    def get_assistant_name(self):
+        a_full_name = ''
+        if self.admin_first_name:
+            a_full_name = self.admin_first_name
+        if self.admin_last_name and self.admin_first_name:
+            a_full_name += ' ' + self.admin_last_name
+        elif self.admin_last_name:
+            a_full_name = self.admin_last_name
+        return a_full_name
+
     @classmethod
     def get_admin_assistant_info(cls, request, params):
         profile_obj = params['profile_obj']
@@ -493,7 +202,7 @@ class Profile(user_model, CustomModel):
             'admin_fax',
             'admin_image',
             'mail_to_assistant'])
-        profile['admin_full_name'] = profile_obj.admin_full_name
+        profile['admin_full_name'] = profile_obj.get_assistant_name()
         return profile
 
     @classmethod
@@ -567,7 +276,6 @@ class Profile(user_model, CustomModel):
     @classmethod
     def get_details(cls, request, params):
         user_id = params.get('id')
-        group = params.get('type')
         if not user_id:
             user_id = request.user.id
         profile_orm = None
@@ -579,16 +287,11 @@ class Profile(user_model, CustomModel):
             profile_orm = Profile.objects.get(pk=user_id)
 
         if not profile_orm:
-            user_object = user_model.objects.get(pk=user_id)
-            if user_object.is_superuser:
-                profile_object = Profile(user_ptr=user_object, name=user_object.username)
-                profile_object.save()
-                create_group(user_object, 'Admin')
-                profile_orm = profile_object
+            return 'No role assigned yet'
         else:
-            admin_full_name = ''
+            assistant_name = ''
             try:
-                admin_full_name = profile_orm.admin_full_name
+                assistant_name = profile_orm.get_assistant_name()
             except:
                 pass
         profile = ws_methods.obj_to_dict(
@@ -632,7 +335,7 @@ class Profile(user_model, CustomModel):
         profile['signature_data'] = profile_orm.signature_data.decode()
         if profile['groups']:
             profile['group'] = profile['groups'][0]['name']
-        profile['admin_full_name'] = admin_full_name
+        profile['admin_full_name'] = assistant_name
         resume = profile_orm.resume
         if resume:
             profile['resume'] = {'id': resume.id}
@@ -792,32 +495,6 @@ class Profile(user_model, CustomModel):
         ]
         ws_methods.emit_event(events)
 
-    def password_reset_on_creation_email(self, random_password):
-        try:
-            if not self.email:
-                return 'User email not exists in system'
-
-            thread_data = {}
-            thread_data['subject'] = 'Password Rest'
-            thread_data['audience'] = [self.id]
-            thread_data['template_data'] = {
-                'url': server_base_url + '/user/reset-password/',
-                'password': random_password
-            }
-            thread_data['template_name'] = 'user/user_creation_password_reset.html'
-            thread_data['token_required'] = 1
-            thread_data['post_info'] = {
-                'res_app': 'meetings',
-                'res_model': 'Profile',
-                'res_id': self.id
-            }
-            ws_methods.send_email_on_creation(thread_data)
-            return 'done'
-        except:
-            res = ws_methods.get_error_message()
-            return res
-
-
     @classmethod
     def get_all_users(cls, request, params):
         users = None
@@ -841,9 +518,101 @@ class Profile(user_model, CustomModel):
         }
         return data
 
+    @classmethod
+    def verify_chat_user(cls, request, params):
+        data = {
+            'friends': [],
+            'friendIds': [],
+            'notifications': [],
+            'unseen': 0,
+            'committees': [],
+            'meetings': [],
+            'user': {
+                'id': request.user.id,
+                'name': 'Anonymous',
+                'photo': 'https://theareligroup.com/wp-content/uploads/2016/03/user-experiance-icon.png',
+            }
+        }
+        try:
+            uid = params['id']
+            uid = int(uid)
+            chat_users = Profile.objects.exclude(pk=uid).values('id', 'name', 'image', 'groups')
+            chat_users = list(chat_users)
+            unseen_messages = 0
+            friend_ids = []
+            committees = []
+            meetings = []
+            for friend in chat_users:
+                unseen = len(Message.objects.filter(sender_id=friend['id'], read_status=False, to=uid))
+                friend['unseen'] = unseen
+                unseen_messages += unseen
+                friend_ids.append(friend['id'])
+                friend['unseen'] = unseen
+                friend['photo'] = '/media/' + friend['image']
 
-# class Resume(File):
-#     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+            profile_object = Profile.objects.filter(pk=uid)
+            res = False
+            if not profile_object:
+                return 'Profile not created yet'
+            else:
+                profile_object = profile_object[0]
+                res = None
+                if not profile_object.groups.all():
+                    return 'No role assigned yet to user'
+            if res != 'done':
+                if res:
+                    data['message'] = {'error': res}
+                else:
+                    data['message'] = {'error': 'Error in group creation'}
+            req_user = {
+                'id': uid,
+                'name': profile_object.name,
+                'photo': profile_object.image.url,
+                'groups': list(profile_object.groups.all().values('id', 'name'))
+            }
+            committee_objects = profile_object.committees.all()
+            for obj in committee_objects:
+                committees.append({'id': obj.id, 'name': obj.name})
+            meeting_objects = profile_object.meetings.all()
+            for obj in meeting_objects:
+                meetings.append({'id': obj.id, 'name': obj.name})
+            for com in committee_objects:
+                committees.append({'id': com.id, 'name': com.name})
+            notifications = UserNotification.get_my_notifications(request, False)
+            chat_groups = profile_object.chat_groups.filter(active=True)
+            chat_groups_list = []
+            for obj in chat_groups:
+                unseen = len(MessageStatus.objects.filter(message__chat_group_id=obj.id, read=False))
+                is_owner = False
+                if obj.owner_id == request.user.id:
+                    is_owner = True
+                chat_group = {
+                    'id': obj.id, 'name': obj.name, 'unseen': unseen,
+                    'photo': '/static/assets/images/group.jpeg',
+                    'members': [],
+                    'is_owner': is_owner,
+                    'created_by': {
+                        'id': obj.created_by.id,
+                        'name': obj.created_by.name,
+                        'photo': obj.created_by.image.url,
+                    },
+                    'is_group': True
+                }
+                chat_groups_list.append(chat_group)
+            data = {
+                'friends': chat_users,
+                'friendIds': friend_ids,
+                'notifications': notifications,
+                'unseen': unseen_messages,
+                'user': req_user,
+                'committees': committees,
+                'meetings': meetings,
+                'chat_groups': chat_groups_list
+            }
+        except:
+            ws_methods.produce_exception()
+        return data
+
 
 class ManagerDirector(UserManager):
     def get_queryset(self):
@@ -858,51 +627,3 @@ class ManagerAdmin(UserManager):
 class ManagerStaff(UserManager):
     def get_queryset(self):
         return super(ManagerStaff, self).get_queryset().filter(groups__name__in=['Staff'])
-
-
-class Director(Profile):
-    objects = ManagerDirector()
-
-    class Meta:
-        proxy = True
-
-    def save(self, *args, **kwargs):
-        created = self.pk
-        super(Director, self).save(*args, **kwargs)
-        if not created:
-            create_group(self, 'Director')
-
-
-class Admin(Profile):
-    objects = ManagerAdmin()
-
-    class Meta:
-        proxy = True
-
-    def save(self, *args, **kwargs):
-        created = self.pk
-        super(Admin, self).save(*args, **kwargs)
-        if not created:
-            create_group(self, 'Admin')
-
-
-class Staff(Profile):
-    objects = ManagerStaff()
-
-    class Meta:
-        proxy = True
-        verbose_name_plural = "Staff"
-
-    def save(self, *args, **kwargs):
-        created = self.pk
-        super(Staff, self).save(*args, **kwargs)
-        if not created:
-            create_group(self, 'Staff')
-
-
-# ////////////////////GROUPS//////////////////////////////////
-
-
-# class MeetingGroup(group_model):
-#     pass
-    # app_label = models.CharField(max_length=100)

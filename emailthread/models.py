@@ -2,8 +2,6 @@ import os
 import sys
 import traceback
 import threading
-from mainapp import settings
-from PyPDF2 import PdfFileReader
 from django.core.mail import send_mail
 from restoken.models import PostUserToken
 from django.contrib.auth.models import User
@@ -112,62 +110,8 @@ class ThreadEmail(threading.Thread):
 
     def run (self):
         try:
-            subject = self.subject
             html_message = render_to_string(self.template_name, self.template_data)
             send_mail(self.subject, '', "sami@gmai.com", self.emails, html_message=html_message)
         except:
             pass
-            produce_exception('')
-
-
-class DocumentThread(threading.Thread):
-    def __init__(self, doc_obj):
-        self.doc_obj = doc_obj
-        threading.Thread.__init__(self)
-
-    def run (self):
-        try:
-            self.get_pdf(self.doc_obj)
-            if self.doc_obj.html:
-                self.doc_obj.content = self.doc_obj.html
-            else:
-                if not self.doc_obj.pdf_doc:
-                    produce_exception('File conversion failed')
-                if not self.doc_obj.pdf_doc.file:
-                    produce_exception('File conversion failed.')
-                self.doc_obj.content = self.text_extractor(self.doc_obj.pdf_doc)
-                self.doc_obj.uplaod_status = True
-            self.doc_obj.save()
-        except:
-            produce_exception('')
-
-    def get_pdf(self, doc):
-        try:
-            tmp = doc.attachment.url.split('.')
-            ext = tmp[len(tmp) - 1]
-            filename = doc.attachment.name.replace("files/","").split(".")[0]
-            pth = settings.BASE_DIR + doc.attachment.url
-            if ext in ('odt', 'doc','docx','ppt','pptx','pdf'):
-                doc.doc2pdf(pth,ext,filename)
-            elif ext == "xls" or ext =="xlsx":
-                doc.excel2xhtml(pth,filename)
-            elif ext in ['png','jpg','jpeg']:
-                doc.img2pdf(pth,filename)
-            else:
-                produce_exception('Invalid File Type')
-        except:
-            produce_exception('')
-    
-    def text_extractor(self, f):
-        try:    
-            pdf = PdfFileReader(f)
-            number_of_pages = pdf.numPages
-            n = 0
-            text = ''
-            while n != number_of_pages:
-                page = pdf.getPage(n)
-                text += page.extractText() + ' '
-                n += 1
-            return text
-        except:
             produce_exception('')

@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import json
 import os
 
+ALLOWED_HOSTS = [
+    '34.66.182.85',
+    'localhost', '127.0.0.1',
+    'boardsheet.com', 'www.boardsheet.com',
+    'meetvue.com', 'dn.meetvue.com', 'www.meetvue.com'
+]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -27,13 +34,6 @@ SECRET_KEY = 'd9phtmv5b^cqr$daog097))s@$776gvk$-ca&shxt&re*r31bn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = [
-    '34.66.182.85',
-    'localhost', '127.0.0.1',
-    'boardsheet.com', 'www.boardsheet.com',
-    'meetvue.com', 'dn.meetvue.com', 'www.meetvue.com'
-]
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

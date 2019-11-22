@@ -1,10 +1,11 @@
-import datetime
-
 import pytz
+import datetime
 from django.db import models
-from meetings.model_files.event import Event
 from django.utils.translation import ugettext_lazy as _
+
 from mainapp.models import CustomModel
+from meetings.model_files.event import Event
+
 
 class Actions(CustomModel):
     class Meta:

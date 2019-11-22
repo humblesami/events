@@ -10,7 +10,7 @@ from meetings.model_files.committee import Committee
 from meetings.model_files.user import Profile
 from django.views.decorators.debug import sensitive_post_parameters
 from meetings.model_files.document import MeetingDocument, AgendaDocument
-from .models import Event, Topic, News, NewsVideo, NewsDocument, Invitation_Response, LoginEntry
+from .models import Event, Topic, News, NewsVideo, NewsDocument, InvitationResponse, LoginEntry
 from django_currentuser.middleware import get_current_user
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
@@ -193,5 +193,5 @@ admin.site.register(Profile, UserAdmin)
 # admin.site.register(MeetingGroup, MeetingGroupAdmin)
 admin.site.register(Committee, CommitteeAdmin)
 admin.site.register(LoginEntry)
-admin.site.register(Invitation_Response, AttendeeAdmin)
+admin.site.register(InvitationResponse, AttendeeAdmin)
 admin.site.site_header = "BoardSheet"

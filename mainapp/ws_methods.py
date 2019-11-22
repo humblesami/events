@@ -4,6 +4,7 @@ import json
 import urllib
 import base64
 import requests
+import threading
 import traceback
 from random import randint
 from urllib.parse import urlsplit
@@ -23,7 +24,7 @@ from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
 
 from mainapp.settings import SOCKET_SERVER_URL
-from emailthread.models import EmailThread, DocumentThread
+from emailthread.models import EmailThread
 
 
 def now_str():
@@ -32,6 +33,7 @@ def now_str():
     now = now.replace(':', '-')
     now = now.replace('.', '-')
     return now
+
 
 def get_user_name(user):
     name = False
@@ -67,7 +69,8 @@ def execute_update(query):
     res = cr.execute(query)
     return res
 
-def stringfy_sytem_fields(dict_object):
+
+def stringify_fields(dict_object):
     if dict_object.get('updated_at'):
         dict_object['updated_at'] = str(dict_object['updated_at'])
     if dict_object.get('created_at'):
@@ -84,11 +87,13 @@ def execute_read(query):
     res = cr.dictfetchall()
     return res
 
+
 def set_obj_attrs(dict_key_values, py_obj):
     for prop in dict_key_values:
         py_obj. __setattr__(prop, dict_key_values[prop])
 
-def base64StringToFile(data, file_name):
+
+def base64_str_to_file(data, file_name):
     if 'data:' in data and ';base64,' in data:
         header, data = data.split(';base64,')
     try:
@@ -208,6 +213,7 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
 
     return dict
 
+
 def queryset_to_list(queryset,fields=None,to_str=None,related=None):
     list = []
     for obj in queryset:
@@ -215,7 +221,6 @@ def queryset_to_list(queryset,fields=None,to_str=None,related=None):
         list.append(dict)
 
     return list
-
 
 
 def obj_to_dict_search(obj,fields=None,to_str=None,related=None):
@@ -269,15 +274,10 @@ def check_auth_token(request,values):
 
     return user.id
 
-import threading
 
-def threadedOperation(operation, args):
+def threaded_operation(operation, args):
     obj = threading.Thread(target=operation, args=args)
     obj.start()
-
-
-def document_thread(doc):
-    DocumentThread(doc).start()
 
 
 def send_email_on_creation(email_data):
@@ -367,6 +367,7 @@ def get_user_info(users):
         users_info.append(user_info)
     return users_info
 
+
 def get_error_message():
     eg = traceback.format_exception(*sys.exc_info())
     errorMessage = ''
@@ -409,7 +410,7 @@ def duplicate_file(a, file_ptr, file_type):
     return a
 
 
-def detele_all_temp_files(request, user_id):
+def delete_all_temp_files(request, user_id):
     file_model = get_model('documents', 'File')
     method_to_call =  getattr(file_model, 'delete_all_tem_files')
     params = {'user_id': user_id}
@@ -454,6 +455,7 @@ search_apps = {
         }
 }
 
+
 def search_db(params, search_fields=None):
     results = None
     search_text = params['kw'].lower()
@@ -493,6 +495,7 @@ def generate_default_image(name):
     img.save(img_path)
     return 'profile' + pic_name
 
+
 def bytes_to_json(my_bytes_value):
     my_json = {'error': 'Invalid bytes value to get json'}
     try:
@@ -501,6 +504,7 @@ def bytes_to_json(my_bytes_value):
     except:
         pass
     return my_json
+
 
 def download_image(file):
     img_temp = NamedTemporaryFile(delete=True)

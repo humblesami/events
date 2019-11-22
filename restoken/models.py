@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from meetings.model_files.user import Profile
+from django.contrib.auth.models import User
 
 
 class PostInfo(models.Model):
@@ -13,7 +13,7 @@ class PostInfo(models.Model):
 
 class PostUserToken(models.Model):
     post_info = models.ForeignKey(PostInfo, on_delete=models.CASCADE)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=128)
 
     @classmethod
@@ -30,7 +30,6 @@ class PostUserToken(models.Model):
             post_info.save()
         else:
             post_info = post_info[0]
-        user = Profile.objects.get(pk=user_id)
         token = uuid.uuid4().hex[:20]
         user_token = PostUserToken(post_info_id=post_info.id, user_id=user_id, token=token)
         user_token.save()

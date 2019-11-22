@@ -286,7 +286,7 @@ class Voting(Actions):
             del voting_object['_state']
         if my_status:
             voting_object['my_status'] = my_status
-        ws_methods.stringfy_sytem_fields(voting_object)
+        ws_methods.stringify_fields(voting_object)
         return voting_object
 
 

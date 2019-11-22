@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-import datetime
 import pytz
+import datetime
 from django.db import models
 from ast import literal_eval
-from django.db.models import Q
 from django.urls import reverse
 from django.db.models import Count
-from mainapp import ws_methods
-from mainapp.settings import server_base_url
+
 from django.db.models.signals import m2m_changed
 from django.utils.translation import ugettext_lazy as _
-from actions.models import Actions
 from django_currentuser.middleware import get_current_user
+
+from mainapp import ws_methods
+from actions.models import Actions
+from mainapp.settings import server_base_url
 
 
 class Survey(Actions):
@@ -180,14 +181,14 @@ class Survey(Actions):
             question_dict = question.__dict__
             if question_dict['_state']:
                 del question_dict['_state']
-            ws_methods.stringfy_sytem_fields(question_dict)
+            ws_methods.stringify_fields(question_dict)
             if question_dict['choices']:
                 question_dict['choices'] = question_dict['choices'].split(',')
             survey_questions.append(question_dict)
         survey = survey_obj.__dict__
         if survey['_state']:
             del survey['_state']
-        ws_methods.stringfy_sytem_fields(survey)
+        ws_methods.stringify_fields(survey)
         survey['questions'] = survey_questions
         survey['open_date'] = str(survey['open_date'])
         survey['close_date'] = str(survey['close_date'])

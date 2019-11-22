@@ -1,18 +1,21 @@
 import re
-from django.db import transaction
-from meetings.model_files.user import *
-from mainapp.models import CustomModel
-from django_currentuser.middleware import get_current_user
-from django.db.models import Q
+
+from documents.file import File
 from mainapp import ws_methods
-from django.db.models.signals import m2m_changed
+from mainapp.models import CustomModel
 from mainapp.settings import server_base_url
+
+from django.db.models import Q
+from django.db import transaction, models
+from django.contrib.auth.models import User
+from django.db.models.signals import m2m_changed
+from django_currentuser.middleware import get_current_user
 
 
 class Folder(CustomModel):
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-    users = models.ManyToManyField(Profile, related_name='folder_audience', blank=True)
+    users = models.ManyToManyField(User, related_name='folder_audience', blank=True)
     personal = models.BooleanField(default=False, null=True)
 
     def __str__(self):
@@ -384,8 +387,7 @@ class Folder(CustomModel):
         offset = params.get('offset')
         limit = params.get('limit')
         records = []
-        users_obj = ws_methods.get_model('meetings', 'Profile')
-        users_obj = users_obj.objects.all().order_by('-pk')
+        users_obj = User.objects.all().order_by('-pk')
         all_users = list(users_obj.values('id', 'name'))
         if limit:
             folders = folders[offset: offset + int(limit)]
@@ -466,7 +468,7 @@ m2m_changed.connect(save_folder_users, sender=Folder.users.through)
 
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
-    users = models.ManyToManyField(Profile, related_name='file_audience', blank=True)
+    users = models.ManyToManyField(User, related_name='file_audience', blank=True)
     personal = models.BooleanField(default=False, null=True)
 
     def __str__(self):

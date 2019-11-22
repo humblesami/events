@@ -5,6 +5,8 @@ from django_currentuser.middleware import get_current_user
 
 
 class CustomModel(models.Model):
+    class Meta:
+        abstract = True
     created_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(
         user_model,
@@ -21,8 +23,6 @@ class CustomModel(models.Model):
         related_name='%(app_label)s_%(class)s_updated_by',
         related_query_name='%(app_label)s_%(class)s'
         )
-    class Meta:
-        abstract = True
     
     def save(self, *args, **kwargs):
         req_user = get_current_user()
@@ -33,3 +33,5 @@ class CustomModel(models.Model):
             self.updated_at = datetime.datetime.now()
             self.updated_by = req_user
         super(CustomModel, self).save(*args, **kwargs)
+
+

@@ -24,7 +24,7 @@
         "pk": 1,
         "model": "auth.user",
         "fields": {
-            "username": "muhammad.faizan@digitalnet.com",
+            "username": "sa",
             "first_name": "Faize",
             "last_name": "Ansari",
             "is_active": true,
@@ -34,6 +34,18 @@
             "user_permissions": [],
             "password": "pbkdf2_sha256$150000$IcCUgVA4XXlg$zcfM9BdEPRQ3AR9J6A6jfRLnfT+2jUUvmp2XqLHj0ok=",
             "email": "muhammad.faizan@digitalnet.com"
+        }
+    },
+    {
+        "model": "authsignup.AuthUser",
+        "fields": {
+            "user_ptr_id": 1
+        }
+    },
+    {
+        "model": "meetings.Profile",
+        "fields": {
+            "user_ptr_id": 1
         }
     }
 ]
