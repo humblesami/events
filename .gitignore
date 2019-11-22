@@ -14,11 +14,7 @@ media/*
 media/profile/*
 !media/profile/default.pngx
 !media/profile/ETjUSr1v2n.png
-*/migrations
-*/migrations/*
-*/migrations/*.py
-000*.py
-*/000*.py
+/**/migrations
 config.json
 */node_modules
 static/build/static

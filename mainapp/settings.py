@@ -31,8 +31,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '34.66.182.85','172.16.21.170', 
     'localhost', 
-    'boardsheet.com', 'www.boardsheet.com',
-    'meetvue.com', 'www.meetvue.com'
+    'boardsheet.com', '*.boardsheet.com', 'www.*.boardsheet.com', 'www.boardsheet.com',
+    'meetvue.com', '*.meetvue.com', 'www.*.meetvue.com', 'www.meetvue.com'
 ]
 
 EMAIL_HOST = 'smtp.gmail.com'
