@@ -14,6 +14,7 @@ import os
 
 ALLOWED_HOSTS = [
     '34.66.182.85',
+    'sd', 'a1.sd', 'a2.sd', 'a3.sd',
     'localhost', '127.0.0.1',
     'boardsheet.com', 'www.boardsheet.com',
     'meetvue.com', 'dn.meetvue.com', 'www.meetvue.com'

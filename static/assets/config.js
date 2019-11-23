@@ -38,7 +38,8 @@ network_config_https.db = network_config.db = site_config_local.db = site_config
 
 var site_config = site_config_live;
 var is_localhost = false;
-var current_site_base_url = window.location.hostname + '';
+var current_site_base_url = window.location.protocol+'//' + window.location.hostname + '';
+console.log(current_site_base_url);
 if(current_site_base_url.indexOf('localhost') > -1)
 {
     site_config = site_config_local;
