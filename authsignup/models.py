@@ -60,7 +60,7 @@ class AuthUser(user_model, CustomModel):
                         pass
                     self.image = ws_methods.generate_default_image(self.name)
 
-
+        random_password = None
         if self.password and len(self.password) <= 15:
             random_password = self.password
         super(AuthUser, self).save(*args, **kwargs)
