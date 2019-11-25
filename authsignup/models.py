@@ -40,14 +40,8 @@ class AuthUser(user_model, CustomModel):
         if self.two_factor_auth and self.two_factor_auth == 2 and not self.mobile_verified:
             return
         profile_obj = AuthUser.objects.filter(pk=self.pk)
-        password = ''
-        if len(self.password) <= 15:
-            password = self.password
-
         if not profile_obj:
             creating = True
-            if password:
-                self.set_password(password)
             self.is_staff = True
             if self.email and not self.username:
                 self.username = self.email
@@ -66,22 +60,18 @@ class AuthUser(user_model, CustomModel):
                         pass
                     self.image = ws_methods.generate_default_image(self.name)
 
-        random_password = password
+
+        if self.password and len(self.password) <= 15:
+            random_password = self.password
         super(AuthUser, self).save(*args, **kwargs)
         if creating:
             if not self.is_superuser:
-                if not password:
+                if not random_password:
                     random_password = uuid.uuid4().hex[:8]
-                else:
-                    random_password = password
-                self.password_reset_on_creation_email(random_password)                
-            if random_password:
-                self.set_password(random_password)
-                super(AuthUser, self).save(*args, **kwargs)
-        else:
-            if random_password:
-                self.set_password(random_password)
-                super(AuthUser, self).save(*args, **kwargs)
+                self.password_reset_on_creation_email(random_password)
+        if random_password:
+            self.set_password(random_password)
+            super(AuthUser, self).save(*args, **kwargs)
 
     def fullname(self):
         user = self
