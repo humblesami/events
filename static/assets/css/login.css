@@ -171,6 +171,9 @@ body {
     .Login-form-wrapper .hide-small{
         display: block;    
     }
+    .login-form-div.login-form.forgot{
+        width: 50%;
+    }
 }
 @media (max-width: 767px) {
     .login-logo-image{
@@ -178,7 +181,10 @@ body {
     }
     .login-form {
         width: 250x;
-    }    
+    }
+    .login-form-div.login-form.forgot{
+        width: 90%;
+    }
 }
 @media (max-width: 420px) {    
     .login-logo-image{

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
 import { HttpService } from '../../app/http.service'
 declare var $:any;
 
@@ -43,7 +41,7 @@ export class ForgotpasswordComponent implements OnInit {
 		else{
 			obj_this.valid = false;
 		}
-	}
+    }
 
 	onSubmit() {
 		let obj_this = this;
@@ -58,7 +56,7 @@ export class ForgotpasswordComponent implements OnInit {
 		};
 		var failure_cb = function (error) {
 			obj_this.valid = false;
-            obj_this.error = error;            
+            obj_this.error = error;
         };
         let args = {
             app: 'authsignup',
