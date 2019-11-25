@@ -140,7 +140,7 @@ class AuthUser(user_model, CustomModel):
         user_groups = list(user.groups.all().values())
         user_data = {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
         try:
-            user_data['photo'] = user.image.url
+            user_data['photo'] = user.authuser.image.url
             user_data['user_photo'] = user_data['photo']
         except:
             pass        
