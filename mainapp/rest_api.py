@@ -17,7 +17,7 @@ public_methods = {
         'AuthUser': {
             'login_user': 1,
             'reset_password': 1,
-            'set_password': 1
+            'set_user_password': 1
         }
     },
     'meetings': {

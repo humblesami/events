@@ -40,10 +40,14 @@ class AuthUser(user_model, CustomModel):
         if self.two_factor_auth and self.two_factor_auth == 2 and not self.mobile_verified:
             return
         profile_obj = AuthUser.objects.filter(pk=self.pk)
-        password = self.password
+        password = ''
+        if len(self.password) <= 15:
+            password = self.password
 
         if not profile_obj:
             creating = True
+            if password:
+                self.set_password(password)
             self.is_staff = True
             if self.email and not self.username:
                 self.username = self.email
@@ -62,15 +66,22 @@ class AuthUser(user_model, CustomModel):
                         pass
                     self.image = ws_methods.generate_default_image(self.name)
 
+        random_password = password
         super(AuthUser, self).save(*args, **kwargs)
         if creating:
             if not self.is_superuser:
-                random_password = uuid.uuid4().hex[:8]
-                self.password_reset_on_creation_email(random_password)
-                self.user_ptr.set_password(random_password)
-            else:
-                self.user_ptr.set_password(password)
-            self.user_ptr.save()
+                if not password:
+                    random_password = uuid.uuid4().hex[:8]
+                else:
+                    random_password = password
+                self.password_reset_on_creation_email(random_password)                
+            if random_password:
+                self.set_password(random_password)
+                super(AuthUser, self).save(*args, **kwargs)
+        else:
+            if random_password:
+                self.set_password(random_password)
+                super(AuthUser, self).save(*args, **kwargs)
 
     def fullname(self):
         user = self
@@ -279,7 +290,7 @@ class AuthUser(user_model, CustomModel):
             return 'Wrong old password'
 
     @classmethod
-    def set_password(cls, request, params):
+    def set_user_password(cls, request, params):
         password = params['password']
         token = params['token']
         user_token = PostUserToken.validate_token(token,1)

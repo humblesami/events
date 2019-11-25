@@ -105,7 +105,10 @@ class UserForm(forms.ModelForm):
         req_user = get_current_user()
         if req_user.is_superuser:
             if 'password' in self.changed_data:
-                user.set_password(self.data['password'])
+                if len(self.data['password']) < 15:
+                    user.password = self.data['password']
+                else:
+                    user.password = ''
         if commit:
             user.save()
         return user

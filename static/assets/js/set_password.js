@@ -7,7 +7,7 @@
                     args:{
                         app: 'authsignup',
                         model: 'AuthUser',
-                        method: 'set_password',
+                        method: 'set_user_password',
                     },
                     params: {
                         password: $('.new-password').val(),

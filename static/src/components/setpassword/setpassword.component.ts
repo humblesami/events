@@ -67,7 +67,7 @@ export class SetpasswordComponent implements OnInit {
 		let args = {
             app: 'authsignup',
             model: 'AuthUser',
-            method: 'set_password'
+            method: 'set_user_password'
         }			
         let final_input_data = {
             params: input_data,
