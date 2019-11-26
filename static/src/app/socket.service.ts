@@ -136,44 +136,38 @@ export class SocketService {
             id:authorized_user.id,
             group: undefined
         }
+        // console.log(authorized_user.groups);
         if(!authorized_user.groups)
         {
             authorized_user.groups = [];
         }
+        obj_this.actually_admin = false;
         if(authorized_user.groups.length > 0)
         {
             me.group = authorized_user.groups[0].name;
+            var admin_group = authorized_user.groups.filter(function(item){return item.name == 'Admin' })            
+            if(admin_group.length)
+            {
+                obj_this.actually_admin = true;
+            }
         }
         // console.log(me);
-        $('#main-div').show();
-        for(var i = 0; i < authorized_user.groups.length; i++){
-            if( authorized_user.groups[i].name == 'Admin'){
-                obj_this.actually_admin = true;
-                break;
-            }
-            else
-            {
-                obj_this.actually_admin = false;
-            }
-        }
+        $('#main-div').show();        
         var admin_mode_cookie = localStorage.getItem('admin_mode');
         if (!admin_mode_cookie)
         {
             localStorage.setItem('admin_mode', JSON.stringify({admin_mode: false}));
             obj_this.admin_mode = false;
-            obj_this.actually_admin = false;
         }
         else if (!obj_this.actually_admin)
         {
             localStorage.setItem('admin_mode', JSON.stringify({admin_mode: true}));
             obj_this.admin_mode = false;
-            obj_this.actually_admin = false;
         }
         else
         {
             let admin_mode_obj = JSON.parse(admin_mode_cookie);
-            obj_this.admin_mode = admin_mode_obj['admin_mode'];
-            obj_this.actually_admin = true;
+            obj_this.admin_mode = admin_mode_obj['admin_mode'];            
         }
         obj_this.user_data = authorized_user;
 
