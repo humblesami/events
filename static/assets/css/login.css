@@ -159,6 +159,12 @@ body {
     border-radius: 10px;
     padding-top:5px;
 } */
+.forgot-label{
+	margin-bottom: 10px;
+}
+.login-form-div.login-form.forgot:hover{
+	text-decoration: none;
+}
 @media (min-width: 800px) and (max-width: 1200px) {
     .Login-form-wrapper:before {
         display: block;
@@ -178,10 +184,7 @@ body {
 @media (max-width: 767px) {
     .login-logo-image{
         width: 70%;
-    }
-    .login-form {
-        width: 250x;
-    }
+    }    
     .login-form-div.login-form.forgot{
         width: 90%;
     }

@@ -14,11 +14,12 @@ $(function(){
         var one_keys = {
             'meetvue.com' : "df45ae45-68bd-4568-a473-4159a1b16fc1",
             'boardsheet.com' : "edcfe98f-e101-4041-9510-0a846e0d3a0d",
-            'localhost:8000' : "df45ae45-68bd-4568-a473-4159a1b16fc1",
+            'localhost' : "df45ae45-68bd-4568-a473-4159a1b16fc1",
         }
         var api_key = '';
         for(var key in one_keys)
         {
+
             if(window['site_url'].indexOf(key) > - 1) 
             {
                 api_key =  one_keys[key];

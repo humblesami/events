@@ -32,7 +32,7 @@
                         <i class="icon-doc-file"></i>
                     </span>
                 </div>
-                <div class="DocText" (click)="renameService.prevent_default($event, personal)">
+                <div title="Rename Document" class="DocText" (click)="renameService.prevent_default($event, personal)">
                     <div class="DocName w-100">
                         <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
                             <span class="text-truncate doc-info" [ngClass]="{'mt-2': (!socketService.admin_mode && !personal)}">{{doc.name}}</span>                            
@@ -41,19 +41,19 @@
                 </div>
             </a>
             <a class="DocumentWrapper gray-bg doc" 
-            *ngIf="!doc.invalid"
-            [ngClass]="{personal: doc.personal}"            
-            routerLink="{{roterLinkPrefix+doc.id}}"
-            >
+                *ngIf="!doc.invalid"
+                [ngClass]="{personal: doc.personal}"
+                routerLink="{{roterLinkPrefix+doc.id}}"
+                >
                 <input type="hidden" class="item_id" value="{{doc.id}}" />
                 <div class="doc-del-btn d-flex" *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly">
                     <div class="pointer" *ngIf="parent_model == 'Folder'"
-                    title="Move"
+                    title="Move Document"
                     (click)="renameService.make_movable($event, parent_id, doc.id, 'files', doc.personal)">
                         <i class="fas fa-cut" ></i>
                     </div>
                     <div class="pointer"
-                    title="Delete"
+                    title="Delete Document"
                     (click)="delete_file($event, doc.id)">
                         <i class="far fa-trash-alt" ></i>
                     </div>
@@ -71,17 +71,17 @@
                         <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
                             <span class="text-truncate doc-info" [ngClass]="{'mt-2': (!socketService.admin_mode && !personal)}">{{doc.name}}</span>
                             <span class="d-flex">
-                                <button (click)="renameService.enable_rename($event, doc)" *ngIf="socketService.admin_mode || personal" class="btn btn-sm btn-primary ml-2 mr-1">
+                                <button title="Rename Document" (click)="renameService.enable_rename($event, doc)" *ngIf="socketService.admin_mode || personal" class="btn btn-sm btn-primary ml-2 mr-1">
                                     <i class="fas fa-edit "></i>
                                 </button>
-                                <button *ngIf="res_model=='ResourceDocument' && (socketService.admin_mode || personal)" 
+                                <button title="Define Access" *ngIf="res_model=='ResourceDocument' && (socketService.admin_mode || personal)" 
                                 (click)="userService.get_access_details(doc,'resources','ResourceDocument', parent)" class="btn btn-sm btn-primary">
                                     <i class="fa fa-user-plus"></i>
                                 </button>
                             </span>
                         </div>
                         
-                        <div *ngIf="personal_access && doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
+                        <div title="Rename Document" *ngIf="personal_access && doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
                             <input class="form-control renamer"   
                                 (blur)="renameService.renamer_focused_out($event,doc,'file')"                             
                                 (keyup)="renameService.renamer_focused_out($event,doc,'file')"												

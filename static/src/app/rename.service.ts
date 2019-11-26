@@ -94,8 +94,8 @@ export class RenameService {
         input_data['app'] = app;
         input_data['model'] = model;
         let args = {
-            app: 'authsignup',
-            model: 'AuthUser',
+            app: 'my_admin',
+            model: 'Helper',
             method: 'rename_item'
         }
         let final_input = {
