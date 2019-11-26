@@ -269,30 +269,30 @@ class Event(CustomModel):
         if not is_respondant:
             return 'Unauthorized'
         if user_response:
-            InvitationResponse = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id=user_id)
-            if InvitationResponse:
-                InvitationResponse = InvitationResponse[0]
-                InvitationResponse.state = user_response
-                InvitationResponse.save()
+            ResponseList = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id=user_id)
+            if ResponseList:
+                ResponseList = ResponseList[0]
+                ResponseList.state = user_response
+                ResponseList.save()
             else:
-                InvitationResponse = InvitationResponse(state=user_response, event_id=meeting_id, attendee_id=user_id)
-                InvitationResponse.save()
+                ResponseList = ResponseList(state=user_response, event_id=meeting_id, attendee_id=user_id)
+                ResponseList.save()
             return 'done'
         elif user_attendance:
             data = {
                 'attendance_marked': False
             }
             user_id = params['user_id']
-            InvitationResponse = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id=user_id)
-            if InvitationResponse:
-                InvitationResponse = InvitationResponse[0]
-                InvitationResponse.attendance = user_attendance
-                InvitationResponse.save()
-                data['attendance_marked'] = InvitationResponse.event.attendance_marked
+            ResponseList = InvitationResponse.objects.filter(event_id=meeting_id, attendee_id=user_id)
+            if ResponseList:
+                ResponseList = ResponseList[0]
+                ResponseList.attendance = user_attendance
+                ResponseList.save()
+                data['attendance_marked'] = ResponseList.event.attendance_marked
             else:
-                InvitationResponse = InvitationResponse(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
-                InvitationResponse.save()
-                data['attendance_marked'] = InvitationResponse.event.attendance_marked
+                ResponseList = ResponseList(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
+                ResponseList.save()
+                data['attendance_marked'] = ResponseList.event.attendance_marked
             return data
         return 'Something Wrong in Response Invitation'
 
@@ -437,17 +437,17 @@ class Event(CustomModel):
 
     @classmethod
     def get_attendance_status(cls, meeting, uid):
-        InvitationResponse = InvitationResponse.objects.filter(event_id=meeting.id, attendee_id=uid)
+        ResponseList = InvitationResponse.objects.filter(event_id=meeting.id, attendee_id=uid)
         attendance_status = {
             'state': 'needsAction',
             'response_by': '',
             'attendance': ''
         }
-        if InvitationResponse:
-            InvitationResponse = list(InvitationResponse)[0]
-            attendance_status['state'] = InvitationResponse.state
-            attendance_status['response_by'] = InvitationResponse.state_by
-            attendance_status['attendance'] = InvitationResponse.attendance
+        if ResponseList:
+            ResponseList = list(ResponseList)[0]
+            attendance_status['state'] = ResponseList.state
+            attendance_status['response_by'] = ResponseList.state_by
+            attendance_status['attendance'] = ResponseList.attendance
         my_event = meeting.attendees.filter(pk=uid)
         if my_event:
             attendance_status['my_event'] = 1
