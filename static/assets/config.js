@@ -37,7 +37,6 @@ var network_config_https = {
 var site_config = {};
 var is_localhost = false;
 var current_site_base_url = window.location.protocol+'//' + window.location.hostname + '';
-console.log(current_site_base_url);
 if(current_site_base_url.indexOf('localhost') > -1)
 {
     site_config = site_config_local;
@@ -45,13 +44,15 @@ if(current_site_base_url.indexOf('localhost') > -1)
 }
 else
 {
-	site_config = site_config_live;
+    site_config = site_config_live;
+    site_config.server_base_url = site_config.site_url = current_site_base_url;
 	is_localhost = false;
 }
+
 window['site_url'] = site_config.site_url;
 window['server_url'] = site_config.server_base_url;
+
 site_config.public_urls = ['login']
-//console.log(site_config);
 site_config['app_name'] = 'meetings';
 if(is_localhost)
 {
@@ -60,3 +61,4 @@ if(is_localhost)
 }
 site_config.trace_request = 1;
 window['site_config'] = site_config;
+console.log(site_config);
