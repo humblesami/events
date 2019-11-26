@@ -76,7 +76,9 @@ function addChoicesButton(el) {
     $('#questions-group table tr th:nth-child(4)').hide();
     var parent = $(el).parent();
     parent.find('button').remove();
-    if (el.value == 'radio' || el.value == 'select-multiple') {
+    if (el.value == 'radio' || el.value == 'select-multiple') 
+    {   
+        $('.submit-row').find('input[type="submit"]').attr('disabled', 'disabled');
         $(el).parent().find('.tagsinput').show();
         var choices_tag_input = $(el).parent().next().find('textarea');
         parent.append(choices_tag_input);
@@ -102,12 +104,13 @@ function addChoicesButton(el) {
                 parent.next().find('textarea').val($(this).val());
                 let choices = $(this).val();
                 choices = choices_to_list(choices);
-                if (!choices.length)
-                {
-                    parent.find('.choice_error').remove();
-                    $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
-                }
-                else if( choices.length == 1)
+                // if (!choices.length)
+                // {
+                //     parent.find('.choice_error').remove();
+                //     $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
+                // }
+                // else if( choices.length == 1)
+                if( choices.length == 1)
                 {
                     parent.find('.choice_error').remove();
                     parent.append('<span class="choice_error" style="color:red">Please add more than 1 choices</span>');
