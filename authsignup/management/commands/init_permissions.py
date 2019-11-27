@@ -80,8 +80,13 @@ class Command(BaseCommand):
         
         print('\033[32m' +'Permissions are set to the Groups' + '\x1b[0m')
 
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--fixtures', action='store_true', help='load fixtures')
+
     def handle(self, *args, **kwargs):
-        call_command('loaddata', 'meetings/fixtures/userdata.json')
+        fixtures = kwargs['fixtures']
+        if fixtures:
+            call_command('loaddata', 'meetings/fixtures/userdata.json')
         self.add_permissions()
 
 

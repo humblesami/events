@@ -45,7 +45,8 @@
     {
         "model": "meetings.Profile",
         "fields": {
-            "user_ptr_id": 1
+            "user_ptr_id": 1,
+            "authuser_ptr_id": 1
         }
     },
     {
