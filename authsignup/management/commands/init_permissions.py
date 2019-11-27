@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
 from django.utils import timezone
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import ContentType
@@ -9,7 +10,7 @@ import json
 class Command(BaseCommand):
     help = 'Displays current time'
 
-    def add_permissions(self):
+    def load_data_from_local_files(self):
         group_permissions_data = None
         content_types_data = None
         with open('group_permissions.json', 'r') as gperms:
@@ -17,7 +18,11 @@ class Command(BaseCommand):
 
         with open('content_types.json', 'r') as ctypes:
             content_types_data = json.load(ctypes)
-        print('Please wait setting up permissions...')
+        return group_permissions_data, content_types_data
+
+    def add_permissions(self):
+        group_permissions_data, content_types_data = self.load_data_from_local_files()
+        print('Please wait setting up group permissions...')
         with transaction.atomic():
             for group in group_permissions_data:
                 obj_group = Group.objects.get(name=group)
@@ -28,12 +33,18 @@ class Command(BaseCommand):
                     for model in models:
                         perms = models[model]
                         for key, val in perms.items():
-                            if val:
-                                content_type_id = content_types_data[app][model]
-                                code_name = key + '_' + model
-                                obj_perm = Permission.objects.get(content_type_id=content_type_id,
-                                                                codename=code_name)
-                                obj_group.permissions.add(obj_perm)
+                            try:
+                                if val:
+                                    content_type_id = content_types_data[app][model]
+                                    code_name = key + '_' + model
+                                    obj_perm = Permission.objects.get(content_type_id=content_type_id,
+                                                                    codename=code_name)
+                                    obj_group.permissions.add(obj_perm)
+                                    print(key + ' permission over app: '+ app +' and model: '+ model +' has been given to ' + group)
+                                else:
+                                    print(key + ' permission over app: '+ app +' and model: '+ model +' has not been given to ' + group)
+                            except:
+                                print('Something went wrong while giving permission of ' + key + ' over app: '+ app +' and model: '+ model)
 
         print('Permissions are set to the Groups')
         # for group in obj_permissions:            
@@ -54,6 +65,7 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **kwargs):
+        call_command('loaddata', 'meetings/fixtures/userdata.json')
         self.add_permissions()
         # perms = Permission.objects.all()
         # for perm in perms:
