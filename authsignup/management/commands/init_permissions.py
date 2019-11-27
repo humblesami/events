@@ -8,65 +8,94 @@ from django.db import transaction
 import json
 
 class Command(BaseCommand):
-    help = 'Displays current time'
+    help = 'Load initial data fixture and assign permissions to the groups'
 
     def load_data_from_local_files(self):
         group_permissions_data = None
-        content_types_data = None
         with open('group_permissions.json', 'r') as gperms:
             group_permissions_data = json.load(gperms)
+        return group_permissions_data
 
-        with open('content_types.json', 'r') as ctypes:
-            content_types_data = json.load(ctypes)
-        return group_permissions_data, content_types_data
+    def get_content_type_data(self):
+        content_types_data = {}
+        models_list = []
+        ctypes = ContentType.objects.all()
+        for ctype in ctypes:
+            model_name = ctype.app_label + '.' + ctype.model
+            if model_name not in models_list:
+                models_list.append(model_name)
+            try:
+                if not content_types_data[ctype.app_label]:
+                    content_types_data[ctype.app_label] = {}
+            except:
+                content_types_data[ctype.app_label] = {}
+            content_types_data[ctype.app_label].update({
+                ctype.model: ctype.id
+            })
+        return content_types_data, models_list
 
     def add_permissions(self):
-        group_permissions_data, content_types_data = self.load_data_from_local_files()
-        print('Please wait setting up group permissions...')
+        permissions_models_list = []
+        group_permissions_data = self.load_data_from_local_files()
+        content_types_data, content_type_models_list = self.get_content_type_data()
+        print('\033[1m' + '\033[4m' + '\033[94m' + 'Please wait setting up group permissions...' + '\x1b[0m')
         with transaction.atomic():
             for group in group_permissions_data:
                 obj_group = Group.objects.get(name=group)
                 obj_group.permissions.clear()
                 apps = group_permissions_data[group]
                 for app in apps:
+                    print('\033[95m' + app + '\x1b[0m')
                     models = apps[app]
                     for model in models:
                         perms = models[model]
                         for key, val in perms.items():
                             try:
+                                model_name = app + '.' + model
+                                if model_name not in permissions_models_list:
+                                    permissions_models_list.append(model_name)
                                 if val:
                                     content_type_id = content_types_data[app][model]
                                     code_name = key + '_' + model
                                     obj_perm = Permission.objects.get(content_type_id=content_type_id,
                                                                     codename=code_name)
                                     obj_group.permissions.add(obj_perm)
-                                    print(key + ' permission over app: '+ app +' and model: '+ model +' has been given to ' + group)
+                                    print('\t' + '- \033[32m' + key + '\x1b[0m ' + model +' - \033[1m \033[94m' + group + '\x1b[0m ' + '\033[32m' + u'\u2714' + '\x1b[0m')
                                 else:
-                                    print(key + ' permission over app: '+ app +' and model: '+ model +' has not been given to ' + group)
+                                    print('\t' + '- \033[91m' + key + '\x1b[0m ' + model +' - \033[1m \033[94m' + group + '\x1b[0m ' + '\033[91m' + u'\u2718' + '\x1b[0m')
                             except:
-                                print('Something went wrong while giving permission of ' + key + ' over app: '+ app +' and model: '+ model)
+                                print('\t' + '- \033[93m' + key + '\x1b[0m ' + model +' - \033[1m \033[94m' + group + '\x1b[0m ' + '\033[91m' + u'\u2718' + ' error' + '\x1b[0m')
+            
+        models_not_in_permission_set = list(set(content_type_models_list) - set(permissions_models_list))
+        models_not_in_content_type_set = list(set(permissions_models_list) - set(content_type_models_list))
 
-        print('Permissions are set to the Groups')
-        # for group in obj_permissions:            
-        #     obj_group = {}
-        #     obj_group.permissions.clear()
-        #     for app in apps:
-        #         for model in models:
-        #             content_type_id = content_types[app][model]
-        #             for perm_type in model:
-        #                 code_name = perm_type + '_' + model
-        #                 obj_perm = Permission.objects.get(codename = code_name, content_type_id=content_type_id)
-        #                 obj_group.permissions.add(obj_perm.id)
-
-
-
-
-        # pass
-
+        if len(models_not_in_permission_set):
+            print('\033[91m' + 'models not in permissions set are ')
+            print(models_not_in_permission_set)
+            print('\x1b[0m')
+        if len(models_not_in_content_type_set):
+            print('\033[91m' + 'models not in content type set are ')
+            print(models_not_in_content_type_set)
+            print('\x1b[0m')
+        
+        print('\033[32m' +'Permissions are set to the Groups' + '\x1b[0m')
 
     def handle(self, *args, **kwargs):
         call_command('loaddata', 'meetings/fixtures/userdata.json')
         self.add_permissions()
+
+
+
+
+####### list difference
+####### file for sample permissions
+
+
+
+
+
+
+######################## some code to generate data files ######################
         # perms = Permission.objects.all()
         # for perm in perms:
         #     print(perm.name)

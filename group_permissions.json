@@ -1142,6 +1142,12 @@
                 "delete": 1,
                 "view": 1,
                 "change": 1
+            },
+            "abc_postusertoken": {
+                "add": 1,
+                "delete": 1,
+                "view": 1,
+                "change": 1
             }
         }
     }
