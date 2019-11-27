@@ -42,8 +42,8 @@ export class UserService {
             user_ids.push(user.id);
         }
         let args = {
-            app: 'authsignup',
-            model: 'AuthUser',
+            app: 'my_admin',
+            model: 'Helper',
             method: 'define_access'
         }
         let final_input_data = {
@@ -75,8 +75,8 @@ export class UserService {
         obj_this.selected_object = obj;
         
         let args = {
-            app: 'authsignup',
-            model: 'AuthUser',
+            app: 'my_admin',
+            model: 'Helper',
             method: 'get_resource_audience'
         }
         let params = {

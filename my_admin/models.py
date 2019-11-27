@@ -70,7 +70,8 @@ class Helper(models.Model):
 
         model = apps.get_model(app_name, model_name)
         users = model.objects.get(pk=object_id).users.all()
-        audience = list(users.values('id', 'name'))
+        audience = list(users.values('id', 'authuser__name'))
+        audience = ws_methods.replace_key_in_dict(audience,'authuser__name', 'name')
 
         valid_audience = []
         if parent:
@@ -84,7 +85,9 @@ class Helper(models.Model):
 
             users = model.objects.get(pk=parent_id).users.all()
             # valid_audience = list(users.values('id', 'name', 'image'))
-            valid_audience = ws_methods.queryset_to_list(users, ['id', 'name', 'image'])
+            valid_audience = ws_methods.queryset_to_list(users, ['id', 'authuser__name', 'authuser__image'])
+            valid_audience = ws_methods.replace_key_in_dict(valid_audience,'authuser__name', 'name')
+            valid_audience = ws_methods.replace_key_in_dict(valid_audience,'authuser__image', 'image')
+
         res = {'selected': audience, 'valid': valid_audience}
         return res
-

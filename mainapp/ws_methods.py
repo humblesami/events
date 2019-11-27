@@ -274,6 +274,11 @@ def check_auth_token(request,values):
 
     return user.id
 
+def replace_key_in_dict(values, old_key, new_key):
+    for obj in values:
+        obj[new_key] = obj.pop(old_key)
+
+    return values
 
 def threaded_operation(operation, args):
     obj = threading.Thread(target=operation, args=args)
