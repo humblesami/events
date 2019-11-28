@@ -50,7 +50,7 @@
                                 <button title="Rename Folder" *ngIf="(socketService.admin_mode || folder.personal)" 
                                 (click)="renameService.enable_rename($event, folder)"
                                 class="btn btn-sm btn-primary mr-1">
-                                    <i class="fas fa-edit "></i>
+                                <svg _ngcontent-c9="" height="20" viewBox="0 0 35.813 35.809" width="15" xmlns="http://www.w3.org/2000/svg"><g _ngcontent-c9="" id="edit" transform="translate(0 -0.028)"><path _ngcontent-c9="" d="M33.494,2.346a7.9,7.9,0,0,0-11.179,0L1.819,22.834a1.025,1.025,0,0,0-.29.588L.01,34.669a1.022,1.022,0,0,0,.29.862,1.042,1.042,0,0,0,.725.305.829.829,0,0,0,.137-.008l6.776-.916a1.032,1.032,0,0,0-.275-2.045L2.231,33.6l1.061-7.844,8.256,8.256a1.042,1.042,0,0,0,.725.305A1.01,1.01,0,0,0,13,34.013l20.5-20.488a7.894,7.894,0,0,0,0-11.179ZM22.712,4.864l3.441,3.441-18.7,18.7L4.009,23.567ZM12.28,31.831,8.915,28.466l18.7-18.7,3.365,3.365ZM32.418,11.655,24.184,3.422a5.849,5.849,0,0,1,8.233,8.233Z" data-name="Path 8793" fill="#fff" id="Path_8793" transform="translate(0 0)"></path></g></svg>
                                 </button>
                                 <button title="Define Access" *ngIf="(socketService.admin_mode || folder.personal)"
                                 (click)="userService.get_access_details(folder,'resources','Folder',parent)" class="btn btn-sm btn-primary">
