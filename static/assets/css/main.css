@@ -3186,7 +3186,7 @@ a:not([href]).app-menu__item{
 	padding-top: 2rem;
 	padding-bottom: 2rem;
 }
-.profile_summary_popup .user-name{
+.user-summary-modal .user-name{
 	padding-top: 1rem;
 	text-align: center;
 }
