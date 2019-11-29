@@ -351,9 +351,14 @@ button:focus {
 	margin-bottom: 0.5rem;
 	font-size: 1rem;
     }
+
 .modal-content:not(.signature){
     min-width: 50vw;
-}    
+}
+.user-summary-modal .modal-content{
+    min-width: auto;
+    max-width: 48vw;
+}
 .modal-input-wrap {
 	width: 100%;
 	padding: 0 10px;
