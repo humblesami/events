@@ -189,12 +189,16 @@ a,
 .ProfileChangeSaveWrapper {
 	border-radius: 50%;
 	overflow: hidden;
-	width: 160px;
-	height: 160px;
+	min-width: 140px;
+	width: 140px;
+	height: 140px;
 	border: 2px solid #4b74b5;
 	margin-left: auto;
 	margin-right: auto;
 	}
+.min-width-0{
+	min-width: 0;	
+}	
 #main-div .img-thumbnail-lg {
 	width: 100%;
 	}
@@ -357,7 +361,7 @@ button:focus {
 }
 .user-summary-modal .modal-content{
     min-width: auto;
-    max-width: 48vw;
+    max-width: 480px;
 }
 .modal-input-wrap {
 	width: 100%;
@@ -3177,9 +3181,24 @@ a:not([href]).app-menu__item{
     height: 40vh;
     overflow-y: auto;
 }
+.ProfileUserNameJonbWrapper-column{
+	display: flex;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+.profile_summary_popup .user-name{
+	padding-top: 1rem;
+	text-align: center;
+}
 @media screen and (max-width:576px){
 	.MeetingHeadWrapper .btn, .MeetingBtnWrapper .btn{
 		min-width: 65px
+	}
+	.ProfileUserNameJonbWrapper-column{
+		flex-direction: column;
+	}
+	.user-summary-modal .modal-content{
+		max-width: 96vw;
 	}
 }
 .no-data{
