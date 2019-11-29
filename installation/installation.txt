@@ -55,6 +55,12 @@ DATABASES = {
 	}
 }
 
+sudo -u postgres psql;
+CREATE USER odoo WITH PASSWORD '123';
+ALTER USER odoo WITH SUPERUSER;
+\password odoo user_name;
+
+
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 python manage.py migrate myproj --fake-initial
 
