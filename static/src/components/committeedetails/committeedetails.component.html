@@ -15,7 +15,7 @@ title="{{committee.name}}"></app-breadcrumb>
         <div *ngIf="committee" class="deatils-form">
             <div class="col-lg-12">
                 <div  class="kanban-headings child-pages">
-                    <h3>
+                    <h3 class="text-capitalize">
                         <i class="icon-committees text-primary"></i> {{committee.name}}
                     </h3> 
                 </div>
@@ -40,14 +40,14 @@ title="{{committee.name}}"></app-breadcrumb>
                     <div class="col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let profile of committee.users">
                         <div class="kanban-card">
                             <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
-                                <div class="kanban-profiles-user-img img-flex">
+                                <div class="kanban-profiles-user-img ">
                                     <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                                 </div>
-                                <div class="">
-                                    <div class="font-weight-bolder">
+                                <div class="min-width-0">
+                                    <div class="font-weight-bolder text-truncate">
                                         {{profile.name}}
                                     </div>
-                                    <div class="kanban-profiles-user-InfoLIST">
+                                    <div class="kanban-profiles-user-InfoLIST text-truncate">
                                         <i class="fas fa-envelope"></i>{{profile.email}}
                                     </div>
                                     <div *ngIf="profile.committees && profile.committees.length > 0">
