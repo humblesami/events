@@ -378,7 +378,8 @@ class Profile(AuthUser):
     @classmethod
     def update_profile(cls, request, params):
         request_user = request.user
-        if not request_user.profile.is_admin():
+        request_user = Profile.objects.get(pk=request_user.id)
+        if not request_user.is_admin():
             params.pop('committees', None)
             params.pop('groups', None)
         user_id = params.get('user_id')
