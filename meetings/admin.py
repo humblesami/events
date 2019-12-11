@@ -109,8 +109,7 @@ class UserForm(forms.ModelForm):
         user = super(UserForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         req_user = get_current_user()
-        if req_user.is_superuser:
-            # if not identify_hasher(self.initial['password']):
+        if req_user.is_superuser and password:
             has_valid_hash = False
             try:
                 has_valid_hash = identify_hasher(password)
@@ -125,7 +124,6 @@ class UserForm(forms.ModelForm):
         if not self.instance.pk and Profile.objects.filter(email=self.cleaned_data['email']).exists():
             raise forms.ValidationError(u'This email already exists.')
         return self.cleaned_data['email']
-
 
 
 class UserAdmin(BaseAdmin):
