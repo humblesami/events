@@ -144,19 +144,24 @@ DATABASES = {
 
 }
 
-config_info = {
-    'default': {
 
-    },
-    'domain': 'localhost',
-    'port': '',
-}
+ip2location = {}
+server_base_url = ''
+SOCKET_SERVER_URL = ''
+base_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = base_dir.replace('mainapp', '')
+
+
 config_path = (BASE_DIR+'/config.json')
 config_path = config_path.replace('\\/', '\\')
 config_path = config_path.replace('//', '/')
 with open(config_path, 'r') as site_config:
     config_info = json.load(site_config)
     DATABASES['default'] = config_info['default']
+    SOCKET_SERVER_URL = config_info['socket_url']
+    server_base_url = config_info['server_base_url']
+    AUTH_SERVER_URL = config_info['auth_server_url']
+    ip2location = config_info["ip2location"]["active"]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -176,18 +181,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ip2location = {}
-server_base_url = ''
-SOCKET_SERVER_URL = ''
-base_dir = os.path.dirname(os.path.abspath(__file__))
-base_dir = base_dir.replace('mainapp', '')
-with open(base_dir+'config.json') as f:
-    configs = json.loads(f.read())
-    SOCKET_SERVER_URL = configs['socket_url']
-    server_base_url = configs['server_base_url']
-    AUTH_SERVER_URL = configs['auth_server_url']
-    ip2location = configs["ip2location"]["active"]
-# if 'localhost' in SOCKET_SERVER_URL:
 AUTH_PASSWORD_VALIDATORS = []
 
 
