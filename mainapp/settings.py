@@ -71,8 +71,8 @@ INSTALLED_APPS = [
     'nested_admin',
     'restoken',
     'actions',
+    'website',
     'test',
-    'django_seed',
 ]
 
 REST_FRAMEWORK = {
@@ -138,21 +138,25 @@ WSGI_APPLICATION = 'mainapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+
 }
 
-# DATABASES = {
-# 	'default': {
-# 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-# 		'NAME': 'demo1',
-# 		'USER': 'odoo',
-# 		'PASSWORD': '123',
-# 	}
-# }
+config_info = {
+    'default': {
+
+    },
+    'domain': 'localhost',
+    'port': '',
+}
+config_path = (BASE_DIR+'/config.json')
+config_path = config_path.replace('\\/', '\\')
+config_path = config_path.replace('//', '/')
+with open(config_path, 'r') as site_config:
+    config_info = json.load(site_config)
+    DATABASES['default'] = config_info['default']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators

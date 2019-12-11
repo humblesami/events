@@ -86,6 +86,9 @@ class Profile(AuthUser):
         creating = False
         if not self.pk:
             creating = True
+            self.is_staff = True
+            if self.email:
+                self.username = self.email
         super(Profile, self).save(*args, **kwargs)
         if creating:
             user_data = {
@@ -332,7 +335,8 @@ class Profile(AuthUser):
             'id': profile_orm.two_factor_auth,
             'name': profile_orm.get_two_factor_auth_display()
         }
-        profile['signature_data'] = profile_orm.signature_data.decode()
+        if profile_orm.signature_data:
+            profile['signature_data'] = profile_orm.signature_data.decode()
         if profile['groups']:
             profile['group'] = profile['groups'][0]['name']
         profile['admin_full_name'] = assistant_name

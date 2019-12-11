@@ -55,10 +55,21 @@ DATABASES = {
 	}
 }
 
+sudo apt-get install postgresql postgresql-contrib libpq-dev
 sudo -u postgres psql;
 CREATE USER odoo WITH PASSWORD '123';
 ALTER USER odoo WITH SUPERUSER;
 \password odoo user_name;
+GRANT ALL PRIVILEGES ON DATABASE database_name TO username;
+
+change
+local   all             all                                     peer
+to
+local   all             all                                     md5
+sudo systemctl restart postgresql
+
+
+
 
 
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete

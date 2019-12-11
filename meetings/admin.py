@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth.hashers import is_password_usable, identify_hasher
+from django.forms import PasswordInput
 from django.utils.html import format_html
 from django.contrib.auth.admin import GroupAdmin
 from django.utils.decorators import method_decorator
@@ -91,6 +93,9 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('email', 'password', 'first_name', 'last_name', 'mobile_phone', 'groups', 'two_factor_auth')
+        widgets = {
+            'password': PasswordInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -100,17 +105,20 @@ class UserForm(forms.ModelForm):
         self.fields['groups'].required = True
 
     def save(self, commit=True):
+        password = self.instance.password
         user = super(UserForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         req_user = get_current_user()
         if req_user.is_superuser:
-            if 'password' in self.changed_data:
-                if len(self.data['password']) < 15:
-                    user.password = self.data['password']
-                else:
-                    user.password = ''
-        if commit:
-            user.save()
+            # if not identify_hasher(self.initial['password']):
+            has_valid_hash = False
+            try:
+                has_valid_hash = identify_hasher(password)
+            except:
+                pass
+            if not has_valid_hash:
+                user.set_password(password)
+                user.save()
         return user
 
     def clean_email(self):

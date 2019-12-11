@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def load_data_from_local_files(self):
         group_permissions_data = None
-        with open('group_permissions.json', 'r') as gperms:
+        with open('json_files/group_permissions.json', 'r') as gperms:
             group_permissions_data = json.load(gperms)
         return group_permissions_data
 
@@ -64,8 +64,7 @@ class Command(BaseCommand):
                                 if val:
                                     content_type_id = content_types_data[app][model]
                                     code_name = key + '_' + model
-                                    obj_perm = Permission.objects.get(content_type_id=content_type_id,
-                                                                    codename=code_name)
+                                    obj_perm = Permission.objects.get(content_type_id=content_type_id, codename=code_name)
                                     obj_group.permissions.add(obj_perm)
                                     try:
                                         print('\t' + '- \033[32m' + key + '\x1b[0m ' + model +' - \033[1m \033[94m' + group + '\x1b[0m ' + '\033[32m' + u'\u2714' + '\x1b[0m')
@@ -101,21 +100,14 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         fixtures = kwargs['fixtures']
         if fixtures:
-            call_command('loaddata', 'meetings/fixtures/userdata.json')
+            call_command('loaddata', 'website/fixtures/data.json')
         self.add_permissions()
-
-
 
 
 ####### list difference
 ####### file for sample permissions
-
-
-
-
-
-
 ######################## some code to generate data files ######################
+
         # perms = Permission.objects.all()
         # for perm in perms:
         #     print(perm.name)
