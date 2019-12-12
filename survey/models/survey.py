@@ -366,7 +366,31 @@ class Survey(Actions):
             survey_results['questions'] = survey_results['questions_single'] + survey_results['questions_multi']
             survey_results['progress_data'] = progress_data
         return survey_results
-
+    
+    @classmethod
+    def get_answered_users(cls, request, params):
+        survey_id = params['survey_id']
+        question_id = params['question_id']
+        check_answer = params['check_answer']
+        survey = Survey.objects.get(pk=survey_id)
+        question = survey.questions.filter(pk=question_id )
+        question_choices = []
+        final_responders = []
+        question_choices = question[0].choices.split(',')
+        if check_answer in question_choices:
+            answers = question[0].answers.all()
+            valid_users = []
+            for answer in answers:
+                if question[0].type == 'radio':
+                    ans_choice = answer.body.split(",")
+                else:
+                    ans_choice = eval(answer.body)
+                if check_answer in ans_choice:
+                    responders = answer.response;
+                    fullname = responders.user.first_name + " " + responders.user.last_name
+                    response = {'id': responders.user.id , 'name': fullname , 'email': responders.user.email , 'image' : responders.user.authuser.image.url }
+                    final_responders.append(response)
+        return final_responders
 
     def send_email_on_save(self, audience, action=None):
         token_required = False

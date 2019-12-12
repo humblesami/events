@@ -463,7 +463,7 @@ export class SocketService {
             default_selected = true;
             owner = dialog_options.owner;
         }
-        if(dialog_options.user_list && dialog_options.user_list.length)
+        if(dialog_options.user_list)
         {
             if (cuser)
             {
@@ -507,6 +507,9 @@ export class SocketService {
         
         modalRef.componentInstance.user_input_str = JSON.stringify(dialog_options.user_list);
         modalRef.componentInstance.selection_input_str = JSON.stringify(selected_users);
+        if(dialog_options.hide_checkbox){
+            modalRef.componentInstance.hide_checkbox = dialog_options.hide_checkbox;
+        }
         if(dialog_options.extra_input)
         {
             for(var key in dialog_options.extra_input)

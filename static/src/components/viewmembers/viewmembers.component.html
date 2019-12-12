@@ -7,11 +7,11 @@
             placeholder="Search..."  class="form-control"/>
         </div>
             
-        <div class="bg-heading">
+        <div class="bg-heading" *ngIf="!hide_checkbox">
             <div>
                 User Info
             </div>
-            <div>
+            <div >
                 Status
             </div>
         </div>            
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-                <div  class="col-3 custom-control custom-checkbox">
+                <div  class="col-3 custom-control custom-checkbox" *ngIf="!hide_checkbox">
                         <input type="checkbox"
                         disabled="disabled"
                         [(ngModel)]="obj.selected"

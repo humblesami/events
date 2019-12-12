@@ -15,6 +15,7 @@ export class ViewmembersComponent implements OnInit {
     @Input() selection_input_str = '';
     @Input() user_input_str = '';
     @Input() title = '';
+    @Input() hide_checkbox = '';
 
   // @Output() group_users_changed : EventEmitter <any> = new EventEmitter();
     server_url = window['server_url'];
@@ -57,6 +58,7 @@ export class ViewmembersComponent implements OnInit {
         }
         if(obj_this.user_input_str)
         {
+            console.log(obj_this.user_input_str, obj_this.hide_checkbox);
             obj_this.all_users = JSON.parse(obj_this.user_input_str);
             // console.log(obj_this.all_users, 223);
             obj_this.all_users.forEach((val)=>{

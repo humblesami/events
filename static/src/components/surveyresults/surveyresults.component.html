@@ -76,6 +76,9 @@ title="Results"></app-breadcrumb>
                                                                 <td>{{obj.option_result || 0}}</td>
                                                                 <td *ngIf="obj.type != 'select-multiple'">{{obj.option_perc || 0}}%</td>
                                                                 <td *ngIf="obj.type == 'select-multiple'">{{obj.total_perc || 0}}%</td>
+
+                                                                <td><a (click)="get_answered_users(question.id, obj.option_name)">More</a></td>
+
                                                             </tr>
                                                         </tbody>
                                                     </table>                                                        
