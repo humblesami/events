@@ -67,7 +67,7 @@ title="Results"></app-breadcrumb>
                                                                 <canvas id="chartData-{{question.id}}"></canvas>
                                                         </div>
                                                      </div>
-                                                    <label>Choices: Answer By {{ question.user_answers.length }} Person</label> 
+                                                    <label>Choices: Answer By {{ question.user_answers.length }} / {{ surveyDetails.total_respondents }}  Person</label> 
                                                     <table class="table">
                                                         <tbody>
                                                             <tr *ngFor="let obj of question.chart_data">

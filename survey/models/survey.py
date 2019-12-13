@@ -258,6 +258,7 @@ class Survey(Actions):
         survey_results = {
             'id': survey.id,
             'name': survey.name,
+            'total_respondents' : survey.respondents.count(),
             'questions': [],
             'questions_single':[],
             'questions_multi':[],
