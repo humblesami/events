@@ -9,7 +9,7 @@ django-nested-admin==3.2.3
 django-currentuser==0.4.2
 fpdf==1.7.2
 pypdf2==1.26.0
-pillow==3.4.1
+pillow==9.0.0
 django-pwa==1.0.5
 #sudo apt-get update
 #sudo apt-get install build-essential libpoppler-cpp-dev pkg-config python-dev
