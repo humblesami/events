@@ -8,7 +8,7 @@ django-bootstrap-form==3.4
 django-nested-admin==3.2.3
 django-currentuser==0.4.2
 fpdf==1.7.2
-pypdf2==1.26.0
+pypdf2==1.27.5
 pillow==9.0.1
 django-pwa==1.0.5
 #sudo apt-get update
